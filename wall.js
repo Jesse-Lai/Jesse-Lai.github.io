@@ -122,7 +122,7 @@
   }
 
   // ─── GENERATE STICKERS ───
-  const img1 = generateSticker1("JESSE LAI");
+  const img1 = generateSticker1("");
   const img2 = await loadImagePixels("sticker2.png");
 
   const gap = 3; // 3x3 sampling for smooth performance
