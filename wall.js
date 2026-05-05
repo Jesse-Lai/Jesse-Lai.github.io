@@ -151,7 +151,7 @@ import { prepareWithSegments, layoutNextLineRange, materializeLineRange } from "
         // Corner peel
         if (this.hoverProgress > 0.01) {
           const distFromCorner = Math.sqrt(Math.pow(1 - p.nx, 2) + Math.pow(1 - p.ny, 2));
-          const foldRadius = this.hoverProgress * 0.8;
+          const foldRadius = this.hoverProgress * 0.4;
           if (distFromCorner < foldRadius) {
             const foldAmount = (foldRadius - distFromCorner) / foldRadius;
             const foldDist = foldAmount * foldRadius * this.renderW * 0.5;
