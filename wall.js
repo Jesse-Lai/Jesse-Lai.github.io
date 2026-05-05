@@ -1,6 +1,9 @@
 import { prepareWithSegments, layoutNextLineRange, materializeLineRange } from "@chenglou/pretext";
 
+console.log("wall.js loaded");
+
 (async () => {
+  try {
   const W = window.innerWidth;
   const H = window.innerHeight;
   const dpr = window.devicePixelRatio || 1;
@@ -205,6 +208,7 @@ import { prepareWithSegments, layoutNextLineRange, materializeLineRange } from "
 
   function layoutText(stickers) {
     textContainer.removeChildren();
+    console.log("layoutText called");
 
     const prepared = prepareWithSegments(textContent, FONT);
     const exclusions = stickers.map(s => s.bounds);
@@ -272,7 +276,7 @@ import { prepareWithSegments, layoutNextLineRange, materializeLineRange } from "
       }
 
       // Check if we've exhausted all text
-      if (cursor.segmentIndex >= prepared.segments.length) break;
+      // check done via range === null below
 
       y += LINE_HEIGHT;
     }
@@ -392,4 +396,5 @@ import { prepareWithSegments, layoutNextLineRange, materializeLineRange } from "
       lastW = window.innerWidth;
     }, 500);
   });
+  } catch(e) { console.error("wall.js error:", e); }
 })();
