@@ -3,7 +3,6 @@
   const H = window.innerHeight;
   const dpr = window.devicePixelRatio || 1;
 
-  // ─── PIXI APP ───
   const app = new PIXI.Application();
   await app.init({
     width: W, height: H,
@@ -13,133 +12,180 @@
   });
   document.body.appendChild(app.canvas);
 
-  // ─── LOAD IMAGE & SAMPLE PIXELS ───
-  const img = new Image();
-  img.crossOrigin = "anonymous";
-  img.src = "sticker.png";
-  await new Promise(r => img.onload = r);
+  // ─── LOAD & SAMPLE IMAGE ───
+  async function loadImagePixels(src) {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.src = src;
+    await new Promise(r => img.onload = r);
+    const c = document.createElement("canvas");
+    c.width = img.naturalWidth; c.height = img.naturalHeight;
+    const ctx = c.getContext("2d");
+    ctx.drawImage(img, 0, 0);
+    return { data: ctx.getImageData(0, 0, c.width, c.height), w: c.width, h: c.height };
+  }
 
-  // Draw image to offscreen canvas to read pixels
-  const imgW = img.naturalWidth;
-  const imgH = img.naturalHeight;
-  const offCanvas = document.createElement("canvas");
-  offCanvas.width = imgW;
-  offCanvas.height = imgH;
-  const octx = offCanvas.getContext("2d");
-  octx.drawImage(img, 0, 0);
-  const imageData = octx.getImageData(0, 0, imgW, imgH);
-  const pixels = imageData.data;
+  // Sample pixels → array of {x, y, r, g, b, a} in normalized coords (0-1)
+  function sampleImage(imageData, w, h, gap) {
+    const pixels = imageData.data;
+    const points = [];
+    for (let y = 0; y < h; y += gap) {
+      for (let x = 0; x < w; x += gap) {
+        const i = (y * w + x) * 4;
+        const r = pixels[i], g = pixels[i+1], b = pixels[i+2], a = pixels[i+3];
+        if (a < 128) continue; // sharp edge: skip semi-transparent
+        points.push({ nx: x / w, ny: y / h, r, g, b, a });
+      }
+    }
+    return points;
+  }
 
-  // ─── CREATE 1px DOT TEXTURE ───
-  const dotSize = 2; // 2x2 for slight coverage overlap
+  // ─── LOAD BOTH STICKERS ───
+  const img1 = await loadImagePixels("sticker.png");
+  const img2 = await loadImagePixels("sticker2.png");
+
+  const gap = 1; // pixel-perfect
+  const points1 = sampleImage(img1.data, img1.w, img1.h, gap);
+  const points2 = sampleImage(img2.data, img2.w, img2.h, gap);
+
+  console.log(`Sticker1: ${points1.length}, Sticker2: ${points2.length}`);
+
+  // Use the larger set as particle count
+  const maxCount = Math.max(points1.length, points2.length);
+
+  // Pad smaller array by recycling points
+  while (points1.length < maxCount) points1.push(points1[Math.floor(Math.random() * points1.length)]);
+  while (points2.length < maxCount) points2.push(points2[Math.floor(Math.random() * points2.length)]);
+
+  // Shuffle points2 for more interesting transitions
+  for (let i = points2.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [points2[i], points2[j]] = [points2[j], points2[i]];
+  }
+
+  // ─── LAYOUT: both stickers side by side ───
+  const margin = 40;
+  const availW = (W - margin * 3) / 2;
+  const availH = H - margin * 2;
+
+  const scale1 = Math.min(availW / img1.w, availH / img1.h);
+  const offset1X = margin + (availW - img1.w * scale1) / 2;
+  const offset1Y = margin + (availH - img1.h * scale1) / 2;
+
+  const scale2 = Math.min(availW / img2.w, availH / img2.h);
+  const offset2X = margin * 2 + availW + (availW - img2.w * scale2) / 2;
+  const offset2Y = margin + (availH - img2.h * scale2) / 2;
+
+  // Convert normalized coords to screen coords
+  function toScreen1(p) { return { x: offset1X + p.nx * img1.w * scale1, y: offset1Y + p.ny * img1.h * scale1 }; }
+  function toScreen2(p) { return { x: offset2X + p.nx * img2.w * scale2, y: offset2Y + p.ny * img2.h * scale2 }; }
+
+  // ─── DOT TEXTURE (1x1 pixel, sharp) ───
   const dotCanvas = document.createElement("canvas");
-  dotCanvas.width = dotSize;
-  dotCanvas.height = dotSize;
+  dotCanvas.width = 2; dotCanvas.height = 2;
   const dctx = dotCanvas.getContext("2d");
   dctx.fillStyle = "white";
-  dctx.fillRect(0, 0, dotSize, dotSize);
+  dctx.fillRect(0, 0, 2, 2);
   const dotTexture = PIXI.Texture.from(dotCanvas);
 
-  // ─── PARTICLE CONTAINER ───
-  // Scale image to fit screen (max 80% of viewport)
-  const maxW = W * 0.6;
-  const maxH = H * 0.8;
-  const scale = Math.min(maxW / imgW, maxH / imgH);
-  const renderW = imgW * scale;
-  const renderH = imgH * scale;
-  const offsetX = (W - renderW) / 2;
-  const offsetY = (H - renderH) / 2;
-
-  // Sample every pixel (or subsample for performance)
-  // For a ~400x500 image, every pixel = ~200k particles. Use gap=1 for full fidelity.
-  const gap = 1; // pixel-perfect
+  // ─── CREATE PARTICLES ───
   const container = new PIXI.Container();
   app.stage.addChild(container);
 
-  const particleData = [];
+  const particles = [];
+  const particleScale = scale1 * gap / 2; // exact pixel size, no overlap
 
-  for (let y = 0; y < imgH; y += gap) {
-    for (let x = 0; x < imgW; x += gap) {
-      const i = (y * imgW + x) * 4;
-      const r = pixels[i], g = pixels[i + 1], b = pixels[i + 2], a = pixels[i + 3];
+  for (let i = 0; i < maxCount; i++) {
+    const p1 = points1[i];
+    const pos = toScreen1(p1);
 
-      // Skip fully transparent pixels
-      if (a < 10) continue;
+    const sprite = new PIXI.Sprite(dotTexture);
+    sprite.anchor.set(0.5);
+    sprite.x = pos.x;
+    sprite.y = pos.y;
+    sprite.scale.set(particleScale);
+    sprite.tint = (p1.r << 16) | (p1.g << 8) | p1.b;
+    sprite.alpha = p1.a / 255;
+    container.addChild(sprite);
 
-      const sprite = new PIXI.Sprite(dotTexture);
-      sprite.anchor.set(0.5);
-      sprite.x = offsetX + x * scale;
-      sprite.y = offsetY + y * scale;
-      sprite.scale.set(scale * gap / dotSize * 1.05); // slight overlap to avoid gaps
-      sprite.tint = (r << 16) | (g << 8) | b;
-      sprite.alpha = a / 255;
-      container.addChild(sprite);
-
-      particleData.push({
-        sprite,
-        originX: sprite.x,
-        originY: sprite.y,
-        x: sprite.x,
-        y: sprite.y,
-        vx: 0,
-        vy: 0,
-      });
-    }
+    particles.push({
+      sprite,
+      x: pos.x, y: pos.y,
+      vx: 0, vy: 0,
+      // State A (sticker 1)
+      ax: pos.x, ay: pos.y,
+      ar: p1.r, ag: p1.g, ab: p1.b, aa: p1.a,
+      // State B (sticker 2)
+      bx: toScreen2(points2[i]).x, by: toScreen2(points2[i]).y,
+      br: points2[i].r, bg: points2[i].g, bb: points2[i].b, ba: points2[i].a,
+    });
   }
 
-  console.log(`Particles: ${particleData.length}`);
+  console.log(`Total particles: ${maxCount}`);
 
-  // ─── MOUSE INTERACTION ───
+  // ─── STATE: which sticker to show ───
+  let targetB = false; // false = sticker1, true = sticker2
+  let morphProgress = 0; // 0 = A, 1 = B
+
+  // ─── MOUSE ───
   const mouse = { x: -9999, y: -9999 };
-  const interactRadius = 80;
-  const pushForce = 8;
-
-  window.addEventListener("mousemove", e => {
-    mouse.x = e.clientX;
-    mouse.y = e.clientY;
-  });
+  window.addEventListener("mousemove", e => { mouse.x = e.clientX; mouse.y = e.clientY; });
   window.addEventListener("mouseleave", () => { mouse.x = -9999; });
 
-  // ─── ANIMATION LOOP ───
+  // Detect hover on sticker1 area
+  function isOverSticker1() {
+    return mouse.x > offset1X && mouse.x < offset1X + img1.w * scale1 &&
+           mouse.y > offset1Y && mouse.y < offset1Y + img1.h * scale1;
+  }
+
+  // ─── ANIMATION ───
   app.ticker.add((ticker) => {
-    const mx = mouse.x, my = mouse.y;
-    const rSq = interactRadius * interactRadius;
-    const checkRadius = interactRadius + 50; // slightly larger check area
-    const checkSq = checkRadius * checkRadius;
+    const dt = Math.min(ticker.deltaMS / 1000, 0.05);
 
-    for (let i = 0; i < particleData.length; i++) {
-      const p = particleData[i];
+    // Determine target
+    targetB = isOverSticker1();
 
-      // Skip particles that are stationary and far from mouse
-      if (Math.abs(p.vx) < 0.01 && Math.abs(p.vy) < 0.01) {
-        const dx2 = p.originX - mx, dy2 = p.originY - my;
-        if (dx2 * dx2 + dy2 * dy2 > checkSq) continue;
-      }
+    // Animate morph progress
+    const targetProgress = targetB ? 1 : 0;
+    morphProgress += (targetProgress - morphProgress) * 0.03;
 
-      const dx = p.x - mx, dy = p.y - my;
-      const distSq = dx * dx + dy * dy;
+    // Update particles
+    for (let i = 0; i < particles.length; i++) {
+      const p = particles[i];
 
-      if (distSq < rSq && distSq > 0.01) {
-        const dist = Math.sqrt(distSq);
-        const t = 1 - dist / interactRadius;
-        const force = t * t * pushForce;
-        p.vx += (dx / dist) * force;
-        p.vy += (dy / dist) * force;
-      }
+      // Interpolate target position and color
+      const tx = p.ax + (p.bx - p.ax) * morphProgress;
+      const ty = p.ay + (p.by - p.ay) * morphProgress;
 
-      // Spring back to origin
-      p.vx += (p.originX - p.x) * 0.02;
-      p.vy += (p.originY - p.y) * 0.02;
-
-      // Damping
-      p.vx *= 0.88;
-      p.vy *= 0.88;
-
+      // Spring to target
+      p.vx += (tx - p.x) * 0.08;
+      p.vy += (ty - p.y) * 0.08;
+      p.vx *= 0.82;
+      p.vy *= 0.82;
       p.x += p.vx;
       p.y += p.vy;
 
       p.sprite.x = p.x;
       p.sprite.y = p.y;
+
+      // Interpolate color
+      const r = Math.round(p.ar + (p.br - p.ar) * morphProgress);
+      const g = Math.round(p.ag + (p.bg - p.ag) * morphProgress);
+      const b = Math.round(p.ab + (p.bb - p.ab) * morphProgress);
+      p.sprite.tint = (r << 16) | (g << 8) | b;
+
+      const a = p.aa + (p.ba - p.aa) * morphProgress;
+      p.sprite.alpha = a / 255;
     }
+  });
+
+  // ─── RESIZE ───
+  let resizeTimer;
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      const nW = window.innerWidth;
+      if (Math.abs(nW - W) > 50) location.reload();
+    }, 500);
   });
 })();
