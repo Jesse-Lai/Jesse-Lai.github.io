@@ -85,6 +85,8 @@
           y: this.posY + ly,
           vx: 0, vy: 0,
           nx: p.nx, ny: p.ny, // normalized 0-1
+          origR: p.r, origG: p.g, origB: p.b, origA: p.a,
+          isFlipped: false,
         });
       }
 
@@ -134,17 +136,43 @@
         let tx = this.posX + p.lx;
         let ty = this.posY + p.ly;
 
-        // Corner peel effect: bottom-right particles lift up when hovered
+        // Corner peel effect: simulate folding the bottom-right corner
         if (this.hoverProgress > 0.01) {
-          // How much this particle is in the bottom-right corner (0-1)
+          // Fold line: diagonal from bottom-right corner
+          // Particles past the fold line get "flipped" and turn white (backside)
           const cornerX = p.nx; // 0=left, 1=right
           const cornerY = p.ny; // 0=top, 1=bottom
-          const cornerInfluence = Math.max(0, (cornerX - 0.6) * 2.5) * Math.max(0, (cornerY - 0.6) * 2.5);
-          const peelAmount = cornerInfluence * this.hoverProgress;
 
-          // Peel: move up and slightly rotate
-          tx += peelAmount * 15;
-          ty -= peelAmount * 25;
+          // Distance from bottom-right corner (0 at corner, ~1.4 at top-left)
+          const distFromCorner = Math.sqrt(Math.pow(1 - cornerX, 2) + Math.pow(1 - cornerY, 2));
+
+          // Fold threshold moves based on hover progress
+          const foldRadius = this.hoverProgress * 0.4; // how much of the corner is folded
+
+          if (distFromCorner < foldRadius) {
+            // This particle is in the folded region
+            // Mirror it across the fold line (diagonal)
+            const foldAmount = (foldRadius - distFromCorner) / foldRadius;
+
+            // Fold direction: up and to the left (diagonal mirror)
+            const foldDist = foldAmount * foldRadius * this.renderW * 0.5;
+            tx += -foldDist * 0.7;
+            ty += -foldDist * 0.7;
+
+            // Change color to white (backside of sticker)
+            p.sprite.tint = 0xf0f0f0;
+            p.sprite.alpha = 0.95;
+            p.isFlipped = true;
+          } else if (p.isFlipped) {
+            // Restore original color when unfolded
+            p.sprite.tint = (p.origR << 16) | (p.origG << 8) | p.origB;
+            p.sprite.alpha = p.origA / 255;
+            p.isFlipped = false;
+          }
+        } else if (p.isFlipped) {
+          p.sprite.tint = (p.origR << 16) | (p.origG << 8) | p.origB;
+          p.sprite.alpha = p.origA / 255;
+          p.isFlipped = false;
         }
 
         // Dragging: add subtle jitter/lag for organic feel
