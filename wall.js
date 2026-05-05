@@ -89,16 +89,57 @@
 
   console.log(`Particles: ${particleData.length}`);
 
-  // ─── MOUSE INTERACTION (for future use) ───
+  // ─── MOUSE INTERACTION ───
   const mouse = { x: -9999, y: -9999 };
+  const interactRadius = 80;
+  const pushForce = 8;
+
   window.addEventListener("mousemove", e => {
     mouse.x = e.clientX;
     mouse.y = e.clientY;
   });
   window.addEventListener("mouseleave", () => { mouse.x = -9999; });
 
-  // ─── ANIMATION LOOP (idle for now, ready for interactions) ───
+  // ─── ANIMATION LOOP ───
   app.ticker.add((ticker) => {
-    // Future: add hover dispersion, drag, tear effects here
+    const mx = mouse.x, my = mouse.y;
+    const rSq = interactRadius * interactRadius;
+    const checkRadius = interactRadius + 50; // slightly larger check area
+    const checkSq = checkRadius * checkRadius;
+
+    for (let i = 0; i < particleData.length; i++) {
+      const p = particleData[i];
+
+      // Skip particles that are stationary and far from mouse
+      if (Math.abs(p.vx) < 0.01 && Math.abs(p.vy) < 0.01) {
+        const dx2 = p.originX - mx, dy2 = p.originY - my;
+        if (dx2 * dx2 + dy2 * dy2 > checkSq) continue;
+      }
+
+      const dx = p.x - mx, dy = p.y - my;
+      const distSq = dx * dx + dy * dy;
+
+      if (distSq < rSq && distSq > 0.01) {
+        const dist = Math.sqrt(distSq);
+        const t = 1 - dist / interactRadius;
+        const force = t * t * pushForce;
+        p.vx += (dx / dist) * force;
+        p.vy += (dy / dist) * force;
+      }
+
+      // Spring back to origin
+      p.vx += (p.originX - p.x) * 0.02;
+      p.vy += (p.originY - p.y) * 0.02;
+
+      // Damping
+      p.vx *= 0.88;
+      p.vy *= 0.88;
+
+      p.x += p.vx;
+      p.y += p.vy;
+
+      p.sprite.x = p.x;
+      p.sprite.y = p.y;
+    }
   });
 })();
