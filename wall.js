@@ -13,7 +13,7 @@
   document.body.appendChild(app.canvas);
 
   // ─── LOAD & SAMPLE IMAGE ───
-  async function loadImagePixels(src) {
+  async function loadImagePixels(src, textOverlay) {
     const img = new Image();
     img.crossOrigin = "anonymous";
     img.src = src;
@@ -22,6 +22,21 @@
     c.width = img.naturalWidth; c.height = img.naturalHeight;
     const ctx = c.getContext("2d");
     ctx.drawImage(img, 0, 0);
+
+    // If textOverlay specified, paint over the text region and draw new text
+    if (textOverlay) {
+      const { text, region, bgColor, textColor, font } = textOverlay;
+      // Fill background
+      ctx.fillStyle = bgColor || "#f0e6d3";
+      ctx.fillRect(region.x, region.y, region.w, region.h);
+      // Draw text
+      ctx.fillStyle = textColor || "#2a3c3c";
+      ctx.font = font || `bold ${Math.floor(region.h * 0.6)}px Helvetica, Arial, sans-serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(text, region.x + region.w / 2, region.y + region.h / 2);
+    }
+
     return { data: ctx.getImageData(0, 0, c.width, c.height), w: c.width, h: c.height };
   }
 
@@ -41,7 +56,14 @@
   }
 
   // ─── LOAD BOTH STICKERS ───
-  const img1 = await loadImagePixels("sticker.png");
+  // Sticker 1: overlay "JESSE LAI" on the text region (bottom strip)
+  const img1 = await loadImagePixels("sticker.png", {
+    text: "JESSE LAI",
+    region: { x: 56, y: 530, w: 444, h: 70 },  // text area of the sticker
+    bgColor: "#f0e6d3",
+    textColor: "#2a3c3c",
+    font: "bold 42px Helvetica, Arial, sans-serif",
+  });
   const img2 = await loadImagePixels("sticker2.png");
 
   const gap = 3; // 3x3 sampling for smooth performance
