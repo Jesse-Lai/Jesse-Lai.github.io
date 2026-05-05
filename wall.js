@@ -45,7 +45,7 @@ import { prepareWithSegments, layoutNextLineRange, materializeLineRange } from "
   // ─── TEXT CONTENT ───
   const textContent = "Jesse Lai, Product Designer at Microsoft. Crafting AI-native experiences where technology and humanity converge. Believer in emergent design — systems that grow, adapt, and evolve beyond their creator's intent. Stand-up comedian on open mic nights. Bass fisher on quiet mornings. Building tools that think with you, not for you.";
 
-  const FONT = '72px "Playfair Display", serif';
+  const FONT = '72px "Bradford LL", serif';
   const FONT_ITALIC = 'italic 72px "Playfair Display", serif';
   const LINE_HEIGHT = 82;
   const TEXT_COLOR = 0x1a1a1a;
@@ -212,7 +212,7 @@ import { prepareWithSegments, layoutNextLineRange, materializeLineRange } from "
     const fullRight = W - MARGIN;
 
     const textStyle = new PIXI.TextStyle({
-      fontFamily: '"Playfair Display", serif',
+      fontFamily: '"Bradford LL", serif',
       fontSize: 72,
       fontWeight: '400',
       fill: TEXT_COLOR,
@@ -292,7 +292,7 @@ import { prepareWithSegments, layoutNextLineRange, materializeLineRange } from "
   const stickers = [sticker1, sticker2];
 
   // Initial text layout
-  await document.fonts.load(FONT);
+  await document.fonts.ready;
   layoutText(stickers);
 
   // ─── INTERACTION ───
