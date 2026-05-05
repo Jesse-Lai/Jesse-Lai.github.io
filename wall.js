@@ -157,7 +157,9 @@ import { prepareWithSegments, layoutNextLineRange, materializeLineRange } from "
             const foldDist = foldAmount * foldRadius * this.renderW * 0.5;
             tx += -foldDist * 0.7;
             ty += -foldDist * 0.7;
-            p.sprite.tint = 0xf0f0f0;
+            // Gradient: darker closer to corner
+            const shade = Math.floor(240 - foldAmount * 100); // 240 at edge, 140 at corner
+            p.sprite.tint = (shade << 16) | (shade << 8) | shade;
             p.sprite.alpha = 0.95;
             p.isFlipped = true;
           } else if (p.isFlipped) {
