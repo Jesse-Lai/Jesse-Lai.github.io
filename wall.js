@@ -123,9 +123,23 @@
 
   console.log(`Total particles: ${maxCount}`);
 
-  // ─── STATE: which sticker to show ───
-  let targetB = false; // false = sticker1, true = sticker2
+  // ─── STATE: morph timing ───
+  let targetB = false;
   let morphProgress = 0; // 0 = A, 1 = B
+  let morphStart = null;
+  let morphFrom = 0;
+  let morphTo = 0;
+  const morphDuration = 1000; // ms
+
+  function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+
+  function startMorph(toB) {
+    if (targetB === toB) return;
+    targetB = toB;
+    morphFrom = morphProgress;
+    morphTo = toB ? 1 : 0;
+    morphStart = performance.now();
+  }
 
   // ─── MOUSE ───
   const mouse = { x: -9999, y: -9999 };
@@ -146,11 +160,16 @@
     const dt = Math.min(ticker.deltaMS / 1000, 0.05);
 
     // Determine target
-    targetB = isOverSticker();
+    const shouldBeB = isOverSticker();
+    startMorph(shouldBeB);
 
-    // Animate morph progress
-    const targetProgress = targetB ? 1 : 0;
-    morphProgress += (targetProgress - morphProgress) * 0.1;
+    // Update morph progress with timer
+    if (morphStart !== null) {
+      const elapsed = performance.now() - morphStart;
+      const t = Math.min(elapsed / morphDuration, 1);
+      morphProgress = morphFrom + (morphTo - morphFrom) * easeOutCubic(t);
+      if (t >= 1) morphStart = null; // done
+    }
 
     // Update particles
     for (let i = 0; i < particles.length; i++) {
