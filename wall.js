@@ -204,19 +204,12 @@ import { prepareWithSegments, layoutNextLineRange, materializeLineRange } from "
   let textGraphics = null;
 
   function layoutText(stickers) {
-    // Remove old text
     textContainer.removeChildren();
 
-    // Prepare text with pretext
     const prepared = prepareWithSegments(textContent, FONT);
-
-    // Get sticker bounds for exclusion
     const exclusions = stickers.map(s => s.bounds);
-
-    // Layout text line by line, adjusting width around stickers
-    const fullWidth = W - MARGIN * 2;
-    let cursor = { segmentIndex: 0, graphemeIndex: 0 };
-    let y = MARGIN;
+    const fullLeft = MARGIN;
+    const fullRight = W - MARGIN;
 
     const textStyle = new PIXI.TextStyle({
       fontFamily: '"Playfair Display", serif',
@@ -226,62 +219,64 @@ import { prepareWithSegments, layoutNextLineRange, materializeLineRange } from "
       wordWrap: false,
     });
 
+    let cursor = { segmentIndex: 0, graphemeIndex: 0 };
+    let y = MARGIN;
+
     while (y < H - MARGIN) {
-      // Check which stickers overlap this line
-      let lineX = MARGIN;
-      let lineWidth = fullWidth;
+      const lineTop = y;
+      const lineBottom = y + LINE_HEIGHT;
+
+      // Find available horizontal spans for this line
+      // Start with full width, then subtract sticker overlaps
+      let spans = [{ left: fullLeft, right: fullRight }];
 
       for (const exc of exclusions) {
-        const lineTop = y;
-        const lineBottom = y + LINE_HEIGHT;
-
-        // Does this sticker overlap this line vertically?
-        if (exc.y < lineBottom && exc.y + exc.h > lineTop) {
-          // Sticker overlaps — shrink available width
-          const stickerLeft = exc.x;
-          const stickerRight = exc.x + exc.w;
-
-          // Determine if sticker is on left or right side
-          const stickerCenter = stickerLeft + exc.w / 2;
-          if (stickerCenter < W / 2) {
-            // Sticker on left — text starts after sticker
-            const newLeft = stickerRight + 20;
-            if (newLeft > lineX) {
-              lineWidth -= (newLeft - lineX);
-              lineX = newLeft;
-            }
+        if (exc.y >= lineBottom || exc.y + exc.h <= lineTop) continue;
+        // This sticker overlaps this line — split spans
+        const sLeft = exc.x - 15;
+        const sRight = exc.x + exc.w + 15;
+        const newSpans = [];
+        for (const span of spans) {
+          if (sRight <= span.left || sLeft >= span.right) {
+            newSpans.push(span); // no overlap
           } else {
-            // Sticker on right — text ends before sticker
-            const newRight = stickerLeft - 20;
-            const maxRight = lineX + lineWidth;
-            if (newRight < maxRight) {
-              lineWidth = newRight - lineX;
-            }
+            // Split: left part and right part
+            if (sLeft > span.left + 80) newSpans.push({ left: span.left, right: sLeft });
+            if (sRight < span.right - 80) newSpans.push({ left: sRight, right: span.right });
           }
         }
+        spans = newSpans;
       }
 
-      if (lineWidth < 100) {
-        // Too narrow, skip this line
+      if (spans.length === 0) {
         y += LINE_HEIGHT;
         continue;
       }
 
-      // Use pretext to get next line
-      const range = layoutNextLineRange(prepared, cursor, lineWidth);
-      if (range === null) break;
+      // Fill text into each available span on this line
+      for (const span of spans) {
+        const lineWidth = span.right - span.left;
+        if (lineWidth < 80) continue;
 
-      const line = materializeLineRange(prepared, range);
-      if (line.text.trim()) {
-        const text = new PIXI.Text({ text: line.text.trim(), style: textStyle });
-        text.x = lineX;
-        text.y = y;
-        textContainer.addChild(text);
+        const range = layoutNextLineRange(prepared, cursor, lineWidth);
+        if (range === null) break;
+
+        const line = materializeLineRange(prepared, range);
+        if (line.text.trim()) {
+          const text = new PIXI.Text({ text: line.text.trim(), style: textStyle });
+          text.x = span.left;
+          text.y = y;
+          textContainer.addChild(text);
+        }
+        cursor = range.end;
       }
 
-      cursor = range.end;
+      // Check if we've exhausted all text
+      if (cursor.segmentIndex >= prepared.segments.length) break;
+
       y += LINE_HEIGHT;
     }
+  }
   }
 
   // ─── LOAD STICKERS ───
