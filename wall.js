@@ -12,8 +12,89 @@
   });
   document.body.appendChild(app.canvas);
 
-  // ─── LOAD & SAMPLE IMAGE ───
-  async function loadImagePixels(src, textOverlay) {
+  // ─── PROGRAMMATIC STICKER GENERATION ───
+  function generateSticker1(text) {
+    const w = 556, h = 616;
+    const c = document.createElement("canvas");
+    c.width = w; c.height = h;
+    const ctx = c.getContext("2d");
+
+    // Background: transparent
+    ctx.clearRect(0, 0, w, h);
+
+    // ── Arch shape (rounded top, flat bottom) ──
+    const archX = 45, archY = 20, archW = 466, archH = 520;
+    const archR = archW / 2; // full semicircle top
+    ctx.beginPath();
+    ctx.moveTo(archX, archY + archR);
+    ctx.arc(archX + archR, archY + archR, archR, Math.PI, 0); // top semicircle
+    ctx.lineTo(archX + archW, archY + archH);
+    ctx.lineTo(archX, archY + archH);
+    ctx.closePath();
+    ctx.fillStyle = "#1f4a50"; // dark teal
+    ctx.fill();
+
+    // ── Three-petal flower (trefoil) ──
+    const cx = w / 2, cy = 310;
+    const petalR = 95;
+    const petalDist = 55;
+
+    ctx.fillStyle = "#f0e6d3"; // cream/white
+    // Top petal
+    ctx.beginPath();
+    ctx.ellipse(cx, cy - petalDist, petalR * 0.85, petalR, 0, 0, Math.PI * 2);
+    ctx.fill();
+    // Bottom-left petal
+    ctx.beginPath();
+    ctx.ellipse(cx - petalDist * 0.9, cy + petalDist * 0.5, petalR * 0.85, petalR, Math.PI * 0.55, 0, Math.PI * 2);
+    ctx.fill();
+    // Bottom-right petal
+    ctx.beginPath();
+    ctx.ellipse(cx + petalDist * 0.9, cy + petalDist * 0.5, petalR * 0.85, petalR, -Math.PI * 0.55, 0, Math.PI * 2);
+    ctx.fill();
+
+    // ── Orange starburst center ──
+    ctx.fillStyle = "#e8611a";
+    const starCx = cx, starCy = cy + 10;
+    const outerR = 38, innerR = 22;
+    const points = 10;
+    ctx.beginPath();
+    for (let i = 0; i < points * 2; i++) {
+      const angle = (i * Math.PI) / points - Math.PI / 2;
+      const r = i % 2 === 0 ? outerR : innerR;
+      const sx = starCx + Math.cos(angle) * r;
+      const sy = starCy + Math.sin(angle) * r;
+      if (i === 0) ctx.moveTo(sx, sy);
+      else ctx.lineTo(sx, sy);
+    }
+    ctx.closePath();
+    ctx.fill();
+
+    // ── Text strip at bottom ──
+    const stripY = archY + archH;
+    const stripH = 70;
+    ctx.fillStyle = "#e8e0cf";
+    ctx.fillRect(archX, stripY, archW, stripH);
+
+    // Main text
+    ctx.fillStyle = "#1f4a50";
+    ctx.font = "bold 36px 'Helvetica Neue', Helvetica, Arial, sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(text || "JESSE LAI", cx, stripY + stripH / 2);
+
+    // ── Small labels: "26" and "MI." ──
+    ctx.font = "bold 22px 'Helvetica Neue', Helvetica, Arial, sans-serif";
+    ctx.fillStyle = "#1f4a50";
+    ctx.textAlign = "center";
+    ctx.fillText("26", archX + 60, archY + archR - 60);
+    ctx.fillText("MI.", archX + archW - 60, archY + archR - 60);
+
+    return { data: ctx.getImageData(0, 0, w, h), w, h };
+  }
+
+  // ─── LOAD STICKER 2 (still from image for now) ───
+  async function loadImagePixels(src) {
     const img = new Image();
     img.crossOrigin = "anonymous";
     img.src = src;
@@ -22,21 +103,6 @@
     c.width = img.naturalWidth; c.height = img.naturalHeight;
     const ctx = c.getContext("2d");
     ctx.drawImage(img, 0, 0);
-
-    // If textOverlay specified, paint over the text region and draw new text
-    if (textOverlay) {
-      const { text, region, bgColor, textColor, font } = textOverlay;
-      // Fill background
-      ctx.fillStyle = bgColor || "#f0e6d3";
-      ctx.fillRect(region.x, region.y, region.w, region.h);
-      // Draw text
-      ctx.fillStyle = textColor || "#2a3c3c";
-      ctx.font = font || `bold ${Math.floor(region.h * 0.6)}px Helvetica, Arial, sans-serif`;
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillText(text, region.x + region.w / 2, region.y + region.h / 2);
-    }
-
     return { data: ctx.getImageData(0, 0, c.width, c.height), w: c.width, h: c.height };
   }
 
@@ -55,15 +121,8 @@
     return points;
   }
 
-  // ─── LOAD BOTH STICKERS ───
-  // Sticker 1: overlay "JESSE LAI" on the text region (bottom strip)
-  const img1 = await loadImagePixels("sticker.png", {
-    text: "JESSE LAI",
-    region: { x: 50, y: 475, w: 456, h: 70 },  // text area of the sticker
-    bgColor: "#e8e0cf",
-    textColor: "#2a3c3c",
-    font: "bold 48px Helvetica, Arial, sans-serif",
-  });
+  // ─── GENERATE STICKERS ───
+  const img1 = generateSticker1("JESSE LAI");
   const img2 = await loadImagePixels("sticker2.png");
 
   const gap = 3; // 3x3 sampling for smooth performance
