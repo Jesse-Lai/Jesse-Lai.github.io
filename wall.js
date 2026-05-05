@@ -44,7 +44,7 @@
   const img1 = await loadImagePixels("sticker.png");
   const img2 = await loadImagePixels("sticker2.png");
 
-  const gap = 2; // 2x2 sampling for performance
+  const gap = 3; // 3x3 sampling for smooth performance
   const points1 = sampleImage(img1.data, img1.w, img1.h, gap);
   const points2 = sampleImage(img2.data, img2.w, img2.h, gap);
 
