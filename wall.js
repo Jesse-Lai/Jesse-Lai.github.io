@@ -12,91 +12,7 @@
   });
   document.body.appendChild(app.canvas);
 
-  // ─── PROGRAMMATIC STICKER GENERATION ───
-  function generateSticker1(text) {
-    const baseW = 556, baseH = 616;
-    const scale = 2; // 2x resolution for smooth edges
-    const w = baseW * scale, h = baseH * scale;
-    const c = document.createElement("canvas");
-    c.width = w; c.height = h;
-    const ctx = c.getContext("2d");
-    ctx.scale(scale, scale);
-
-    // Background: transparent
-    ctx.clearRect(0, 0, w, h);
-
-    // ── Arch shape (rounded top, flat bottom) ──
-    const archX = 45, archY = 20, archW = 466, archH = 520;
-    const archR = archW / 2; // full semicircle top
-    ctx.beginPath();
-    ctx.moveTo(archX, archY + archR);
-    ctx.arc(archX + archR, archY + archR, archR, Math.PI, 0); // top semicircle
-    ctx.lineTo(archX + archW, archY + archH);
-    ctx.lineTo(archX, archY + archH);
-    ctx.closePath();
-    ctx.fillStyle = "#1f4a50"; // dark teal
-    ctx.fill();
-
-    // ── Three-petal flower (trefoil) ──
-    const cx = w / 2, cy = 310;
-    const petalR = 95;
-    const petalDist = 55;
-
-    ctx.fillStyle = "#f0e6d3"; // cream/white
-    // Top petal
-    ctx.beginPath();
-    ctx.ellipse(cx, cy - petalDist, petalR * 0.85, petalR, 0, 0, Math.PI * 2);
-    ctx.fill();
-    // Bottom-left petal
-    ctx.beginPath();
-    ctx.ellipse(cx - petalDist * 0.9, cy + petalDist * 0.5, petalR * 0.85, petalR, Math.PI * 0.55, 0, Math.PI * 2);
-    ctx.fill();
-    // Bottom-right petal
-    ctx.beginPath();
-    ctx.ellipse(cx + petalDist * 0.9, cy + petalDist * 0.5, petalR * 0.85, petalR, -Math.PI * 0.55, 0, Math.PI * 2);
-    ctx.fill();
-
-    // ── Orange starburst center ──
-    ctx.fillStyle = "#e8611a";
-    const starCx = cx, starCy = cy + 10;
-    const outerR = 38, innerR = 22;
-    const points = 10;
-    ctx.beginPath();
-    for (let i = 0; i < points * 2; i++) {
-      const angle = (i * Math.PI) / points - Math.PI / 2;
-      const r = i % 2 === 0 ? outerR : innerR;
-      const sx = starCx + Math.cos(angle) * r;
-      const sy = starCy + Math.sin(angle) * r;
-      if (i === 0) ctx.moveTo(sx, sy);
-      else ctx.lineTo(sx, sy);
-    }
-    ctx.closePath();
-    ctx.fill();
-
-    // ── Text strip at bottom ──
-    const stripY = archY + archH;
-    const stripH = 70;
-    ctx.fillStyle = "#e8e0cf";
-    ctx.fillRect(archX, stripY, archW, stripH);
-
-    // Main text
-    ctx.fillStyle = "#1f4a50";
-    ctx.font = "bold 36px 'Helvetica Neue', Helvetica, Arial, sans-serif";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(text || "JESSE LAI", cx, stripY + stripH / 2);
-
-    // ── Small labels: "26" and "MI." ──
-    ctx.font = "bold 22px 'Helvetica Neue', Helvetica, Arial, sans-serif";
-    ctx.fillStyle = "#1f4a50";
-    ctx.textAlign = "center";
-    ctx.fillText("26", archX + 60, archY + archR - 60);
-    ctx.fillText("MI.", archX + archW - 60, archY + archR - 60);
-
-    return { data: ctx.getImageData(0, 0, w, h), w, h };
-  }
-
-  // ─── LOAD STICKER 2 (still from image for now) ───
+  // ─── LOAD & SAMPLE IMAGE ───
   async function loadImagePixels(src) {
     const img = new Image();
     img.crossOrigin = "anonymous";
@@ -109,7 +25,7 @@
     return { data: ctx.getImageData(0, 0, c.width, c.height), w: c.width, h: c.height };
   }
 
-  // Sample pixels → array of {x, y, r, g, b, a} in normalized coords (0-1)
+  // Sample pixels → array of {nx, ny, r, g, b, a} in normalized coords (0-1)
   function sampleImage(imageData, w, h, gap) {
     const pixels = imageData.data;
     const points = [];
@@ -117,18 +33,18 @@
       for (let x = 0; x < w; x += gap) {
         const i = (y * w + x) * 4;
         const r = pixels[i], g = pixels[i+1], b = pixels[i+2], a = pixels[i+3];
-        if (a < 128) continue; // sharp edge: skip semi-transparent
+        if (a < 128) continue;
         points.push({ nx: x / w, ny: y / h, r, g, b, a });
       }
     }
     return points;
   }
 
-  // ─── GENERATE STICKERS ───
-  const img1 = generateSticker1("");
+  // ─── LOAD BOTH STICKERS ───
+  const img1 = await loadImagePixels("sticker.png");
   const img2 = await loadImagePixels("sticker2.png");
 
-  const gap = 2; // with 2x canvas, this gives smooth edges while staying performant
+  const gap = 2;
   const points1 = sampleImage(img1.data, img1.w, img1.h, gap);
   const points2 = sampleImage(img2.data, img2.w, img2.h, gap);
 
@@ -141,7 +57,7 @@
   while (points1.length < maxCount) points1.push(points1[Math.floor(Math.random() * points1.length)]);
   while (points2.length < maxCount) points2.push(points2[Math.floor(Math.random() * points2.length)]);
 
-  // Shuffle points2 for more interesting transitions
+  // Shuffle points2 for interesting transitions
   for (let i = points2.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [points2[i], points2[j]] = [points2[j], points2[i]];
@@ -164,7 +80,7 @@
   function toScreen1(p) { return { x: offset1X + p.nx * img1.w * scale1, y: offset1Y + p.ny * img1.h * scale1 }; }
   function toScreen2(p) { return { x: offset2X + p.nx * img2.w * scale2, y: offset2Y + p.ny * img2.h * scale2 }; }
 
-  // ─── DOT TEXTURE (1x1 pixel, sharp) ───
+  // ─── DOT TEXTURE ───
   const dotCanvas = document.createElement("canvas");
   dotCanvas.width = 2; dotCanvas.height = 2;
   const dctx = dotCanvas.getContext("2d");
@@ -177,7 +93,7 @@
   app.stage.addChild(container);
 
   const particles = [];
-  const particleScale = scale1 * gap / 2; // exact pixel size, no overlap
+  const particleScale = scale1 * gap / 2;
 
   for (let i = 0; i < maxCount; i++) {
     const p1 = points1[i];
@@ -196,10 +112,8 @@
       sprite,
       x: pos.x, y: pos.y,
       vx: 0, vy: 0,
-      // State A (sticker 1)
       ax: pos.x, ay: pos.y,
       ar: p1.r, ag: p1.g, ab: p1.b, aa: p1.a,
-      // State B (sticker 2)
       bx: toScreen2(points2[i]).x, by: toScreen2(points2[i]).y,
       br: points2[i].r, bg: points2[i].g, bb: points2[i].b, ba: points2[i].a,
     });
@@ -209,11 +123,11 @@
 
   // ─── STATE: morph timing ───
   let targetB = false;
-  let morphProgress = 0; // 0 = A, 1 = B
+  let morphProgress = 0;
   let morphStart = null;
   let morphFrom = 0;
   let morphTo = 0;
-  const morphDuration = 1000; // ms
+  const morphDuration = 1000;
 
   function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
 
@@ -227,8 +141,19 @@
 
   // ─── MOUSE ───
   const mouse = { x: -9999, y: -9999 };
+  const isMobile = "ontouchstart" in window;
+
   window.addEventListener("mousemove", e => { mouse.x = e.clientX; mouse.y = e.clientY; });
   window.addEventListener("mouseleave", () => { mouse.x = -9999; });
+
+  // Mobile: tap to toggle
+  if (isMobile) {
+    let tapped = false;
+    window.addEventListener("touchstart", e => {
+      tapped = !tapped;
+      startMorph(tapped);
+    });
+  }
 
   // Detect hover on sticker area (centered)
   function isOverSticker() {
@@ -241,29 +166,27 @@
 
   // ─── ANIMATION ───
   app.ticker.add((ticker) => {
-    const dt = Math.min(ticker.deltaMS / 1000, 0.05);
-
-    // Determine target
-    const shouldBeB = isOverSticker();
-    startMorph(shouldBeB);
+    // Determine target (PC: hover, mobile: handled by tap)
+    if (!isMobile) {
+      const shouldBeB = isOverSticker();
+      startMorph(shouldBeB);
+    }
 
     // Update morph progress with timer
     if (morphStart !== null) {
       const elapsed = performance.now() - morphStart;
       const t = Math.min(elapsed / morphDuration, 1);
       morphProgress = morphFrom + (morphTo - morphFrom) * easeOutCubic(t);
-      if (t >= 1) morphStart = null; // done
+      if (t >= 1) morphStart = null;
     }
 
     // Update particles
     for (let i = 0; i < particles.length; i++) {
       const p = particles[i];
 
-      // Interpolate target position and color
       const tx = p.ax + (p.bx - p.ax) * morphProgress;
       const ty = p.ay + (p.by - p.ay) * morphProgress;
 
-      // Spring to target
       p.vx += (tx - p.x) * 0.08;
       p.vy += (ty - p.y) * 0.08;
       p.vx *= 0.82;
@@ -274,7 +197,6 @@
       p.sprite.x = p.x;
       p.sprite.y = p.y;
 
-      // Interpolate color
       const r = Math.round(p.ar + (p.br - p.ar) * morphProgress);
       const g = Math.round(p.ag + (p.bg - p.ag) * morphProgress);
       const b = Math.round(p.ab + (p.bb - p.ab) * morphProgress);
@@ -286,12 +208,13 @@
   });
 
   // ─── RESIZE ───
-  let resizeTimer;
+  let resizeTimer, lastW = W;
   window.addEventListener("resize", () => {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => {
       const nW = window.innerWidth;
-      if (Math.abs(nW - W) > 50) location.reload();
+      if (Math.abs(nW - lastW) > 50) location.reload();
+      lastW = nW;
     }, 500);
   });
 })();
