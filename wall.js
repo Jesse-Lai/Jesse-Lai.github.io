@@ -112,6 +112,7 @@
       this.state = "dragging";
       this.dragOffsetX = this.posX - mx;
       this.dragOffsetY = this.posY - my;
+      this.hoverProgress = 1; // keep peel visible during drag
     }
 
     moveDrag(mx, my) {
@@ -122,11 +123,12 @@
 
     drop() {
       this.state = "idle";
+      // hoverProgress will naturally animate back to 0
     }
 
     update(dt) {
       // Animate hover progress
-      const targetHover = this.state === "hover" ? 1 : 0;
+      const targetHover = (this.state === "hover" || this.state === "dragging") ? 1 : 0;
       this.hoverProgress += (targetHover - this.hoverProgress) * 0.1;
 
       for (let i = 0; i < this.particles.length; i++) {
@@ -147,7 +149,7 @@
           const distFromCorner = Math.sqrt(Math.pow(1 - cornerX, 2) + Math.pow(1 - cornerY, 2));
 
           // Fold threshold moves based on hover progress
-          const foldRadius = this.hoverProgress * 0.4; // how much of the corner is folded
+          const foldRadius = this.hoverProgress * 0.8; // larger fold area
 
           if (distFromCorner < foldRadius) {
             // This particle is in the folded region
