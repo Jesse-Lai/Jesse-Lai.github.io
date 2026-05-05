@@ -260,18 +260,37 @@
   window.addEventListener("mouseleave", () => { mouse.x = -9999; });
   window.addEventListener("click", handleClick);
 
-  // Touch events
+  // Touch events — tap or long press to pick up
+  let longPressTimer = null;
+  let touchMoved = false;
+
   window.addEventListener("touchstart", e => {
     const t = e.touches[0];
     mouse.x = t.clientX; mouse.y = t.clientY;
-    handleClick();
+    touchMoved = false;
+
+    // Long press: start drag after 400ms
+    longPressTimer = setTimeout(() => {
+      if (!touchMoved) handleClick();
+    }, 400);
   });
+
   window.addEventListener("touchmove", e => {
     e.preventDefault();
     const t = e.touches[0];
     mouse.x = t.clientX; mouse.y = t.clientY;
+    touchMoved = true;
+    if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
     if (draggedSticker) draggedSticker.moveDrag(mouse.x, mouse.y);
   }, { passive: false });
+
+  window.addEventListener("touchend", e => {
+    if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
+    // Tap (no move): also triggers click
+    if (!touchMoved) handleClick();
+    // If dragging and lifted finger, drop
+    else if (draggedSticker) { draggedSticker.drop(); draggedSticker = null; }
+  });
 
   // ─── ANIMATION LOOP ───
   app.ticker.add((ticker) => {
