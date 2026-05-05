@@ -59,10 +59,10 @@
   // Sticker 1: overlay "JESSE LAI" on the text region (bottom strip)
   const img1 = await loadImagePixels("sticker.png", {
     text: "JESSE LAI",
-    region: { x: 56, y: 530, w: 444, h: 70 },  // text area of the sticker
-    bgColor: "#f0e6d3",
+    region: { x: 50, y: 475, w: 456, h: 70 },  // text area of the sticker
+    bgColor: "#e8e0cf",
     textColor: "#2a3c3c",
-    font: "bold 42px Helvetica, Arial, sans-serif",
+    font: "bold 48px Helvetica, Arial, sans-serif",
   });
   const img2 = await loadImagePixels("sticker2.png");
 
