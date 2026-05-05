@@ -150,7 +150,7 @@
 
     // Animate morph progress
     const targetProgress = targetB ? 1 : 0;
-    morphProgress += (targetProgress - morphProgress) * 0.03;
+    morphProgress += (targetProgress - morphProgress) * 0.1;
 
     // Update particles
     for (let i = 0; i < particles.length; i++) {
