@@ -304,6 +304,15 @@
       s.setHover(s === hovered);
       s.update(dt);
     }
+
+    // Cursor style
+    if (draggedSticker) {
+      app.canvas.style.cursor = "grabbing";
+    } else if (hovered) {
+      app.canvas.style.cursor = "pointer";
+    } else {
+      app.canvas.style.cursor = "default";
+    }
   });
 
   // ─── RESIZE ───
