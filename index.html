@@ -3,24 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Jesse Lai · Portfolio — Sky</title>
+  <title>The Wall — Particle Sticker</title>
   <style>
     * { margin: 0; padding: 0; }
-    body { overflow: hidden; cursor: none; }
+    body { background: #000; overflow: hidden; }
     canvas { display: block; }
-    #cursor {
-      position: fixed; pointer-events: none; z-index: 999;
-      width: 40px; height: 40px; border-radius: 50%;
-      border: 1px solid rgba(255,255,255,0.4);
-      transform: translate(-50%, -50%);
-      transition: width 0.2s, height 0.2s;
-    }
   </style>
 </head>
 <body>
-  <div id="cursor"></div>
-  <!-- PixiJS v8 CDN -->
   <script src="https://cdn.jsdelivr.net/npm/pixi.js@8/dist/pixi.min.js"></script>
-  <script src="sky-pixi.js"></script>
+  <script src="wall.js"></script>
 </body>
 </html>
