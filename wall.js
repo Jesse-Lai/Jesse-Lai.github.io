@@ -63,18 +63,18 @@
     [points2[i], points2[j]] = [points2[j], points2[i]];
   }
 
-  // ─── LAYOUT: both stickers side by side ───
+  // ─── LAYOUT: both stickers centered in same position ───
   const margin = 40;
-  const availW = (W - margin * 3) / 2;
+  const availW = W - margin * 2;
   const availH = H - margin * 2;
 
-  const scale1 = Math.min(availW / img1.w, availH / img1.h);
-  const offset1X = margin + (availW - img1.w * scale1) / 2;
-  const offset1Y = margin + (availH - img1.h * scale1) / 2;
+  const scale1 = Math.min(availW / img1.w, availH / img1.h) * 0.7;
+  const offset1X = (W - img1.w * scale1) / 2;
+  const offset1Y = (H - img1.h * scale1) / 2;
 
-  const scale2 = Math.min(availW / img2.w, availH / img2.h);
-  const offset2X = margin * 2 + availW + (availW - img2.w * scale2) / 2;
-  const offset2Y = margin + (availH - img2.h * scale2) / 2;
+  const scale2 = Math.min(availW / img2.w, availH / img2.h) * 0.7;
+  const offset2X = (W - img2.w * scale2) / 2;
+  const offset2Y = (H - img2.h * scale2) / 2;
 
   // Convert normalized coords to screen coords
   function toScreen1(p) { return { x: offset1X + p.nx * img1.w * scale1, y: offset1Y + p.ny * img1.h * scale1 }; }
@@ -132,10 +132,13 @@
   window.addEventListener("mousemove", e => { mouse.x = e.clientX; mouse.y = e.clientY; });
   window.addEventListener("mouseleave", () => { mouse.x = -9999; });
 
-  // Detect hover on sticker1 area
-  function isOverSticker1() {
-    return mouse.x > offset1X && mouse.x < offset1X + img1.w * scale1 &&
-           mouse.y > offset1Y && mouse.y < offset1Y + img1.h * scale1;
+  // Detect hover on sticker area (centered)
+  function isOverSticker() {
+    const sw = Math.max(img1.w * scale1, img2.w * scale2);
+    const sh = Math.max(img1.h * scale1, img2.h * scale2);
+    const cx = W / 2, cy = H / 2;
+    return mouse.x > cx - sw/2 && mouse.x < cx + sw/2 &&
+           mouse.y > cy - sh/2 && mouse.y < cy + sh/2;
   }
 
   // ─── ANIMATION ───
@@ -143,7 +146,7 @@
     const dt = Math.min(ticker.deltaMS / 1000, 0.05);
 
     // Determine target
-    targetB = isOverSticker1();
+    targetB = isOverSticker();
 
     // Animate morph progress
     const targetProgress = targetB ? 1 : 0;
