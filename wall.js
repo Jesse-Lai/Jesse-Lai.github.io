@@ -1,3 +1,5 @@
+import { prepareWithSegments, layoutNextLineRange, materializeLineRange } from "@chenglou/pretext";
+
 (async () => {
   const W = window.innerWidth;
   const H = window.innerHeight;
@@ -9,7 +11,7 @@
     width: W, height: H,
     resolution: dpr,
     autoDensity: true,
-    backgroundColor: 0x000000,
+    backgroundColor: 0xf5f2ed,
   });
   document.body.appendChild(app.canvas);
 
@@ -40,12 +42,21 @@
     return points;
   }
 
+  // ─── TEXT CONTENT ───
+  const textContent = "Jesse Lai, Product Designer at Microsoft. Crafting AI-native experiences where technology and humanity converge. Believer in emergent design — systems that grow, adapt, and evolve beyond their creator's intent. Stand-up comedian on open mic nights. Bass fisher on quiet mornings. Building tools that think with you, not for you.";
+
+  const FONT = '72px "Playfair Display", serif';
+  const FONT_ITALIC = 'italic 72px "Playfair Display", serif';
+  const LINE_HEIGHT = 82;
+  const TEXT_COLOR = 0x1a1a1a;
+  const MARGIN = 60;
+
   // ─── STICKER CLASS ───
   class Sticker {
     constructor(imgData, x, y, displayScale) {
       this.imgW = imgData.w;
       this.imgH = imgData.h;
-      this.posX = x; // center position
+      this.posX = x;
       this.posY = y;
       this.scale = displayScale;
       this.renderW = imgData.w * displayScale;
@@ -68,7 +79,7 @@
       const dotTexture = PIXI.Texture.from(dotCanvas);
 
       for (const p of points) {
-        const lx = (p.nx - 0.5) * this.renderW; // local coords from center
+        const lx = (p.nx - 0.5) * this.renderW;
         const ly = (p.ny - 0.5) * this.renderH;
 
         const sprite = new PIXI.Sprite(dotTexture);
@@ -79,28 +90,33 @@
         this.container.addChild(sprite);
 
         this.particles.push({
-          sprite,
-          lx, ly, // local position (relative to sticker center)
-          x: this.posX + lx,
-          y: this.posY + ly,
+          sprite, lx, ly,
+          x: this.posX + lx, y: this.posY + ly,
           vx: 0, vy: 0,
-          nx: p.nx, ny: p.ny, // normalized 0-1
+          nx: p.nx, ny: p.ny,
           origR: p.r, origG: p.g, origB: p.b, origA: p.a,
           isFlipped: false,
         });
       }
 
-      // State
-      this.state = "idle"; // idle | hover | dragging
-      this.hoverProgress = 0; // 0-1 for corner peel
+      this.state = "idle";
+      this.hoverProgress = 0;
       this.dragOffsetX = 0;
       this.dragOffsetY = 0;
     }
 
-    // Check if point is within sticker bounds
+    get bounds() {
+      return {
+        x: this.posX - this.renderW / 2,
+        y: this.posY - this.renderH / 2,
+        w: this.renderW,
+        h: this.renderH,
+      };
+    }
+
     hitTest(mx, my) {
-      return mx > this.posX - this.renderW/2 && mx < this.posX + this.renderW/2 &&
-             my > this.posY - this.renderH/2 && my < this.posY + this.renderH/2;
+      const b = this.bounds;
+      return mx > b.x && mx < b.x + b.w && my > b.y && my < b.y + b.h;
     }
 
     setHover(isHover) {
@@ -112,7 +128,7 @@
       this.state = "dragging";
       this.dragOffsetX = this.posX - mx;
       this.dragOffsetY = this.posY - my;
-      this.hoverProgress = 1; // keep peel visible during drag
+      this.hoverProgress = 1;
     }
 
     moveDrag(mx, my) {
@@ -121,52 +137,30 @@
       this.posY = my + this.dragOffsetY;
     }
 
-    drop() {
-      this.state = "idle";
-      // hoverProgress will naturally animate back to 0
-    }
+    drop() { this.state = "idle"; }
 
     update(dt) {
-      // Animate hover progress
       const targetHover = (this.state === "hover" || this.state === "dragging") ? 1 : 0;
       this.hoverProgress += (targetHover - this.hoverProgress) * 0.1;
 
       for (let i = 0; i < this.particles.length; i++) {
         const p = this.particles[i];
-
-        // Target position = sticker center + local offset
         let tx = this.posX + p.lx;
         let ty = this.posY + p.ly;
 
-        // Corner peel effect: simulate folding the bottom-right corner
+        // Corner peel
         if (this.hoverProgress > 0.01) {
-          // Fold line: diagonal from bottom-right corner
-          // Particles past the fold line get "flipped" and turn white (backside)
-          const cornerX = p.nx; // 0=left, 1=right
-          const cornerY = p.ny; // 0=top, 1=bottom
-
-          // Distance from bottom-right corner (0 at corner, ~1.4 at top-left)
-          const distFromCorner = Math.sqrt(Math.pow(1 - cornerX, 2) + Math.pow(1 - cornerY, 2));
-
-          // Fold threshold moves based on hover progress
-          const foldRadius = this.hoverProgress * 0.8; // larger fold area
-
+          const distFromCorner = Math.sqrt(Math.pow(1 - p.nx, 2) + Math.pow(1 - p.ny, 2));
+          const foldRadius = this.hoverProgress * 0.8;
           if (distFromCorner < foldRadius) {
-            // This particle is in the folded region
-            // Mirror it across the fold line (diagonal)
             const foldAmount = (foldRadius - distFromCorner) / foldRadius;
-
-            // Fold direction: up and to the left (diagonal mirror)
             const foldDist = foldAmount * foldRadius * this.renderW * 0.5;
             tx += -foldDist * 0.7;
             ty += -foldDist * 0.7;
-
-            // Change color to white (backside of sticker)
             p.sprite.tint = 0xf0f0f0;
             p.sprite.alpha = 0.95;
             p.isFlipped = true;
           } else if (p.isFlipped) {
-            // Restore original color when unfolded
             p.sprite.tint = (p.origR << 16) | (p.origG << 8) | p.origB;
             p.sprite.alpha = p.origA / 255;
             p.isFlipped = false;
@@ -177,35 +171,114 @@
           p.isFlipped = false;
         }
 
-        // Dragging: add subtle jitter/lag for organic feel
+        // Physics
         if (this.state === "dragging") {
-          // Particles slightly lag behind (creates fluid motion)
-          const lag = 0.06 + Math.random() * 0.01;
-          p.vx += (tx - p.x) * lag;
-          p.vy += (ty - p.y) * lag;
+          p.vx += (tx - p.x) * 0.06;
+          p.vy += (ty - p.y) * 0.06;
         } else {
-          // Normal spring
           p.vx += (tx - p.x) * 0.12;
           p.vy += (ty - p.y) * 0.12;
         }
 
-        // Subtle breathing when idle
+        // Breathing
         if (this.state === "idle" && this.hoverProgress < 0.05) {
           const time = performance.now() * 0.001;
-          const breathX = Math.sin(time * 0.5 + p.lx * 0.01) * 0.3;
-          const breathY = Math.cos(time * 0.4 + p.ly * 0.01) * 0.2;
-          p.vx += breathX * 0.01;
-          p.vy += breathY * 0.01;
+          p.vx += Math.sin(time * 0.5 + p.lx * 0.01) * 0.003;
+          p.vy += Math.cos(time * 0.4 + p.ly * 0.01) * 0.002;
         }
 
-        p.vx *= 0.82;
-        p.vy *= 0.82;
-        p.x += p.vx;
-        p.y += p.vy;
-
-        p.sprite.x = p.x;
-        p.sprite.y = p.y;
+        p.vx *= 0.82; p.vy *= 0.82;
+        p.x += p.vx; p.y += p.vy;
+        p.sprite.x = p.x; p.sprite.y = p.y;
       }
+    }
+  }
+
+  // ─── TEXT LAYOUT WITH PRETEXT ───
+  const textContainer = new PIXI.Container();
+  app.stage.addChild(textContainer);
+
+  // We'll use a PIXI.Text for simplicity first, then re-layout with pretext
+  let textGraphics = null;
+
+  function layoutText(stickers) {
+    // Remove old text
+    textContainer.removeChildren();
+
+    // Prepare text with pretext
+    const prepared = prepareWithSegments(textContent, FONT);
+
+    // Get sticker bounds for exclusion
+    const exclusions = stickers.map(s => s.bounds);
+
+    // Layout text line by line, adjusting width around stickers
+    const fullWidth = W - MARGIN * 2;
+    let cursor = { segmentIndex: 0, graphemeIndex: 0 };
+    let y = MARGIN;
+
+    const textStyle = new PIXI.TextStyle({
+      fontFamily: '"Playfair Display", serif',
+      fontSize: 72,
+      fontWeight: '400',
+      fill: TEXT_COLOR,
+      wordWrap: false,
+    });
+
+    while (y < H - MARGIN) {
+      // Check which stickers overlap this line
+      let lineX = MARGIN;
+      let lineWidth = fullWidth;
+
+      for (const exc of exclusions) {
+        const lineTop = y;
+        const lineBottom = y + LINE_HEIGHT;
+
+        // Does this sticker overlap this line vertically?
+        if (exc.y < lineBottom && exc.y + exc.h > lineTop) {
+          // Sticker overlaps — shrink available width
+          const stickerLeft = exc.x;
+          const stickerRight = exc.x + exc.w;
+
+          // Determine if sticker is on left or right side
+          const stickerCenter = stickerLeft + exc.w / 2;
+          if (stickerCenter < W / 2) {
+            // Sticker on left — text starts after sticker
+            const newLeft = stickerRight + 20;
+            if (newLeft > lineX) {
+              lineWidth -= (newLeft - lineX);
+              lineX = newLeft;
+            }
+          } else {
+            // Sticker on right — text ends before sticker
+            const newRight = stickerLeft - 20;
+            const maxRight = lineX + lineWidth;
+            if (newRight < maxRight) {
+              lineWidth = newRight - lineX;
+            }
+          }
+        }
+      }
+
+      if (lineWidth < 100) {
+        // Too narrow, skip this line
+        y += LINE_HEIGHT;
+        continue;
+      }
+
+      // Use pretext to get next line
+      const range = layoutNextLineRange(prepared, cursor, lineWidth);
+      if (range === null) break;
+
+      const line = materializeLineRange(prepared, range);
+      if (line.text.trim()) {
+        const text = new PIXI.Text({ text: line.text.trim(), style: textStyle });
+        text.x = lineX;
+        text.y = y;
+        textContainer.addChild(text);
+      }
+
+      cursor = range.end;
+      y += LINE_HEIGHT;
     }
   }
 
@@ -213,23 +286,24 @@
   const img1 = await loadImagePixels("sticker.png");
   const img2 = await loadImagePixels("sticker2.png");
 
-  // Layout: place stickers on screen
-  const maxH = H * 0.6;
-  const s1Scale = Math.min((W * 0.35) / img1.w, maxH / img1.h);
-  const s2Scale = Math.min((W * 0.35) / img2.w, maxH / img2.h);
+  const maxH = H * 0.35;
+  const s1Scale = Math.min((W * 0.25) / img1.w, maxH / img1.h);
+  const s2Scale = Math.min((W * 0.25) / img2.w, maxH / img2.h);
 
-  const sticker1 = new Sticker(img1, W * 0.35, H * 0.5, s1Scale);
-  const sticker2 = new Sticker(img2, W * 0.65, H * 0.5, s2Scale);
+  const sticker1 = new Sticker(img1, W * 0.75, H * 0.3, s1Scale);
+  const sticker2 = new Sticker(img2, W * 0.7, H * 0.7, s2Scale);
   const stickers = [sticker1, sticker2];
 
-  console.log(`Sticker1: ${sticker1.particles.length}, Sticker2: ${sticker2.particles.length}`);
+  // Initial text layout
+  await document.fonts.load(FONT);
+  layoutText(stickers);
 
   // ─── INTERACTION ───
   const mouse = { x: -9999, y: -9999 };
   let draggedSticker = null;
+  let needsTextRelayout = false;
 
   function getHoveredSticker() {
-    // Check in reverse (top sticker first)
     for (let i = stickers.length - 1; i >= 0; i--) {
       if (stickers[i].hitTest(mouse.x, mouse.y)) return stickers[i];
     }
@@ -238,80 +312,77 @@
 
   function handleClick() {
     if (draggedSticker) {
-      // Drop
       draggedSticker.drop();
       draggedSticker = null;
+      needsTextRelayout = true;
       return;
     }
-
     const hovered = getHoveredSticker();
     if (hovered) {
       hovered.startDrag(mouse.x, mouse.y);
       draggedSticker = hovered;
-      // Bring to front
       app.stage.removeChild(hovered.container);
       app.stage.addChild(hovered.container);
     }
   }
 
-  // Mouse events
+  // Mouse
   window.addEventListener("mousemove", e => {
     mouse.x = e.clientX; mouse.y = e.clientY;
-    if (draggedSticker) draggedSticker.moveDrag(mouse.x, mouse.y);
+    if (draggedSticker) {
+      draggedSticker.moveDrag(mouse.x, mouse.y);
+      needsTextRelayout = true;
+    }
   });
   window.addEventListener("mouseleave", () => { mouse.x = -9999; });
   window.addEventListener("click", handleClick);
 
-  // Touch events — tap or long press to pick up
-  let longPressTimer = null;
-  let touchMoved = false;
-
+  // Touch
+  let longPressTimer = null, touchMoved = false;
   window.addEventListener("touchstart", e => {
     const t = e.touches[0];
     mouse.x = t.clientX; mouse.y = t.clientY;
     touchMoved = false;
-
-    // Long press: start drag after 400ms
-    longPressTimer = setTimeout(() => {
-      if (!touchMoved) handleClick();
-    }, 400);
+    longPressTimer = setTimeout(() => { if (!touchMoved) handleClick(); }, 400);
   });
-
   window.addEventListener("touchmove", e => {
     e.preventDefault();
     const t = e.touches[0];
     mouse.x = t.clientX; mouse.y = t.clientY;
     touchMoved = true;
     if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
-    if (draggedSticker) draggedSticker.moveDrag(mouse.x, mouse.y);
+    if (draggedSticker) { draggedSticker.moveDrag(mouse.x, mouse.y); needsTextRelayout = true; }
   }, { passive: false });
-
-  window.addEventListener("touchend", e => {
+  window.addEventListener("touchend", () => {
     if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
-    // Tap (no move): also triggers click
     if (!touchMoved) handleClick();
-    // If dragging and lifted finger, drop
-    else if (draggedSticker) { draggedSticker.drop(); draggedSticker = null; }
+    else if (draggedSticker) { draggedSticker.drop(); draggedSticker = null; needsTextRelayout = true; }
   });
 
   // ─── ANIMATION LOOP ───
+  let relayoutCooldown = 0;
   app.ticker.add((ticker) => {
     const dt = Math.min(ticker.deltaMS / 1000, 0.05);
 
-    // Update hover state
     const hovered = draggedSticker ? null : getHoveredSticker();
     for (const s of stickers) {
       s.setHover(s === hovered);
       s.update(dt);
     }
 
-    // Cursor style
-    if (draggedSticker) {
-      app.canvas.style.cursor = "grabbing";
-    } else if (hovered) {
-      app.canvas.style.cursor = "pointer";
-    } else {
-      app.canvas.style.cursor = "default";
+    // Cursor
+    if (draggedSticker) app.canvas.style.cursor = "grabbing";
+    else if (hovered) app.canvas.style.cursor = "pointer";
+    else app.canvas.style.cursor = "default";
+
+    // Re-layout text when stickers move (throttled)
+    if (needsTextRelayout) {
+      relayoutCooldown += dt;
+      if (relayoutCooldown > 0.05) { // max 20 relayouts/sec
+        layoutText(stickers);
+        relayoutCooldown = 0;
+        needsTextRelayout = false;
+      }
     }
   });
 
