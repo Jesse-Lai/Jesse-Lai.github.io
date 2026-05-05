@@ -2,6 +2,7 @@
   const W = window.innerWidth;
   const H = window.innerHeight;
   const dpr = window.devicePixelRatio || 1;
+  const isMobile = "ontouchstart" in window;
 
   const app = new PIXI.Application();
   await app.init({
@@ -25,7 +26,6 @@
     return { data: ctx.getImageData(0, 0, c.width, c.height), w: c.width, h: c.height };
   }
 
-  // Sample pixels → array of {nx, ny, r, g, b, a} in normalized coords (0-1)
   function sampleImage(imageData, w, h, gap) {
     const pixels = imageData.data;
     const points = [];
@@ -40,170 +40,220 @@
     return points;
   }
 
-  // ─── LOAD BOTH STICKERS ───
+  // ─── STICKER CLASS ───
+  class Sticker {
+    constructor(imgData, x, y, displayScale) {
+      this.imgW = imgData.w;
+      this.imgH = imgData.h;
+      this.posX = x; // center position
+      this.posY = y;
+      this.scale = displayScale;
+      this.renderW = imgData.w * displayScale;
+      this.renderH = imgData.h * displayScale;
+
+      const gap = 3;
+      const points = sampleImage(imgData.data, imgData.w, imgData.h, gap);
+
+      this.container = new PIXI.Container();
+      app.stage.addChild(this.container);
+
+      this.particles = [];
+      const particleScale = displayScale * gap / 2;
+
+      const dotCanvas = document.createElement("canvas");
+      dotCanvas.width = 2; dotCanvas.height = 2;
+      const dctx = dotCanvas.getContext("2d");
+      dctx.fillStyle = "white";
+      dctx.fillRect(0, 0, 2, 2);
+      const dotTexture = PIXI.Texture.from(dotCanvas);
+
+      for (const p of points) {
+        const lx = (p.nx - 0.5) * this.renderW; // local coords from center
+        const ly = (p.ny - 0.5) * this.renderH;
+
+        const sprite = new PIXI.Sprite(dotTexture);
+        sprite.anchor.set(0.5);
+        sprite.scale.set(particleScale);
+        sprite.tint = (p.r << 16) | (p.g << 8) | p.b;
+        sprite.alpha = p.a / 255;
+        this.container.addChild(sprite);
+
+        this.particles.push({
+          sprite,
+          lx, ly, // local position (relative to sticker center)
+          x: this.posX + lx,
+          y: this.posY + ly,
+          vx: 0, vy: 0,
+          nx: p.nx, ny: p.ny, // normalized 0-1
+        });
+      }
+
+      // State
+      this.state = "idle"; // idle | hover | dragging
+      this.hoverProgress = 0; // 0-1 for corner peel
+      this.dragOffsetX = 0;
+      this.dragOffsetY = 0;
+    }
+
+    // Check if point is within sticker bounds
+    hitTest(mx, my) {
+      return mx > this.posX - this.renderW/2 && mx < this.posX + this.renderW/2 &&
+             my > this.posY - this.renderH/2 && my < this.posY + this.renderH/2;
+    }
+
+    setHover(isHover) {
+      if (this.state === "dragging") return;
+      this.state = isHover ? "hover" : "idle";
+    }
+
+    startDrag(mx, my) {
+      this.state = "dragging";
+      this.dragOffsetX = this.posX - mx;
+      this.dragOffsetY = this.posY - my;
+    }
+
+    moveDrag(mx, my) {
+      if (this.state !== "dragging") return;
+      this.posX = mx + this.dragOffsetX;
+      this.posY = my + this.dragOffsetY;
+    }
+
+    drop() {
+      this.state = "idle";
+    }
+
+    update(dt) {
+      // Animate hover progress
+      const targetHover = this.state === "hover" ? 1 : 0;
+      this.hoverProgress += (targetHover - this.hoverProgress) * 0.1;
+
+      for (let i = 0; i < this.particles.length; i++) {
+        const p = this.particles[i];
+
+        // Target position = sticker center + local offset
+        let tx = this.posX + p.lx;
+        let ty = this.posY + p.ly;
+
+        // Corner peel effect: bottom-right particles lift up when hovered
+        if (this.hoverProgress > 0.01) {
+          // How much this particle is in the bottom-right corner (0-1)
+          const cornerX = p.nx; // 0=left, 1=right
+          const cornerY = p.ny; // 0=top, 1=bottom
+          const cornerInfluence = Math.max(0, (cornerX - 0.6) * 2.5) * Math.max(0, (cornerY - 0.6) * 2.5);
+          const peelAmount = cornerInfluence * this.hoverProgress;
+
+          // Peel: move up and slightly rotate
+          tx += peelAmount * 15;
+          ty -= peelAmount * 25;
+        }
+
+        // Dragging: add subtle jitter/lag for organic feel
+        if (this.state === "dragging") {
+          // Particles slightly lag behind (creates fluid motion)
+          const lag = 0.06 + Math.random() * 0.01;
+          p.vx += (tx - p.x) * lag;
+          p.vy += (ty - p.y) * lag;
+        } else {
+          // Normal spring
+          p.vx += (tx - p.x) * 0.12;
+          p.vy += (ty - p.y) * 0.12;
+        }
+
+        // Subtle breathing when idle
+        if (this.state === "idle" && this.hoverProgress < 0.05) {
+          const time = performance.now() * 0.001;
+          const breathX = Math.sin(time * 0.5 + p.lx * 0.01) * 0.3;
+          const breathY = Math.cos(time * 0.4 + p.ly * 0.01) * 0.2;
+          p.vx += breathX * 0.01;
+          p.vy += breathY * 0.01;
+        }
+
+        p.vx *= 0.82;
+        p.vy *= 0.82;
+        p.x += p.vx;
+        p.y += p.vy;
+
+        p.sprite.x = p.x;
+        p.sprite.y = p.y;
+      }
+    }
+  }
+
+  // ─── LOAD STICKERS ───
   const img1 = await loadImagePixels("sticker.png");
   const img2 = await loadImagePixels("sticker2.png");
 
-  const gap = 2;
-  const points1 = sampleImage(img1.data, img1.w, img1.h, gap);
-  const points2 = sampleImage(img2.data, img2.w, img2.h, gap);
+  // Layout: place stickers on screen
+  const maxH = H * 0.6;
+  const s1Scale = Math.min((W * 0.35) / img1.w, maxH / img1.h);
+  const s2Scale = Math.min((W * 0.35) / img2.w, maxH / img2.h);
 
-  console.log(`Sticker1: ${points1.length}, Sticker2: ${points2.length}`);
+  const sticker1 = new Sticker(img1, W * 0.35, H * 0.5, s1Scale);
+  const sticker2 = new Sticker(img2, W * 0.65, H * 0.5, s2Scale);
+  const stickers = [sticker1, sticker2];
 
-  // Use the larger set as particle count
-  const maxCount = Math.max(points1.length, points2.length);
+  console.log(`Sticker1: ${sticker1.particles.length}, Sticker2: ${sticker2.particles.length}`);
 
-  // Pad smaller array by recycling points
-  while (points1.length < maxCount) points1.push(points1[Math.floor(Math.random() * points1.length)]);
-  while (points2.length < maxCount) points2.push(points2[Math.floor(Math.random() * points2.length)]);
-
-  // Shuffle points2 for interesting transitions
-  for (let i = points2.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [points2[i], points2[j]] = [points2[j], points2[i]];
-  }
-
-  // ─── LAYOUT: both stickers centered in same position ───
-  const margin = 40;
-  const availW = W - margin * 2;
-  const availH = H - margin * 2;
-
-  const scale1 = Math.min(availW / img1.w, availH / img1.h) * 0.7;
-  const offset1X = (W - img1.w * scale1) / 2;
-  const offset1Y = (H - img1.h * scale1) / 2;
-
-  const scale2 = Math.min(availW / img2.w, availH / img2.h) * 0.7;
-  const offset2X = (W - img2.w * scale2) / 2;
-  const offset2Y = (H - img2.h * scale2) / 2;
-
-  // Convert normalized coords to screen coords
-  function toScreen1(p) { return { x: offset1X + p.nx * img1.w * scale1, y: offset1Y + p.ny * img1.h * scale1 }; }
-  function toScreen2(p) { return { x: offset2X + p.nx * img2.w * scale2, y: offset2Y + p.ny * img2.h * scale2 }; }
-
-  // ─── DOT TEXTURE ───
-  const dotCanvas = document.createElement("canvas");
-  dotCanvas.width = 2; dotCanvas.height = 2;
-  const dctx = dotCanvas.getContext("2d");
-  dctx.fillStyle = "white";
-  dctx.fillRect(0, 0, 2, 2);
-  const dotTexture = PIXI.Texture.from(dotCanvas);
-
-  // ─── CREATE PARTICLES ───
-  const container = new PIXI.Container();
-  app.stage.addChild(container);
-
-  const particles = [];
-  const particleScale = scale1 * gap / 2;
-
-  for (let i = 0; i < maxCount; i++) {
-    const p1 = points1[i];
-    const pos = toScreen1(p1);
-
-    const sprite = new PIXI.Sprite(dotTexture);
-    sprite.anchor.set(0.5);
-    sprite.x = pos.x;
-    sprite.y = pos.y;
-    sprite.scale.set(particleScale);
-    sprite.tint = (p1.r << 16) | (p1.g << 8) | p1.b;
-    sprite.alpha = p1.a / 255;
-    container.addChild(sprite);
-
-    particles.push({
-      sprite,
-      x: pos.x, y: pos.y,
-      vx: 0, vy: 0,
-      ax: pos.x, ay: pos.y,
-      ar: p1.r, ag: p1.g, ab: p1.b, aa: p1.a,
-      bx: toScreen2(points2[i]).x, by: toScreen2(points2[i]).y,
-      br: points2[i].r, bg: points2[i].g, bb: points2[i].b, ba: points2[i].a,
-    });
-  }
-
-  console.log(`Total particles: ${maxCount}`);
-
-  // ─── STATE: morph timing ───
-  let targetB = false;
-  let morphProgress = 0;
-  let morphStart = null;
-  let morphFrom = 0;
-  let morphTo = 0;
-  const morphDuration = 1000;
-
-  function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
-
-  function startMorph(toB) {
-    if (targetB === toB) return;
-    targetB = toB;
-    morphFrom = morphProgress;
-    morphTo = toB ? 1 : 0;
-    morphStart = performance.now();
-  }
-
-  // ─── MOUSE ───
+  // ─── INTERACTION ───
   const mouse = { x: -9999, y: -9999 };
-  const isMobile = "ontouchstart" in window;
+  let draggedSticker = null;
 
-  window.addEventListener("mousemove", e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+  function getHoveredSticker() {
+    // Check in reverse (top sticker first)
+    for (let i = stickers.length - 1; i >= 0; i--) {
+      if (stickers[i].hitTest(mouse.x, mouse.y)) return stickers[i];
+    }
+    return null;
+  }
+
+  function handleClick() {
+    if (draggedSticker) {
+      // Drop
+      draggedSticker.drop();
+      draggedSticker = null;
+      return;
+    }
+
+    const hovered = getHoveredSticker();
+    if (hovered) {
+      hovered.startDrag(mouse.x, mouse.y);
+      draggedSticker = hovered;
+      // Bring to front
+      app.stage.removeChild(hovered.container);
+      app.stage.addChild(hovered.container);
+    }
+  }
+
+  // Mouse events
+  window.addEventListener("mousemove", e => {
+    mouse.x = e.clientX; mouse.y = e.clientY;
+    if (draggedSticker) draggedSticker.moveDrag(mouse.x, mouse.y);
+  });
   window.addEventListener("mouseleave", () => { mouse.x = -9999; });
+  window.addEventListener("click", handleClick);
 
-  // Mobile: tap to toggle
-  if (isMobile) {
-    let tapped = false;
-    window.addEventListener("touchstart", e => {
-      tapped = !tapped;
-      startMorph(tapped);
-    });
-  }
+  // Touch events
+  window.addEventListener("touchstart", e => {
+    const t = e.touches[0];
+    mouse.x = t.clientX; mouse.y = t.clientY;
+    handleClick();
+  });
+  window.addEventListener("touchmove", e => {
+    e.preventDefault();
+    const t = e.touches[0];
+    mouse.x = t.clientX; mouse.y = t.clientY;
+    if (draggedSticker) draggedSticker.moveDrag(mouse.x, mouse.y);
+  }, { passive: false });
 
-  // Detect hover on sticker area (centered)
-  function isOverSticker() {
-    const sw = Math.max(img1.w * scale1, img2.w * scale2);
-    const sh = Math.max(img1.h * scale1, img2.h * scale2);
-    const cx = W / 2, cy = H / 2;
-    return mouse.x > cx - sw/2 && mouse.x < cx + sw/2 &&
-           mouse.y > cy - sh/2 && mouse.y < cy + sh/2;
-  }
-
-  // ─── ANIMATION ───
+  // ─── ANIMATION LOOP ───
   app.ticker.add((ticker) => {
-    // Determine target (PC: hover, mobile: handled by tap)
-    if (!isMobile) {
-      const shouldBeB = isOverSticker();
-      startMorph(shouldBeB);
-    }
+    const dt = Math.min(ticker.deltaMS / 1000, 0.05);
 
-    // Update morph progress with timer
-    if (morphStart !== null) {
-      const elapsed = performance.now() - morphStart;
-      const t = Math.min(elapsed / morphDuration, 1);
-      morphProgress = morphFrom + (morphTo - morphFrom) * easeOutCubic(t);
-      if (t >= 1) morphStart = null;
-    }
-
-    // Update particles
-    for (let i = 0; i < particles.length; i++) {
-      const p = particles[i];
-
-      const tx = p.ax + (p.bx - p.ax) * morphProgress;
-      const ty = p.ay + (p.by - p.ay) * morphProgress;
-
-      p.vx += (tx - p.x) * 0.08;
-      p.vy += (ty - p.y) * 0.08;
-      p.vx *= 0.82;
-      p.vy *= 0.82;
-      p.x += p.vx;
-      p.y += p.vy;
-
-      p.sprite.x = p.x;
-      p.sprite.y = p.y;
-
-      const r = Math.round(p.ar + (p.br - p.ar) * morphProgress);
-      const g = Math.round(p.ag + (p.bg - p.ag) * morphProgress);
-      const b = Math.round(p.ab + (p.bb - p.ab) * morphProgress);
-      p.sprite.tint = (r << 16) | (g << 8) | b;
-
-      const a = p.aa + (p.ba - p.aa) * morphProgress;
-      p.sprite.alpha = a / 255;
+    // Update hover state
+    const hovered = draggedSticker ? null : getHoveredSticker();
+    for (const s of stickers) {
+      s.setHover(s === hovered);
+      s.update(dt);
     }
   });
 
@@ -212,9 +262,8 @@
   window.addEventListener("resize", () => {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => {
-      const nW = window.innerWidth;
-      if (Math.abs(nW - lastW) > 50) location.reload();
-      lastW = nW;
+      if (Math.abs(window.innerWidth - lastW) > 50) location.reload();
+      lastW = window.innerWidth;
     }, 500);
   });
 })();
