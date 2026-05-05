@@ -14,10 +14,13 @@
 
   // ─── PROGRAMMATIC STICKER GENERATION ───
   function generateSticker1(text) {
-    const w = 556, h = 616;
+    const baseW = 556, baseH = 616;
+    const scale = 2; // 2x resolution for smooth edges
+    const w = baseW * scale, h = baseH * scale;
     const c = document.createElement("canvas");
     c.width = w; c.height = h;
     const ctx = c.getContext("2d");
+    ctx.scale(scale, scale);
 
     // Background: transparent
     ctx.clearRect(0, 0, w, h);
@@ -125,7 +128,7 @@
   const img1 = generateSticker1("");
   const img2 = await loadImagePixels("sticker2.png");
 
-  const gap = 3; // 3x3 sampling for smooth performance
+  const gap = 2; // with 2x canvas, this gives smooth edges while staying performant
   const points1 = sampleImage(img1.data, img1.w, img1.h, gap);
   const points2 = sampleImage(img2.data, img2.w, img2.h, gap);
 
