@@ -281,7 +281,6 @@ console.log("wall.js loaded");
       y += LINE_HEIGHT;
     }
   }
-  }
 
   // ─── LOAD STICKERS ───
   const img1 = await loadImagePixels("sticker.png");
