@@ -457,7 +457,7 @@ console.log("wall.js loaded");
     }
   });
   window.addEventListener("mouseleave", () => { mouse.x = -9999; });
-  window.addEventListener("click", handleClick);
+  // window.addEventListener("click", handleClick); // disabled - using mousedown/up instead
 
   // Mousedown + drag + mouseup support
   window.addEventListener("mousedown", e => {
