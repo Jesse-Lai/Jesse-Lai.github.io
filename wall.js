@@ -5,7 +5,7 @@ console.log("wall.js loaded");
 (async () => {
   try {
   const W = window.innerWidth;
-  const H = window.innerHeight;
+  let H = Math.max(window.innerHeight, 1200); // min height, will expand for content
   const dpr = window.devicePixelRatio || 1;
   const isMobile = "ontouchstart" in window;
 
@@ -343,7 +343,7 @@ console.log("wall.js loaded");
     let done = false;
     const newTextLines = [];
 
-    while (y < H - MARGIN && !done) {
+    while (!done) {
       const lineTop = y;
       const lineBottom = y + LINE_HEIGHT;
       let spans = [{ left: fullLeft, right: fullRight }];
@@ -402,6 +402,14 @@ console.log("wall.js loaded");
       }
     }
     prevTextLines = newTextLines;
+
+    // Resize canvas if content overflows
+    const contentH = y + MARGIN;
+    if (contentH > H) {
+      H = contentH;
+      app.renderer.resize(W, H);
+      app.canvas.style.height = H + "px";
+    }
   }
 
   // ─── LOAD STICKERS ───
