@@ -432,6 +432,7 @@ console.log("wall.js loaded");
   }
 
   function handleClick() {
+    console.log("handleClick", mouse.x, mouse.y, "hovered:", getHoveredSticker() ? "yes" : "no");
     if (draggedSticker) {
       draggedSticker.drop();
       draggedSticker = null;
