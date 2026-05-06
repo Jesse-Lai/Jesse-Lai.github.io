@@ -194,21 +194,10 @@ console.log("wall.js loaded");
 
         // Physics
         if (this.state === "dragging") {
-          p.vx += (tx - p.x) * 0.06;
-          p.vy += (ty - p.y) * 0.06;
-
-          // Edge particles fly outward when dragging
-          const edgeness = Math.max(
-            Math.abs(p.nx - 0.5) * 2,  // horizontal edge
-            Math.abs(p.ny - 0.5) * 2   // vertical edge
-          );
-          if (edgeness > 0.85 && Math.random() < 0.03) {
-            // Random burst: some edge particles fly off
-            const burstX = (p.nx - 0.5) * 25;
-            const burstY = (p.ny - 0.5) * 25;
-            p.vx += burstX * (Math.random() * 0.5 + 0.5);
-            p.vy += burstY * (Math.random() * 0.5 + 0.5);
-          }
+          // Fluid lag: particles follow with varying delay based on position
+          const lag = 0.03 + (p.nx + p.ny) * 0.02; // top-left follows fast, bottom-right lags
+          p.vx += (tx - p.x) * lag;
+          p.vy += (ty - p.y) * lag;
         } else {
           p.vx += (tx - p.x) * 0.12;
           p.vy += (ty - p.y) * 0.12;
