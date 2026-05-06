@@ -417,8 +417,8 @@ console.log("wall.js loaded");
   const img2 = await loadImagePixels("sticker2.png");
 
   const maxH = H * 0.35;
-  const s1Scale = Math.min((W * 0.25) / img1.w, maxH / img1.h);
-  const s2Scale = Math.min((W * 0.25) / img2.w, maxH / img2.h);
+  const s1Scale = Math.min((W * 0.375) / img1.w, maxH / img1.h);
+  const s2Scale = Math.min((W * 0.375) / img2.w, maxH / img2.h);
 
   const sticker1 = new Sticker(img1, img2, W * 0.5, H * 0.5, s1Scale);
   const stickers = [sticker1];
