@@ -250,8 +250,8 @@ console.log("wall.js loaded");
           p.vx += (tx - p.x) * lag;
           p.vy += (ty - p.y) * lag;
         } else {
-          p.vx += (tx - p.x) * 0.12;
-          p.vy += (ty - p.y) * 0.12;
+          p.vx += (tx - p.x) * 0.15;
+          p.vy += (ty - p.y) * 0.15;
 
           // Hover: edge particles occasionally detach
           if (this.hoverProgress > 0.5) {
@@ -261,7 +261,7 @@ console.log("wall.js loaded");
               p.vy += (p.ny - 0.5) * 15;
             }
           }
-          p.vy += (ty - p.y) * 0.12;
+          p.vy += (ty - p.y) * 0.15;
         }
 
         // Breathing
@@ -271,7 +271,7 @@ console.log("wall.js loaded");
           p.vy += Math.cos(time * 0.4 + p.ly * 0.01) * 0.002;
         }
 
-        p.vx *= 0.82; p.vy *= 0.82;
+        p.vx *= 0.7; p.vy *= 0.7;
         p.x += p.vx; p.y += p.vy;
         p.sprite.x = p.x; p.sprite.y = p.y;
       }
