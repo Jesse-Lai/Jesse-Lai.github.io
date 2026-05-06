@@ -61,17 +61,26 @@ console.log("wall.js loaded");
 
   // ─── STICKER CLASS ───
   class Sticker {
-    constructor(imgData, x, y, displayScale) {
-      this.imgW = imgData.w;
-      this.imgH = imgData.h;
+    constructor(imgDataA, imgDataB, x, y, displayScale) {
       this.posX = x;
       this.posY = y;
       this.scale = displayScale;
-      this.renderW = imgData.w * displayScale;
-      this.renderH = imgData.h * displayScale;
+      this.renderW = imgDataA.w * displayScale;
+      this.renderH = imgDataA.h * displayScale;
 
       const gap = 3;
-      const points = sampleImage(imgData.data, imgData.w, imgData.h, gap);
+      const pointsA = sampleImage(imgDataA.data, imgDataA.w, imgDataA.h, gap);
+      const pointsB = sampleImage(imgDataB.data, imgDataB.w, imgDataB.h, gap);
+
+      // Pad to same length
+      const maxCount = Math.max(pointsA.length, pointsB.length);
+      while (pointsA.length < maxCount) pointsA.push(pointsA[Math.floor(Math.random() * pointsA.length)]);
+      while (pointsB.length < maxCount) pointsB.push(pointsB[Math.floor(Math.random() * pointsB.length)]);
+      // Shuffle B for interesting transitions
+      for (let i = pointsB.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [pointsB[i], pointsB[j]] = [pointsB[j], pointsB[i]];
+      }
 
       this.container = new PIXI.Container();
       app.stage.addChild(this.container);
@@ -82,27 +91,39 @@ console.log("wall.js loaded");
       const dotCanvas = document.createElement("canvas");
       dotCanvas.width = 2; dotCanvas.height = 2;
       const dctx = dotCanvas.getContext("2d");
-      dctx.fillStyle = "white";
-      dctx.fillRect(0, 0, 2, 2);
+      dctx.fillStyle = "white"; dctx.fillRect(0, 0, 2, 2);
       const dotTexture = PIXI.Texture.from(dotCanvas);
 
-      for (const p of points) {
-        const lx = (p.nx - 0.5) * this.renderW;
-        const ly = (p.ny - 0.5) * this.renderH;
+      const renderWB = imgDataB.w * displayScale;
+      const renderHB = imgDataB.h * displayScale;
+
+      for (let i = 0; i < maxCount; i++) {
+        const pA = pointsA[i];
+        const pB = pointsB[i];
+        const lxA = (pA.nx - 0.5) * this.renderW;
+        const lyA = (pA.ny - 0.5) * this.renderH;
+        const lxB = (pB.nx - 0.5) * renderWB;
+        const lyB = (pB.ny - 0.5) * renderHB;
 
         const sprite = new PIXI.Sprite(dotTexture);
         sprite.anchor.set(0.5);
         sprite.scale.set(particleScale);
-        sprite.tint = (p.r << 16) | (p.g << 8) | p.b;
-        sprite.alpha = p.a / 255;
+        sprite.tint = (pA.r << 16) | (pA.g << 8) | pA.b;
+        sprite.alpha = pA.a / 255;
         this.container.addChild(sprite);
 
         this.particles.push({
-          sprite, lx, ly,
-          x: this.posX + lx, y: this.posY + ly,
+          sprite,
+          // State A
+          lxA, lyA, rA: pA.r, gA: pA.g, bA: pA.b, aA: pA.a,
+          // State B
+          lxB, lyB, rB: pB.r, gB: pB.g, bB: pB.b, aB: pB.a,
+          // Current
+          lx: lxA, ly: lyA,
+          x: x + lxA, y: y + lyA,
           vx: 0, vy: 0,
-          nx: p.nx, ny: p.ny,
-          origR: p.r, origG: p.g, origB: p.b, origA: p.a,
+          nx: pA.nx, ny: pA.ny,
+          origR: pA.r, origG: pA.g, origB: pA.b, origA: pA.a,
           isFlipped: false,
         });
       }
@@ -111,6 +132,12 @@ console.log("wall.js loaded");
       this.hoverProgress = 0;
       this.dragOffsetX = 0;
       this.dragOffsetY = 0;
+
+      // Morph state
+      this.morphProgress = 0; // 0 = A, 1 = B
+      this.morphTarget = 0;
+      this.morphTimer = null;
+      this.currentForm = 0; // 0=A, 1=B - which form is shown when dropped
     }
 
     get bounds() {
@@ -137,6 +164,10 @@ console.log("wall.js loaded");
       this.dragOffsetX = this.posX - mx;
       this.dragOffsetY = this.posY - my;
       this.hoverProgress = 1;
+      // Start morph cycling every 2 seconds
+      this.morphTimer = setInterval(() => {
+        this.morphTarget = this.morphTarget === 0 ? 1 : 0;
+      }, 2000);
     }
 
     moveDrag(mx, my) {
@@ -145,15 +176,36 @@ console.log("wall.js loaded");
       this.posY = my + this.dragOffsetY;
     }
 
-    drop() { this.state = "idle"; }
+    drop() {
+      this.state = "idle";
+      if (this.morphTimer) { clearInterval(this.morphTimer); this.morphTimer = null; }
+      // Lock current form
+      this.currentForm = Math.round(this.morphProgress);
+      this.morphTarget = this.currentForm;
+    }
 
     update(dt) {
       const targetHover = (this.state === "hover" || this.state === "dragging") ? 1 : 0;
       this.hoverProgress += (targetHover - this.hoverProgress) * 0.1;
 
+      // Animate morph progress
+      this.morphProgress += (this.morphTarget - this.morphProgress) * 0.05;
+
       for (let i = 0; i < this.particles.length; i++) {
         const p = this.particles[i];
-        let tx = this.posX + p.lx;
+        // Morph between A and B
+        const m = this.morphProgress;
+        const currentLx = p.lxA + (p.lxB - p.lxA) * m;
+        const currentLy = p.lyA + (p.lyB - p.lyA) * m;
+        const cr = Math.round(p.rA + (p.rB - p.rA) * m);
+        const cg = Math.round(p.gA + (p.gB - p.gA) * m);
+        const cb = Math.round(p.bA + (p.bB - p.bA) * m);
+        const ca = p.aA + (p.aB - p.aA) * m;
+        if (!p.isFlipped) { p.sprite.tint = (cr << 16) | (cg << 8) | cb; p.sprite.alpha = ca / 255; }
+        p.origR = cr; p.origG = cg; p.origB = cb; p.origA = ca;
+        p.lx = currentLx; p.ly = currentLy;
+        let tx = this.posX + currentLx;
+        let ty = this.posY + currentLy;
         let ty = this.posY + p.ly;
 
         // Corner peel
@@ -361,9 +413,8 @@ console.log("wall.js loaded");
   const s1Scale = Math.min((W * 0.25) / img1.w, maxH / img1.h);
   const s2Scale = Math.min((W * 0.25) / img2.w, maxH / img2.h);
 
-  const sticker1 = new Sticker(img1, W * 0.75, H * 0.3, s1Scale);
-  const sticker2 = new Sticker(img2, W * 0.7, H * 0.7, s2Scale);
-  const stickers = [sticker1, sticker2];
+  const sticker1 = new Sticker(img1, img2, W * 0.5, H * 0.5, s1Scale);
+  const stickers = [sticker1];
 
   // Initial text layout
   await document.fonts.ready;
