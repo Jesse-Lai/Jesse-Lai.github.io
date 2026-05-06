@@ -52,6 +52,11 @@ console.log("wall.js loaded");
   const FONT_ITALIC = 'italic 72px "Playfair Display", serif';
   const LINE_HEIGHT = 82;
   const TEXT_COLOR = 0x1a1a1a;
+  const LIGHT_BG = 0xf5f2ed;
+  const DARK_BG = 0x1a1a1a;
+  const LIGHT_TEXT = 0x1a1a1a;
+  const DARK_TEXT = 0xf0f0f0;
+  let isDark = false;
   const MARGIN = 60;
 
   // ─── STICKER CLASS ───
@@ -253,7 +258,7 @@ console.log("wall.js loaded");
       fontFamily: '"Bradford LL", serif',
       fontSize: 72,
       fontWeight: '400',
-      fill: TEXT_COLOR,
+      fill: isDark ? DARK_TEXT : LIGHT_TEXT,
       wordWrap: false,
     });
 
@@ -421,11 +426,6 @@ console.log("wall.js loaded");
   });
 
   // ─── THEME TOGGLE ───
-  const LIGHT_BG = 0xf5f2ed;
-  const DARK_BG = 0x1a1a1a;
-  const LIGHT_TEXT = 0x1a1a1a;
-  const DARK_TEXT = 0xf0f0f0;
-  let isDark = false;
 
   window.addEventListener('themechange', (e) => {
     isDark = e.detail.dark;
