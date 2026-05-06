@@ -420,6 +420,20 @@ console.log("wall.js loaded");
     }
   });
 
+  // ─── THEME TOGGLE ───
+  const LIGHT_BG = 0xf5f2ed;
+  const DARK_BG = 0x1a1a1a;
+  const LIGHT_TEXT = 0x1a1a1a;
+  const DARK_TEXT = 0xf0f0f0;
+  let isDark = false;
+
+  window.addEventListener('themechange', (e) => {
+    isDark = e.detail.dark;
+    app.renderer.background.color = isDark ? DARK_BG : LIGHT_BG;
+    // Update text color
+    textContainer.children.forEach(t => { t.style.fill = isDark ? DARK_TEXT : LIGHT_TEXT; });
+  });
+
   // ─── RESIZE ───
   let resizeTimer, lastW = W;
   window.addEventListener("resize", () => {
