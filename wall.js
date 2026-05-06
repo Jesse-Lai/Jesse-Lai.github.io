@@ -227,52 +227,55 @@ console.log("wall.js loaded");
     }
   }
 
-  // ─── TEXT LAYOUT WITH PRETEXT ───
+  // ─── TEXT AS PARTICLES ───
   const textContainer = new PIXI.Container();
   app.stage.addChild(textContainer);
 
-  // We'll use a PIXI.Text for simplicity first, then re-layout with pretext
-  let textGraphics = null;
+  let textParticles = []; // array of {sprite, originX, originY, x, y, vx, vy}
+  let textSprites = [];
 
   function layoutText(stickers) {
+    // Remove old text sprites
     textContainer.removeChildren();
-    console.log("layoutText called");
+    textParticles = [];
+    textSprites = [];
 
+    // Render text to offscreen canvas
+    const offCanvas = document.createElement('canvas');
+    offCanvas.width = W * 2;
+    offCanvas.height = H * 2;
+    const octx = offCanvas.getContext('2d');
+    octx.scale(2, 2);
+    octx.clearRect(0, 0, W, H);
+
+    // Use pretext to lay out text, draw to canvas
     const prepared = prepareWithSegments(textContent, FONT);
     const exclusions = stickers.map(s => s.bounds);
     const fullLeft = MARGIN;
     const fullRight = W - MARGIN;
 
-    const textStyle = new PIXI.TextStyle({
-      fontFamily: '"Bradford LL", serif',
-      fontSize: 72,
-      fontWeight: '400',
-      fill: isDark ? DARK_TEXT : LIGHT_TEXT,
-      wordWrap: false,
-    });
+    octx.fillStyle = '#000';
+    octx.font = `400 72px "Bradford LL", serif`;
+    octx.textBaseline = 'top';
 
     let cursor = { segmentIndex: 0, graphemeIndex: 0 };
     let y = MARGIN;
+    let done = false;
 
-    while (y < H - MARGIN) {
+    while (y < H - MARGIN && !done) {
       const lineTop = y;
       const lineBottom = y + LINE_HEIGHT;
 
-      // Find available horizontal spans for this line
-      // Start with full width, then subtract sticker overlaps
       let spans = [{ left: fullLeft, right: fullRight }];
-
       for (const exc of exclusions) {
         if (exc.y >= lineBottom || exc.y + exc.h <= lineTop) continue;
-        // This sticker overlaps this line — split spans
         const sLeft = exc.x - 15;
         const sRight = exc.x + exc.w + 15;
         const newSpans = [];
         for (const span of spans) {
           if (sRight <= span.left || sLeft >= span.right) {
-            newSpans.push(span); // no overlap
+            newSpans.push(span);
           } else {
-            // Split: left part and right part
             if (sLeft > span.left + 80) newSpans.push({ left: span.left, right: sLeft });
             if (sRight < span.right - 80) newSpans.push({ left: sRight, right: span.right });
           }
@@ -280,34 +283,64 @@ console.log("wall.js loaded");
         spans = newSpans;
       }
 
-      if (spans.length === 0) {
-        y += LINE_HEIGHT;
-        continue;
-      }
+      if (spans.length === 0) { y += LINE_HEIGHT; continue; }
 
-      // Fill text into each available span on this line
       for (const span of spans) {
         const lineWidth = span.right - span.left;
         if (lineWidth < 80) continue;
-
         const range = layoutNextLineRange(prepared, cursor, lineWidth);
-        if (range === null) break;
-
+        if (range === null) { done = true; break; }
         const line = materializeLineRange(prepared, range);
         if (line.text.trim()) {
-          const text = new PIXI.Text({ text: line.text.trim(), style: textStyle });
-          text.x = span.left;
-          text.y = y;
-          textContainer.addChild(text);
+          octx.fillText(line.text.trim(), span.left, y);
         }
         cursor = range.end;
       }
-
-      // Check if we've exhausted all text
-      // check done via range === null below
-
       y += LINE_HEIGHT;
     }
+
+    // Sample the rendered text canvas into particles
+    const imgData = octx.getImageData(0, 0, W * 2, H * 2);
+    const pixels = imgData.data;
+    const textGap = 4; // sample every 4 device pixels
+    const textColor = isDark ? 0xf0f0f0 : 0x1a1a1a;
+
+    const dotCanvas2 = document.createElement('canvas');
+    dotCanvas2.width = 2; dotCanvas2.height = 2;
+    const dctx2 = dotCanvas2.getContext('2d');
+    dctx2.fillStyle = 'white';
+    dctx2.fillRect(0, 0, 2, 2);
+    const textDotTexture = PIXI.Texture.from(dotCanvas2);
+
+    for (let py = 0; py < H * 2; py += textGap) {
+      for (let px = 0; px < W * 2; px += textGap) {
+        const i = (py * W * 2 + px) * 4;
+        const a = pixels[i + 3];
+        if (a < 100) continue;
+
+        const screenX = px / 2;
+        const screenY = py / 2;
+
+        const sprite = new PIXI.Sprite(textDotTexture);
+        sprite.anchor.set(0.5);
+        sprite.x = screenX;
+        sprite.y = screenY;
+        sprite.scale.set(textGap / 2 * 0.45);
+        sprite.tint = textColor;
+        sprite.alpha = a / 255;
+        textContainer.addChild(sprite);
+
+        textParticles.push({
+          sprite,
+          originX: screenX,
+          originY: screenY,
+          x: screenX,
+          y: screenY,
+          vx: 0, vy: 0,
+        });
+      }
+    }
+    console.log(`Text particles: ${textParticles.length}`);
   }
 
   // ─── LOAD STICKERS ───
@@ -418,13 +451,9 @@ console.log("wall.js loaded");
 
   window.addEventListener('themechange', (e) => {
     isDark = e.detail.dark;
-    // Update PixiJS background
     app.renderer.background.color.setValue(isDark ? DARK_BG : LIGHT_BG);
-    // Update text color
-    textContainer.children.forEach(t => {
-      if (t.style) t.style.fill = isDark ? DARK_TEXT : LIGHT_TEXT;
-    });
-    needsTextRelayout = true;
+    // Re-layout text with new color
+    layoutText(stickers);
   });
 
   // ─── RESIZE ───
