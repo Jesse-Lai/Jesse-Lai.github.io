@@ -170,12 +170,15 @@ console.log("wall.js loaded");
             p.sprite.alpha = p.origA / 255;
             p.isFlipped = false;
           } else {
-            // Front face: subtle scatter near the fold line (blur effect)
-            const proximity = Math.max(0, 1 - (distFromCorner - foldRadius) / 0.3);
+            // Front face: expand outward near fold line (paper loosening)
+            const proximity = Math.max(0, 1 - (distFromCorner - foldRadius) / 0.4);
             if (proximity > 0) {
-              const jitter = proximity * this.hoverProgress * 2.5;
-              tx += (Math.random() - 0.5) * jitter;
-              ty += (Math.random() - 0.5) * jitter;
+              const expand = proximity * this.hoverProgress * 4;
+              // Push away from center
+              const dirX = p.nx - 0.5;
+              const dirY = p.ny - 0.5;
+              tx += dirX * expand;
+              ty += dirY * expand;
             }
           }
         } else if (p.isFlipped) {
