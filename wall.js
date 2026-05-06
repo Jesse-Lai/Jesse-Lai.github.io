@@ -77,7 +77,7 @@ console.log("wall.js loaded");
       app.stage.addChild(this.container);
 
       this.particles = [];
-      const particleScale = displayScale * gap / 2;
+      const particleScale = displayScale * gap / 2 * 0.9; // 90% coverage = visible gaps when spread
 
       const dotCanvas = document.createElement("canvas");
       dotCanvas.width = 2; dotCanvas.height = 2;
@@ -194,10 +194,20 @@ console.log("wall.js loaded");
 
         // Physics
         if (this.state === "dragging") {
-          // Fluid lag: particles follow with varying delay based on position
-          const lag = 0.03 + (p.nx + p.ny) * 0.02; // top-left follows fast, bottom-right lags
-          p.vx += (tx - p.x) * lag;
-          p.vy += (ty - p.y) * lag;
+          // Spread particles apart when dragging (reveal particle nature)
+          const spreadFactor = 1.15; // 15% expansion
+          const spreadTx = this.posX + p.lx * spreadFactor;
+          const spreadTy = this.posY + p.ly * spreadFactor;
+          const lag = 0.04 + (p.nx + p.ny) * 0.015;
+          p.vx += (spreadTx - p.x) * lag;
+          p.vy += (spreadTy - p.y) * lag;
+        } else if (this.hoverProgress > 0.3) {
+          // Hover: slight spread to hint at particle nature
+          const hoverSpread = 1 + this.hoverProgress * 0.08;
+          const hoverTx = this.posX + p.lx * hoverSpread;
+          const hoverTy = this.posY + p.ly * hoverSpread;
+          p.vx += (hoverTx - p.x) * 0.1;
+          p.vy += (hoverTy - p.y) * 0.1;
         } else {
           p.vx += (tx - p.x) * 0.12;
           p.vy += (ty - p.y) * 0.12;
