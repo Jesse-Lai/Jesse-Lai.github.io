@@ -169,6 +169,14 @@ console.log("wall.js loaded");
             p.sprite.tint = (p.origR << 16) | (p.origG << 8) | p.origB;
             p.sprite.alpha = p.origA / 255;
             p.isFlipped = false;
+          } else {
+            // Front face: subtle scatter near the fold line (blur effect)
+            const proximity = Math.max(0, 1 - (distFromCorner - foldRadius) / 0.3);
+            if (proximity > 0) {
+              const jitter = proximity * this.hoverProgress * 2.5;
+              tx += (Math.random() - 0.5) * jitter;
+              ty += (Math.random() - 0.5) * jitter;
+            }
           }
         } else if (p.isFlipped) {
           p.sprite.tint = (p.origR << 16) | (p.origG << 8) | p.origB;
