@@ -231,24 +231,41 @@ console.log("wall.js loaded");
   const textContainer = new PIXI.Container();
   app.stage.addChild(textContainer);
 
-  let textParticles = []; // array of {sprite, originX, originY, x, y, vx, vy}
-  let textSprites = [];
+  // Persistent particle pool for text
+  let textPool = []; // {sprite, x, y, vx, vy, targetX, targetY, active}
+  const TEXT_GAP = 4;
+  const MAX_TEXT_PARTICLES = 30000;
+
+  // Create dot texture for text
+  const textDotCanvas = document.createElement('canvas');
+  textDotCanvas.width = 2; textDotCanvas.height = 2;
+  const tdctx = textDotCanvas.getContext('2d');
+  tdctx.fillStyle = 'white';
+  tdctx.fillRect(0, 0, 2, 2);
+  const textDotTexture = PIXI.Texture.from(textDotCanvas);
+
+  // Pre-create particle pool
+  for (let i = 0; i < MAX_TEXT_PARTICLES; i++) {
+    const sprite = new PIXI.Sprite(textDotTexture);
+    sprite.anchor.set(0.5);
+    sprite.scale.set(TEXT_GAP / 2 * 0.45);
+    sprite.visible = false;
+    sprite.tint = isDark ? DARK_TEXT : LIGHT_TEXT;
+    textContainer.addChild(sprite);
+    textPool.push({
+      sprite, x: W / 2, y: H / 2, vx: 0, vy: 0,
+      targetX: W / 2, targetY: H / 2, active: false,
+    });
+  }
 
   function layoutText(stickers) {
-    // Remove old text sprites
-    textContainer.removeChildren();
-    textParticles = [];
-    textSprites = [];
-
     // Render text to offscreen canvas
     const offCanvas = document.createElement('canvas');
-    offCanvas.width = W * 2;
-    offCanvas.height = H * 2;
+    offCanvas.width = W * 2; offCanvas.height = H * 2;
     const octx = offCanvas.getContext('2d');
     octx.scale(2, 2);
     octx.clearRect(0, 0, W, H);
 
-    // Use pretext to lay out text, draw to canvas
     const prepared = prepareWithSegments(textContent, FONT);
     const exclusions = stickers.map(s => s.bounds);
     const fullLeft = MARGIN;
@@ -265,7 +282,6 @@ console.log("wall.js loaded");
     while (y < H - MARGIN && !done) {
       const lineTop = y;
       const lineBottom = y + LINE_HEIGHT;
-
       let spans = [{ left: fullLeft, right: fullRight }];
       for (const exc of exclusions) {
         if (exc.y >= lineBottom || exc.y + exc.h <= lineTop) continue;
@@ -282,9 +298,7 @@ console.log("wall.js loaded");
         }
         spans = newSpans;
       }
-
       if (spans.length === 0) { y += LINE_HEIGHT; continue; }
-
       for (const span of spans) {
         const lineWidth = span.right - span.left;
         if (lineWidth < 80) continue;
@@ -299,48 +313,40 @@ console.log("wall.js loaded");
       y += LINE_HEIGHT;
     }
 
-    // Sample the rendered text canvas into particles
+    // Sample pixels and assign targets to particle pool
     const imgData = octx.getImageData(0, 0, W * 2, H * 2);
     const pixels = imgData.data;
-    const textGap = 4; // sample every 4 device pixels
-    const textColor = isDark ? 0xf0f0f0 : 0x1a1a1a;
+    const textColor = isDark ? DARK_TEXT : LIGHT_TEXT;
+    let idx = 0;
 
-    const dotCanvas2 = document.createElement('canvas');
-    dotCanvas2.width = 2; dotCanvas2.height = 2;
-    const dctx2 = dotCanvas2.getContext('2d');
-    dctx2.fillStyle = 'white';
-    dctx2.fillRect(0, 0, 2, 2);
-    const textDotTexture = PIXI.Texture.from(dotCanvas2);
-
-    for (let py = 0; py < H * 2; py += textGap) {
-      for (let px = 0; px < W * 2; px += textGap) {
+    for (let py = 0; py < H * 2 && idx < MAX_TEXT_PARTICLES; py += TEXT_GAP) {
+      for (let px = 0; px < W * 2 && idx < MAX_TEXT_PARTICLES; px += TEXT_GAP) {
         const i = (py * W * 2 + px) * 4;
         const a = pixels[i + 3];
         if (a < 100) continue;
 
-        const screenX = px / 2;
-        const screenY = py / 2;
-
-        const sprite = new PIXI.Sprite(textDotTexture);
-        sprite.anchor.set(0.5);
-        sprite.x = screenX;
-        sprite.y = screenY;
-        sprite.scale.set(textGap / 2 * 0.45);
-        sprite.tint = textColor;
-        sprite.alpha = a / 255;
-        textContainer.addChild(sprite);
-
-        textParticles.push({
-          sprite,
-          originX: screenX,
-          originY: screenY,
-          x: screenX,
-          y: screenY,
-          vx: 0, vy: 0,
-        });
+        const p = textPool[idx];
+        p.targetX = px / 2;
+        p.targetY = py / 2;
+        p.active = true;
+        p.sprite.visible = true;
+        p.sprite.tint = textColor;
+        p.sprite.alpha = a / 255;
+        idx++;
       }
     }
-    console.log(`Text particles: ${textParticles.length}`);
+
+    // Deactivate unused particles (fly them off screen)
+    for (let i = idx; i < MAX_TEXT_PARTICLES; i++) {
+      const p = textPool[i];
+      if (p.active) {
+        // Scatter outward
+        p.targetX = p.x + (Math.random() - 0.5) * 300;
+        p.targetY = p.y + (Math.random() - 0.5) * 300;
+        p.active = false;
+        // Will fade out in animation loop
+      }
+    }
   }
 
   // ─── LOAD STICKERS ───
@@ -439,10 +445,31 @@ console.log("wall.js loaded");
     // Re-layout text when stickers move (throttled)
     if (needsTextRelayout) {
       relayoutCooldown += dt;
-      if (relayoutCooldown > 0.05) { // max 20 relayouts/sec
+      if (relayoutCooldown > 0.1) { // max 10 relayouts/sec
         layoutText(stickers);
         relayoutCooldown = 0;
         needsTextRelayout = false;
+      }
+    }
+
+    // Animate text particles toward targets
+    for (let i = 0; i < textPool.length; i++) {
+      const p = textPool[i];
+      if (!p.sprite.visible) continue;
+
+      p.vx += (p.targetX - p.x) * 0.08;
+      p.vy += (p.targetY - p.y) * 0.08;
+      p.vx *= 0.82;
+      p.vy *= 0.82;
+      p.x += p.vx;
+      p.y += p.vy;
+      p.sprite.x = p.x;
+      p.sprite.y = p.y;
+
+      // Fade out inactive particles
+      if (!p.active) {
+        p.sprite.alpha *= 0.92;
+        if (p.sprite.alpha < 0.01) p.sprite.visible = false;
       }
     }
   });
