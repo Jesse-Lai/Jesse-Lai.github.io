@@ -227,62 +227,76 @@ console.log("wall.js loaded");
     }
   }
 
-  // ─── TEXT AS PARTICLES ───
+  // ─── TEXT: HYBRID (clean text + particle scatter for displaced) ───
   const textContainer = new PIXI.Container();
+  const scatterContainer = new PIXI.Container();
   app.stage.addChild(textContainer);
+  app.stage.addChild(scatterContainer);
 
-  // Persistent particle pool for text
-  let textPool = []; // {sprite, x, y, vx, vy, targetX, targetY, active}
-  const TEXT_GAP = 4;
-  const MAX_TEXT_PARTICLES = 30000;
+  // Scatter particle pool
+  const SCATTER_POOL_SIZE = 5000;
+  const scatterDotCanvas = document.createElement('canvas');
+  scatterDotCanvas.width = 2; scatterDotCanvas.height = 2;
+  const sdctx = scatterDotCanvas.getContext('2d');
+  sdctx.fillStyle = 'white'; sdctx.fillRect(0, 0, 2, 2);
+  const scatterDotTex = PIXI.Texture.from(scatterDotCanvas);
 
-  // Create dot texture for text
-  const textDotCanvas = document.createElement('canvas');
-  textDotCanvas.width = 2; textDotCanvas.height = 2;
-  const tdctx = textDotCanvas.getContext('2d');
-  tdctx.fillStyle = 'white';
-  tdctx.fillRect(0, 0, 2, 2);
-  const textDotTexture = PIXI.Texture.from(textDotCanvas);
+  const scatterPool = [];
+  for (let i = 0; i < SCATTER_POOL_SIZE; i++) {
+    const s = new PIXI.Sprite(scatterDotTex);
+    s.anchor.set(0.5); s.scale.set(0.8); s.visible = false;
+    scatterContainer.addChild(s);
+    scatterPool.push({ sprite: s, x: 0, y: 0, vx: 0, vy: 0, life: 0 });
+  }
+  let scatterIdx = 0;
 
-  // Pre-create particle pool
-  for (let i = 0; i < MAX_TEXT_PARTICLES; i++) {
-    const sprite = new PIXI.Sprite(textDotTexture);
-    sprite.anchor.set(0.5);
-    sprite.scale.set(TEXT_GAP / 2 * 0.45);
-    sprite.visible = false;
-    sprite.tint = isDark ? DARK_TEXT : LIGHT_TEXT;
-    textContainer.addChild(sprite);
-    textPool.push({
-      sprite, x: W / 2, y: H / 2, vx: 0, vy: 0,
-      targetX: W / 2, targetY: H / 2, active: false,
-    });
+  function emitScatter(x, y, color) {
+    for (let i = 0; i < 3; i++) {
+      const p = scatterPool[scatterIdx % SCATTER_POOL_SIZE];
+      scatterIdx++;
+      p.x = x + (Math.random() - 0.5) * 10;
+      p.y = y + (Math.random() - 0.5) * 10;
+      p.vx = (Math.random() - 0.5) * 8;
+      p.vy = (Math.random() - 0.5) * 8;
+      p.life = 1;
+      p.sprite.visible = true;
+      p.sprite.tint = color;
+      p.sprite.alpha = 1;
+      p.sprite.x = p.x;
+      p.sprite.y = p.y;
+    }
   }
 
+  // Track previous text line positions to detect displacement
+  let prevTextLines = []; // [{x, y, text, width}]
+
   function layoutText(stickers) {
-    // Render text to offscreen canvas
-    const offCanvas = document.createElement('canvas');
-    offCanvas.width = W * 2; offCanvas.height = H * 2;
-    const octx = offCanvas.getContext('2d');
-    octx.scale(2, 2);
-    octx.clearRect(0, 0, W, H);
+    textContainer.removeChildren();
 
     const prepared = prepareWithSegments(textContent, FONT);
     const exclusions = stickers.map(s => s.bounds);
     const fullLeft = MARGIN;
     const fullRight = W - MARGIN;
+    const textColor = isDark ? DARK_TEXT : LIGHT_TEXT;
 
-    octx.fillStyle = '#000';
-    octx.font = `400 72px "Bradford LL", serif`;
-    octx.textBaseline = 'top';
+    const textStyle = new PIXI.TextStyle({
+      fontFamily: '"Bradford LL", serif',
+      fontSize: 72,
+      fontWeight: '400',
+      fill: textColor,
+      wordWrap: false,
+    });
 
     let cursor = { segmentIndex: 0, graphemeIndex: 0 };
     let y = MARGIN;
     let done = false;
+    const newTextLines = [];
 
     while (y < H - MARGIN && !done) {
       const lineTop = y;
       const lineBottom = y + LINE_HEIGHT;
       let spans = [{ left: fullLeft, right: fullRight }];
+
       for (const exc of exclusions) {
         if (exc.y >= lineBottom || exc.y + exc.h <= lineTop) continue;
         const sLeft = exc.x - 15;
@@ -298,7 +312,9 @@ console.log("wall.js loaded");
         }
         spans = newSpans;
       }
+
       if (spans.length === 0) { y += LINE_HEIGHT; continue; }
+
       for (const span of spans) {
         const lineWidth = span.right - span.left;
         if (lineWidth < 80) continue;
@@ -306,47 +322,35 @@ console.log("wall.js loaded");
         if (range === null) { done = true; break; }
         const line = materializeLineRange(prepared, range);
         if (line.text.trim()) {
-          octx.fillText(line.text.trim(), span.left, y);
+          const t = new PIXI.Text({ text: line.text.trim(), style: textStyle });
+          t.x = span.left; t.y = y;
+          textContainer.addChild(t);
+          newTextLines.push({ x: span.left, y, text: line.text.trim() });
         }
         cursor = range.end;
       }
       y += LINE_HEIGHT;
     }
 
-    // Sample pixels and assign targets to particle pool
-    const imgData = octx.getImageData(0, 0, W * 2, H * 2);
-    const pixels = imgData.data;
-    const textColor = isDark ? DARK_TEXT : LIGHT_TEXT;
-    let idx = 0;
-
-    for (let py = 0; py < H * 2 && idx < MAX_TEXT_PARTICLES; py += TEXT_GAP) {
-      for (let px = 0; px < W * 2 && idx < MAX_TEXT_PARTICLES; px += TEXT_GAP) {
-        const i = (py * W * 2 + px) * 4;
-        const a = pixels[i + 3];
-        if (a < 100) continue;
-
-        const p = textPool[idx];
-        p.targetX = px / 2;
-        p.targetY = py / 2;
-        p.active = true;
-        p.sprite.visible = true;
-        p.sprite.tint = textColor;
-        p.sprite.alpha = a / 255;
-        idx++;
+    // Emit scatter particles for displaced text
+    const hexColor = isDark ? 0xf0f0f0 : 0x1a1a1a;
+    for (const old of prevTextLines) {
+      // Check if this old line position is now blocked by a sticker
+      let blocked = false;
+      for (const exc of exclusions) {
+        if (old.y < exc.y + exc.h && old.y + LINE_HEIGHT > exc.y &&
+            old.x < exc.x + exc.w && old.x + 200 > exc.x) {
+          blocked = true; break;
+        }
+      }
+      if (blocked) {
+        // Emit scatter particles along this line
+        for (let cx = old.x; cx < old.x + 200; cx += 8) {
+          emitScatter(cx, old.y + LINE_HEIGHT / 2, hexColor);
+        }
       }
     }
-
-    // Deactivate unused particles (fly them off screen)
-    for (let i = idx; i < MAX_TEXT_PARTICLES; i++) {
-      const p = textPool[i];
-      if (p.active) {
-        // Scatter outward
-        p.targetX = p.x + (Math.random() - 0.5) * 300;
-        p.targetY = p.y + (Math.random() - 0.5) * 300;
-        p.active = false;
-        // Will fade out in animation loop
-      }
-    }
+    prevTextLines = newTextLines;
   }
 
   // ─── LOAD STICKERS ───
@@ -445,32 +449,22 @@ console.log("wall.js loaded");
     // Re-layout text when stickers move (throttled)
     if (needsTextRelayout) {
       relayoutCooldown += dt;
-      if (relayoutCooldown > 0.1) { // max 10 relayouts/sec
+      if (relayoutCooldown > 0.1) {
         layoutText(stickers);
         relayoutCooldown = 0;
         needsTextRelayout = false;
       }
     }
 
-    // Animate text particles toward targets
-    for (let i = 0; i < textPool.length; i++) {
-      const p = textPool[i];
+    // Animate scatter particles
+    for (const p of scatterPool) {
       if (!p.sprite.visible) continue;
-
-      p.vx += (p.targetX - p.x) * 0.08;
-      p.vy += (p.targetY - p.y) * 0.08;
-      p.vx *= 0.82;
-      p.vy *= 0.82;
-      p.x += p.vx;
-      p.y += p.vy;
-      p.sprite.x = p.x;
-      p.sprite.y = p.y;
-
-      // Fade out inactive particles
-      if (!p.active) {
-        p.sprite.alpha *= 0.92;
-        if (p.sprite.alpha < 0.01) p.sprite.visible = false;
-      }
+      p.x += p.vx; p.y += p.vy;
+      p.vx *= 0.95; p.vy *= 0.95;
+      p.life -= 0.03;
+      p.sprite.x = p.x; p.sprite.y = p.y;
+      p.sprite.alpha = Math.max(0, p.life);
+      if (p.life <= 0) p.sprite.visible = false;
     }
   });
 
@@ -479,7 +473,6 @@ console.log("wall.js loaded");
   window.addEventListener('themechange', (e) => {
     isDark = e.detail.dark;
     app.renderer.background.color.setValue(isDark ? DARK_BG : LIGHT_BG);
-    // Re-layout text with new color
     layoutText(stickers);
   });
 
