@@ -497,7 +497,7 @@ console.log("wall.js loaded");
     longPressTimer = setTimeout(() => { if (!touchMoved) handleClick(); }, 400);
   });
   window.addEventListener("touchmove", e => {
-    e.preventDefault();
+    if (draggedSticker) e.preventDefault(); // only prevent scroll when dragging
     const t = e.touches[0];
     mouse.x = t.clientX; mouse.y = t.clientY;
     touchMoved = true;
