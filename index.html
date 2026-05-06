@@ -41,11 +41,11 @@
     body { background: #f5f2ed; overflow: hidden; }
     canvas { display: block; }
     #theme-toggle {
-      position: fixed; top: 20px; right: 20px; z-index: 999;
+      position: fixed; top: 20px; right: 20px; z-index: 9999;
       width: 40px; height: 40px; border-radius: 50%;
       border: 2px solid #333; background: #fff; cursor: pointer;
       display: flex; align-items: center; justify-content: center;
-      font-size: 18px; transition: all 0.3s;
+      font-size: 18px; transition: all 0.3s; user-select: none;
     }
     body.dark #theme-toggle { border-color: #aaa; background: #222; }
   </style>

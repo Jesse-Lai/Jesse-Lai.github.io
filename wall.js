@@ -429,9 +429,13 @@ console.log("wall.js loaded");
 
   window.addEventListener('themechange', (e) => {
     isDark = e.detail.dark;
-    app.renderer.background.color = isDark ? DARK_BG : LIGHT_BG;
+    // Update PixiJS background
+    app.renderer.background.color.setValue(isDark ? DARK_BG : LIGHT_BG);
     // Update text color
-    textContainer.children.forEach(t => { t.style.fill = isDark ? DARK_TEXT : LIGHT_TEXT; });
+    textContainer.children.forEach(t => {
+      if (t.style) t.style.fill = isDark ? DARK_TEXT : LIGHT_TEXT;
+    });
+    needsTextRelayout = true;
   });
 
   // ─── RESIZE ───
