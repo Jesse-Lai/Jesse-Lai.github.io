@@ -173,7 +173,7 @@ console.log("wall.js loaded");
             // Front face: expand outward near fold line (paper loosening)
             const proximity = Math.max(0, 1 - (distFromCorner - foldRadius) / 0.4);
             if (proximity > 0) {
-              const expand = proximity * this.hoverProgress * 4;
+              const expand = proximity * this.hoverProgress * 12;
               // Push away from center
               const dirX = p.nx - 0.5;
               const dirY = p.ny - 0.5;
