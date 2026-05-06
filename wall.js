@@ -459,6 +459,27 @@ console.log("wall.js loaded");
   window.addEventListener("mouseleave", () => { mouse.x = -9999; });
   window.addEventListener("click", handleClick);
 
+  // Mousedown + drag + mouseup support
+  window.addEventListener("mousedown", e => {
+    mouse.x = e.clientX; mouse.y = e.clientY;
+    if (!draggedSticker) {
+      const hovered = getHoveredSticker();
+      if (hovered) {
+        hovered.startDrag(mouse.x, mouse.y);
+        draggedSticker = hovered;
+        app.stage.removeChild(hovered.container);
+        app.stage.addChild(hovered.container);
+      }
+    }
+  });
+  window.addEventListener("mouseup", () => {
+    if (draggedSticker) {
+      draggedSticker.drop();
+      draggedSticker = null;
+      needsTextRelayout = true;
+    }
+  });
+
   // Touch
   let longPressTimer = null, touchMoved = false;
   window.addEventListener("touchstart", e => {
