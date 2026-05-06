@@ -206,7 +206,6 @@ console.log("wall.js loaded");
         p.lx = currentLx; p.ly = currentLy;
         let tx = this.posX + currentLx;
         let ty = this.posY + currentLy;
-        let ty = this.posY + p.ly;
 
         // Corner peel
         if (this.hoverProgress > 0.01) {
