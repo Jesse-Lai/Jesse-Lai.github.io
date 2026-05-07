@@ -108,7 +108,7 @@ console.log("wall.js loaded");
       this.shadow = g;
     }
     activate() {
-      if (this.activated) return;
+      if (this.activated || this.noParticles) return;
       this.activated = true;
       this.flatSprite.visible = false;
 
@@ -426,7 +426,7 @@ console.log("wall.js loaded");
   const p4Scale = Math.min(photoMaxW / imgP4.w, photoMax / imgP4.h);
   const photo4 = new Sticker(imgP4, imgP4, cx - deskW * 0.25, cy + deskH * 0.2, p4Scale);
   const stickers = [sticker1, photo1, photo2, photo3, photo4];
-  [photo1, photo2, photo3, photo4].forEach(p => p.addShadow());
+  [photo1, photo2, photo3, photo4].forEach(p => { p.addShadow(); p.noParticles = true; });
 
   // Initial text layout
   await document.fonts.ready;
