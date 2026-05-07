@@ -382,7 +382,7 @@ console.log("wall.js loaded");
   // ─── DESK BACKGROUND ───
   const deskTex = await PIXI.Assets.load("desk.png");
   const deskSprite = new PIXI.Sprite(deskTex);
-  const deskScale = Math.min(W / deskSprite.texture.width, H / deskSprite.texture.height);
+  const deskScale = Math.min((W * 0.8) / deskSprite.texture.width, (H * 0.8) / deskSprite.texture.height);
   deskSprite.scale.set(deskScale);
   deskSprite.x = (W - deskSprite.texture.width * deskScale) / 2;
   deskSprite.y = (H - deskSprite.texture.height * deskScale) / 2;
