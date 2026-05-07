@@ -167,7 +167,7 @@ console.log("wall.js loaded");
       // Start morph cycling every 2 seconds
       this.morphTimer = setInterval(() => {
         this.morphTarget = this.morphTarget === 0 ? 1 : 0;
-      }, 2000);
+      }, 1000);
     }
 
     moveDrag(mx, my) {
@@ -325,7 +325,7 @@ console.log("wall.js loaded");
   // ─── DESK BACKGROUND ───
   const deskTex = await PIXI.Assets.load("desk.png");
   const deskSprite = new PIXI.Sprite(deskTex);
-  const deskScale = Math.max(W / deskSprite.texture.width, H / deskSprite.texture.height);
+  const deskScale = Math.min(W / deskSprite.texture.width, H / deskSprite.texture.height);
   deskSprite.scale.set(deskScale);
   deskSprite.x = (W - deskSprite.texture.width * deskScale) / 2;
   deskSprite.y = (H - deskSprite.texture.height * deskScale) / 2;
