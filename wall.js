@@ -5,7 +5,7 @@ console.log("wall.js loaded");
 (async () => {
   try {
   const W = window.innerWidth;
-  let H = Math.max(window.innerHeight, 1200); // min height, will expand for content
+  let H = window.innerHeight; // min height, will expand for content
   const dpr = window.devicePixelRatio || 1;
   const isMobile = "ontouchstart" in window;
 
