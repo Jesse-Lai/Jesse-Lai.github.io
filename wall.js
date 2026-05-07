@@ -383,14 +383,6 @@ console.log("wall.js loaded");
   let prevTextLines = []; // [{x, y, text, width}]
 
   function layoutText(stickers) {} // disabled - no text
-  // ─── PAGE BACKGROUND ───
-  const bgTex = await PIXI.Assets.load("bg.png");
-  const bgSprite = new PIXI.Sprite(bgTex);
-  const bgScale = Math.max(W / bgSprite.texture.width, H / bgSprite.texture.height);
-  bgSprite.scale.set(bgScale);
-  bgSprite.x = (W - bgSprite.texture.width * bgScale) / 2;
-  bgSprite.y = (H - bgSprite.texture.height * bgScale) / 2;
-  app.stage.addChild(bgSprite);
 
   // ─── DESK BACKGROUND ───
   const deskTex = await PIXI.Assets.load("desk.png");
