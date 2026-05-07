@@ -397,13 +397,15 @@ console.log("wall.js loaded");
   deskSprite.scale.set(deskScale);
   deskSprite.x = (W - deskSprite.texture.width * deskScale) / 2;
   deskSprite.y = (H - deskSprite.texture.height * deskScale) / 2;
-  const deskShadow = new PIXI.Graphics();
   const dsW = deskSprite.texture.width * deskScale;
   const dsH = deskSprite.texture.height * deskScale;
-  deskShadow.roundRect(deskSprite.x + 8, deskSprite.y + 10, dsW, dsH, 4);
-  deskShadow.fill({ color: 0x000000, alpha: 0.3 });
-  deskShadow.filters = [new PIXI.BlurFilter({ strength: 12, quality: 3 })];
-  app.stage.addChild(deskShadow);
+  for (let i = 8; i >= 1; i--) {
+    const dsg = new PIXI.Graphics();
+    const expand = i * 4;
+    dsg.roundRect(deskSprite.x + 6 - expand, deskSprite.y + 8 - expand, dsW + expand*2, dsH + expand*2, 6 + i);
+    dsg.fill({ color: 0x000000, alpha: 0.02 });
+    app.stage.addChild(dsg);
+  }
   app.stage.addChild(deskSprite);
 
   // Desk bounds for particle boundary effects
