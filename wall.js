@@ -1,4 +1,4 @@
-import { prepareWithSegments, layoutNextLineRange, materializeLineRange } from "@chenglou/pretext";
+// import { prepareWithSegments, layoutNextLineRange, materializeLineRange } from "@chenglou/pretext";
 
 console.log("wall.js loaded");
 
@@ -14,7 +14,7 @@ console.log("wall.js loaded");
     width: W, height: H,
     resolution: dpr,
     autoDensity: true,
-    backgroundColor: 0xf5f2ed,
+    backgroundColor: 0x000000,
   });
   document.body.appendChild(app.canvas);
 
@@ -321,96 +321,15 @@ console.log("wall.js loaded");
   // Track previous text line positions to detect displacement
   let prevTextLines = []; // [{x, y, text, width}]
 
-  function layoutText(stickers) {
-    textContainer.removeChildren();
-
-    const prepared = prepareWithSegments(textContent, FONT);
-    const exclusions = stickers.map(s => s.bounds);
-    const fullLeft = MARGIN;
-    const fullRight = W - MARGIN;
-    const textColor = isDark ? DARK_TEXT : LIGHT_TEXT;
-
-    const textStyle = new PIXI.TextStyle({
-      fontFamily: '"Bradford LL", serif',
-      fontSize: 72,
-      fontWeight: '400',
-      fill: textColor,
-      wordWrap: false,
-    });
-
-    let cursor = { segmentIndex: 0, graphemeIndex: 0 };
-    let y = MARGIN;
-    let done = false;
-    const newTextLines = [];
-
-    while (!done) {
-      const lineTop = y;
-      const lineBottom = y + LINE_HEIGHT;
-      let spans = [{ left: fullLeft, right: fullRight }];
-
-      for (const exc of exclusions) {
-        if (exc.y >= lineBottom || exc.y + exc.h <= lineTop) continue;
-        const sLeft = exc.x - 15;
-        const sRight = exc.x + exc.w + 15;
-        const newSpans = [];
-        for (const span of spans) {
-          if (sRight <= span.left || sLeft >= span.right) {
-            newSpans.push(span);
-          } else {
-            if (sLeft > span.left + 80) newSpans.push({ left: span.left, right: sLeft });
-            if (sRight < span.right - 80) newSpans.push({ left: sRight, right: span.right });
-          }
-        }
-        spans = newSpans;
-      }
-
-      if (spans.length === 0) { y += LINE_HEIGHT; continue; }
-
-      for (const span of spans) {
-        const lineWidth = span.right - span.left;
-        if (lineWidth < 80) continue;
-        const range = layoutNextLineRange(prepared, cursor, lineWidth);
-        if (range === null) { done = true; break; }
-        const line = materializeLineRange(prepared, range);
-        if (line.text.trim()) {
-          const t = new PIXI.Text({ text: line.text.trim(), style: textStyle });
-          t.x = span.left; t.y = y;
-          textContainer.addChild(t);
-          newTextLines.push({ x: span.left, y, text: line.text.trim() });
-        }
-        cursor = range.end;
-      }
-      y += LINE_HEIGHT;
-    }
-
-    // Emit scatter particles for displaced text
-    const hexColor = isDark ? 0xf0f0f0 : 0x1a1a1a;
-    for (const old of prevTextLines) {
-      // Check if this old line position is now blocked by a sticker
-      let blocked = false;
-      for (const exc of exclusions) {
-        if (old.y < exc.y + exc.h && old.y + LINE_HEIGHT > exc.y &&
-            old.x < exc.x + exc.w && old.x + 200 > exc.x) {
-          blocked = true; break;
-        }
-      }
-      if (blocked) {
-        // Emit scatter particles along this line
-        for (let cx = old.x; cx < old.x + 200; cx += 8) {
-          emitScatter(cx, old.y + LINE_HEIGHT / 2, hexColor);
-        }
-      }
-    }
-    prevTextLines = newTextLines;
-
-    // Resize canvas if content overflows
-    const contentH = y + MARGIN;
-    if (contentH > H) {
-      H = contentH;
-      app.renderer.resize(W, H);
-      app.canvas.style.height = H + "px";
-    }
-  }
+  function layoutText(stickers) {} // disabled - no text
+  // ─── DESK BACKGROUND ───
+  const deskTex = await PIXI.Assets.load("desk.png");
+  const deskSprite = new PIXI.Sprite(deskTex);
+  const deskScale = Math.max(W / deskSprite.texture.width, H / deskSprite.texture.height);
+  deskSprite.scale.set(deskScale);
+  deskSprite.x = (W - deskSprite.texture.width * deskScale) / 2;
+  deskSprite.y = (H - deskSprite.texture.height * deskScale) / 2;
+  app.stage.addChild(deskSprite);
 
   // ─── LOAD STICKERS ───
   const img1 = await loadImagePixels("sticker.png");
@@ -444,7 +363,7 @@ console.log("wall.js loaded");
     if (draggedSticker) {
       draggedSticker.drop();
       draggedSticker = null;
-      needsTextRelayout = true;
+      
       return;
     }
     const hovered = getHoveredSticker();
@@ -461,7 +380,7 @@ console.log("wall.js loaded");
     mouse.x = e.clientX; mouse.y = e.clientY;
     if (draggedSticker) {
       draggedSticker.moveDrag(mouse.x, mouse.y);
-      needsTextRelayout = true;
+      
     }
   });
   window.addEventListener("mouseleave", () => { mouse.x = -9999; });
@@ -484,7 +403,7 @@ console.log("wall.js loaded");
     if (draggedSticker) {
       draggedSticker.drop();
       draggedSticker = null;
-      needsTextRelayout = true;
+      
     }
   });
 
@@ -502,12 +421,12 @@ console.log("wall.js loaded");
     mouse.x = t.clientX; mouse.y = t.clientY;
     touchMoved = true;
     if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
-    if (draggedSticker) { draggedSticker.moveDrag(mouse.x, mouse.y); needsTextRelayout = true; }
+    if (draggedSticker) { draggedSticker.moveDrag(mouse.x, mouse.y);  }
   }, { passive: false });
   window.addEventListener("touchend", () => {
     if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
     if (!touchMoved) handleClick();
-    else if (draggedSticker) { draggedSticker.drop(); draggedSticker = null; needsTextRelayout = true; }
+    else if (draggedSticker) { draggedSticker.drop(); draggedSticker = null;  }
   });
 
   // ─── ANIMATION LOOP ───
