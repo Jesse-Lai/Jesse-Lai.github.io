@@ -28,7 +28,7 @@ console.log("wall.js loaded");
     c.width = img.naturalWidth; c.height = img.naturalHeight;
     const ctx = c.getContext("2d");
     ctx.drawImage(img, 0, 0);
-    return { data: ctx.getImageData(0, 0, c.width, c.height), w: c.width, h: c.height, src };
+    const tex = PIXI.Texture.from(c); return { data: ctx.getImageData(0, 0, c.width, c.height), w: c.width, h: c.height, tex };
   }
 
   function sampleImage(imageData, w, h, gap) {
@@ -74,7 +74,7 @@ console.log("wall.js loaded");
       app.stage.addChild(this.container);
 
       // Flat sprite (default - no particles until hover/drag)
-      this.flatSprite = PIXI.Sprite.from(imgDataA.src);
+      this.flatSprite = new PIXI.Sprite(imgDataA.tex);
       this.flatSprite.anchor.set(0.5);
       this.flatSprite.width = this.renderW;
       this.flatSprite.height = this.renderH;
