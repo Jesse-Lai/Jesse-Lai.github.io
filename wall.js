@@ -365,16 +365,30 @@ console.log("wall.js loaded");
   // ─── LOAD STICKERS ───
   const img1 = await loadImagePixels("sticker.png");
   const img2 = await loadImagePixels("sticker2.png");
+  const imgP1 = await loadImagePixels("photo1.png");
+  const imgP2 = await loadImagePixels("photo2.png");
+  const imgP3 = await loadImagePixels("photo3.png");
 
   const deskH = deskSprite.texture.height * deskScale;
   const deskW = deskSprite.texture.width * deskScale;
   const maxH = deskH * 0.45;
   const maxSW = deskW * 0.35;
+  const photoMax = deskH * 0.35;
+  const photoMaxW = deskW * 0.25;
   const s1Scale = Math.min(maxSW / img1.w, maxH / img1.h);
-  const s2Scale = Math.min(maxSW / img2.w, maxH / img2.h);
 
-  const sticker1 = new Sticker(img1, img2, W * 0.5, H * 0.5, s1Scale);
-  const stickers = [sticker1];
+  const p1Scale = Math.min(photoMaxW / imgP1.w, photoMax / imgP1.h);
+  const p2Scale = Math.min(photoMaxW / imgP2.w, photoMax / imgP2.h);
+  const p3Scale = Math.min(photoMaxW / imgP3.w, photoMax / imgP3.h);
+
+  const cx = deskBounds.left + deskW / 2;
+  const cy = deskBounds.top + deskH / 2;
+
+  const sticker1 = new Sticker(img1, img2, cx, cy, s1Scale);
+  const photo1 = new Sticker(imgP1, imgP1, cx - deskW * 0.3, cy - deskH * 0.15, p1Scale);
+  const photo2 = new Sticker(imgP2, imgP2, cx + deskW * 0.3, cy - deskH * 0.1, p2Scale);
+  const photo3 = new Sticker(imgP3, imgP3, cx + deskW * 0.25, cy + deskH * 0.2, p3Scale);
+  const stickers = [sticker1, photo1, photo2, photo3];
 
   // Initial text layout
   await document.fonts.ready;
