@@ -427,7 +427,7 @@ console.log("wall.js loaded");
   const p4Scale = Math.min(photoMaxW / imgP4.w, photoMax / imgP4.h);
   const photo4 = new Sticker(imgP4, imgP4, cx - deskW * 0.25, cy + deskH * 0.2, p4Scale);
   const stickers = [sticker1, photo1, photo2, photo3, photo4];
-  [photo1, photo2, photo3, photo4].forEach(p => { p.addShadow(); p.noParticles = true; });
+  [photo1, photo2, photo3, photo4].forEach(p => { p.addShadow(); p.noParticles = true; p.container.rotation = (Math.random() * 8 - 4) * Math.PI / 180; });
 
   // Initial text layout
   await document.fonts.ready;
