@@ -81,6 +81,9 @@ console.log("wall.js loaded");
       this.flatSprite.x = 0;
       this.flatSprite.y = 0;
       this.container.addChild(this.flatSprite);
+
+      // Shadow (added externally via addShadow)
+      this.shadow = null;
       this.container.x = x;
       this.container.y = y;
 
@@ -96,6 +99,14 @@ console.log("wall.js loaded");
       this.currentForm = 0;
     }
 
+
+    addShadow() {
+      const g = new PIXI.Graphics();
+      g.rect(-this.renderW/2 + 4, -this.renderH/2 + 4, this.renderW, this.renderH);
+      g.fill({ color: 0x000000, alpha: 0.12 });
+      this.container.addChildAt(g, 0);
+      this.shadow = g;
+    }
     activate() {
       if (this.activated) return;
       this.activated = true;
@@ -411,7 +422,11 @@ console.log("wall.js loaded");
   const photo1 = new Sticker(imgP1, imgP1, cx - deskW * 0.3, cy - deskH * 0.15, p1Scale);
   const photo2 = new Sticker(imgP2, imgP2, cx + deskW * 0.3, cy - deskH * 0.1, p2Scale);
   const photo3 = new Sticker(imgP3, imgP3, cx + deskW * 0.25, cy + deskH * 0.2, p3Scale);
-  const stickers = [sticker1, photo1, photo2, photo3];
+  const imgP4 = await loadImagePixels("photo4.png");
+  const p4Scale = Math.min(photoMaxW / imgP4.w, photoMax / imgP4.h);
+  const photo4 = new Sticker(imgP4, imgP4, cx - deskW * 0.25, cy + deskH * 0.2, p4Scale);
+  const stickers = [sticker1, photo1, photo2, photo3, photo4];
+  [photo1, photo2, photo3, photo4].forEach(p => p.addShadow());
 
   // Initial text layout
   await document.fonts.ready;
