@@ -28,7 +28,7 @@ console.log("wall.js loaded");
     c.width = img.naturalWidth; c.height = img.naturalHeight;
     const ctx = c.getContext("2d");
     ctx.drawImage(img, 0, 0);
-    return { data: ctx.getImageData(0, 0, c.width, c.height), w: c.width, h: c.height };
+    return { data: ctx.getImageData(0, 0, c.width, c.height), w: c.width, h: c.height, src };
   }
 
   function sampleImage(imageData, w, h, gap) {
@@ -59,43 +59,68 @@ console.log("wall.js loaded");
   let isDark = false;
   const MARGIN = 60;
 
-  // ─── STICKER CLASS ───
+// ─── STICKER CLASS ───
   class Sticker {
     constructor(imgDataA, imgDataB, x, y, displayScale) {
+      this.imgDataA = imgDataA;
+      this.imgDataB = imgDataB;
       this.posX = x;
       this.posY = y;
       this.scale = displayScale;
       this.renderW = imgDataA.w * displayScale;
       this.renderH = imgDataA.h * displayScale;
 
-      const gap = 3;
-      const pointsA = sampleImage(imgDataA.data, imgDataA.w, imgDataA.h, gap);
-      const pointsB = sampleImage(imgDataB.data, imgDataB.w, imgDataB.h, gap);
+      this.container = new PIXI.Container();
+      app.stage.addChild(this.container);
 
-      // Pad to same length
+      // Flat sprite (default - no particles until hover/drag)
+      this.flatSprite = PIXI.Sprite.from(imgDataA.src);
+      this.flatSprite.anchor.set(0.5);
+      this.flatSprite.width = this.renderW;
+      this.flatSprite.height = this.renderH;
+      this.flatSprite.x = 0;
+      this.flatSprite.y = 0;
+      this.container.addChild(this.flatSprite);
+      this.container.x = x;
+      this.container.y = y;
+
+      this.particles = [];
+      this.activated = false;
+      this.state = "idle";
+      this.hoverProgress = 0;
+      this.dragOffsetX = 0;
+      this.dragOffsetY = 0;
+      this.morphProgress = 0;
+      this.morphTarget = 0;
+      this.morphTimer = null;
+      this.currentForm = 0;
+    }
+
+    activate() {
+      if (this.activated) return;
+      this.activated = true;
+      this.flatSprite.visible = false;
+
+      const gap = 3;
+      const pointsA = sampleImage(this.imgDataA.data, this.imgDataA.w, this.imgDataA.h, gap);
+      const pointsB = sampleImage(this.imgDataB.data, this.imgDataB.w, this.imgDataB.h, gap);
       const maxCount = Math.max(pointsA.length, pointsB.length);
       while (pointsA.length < maxCount) pointsA.push(pointsA[Math.floor(Math.random() * pointsA.length)]);
       while (pointsB.length < maxCount) pointsB.push(pointsB[Math.floor(Math.random() * pointsB.length)]);
-      // Shuffle B for interesting transitions
       for (let i = pointsB.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [pointsB[i], pointsB[j]] = [pointsB[j], pointsB[i]];
       }
 
-      this.container = new PIXI.Container();
-      app.stage.addChild(this.container);
-
-      this.particles = [];
-      const particleScale = displayScale * gap / 2;
-
+      const particleScale = this.scale * gap / 2;
       const dotCanvas = document.createElement("canvas");
       dotCanvas.width = 2; dotCanvas.height = 2;
       const dctx = dotCanvas.getContext("2d");
       dctx.fillStyle = "white"; dctx.fillRect(0, 0, 2, 2);
       const dotTexture = PIXI.Texture.from(dotCanvas);
 
-      const renderWB = imgDataB.w * displayScale;
-      const renderHB = imgDataB.h * displayScale;
+      const renderWB = this.imgDataB.w * this.scale;
+      const renderHB = this.imgDataB.h * this.scale;
 
       for (let i = 0; i < maxCount; i++) {
         const pA = pointsA[i];
@@ -114,30 +139,18 @@ console.log("wall.js loaded");
 
         this.particles.push({
           sprite,
-          // State A
           lxA, lyA, rA: pA.r, gA: pA.g, bA: pA.b, aA: pA.a,
-          // State B
           lxB, lyB, rB: pB.r, gB: pB.g, bB: pB.b, aB: pB.a,
-          // Current
           lx: lxA, ly: lyA,
-          x: x + lxA, y: y + lyA,
+          x: this.posX + lxA, y: this.posY + lyA,
           vx: 0, vy: 0,
           nx: pA.nx, ny: pA.ny,
           origR: pA.r, origG: pA.g, origB: pA.b, origA: pA.a,
           isFlipped: false,
         });
       }
-
-      this.state = "idle";
-      this.hoverProgress = 0;
-      this.dragOffsetX = 0;
-      this.dragOffsetY = 0;
-
-      // Morph state
-      this.morphProgress = 0; // 0 = A, 1 = B
-      this.morphTarget = 0;
-      this.morphTimer = null;
-      this.currentForm = 0; // 0=A, 1=B - which form is shown when dropped
+      this.container.x = 0;
+      this.container.y = 0;
     }
 
     get bounds() {
@@ -161,6 +174,7 @@ console.log("wall.js loaded");
 
     startDrag(mx, my) {
       this.state = "dragging";
+      this.activate();
       this.dragOffsetX = this.posX - mx;
       this.dragOffsetY = this.posY - my;
       this.hoverProgress = 1;
@@ -185,6 +199,15 @@ console.log("wall.js loaded");
     }
 
     update(dt) {
+      // If not activated, just update flat sprite position
+      if (!this.activated) {
+        this.flatSprite.x = 0;
+        this.flatSprite.y = 0;
+        this.container.x = this.posX;
+        this.container.y = this.posY;
+        if (this.state === "hover") this.activate();
+        if (!this.activated) return;
+      }
       const targetHover = (this.state === "hover" || this.state === "dragging") ? 1 : 0;
       this.hoverProgress += (targetHover - this.hoverProgress) * 0.1;
 
