@@ -102,8 +102,9 @@ console.log("wall.js loaded");
 
     addShadow() {
       const g = new PIXI.Graphics();
-      g.rect(-this.renderW/2 + 4, -this.renderH/2 + 4, this.renderW, this.renderH);
-      g.fill({ color: 0x000000, alpha: 0.12 });
+      g.rect(-this.renderW/2 + 6, -this.renderH/2 + 6, this.renderW, this.renderH);
+      g.fill({ color: 0x000000, alpha: 0.15 });
+      g.filters = [new PIXI.BlurFilter({ strength: 8 })];
       this.container.addChildAt(g, 0);
       this.shadow = g;
     }
