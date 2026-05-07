@@ -101,14 +101,17 @@ console.log("wall.js loaded");
 
 
     addShadow() {
-      const g = new PIXI.Graphics();
-      g.roundRect(-this.renderW/2 + 5, -this.renderH/2 + 5, this.renderW, this.renderH, 2);
-      g.fill({ color: 0x000000, alpha: 0.2 });
-      const blur = new PIXI.BlurFilter({ strength: 4, quality: 2 });
-      blur.padding = 20;
-      g.filters = [blur];
-      this.container.addChildAt(g, 0);
-      this.shadow = g;
+      // Use a slightly larger, lower-alpha layered approach instead of BlurFilter
+      // to avoid framebuffer edge clipping artifacts
+      const layers = 5;
+      for (let i = layers; i >= 1; i--) {
+        const g = new PIXI.Graphics();
+        const expand = i * 3;
+        g.roundRect(-this.renderW/2 + 5 - expand, -this.renderH/2 + 5 - expand, this.renderW + expand*2, this.renderH + expand*2, 3 + i);
+        g.fill({ color: 0x000000, alpha: 0.04 });
+        this.container.addChildAt(g, 0);
+      }
+      this.shadow = true;
     }
     activate() {
       if (this.activated || this.noParticles) return;
