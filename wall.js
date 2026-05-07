@@ -214,6 +214,12 @@ console.log("wall.js loaded");
     }
 
     update(dt) {
+      // Scale on hover/drag
+      const targetScale = (this.state === "hover" || this.state === "dragging") ? 1.05 : 1.0;
+      const cs = this.container.scale.x;
+      const ns = cs + (targetScale - cs) * 0.1;
+      this.container.scale.set(ns);
+
       // If not activated, just update flat sprite position
       if (!this.activated) {
         this.flatSprite.x = 0;
