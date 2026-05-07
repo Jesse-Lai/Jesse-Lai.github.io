@@ -101,14 +101,10 @@ console.log("wall.js loaded");
 
 
     addShadow() {
-      const layers = 5;
-      for (let i = layers; i >= 1; i--) {
-        const g = new PIXI.Graphics();
-        const expand = i * 2;
-        g.roundRect(-this.renderW/2 + 4 - expand, -this.renderH/2 + 4 - expand, this.renderW + expand*2, this.renderH + expand*2, 2);
-        g.fill({ color: 0x000000, alpha: 0.03 });
-        this.container.addChildAt(g, 0);
-      }
+      const g = new PIXI.Graphics();
+      g.roundRect(-this.renderW/2 + 4, -this.renderH/2 + 4, this.renderW, this.renderH, 2);
+      g.fill({ color: 0x000000, alpha: 0.15 });
+      this.container.addChildAt(g, 0);
       this.shadow = true;
     }
     activate() {
@@ -399,13 +395,10 @@ console.log("wall.js loaded");
   deskSprite.y = (H - deskSprite.texture.height * deskScale) / 2;
   const dsW = deskSprite.texture.width * deskScale;
   const dsH = deskSprite.texture.height * deskScale;
-  for (let i = 8; i >= 1; i--) {
-    const dsg = new PIXI.Graphics();
-    const expand = i * 4;
-    dsg.roundRect(deskSprite.x + 6 - expand, deskSprite.y + 8 - expand, dsW + expand*2, dsH + expand*2, 6 + i);
-    dsg.fill({ color: 0x000000, alpha: 0.02 });
-    app.stage.addChild(dsg);
-  }
+  const deskShadow = new PIXI.Graphics();
+  deskShadow.roundRect(deskSprite.x + 6, deskSprite.y + 8, dsW, dsH, 4);
+  deskShadow.fill({ color: 0x000000, alpha: 0.2 });
+  app.stage.addChild(deskShadow);
   app.stage.addChild(deskSprite);
 
   // Desk bounds for particle boundary effects
