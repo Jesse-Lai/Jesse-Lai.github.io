@@ -101,14 +101,14 @@ console.log("wall.js loaded");
 
 
     addShadow() {
-      // Use a slightly larger, lower-alpha layered approach instead of BlurFilter
-      // to avoid framebuffer edge clipping artifacts
-      const layers = 5;
+      // Layered shadow - expand proportional to size for consistency
+      const layers = 4;
+      const maxExpand = Math.min(this.renderW, this.renderH) * 0.03;
       for (let i = layers; i >= 1; i--) {
         const g = new PIXI.Graphics();
-        const expand = i * 3;
-        g.roundRect(-this.renderW/2 + 5 - expand, -this.renderH/2 + 5 - expand, this.renderW + expand*2, this.renderH + expand*2, 3 + i);
-        g.fill({ color: 0x000000, alpha: 0.04 });
+        const expand = i * maxExpand;
+        g.roundRect(-this.renderW/2 + 4 - expand, -this.renderH/2 + 4 - expand, this.renderW + expand*2, this.renderH + expand*2, 2 + i);
+        g.fill({ color: 0x000000, alpha: 0.035 });
         this.container.addChildAt(g, 0);
       }
       this.shadow = true;
