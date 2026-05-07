@@ -204,6 +204,9 @@ console.log("wall.js loaded");
         if (!p.isFlipped) { p.sprite.tint = (cr << 16) | (cg << 8) | cb; p.sprite.alpha = ca / 255; }
         p.origR = cr; p.origG = cg; p.origB = cb; p.origA = ca;
         p.lx = currentLx; p.ly = currentLy;
+        // Update normalized position for peel calculation
+        p.nx = currentLx / this.renderW + 0.5;
+        p.ny = currentLy / this.renderH + 0.5;
         let tx = this.posX + currentLx;
         let ty = this.posY + currentLy;
 
