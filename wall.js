@@ -274,6 +274,26 @@ console.log("wall.js loaded");
         p.vx *= 0.7; p.vy *= 0.7;
         p.x += p.vx; p.y += p.vy;
         p.sprite.x = p.x; p.sprite.y = p.y;
+
+        // Desk boundary effect: darken + spread particles outside desk
+        if (typeof deskBounds !== "undefined") {
+          const outLeft = Math.max(0, deskBounds.left - p.x);
+          const outRight = Math.max(0, p.x - deskBounds.right);
+          const outTop = Math.max(0, deskBounds.top - p.y);
+          const outBottom = Math.max(0, p.y - deskBounds.bottom);
+          const outDist = Math.max(outLeft, outRight, outTop, outBottom);
+          if (outDist > 0) {
+            const fade = Math.max(0.3, 1 - outDist / 80);
+            p.sprite.alpha = (p.origA / 255) * fade;
+            // Spread outward
+            const spread = Math.min(outDist * 0.05, 3);
+            const dirX = p.x - this.posX;
+            const dirY = p.y - this.posY;
+            const len = Math.sqrt(dirX * dirX + dirY * dirY) || 1;
+            p.vx += (dirX / len) * spread * 0.3;
+            p.vy += (dirY / len) * spread * 0.3;
+          }
+        }
       }
     }
   }
@@ -330,6 +350,14 @@ console.log("wall.js loaded");
   deskSprite.x = (W - deskSprite.texture.width * deskScale) / 2;
   deskSprite.y = (H - deskSprite.texture.height * deskScale) / 2;
   app.stage.addChild(deskSprite);
+
+  // Desk bounds for particle boundary effects
+  const deskBounds = {
+    left: deskSprite.x,
+    top: deskSprite.y,
+    right: deskSprite.x + deskSprite.texture.width * deskScale,
+    bottom: deskSprite.y + deskSprite.texture.height * deskScale,
+  };
 
   // ─── LOAD STICKERS ───
   const img1 = await loadImagePixels("sticker.png");
