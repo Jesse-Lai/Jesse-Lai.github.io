@@ -101,14 +101,12 @@ console.log("wall.js loaded");
 
 
     addShadow() {
-      // Layered shadow - expand proportional to size for consistency
-      const layers = 4;
-      const maxExpand = Math.min(this.renderW, this.renderH) * 0.03;
+      const layers = 3;
       for (let i = layers; i >= 1; i--) {
         const g = new PIXI.Graphics();
-        const expand = i * maxExpand;
-        g.roundRect(-this.renderW/2 + 4 - expand, -this.renderH/2 + 4 - expand, this.renderW + expand*2, this.renderH + expand*2, 2 + i);
-        g.fill({ color: 0x000000, alpha: 0.035 });
+        const expand = i * 1.5;
+        g.roundRect(-this.renderW/2 + 3 - expand, -this.renderH/2 + 3 - expand, this.renderW + expand*2, this.renderH + expand*2, 2);
+        g.fill({ color: 0x000000, alpha: 0.04 });
         this.container.addChildAt(g, 0);
       }
       this.shadow = true;
