@@ -416,6 +416,7 @@ console.log("wall.js loaded");
   app.stage.addChild(deskSprite);
 
   // ─── DAPPLED LIGHT ───
+  console.log("creating light dapples...");
   const lightContainer = new PIXI.Container();
   lightContainer.eventMode = "none";
   const dapples = [];
@@ -445,6 +446,7 @@ console.log("wall.js loaded");
     bottom: deskSprite.y + deskSprite.texture.height * deskScale,
   };
 
+  console.log("loading stickers...");
   // ─── LOAD STICKERS ───
   const img1 = await loadImagePixels("sticker.png");
   const img2 = await loadImagePixels("sticker2.png");
