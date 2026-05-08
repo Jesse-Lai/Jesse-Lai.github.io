@@ -418,7 +418,6 @@ console.log("wall.js loaded");
   // ─── DAPPLED LIGHT ───
   const lightContainer = new PIXI.Container();
   lightContainer.eventMode = "none";
-  app.stage.addChild(lightContainer);
   const dapples = [];
   const dL = deskBounds.left, dT = deskBounds.top;
   const dW = deskBounds.right - deskBounds.left;
@@ -481,6 +480,9 @@ console.log("wall.js loaded");
   const stickers = [sticker1, photo1, photo2, photo3, photo4, photo6];
   [photo1, photo2, photo3, photo4, photo6].forEach(p => { p.addShadow(); p.noParticles = true; p.container.rotation = (Math.random() * 8 - 4) * Math.PI / 180; });
 
+  // Add light layer on top of everything
+  app.stage.addChild(lightContainer);
+
   // Initial text layout
   await document.fonts.ready;
   layoutText(stickers);
@@ -511,6 +513,7 @@ console.log("wall.js loaded");
       draggedSticker = hovered;
       app.stage.removeChild(hovered.container);
       app.stage.addChild(hovered.container);
+      app.stage.addChild(lightContainer);
     }
   }
 
@@ -536,6 +539,7 @@ console.log("wall.js loaded");
         app.stage.removeChild(hovered.container);
         app.stage.addChild(hovered.container);
       }
+        app.stage.addChild(lightContainer);
     }
   });
   window.addEventListener("mouseup", () => {
