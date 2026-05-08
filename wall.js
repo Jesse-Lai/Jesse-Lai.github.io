@@ -415,6 +415,29 @@ console.log("wall.js loaded");
   app.stage.addChild(deskShadow);
   app.stage.addChild(deskSprite);
 
+  // ─── DAPPLED LIGHT ───
+  const lightContainer = new PIXI.Container();
+  lightContainer.eventMode = "none";
+  app.stage.addChild(lightContainer);
+  const dapples = [];
+  const dL = deskBounds.left, dT = deskBounds.top;
+  const dW = deskBounds.right - deskBounds.left;
+  const dH = deskBounds.bottom - deskBounds.top;
+  for (let i = 0; i < 18; i++) {
+    const g = new PIXI.Graphics();
+    const w = dW * (0.08 + Math.random() * 0.15);
+    const h = w * (0.5 + Math.random() * 0.8);
+    const cx = dL + Math.random() * dW;
+    const cy = dT + Math.random() * dH;
+    g.ellipse(0, 0, w / 2, h / 2);
+    g.fill({ color: 0xffeebb, alpha: 0.08 + Math.random() * 0.07 });
+    g.x = cx; g.y = cy;
+    g.rotation = Math.random() * Math.PI;
+    g.blendMode = "add";
+    lightContainer.addChild(g);
+    dapples.push({ g, baseX: cx, baseY: cy, baseAlpha: g.alpha, phaseX: Math.random() * Math.PI * 2, phaseY: Math.random() * Math.PI * 2, speedX: 0.3 + Math.random() * 0.4, speedY: 0.2 + Math.random() * 0.3, ampX: 3 + Math.random() * 5, ampY: 2 + Math.random() * 4 });
+  }
+
   // Desk bounds for particle boundary effects
   const deskBounds = {
     left: deskSprite.x,
@@ -550,6 +573,14 @@ console.log("wall.js loaded");
   app.ticker.add((ticker) => {
     const dt = Math.min(ticker.deltaMS / 1000, 0.05);
 
+
+    // Animate dappled light
+    const t = performance.now() / 1000;
+    for (const d of dapples) {
+      d.g.x = d.baseX + Math.sin(t * d.speedX + d.phaseX) * d.ampX;
+      d.g.y = d.baseY + Math.sin(t * d.speedY + d.phaseY) * d.ampY;
+      d.g.alpha = d.baseAlpha + Math.sin(t * 0.5 + d.phaseX) * 0.02;
+    }
     const hovered = draggedSticker ? null : getHoveredSticker();
     for (const s of stickers) {
       s.setHover(s === hovered);
