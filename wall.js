@@ -223,6 +223,13 @@ console.log("wall.js loaded");
         this.container.x = this.posX;
         this.container.y = this.posY;
         if (this.state === "hover") this.activate();
+        // Dim photos outside desk bounds
+        if (typeof deskBounds !== "undefined" && this.noParticles) {
+          const b = this.bounds;
+          const outside = b.x < deskBounds.left || b.x + b.w > deskBounds.right || b.y < deskBounds.top || b.y + b.h > deskBounds.bottom;
+          const targetAlpha = outside ? 0.8 : 1.0;
+          this.container.alpha += (targetAlpha - this.container.alpha) * 0.1;
+        }
         if (!this.activated) return;
       }
       const targetHover = (this.state === "hover" || this.state === "dragging") ? 1 : 0;
@@ -444,20 +451,6 @@ console.log("wall.js loaded");
   const stickers = [sticker1, photo1, photo2, photo3, photo4, photo5];
   [photo1, photo2, photo3, photo4, photo5].forEach(p => { p.addShadow(); p.noParticles = true; p.container.rotation = (Math.random() * 8 - 4) * Math.PI / 180; });
 
-
-  // Dark overlay outside desk bounds
-  const dimAlpha = 0.2;
-  const dimOverlay = new PIXI.Container();
-  dimOverlay.eventMode = "none";
-  // Top
-  const dt = new PIXI.Graphics(); dt.rect(0, 0, W, deskBounds.top); dt.fill({color:0,alpha:dimAlpha}); dimOverlay.addChild(dt);
-  // Bottom
-  const db = new PIXI.Graphics(); db.rect(0, deskBounds.bottom, W, H-deskBounds.bottom); db.fill({color:0,alpha:dimAlpha}); dimOverlay.addChild(db);
-  // Left
-  const dl = new PIXI.Graphics(); dl.rect(0, deskBounds.top, deskBounds.left, deskBounds.bottom-deskBounds.top); dl.fill({color:0,alpha:dimAlpha}); dimOverlay.addChild(dl);
-  // Right
-  const dr = new PIXI.Graphics(); dr.rect(deskBounds.right, deskBounds.top, W-deskBounds.right, deskBounds.bottom-deskBounds.top); dr.fill({color:0,alpha:dimAlpha}); dimOverlay.addChild(dr);
-  app.stage.addChild(dimOverlay);
   // Initial text layout
   await document.fonts.ready;
   layoutText(stickers);
