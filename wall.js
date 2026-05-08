@@ -222,6 +222,13 @@ console.log("wall.js loaded");
         this.flatSprite.y = 0;
         this.container.x = this.posX;
         this.container.y = this.posY;
+        // Dim when outside desk bounds
+        if (typeof deskBounds !== "undefined" && this.noParticles) {
+          const b = this.bounds;
+          const inside = b.x >= deskBounds.left && b.x + b.w <= deskBounds.right && b.y >= deskBounds.top && b.y + b.h <= deskBounds.bottom;
+          const targetAlpha = inside ? 1.0 : 0.8;
+          this.container.alpha += (targetAlpha - this.container.alpha) * 0.1;
+        }
         if (this.state === "hover") this.activate();
         if (!this.activated) return;
       }
