@@ -101,7 +101,10 @@ console.log("wall.js loaded");
 
 
     addShadow() {
-      this.flatSprite.filters = [new PIXI.DropShadowFilter({ offset: {x:4,y:4}, blur: 3, alpha: 0.15, color: 0x000000 })];
+      const g = new PIXI.Graphics();
+      g.roundRect(-this.renderW/2 + 4, -this.renderH/2 + 4, this.renderW, this.renderH, 2);
+      g.fill({ color: 0x000000, alpha: 0.1 });
+      this.container.addChildAt(g, 0);
       this.shadow = true;
     }
     activate() {
@@ -445,8 +448,11 @@ console.log("wall.js loaded");
   const imgP5 = await loadImagePixels("photo5.png");
   const p5Scale = Math.min(photoMaxW / imgP5.w, photoMax / imgP5.h) * 1.5;
   const photo5 = new Sticker(imgP5, imgP5, cx + deskW * 0.05, cy + deskH * 0.25, p5Scale);
-  const stickers = [sticker1, photo1, photo2, photo3, photo4, photo5];
-  [photo1, photo2, photo3, photo4, photo5].forEach(p => { p.addShadow(); p.noParticles = true; p.container.rotation = (Math.random() * 8 - 4) * Math.PI / 180; });
+  const imgP6 = await loadImagePixels("photo6.png");
+  const p6Scale = Math.min(photoMaxW / imgP6.w, photoMax / imgP6.h);
+  const photo6 = new Sticker(imgP6, imgP6, cx - deskW * 0.1, cy - deskH * 0.15, p6Scale);
+  const stickers = [sticker1, photo1, photo2, photo3, photo4, photo5, photo6];
+  [photo1, photo2, photo3, photo4, photo5, photo6].forEach(p => { p.addShadow(); p.noParticles = true; p.container.rotation = (Math.random() * 8 - 4) * Math.PI / 180; });
 
   // Initial text layout
   await document.fonts.ready;
