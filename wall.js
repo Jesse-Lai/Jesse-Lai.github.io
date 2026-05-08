@@ -101,10 +101,7 @@ console.log("wall.js loaded");
 
 
     addShadow() {
-      const g = new PIXI.Graphics();
-      g.roundRect(-this.renderW/2 + 4, -this.renderH/2 + 4, this.renderW, this.renderH, 2);
-      g.fill({ color: 0x000000, alpha: 0.075 });
-      this.container.addChildAt(g, 0);
+      this.flatSprite.filters = [new PIXI.DropShadowFilter({ offset: {x:4,y:4}, blur: 3, alpha: 0.15, color: 0x000000 })];
       this.shadow = true;
     }
     activate() {
