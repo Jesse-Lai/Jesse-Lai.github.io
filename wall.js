@@ -408,7 +408,10 @@ console.log("wall.js loaded");
   const dsH = deskSprite.texture.height * deskScale;
   const deskShadow = new PIXI.Graphics();
   deskShadow.roundRect(deskSprite.x + 6, deskSprite.y + 8, dsW, dsH, 4);
-  deskShadow.fill({ color: 0x000000, alpha: 0.2 });
+  deskShadow.fill({ color: 0x000000, alpha: 0.3 });
+  const deskBlur = new PIXI.BlurFilter({ strength: 10, quality: 4 });
+  deskBlur.padding = 60;
+  deskShadow.filters = [deskBlur];
   app.stage.addChild(deskShadow);
   app.stage.addChild(deskSprite);
 
