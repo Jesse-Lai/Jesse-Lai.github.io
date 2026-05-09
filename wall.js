@@ -433,7 +433,7 @@ console.log("wall.js loaded");
   function drawDappleMap() {
     // Dark base - this darkens everything via multiply
     lctx.clearRect(0, 0, W, H);
-    lctx.fillStyle = "rgba(0, 0, 0, 0.25)";
+    lctx.fillStyle = "rgba(0, 0, 0, 0.12)";
     lctx.fillRect(0, 0, W, H);
 
     // Bright spots - these "punch through" the dark to restore/brighten
