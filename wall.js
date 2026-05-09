@@ -415,6 +415,15 @@ console.log("wall.js loaded");
   app.stage.addChild(deskShadow);
   app.stage.addChild(deskSprite);
 
+
+  // Desk bounds for particle boundary effects
+  const deskBounds = {
+    left: deskSprite.x,
+    top: deskSprite.y,
+    right: deskSprite.x + deskSprite.texture.width * deskScale,
+    bottom: deskSprite.y + deskSprite.texture.height * deskScale,
+  };
+
   // ─── DAPPLED LIGHT ───
   console.log("creating light dapples...");
   const lightContainer = new PIXI.Container();
@@ -437,15 +446,6 @@ console.log("wall.js loaded");
     lightContainer.addChild(g);
     dapples.push({ g, baseX: cx, baseY: cy, baseAlpha: g.alpha, phaseX: Math.random() * Math.PI * 2, phaseY: Math.random() * Math.PI * 2, speedX: 0.3 + Math.random() * 0.4, speedY: 0.2 + Math.random() * 0.3, ampX: 3 + Math.random() * 5, ampY: 2 + Math.random() * 4 });
   }
-
-  // Desk bounds for particle boundary effects
-  const deskBounds = {
-    left: deskSprite.x,
-    top: deskSprite.y,
-    right: deskSprite.x + deskSprite.texture.width * deskScale,
-    bottom: deskSprite.y + deskSprite.texture.height * deskScale,
-  };
-
   console.log("loading stickers...");
   // ─── LOAD STICKERS ───
   const img1 = await loadImagePixels("sticker.png");
