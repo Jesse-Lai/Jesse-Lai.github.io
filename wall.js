@@ -533,7 +533,7 @@ console.log("wall.js loaded");
   // window.addEventListener("click", handleClick); // disabled - using mousedown/up instead
 
   // Mousedown + drag + mouseup support
-  window.addEventListener("mousedown", e => {
+  app.canvas.addEventListener("mousedown", e => {
     mouse.x = e.clientX; mouse.y = e.clientY;
     if (!draggedSticker) {
       const hovered = getHoveredSticker();
@@ -546,7 +546,7 @@ console.log("wall.js loaded");
         app.stage.addChild(lightSprite);
     }
   });
-  window.addEventListener("mouseup", () => {
+  app.canvas.addEventListener("mouseup", () => {
     if (draggedSticker) {
       draggedSticker.drop();
       draggedSticker = null;
