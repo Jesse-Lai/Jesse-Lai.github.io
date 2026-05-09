@@ -397,31 +397,14 @@ console.log("wall.js loaded");
 
   function layoutText(stickers) {} // disabled - no text
 
-  // ─── DESK BACKGROUND ───
-  const deskTex = await PIXI.Assets.load("desk.png");
-  const deskSprite = new PIXI.Sprite(deskTex);
-  const deskScale = Math.min((W * 0.8) / deskSprite.texture.width, (H * 0.8) / deskSprite.texture.height);
-  deskSprite.scale.set(deskScale);
-  deskSprite.x = (W - deskSprite.texture.width * deskScale) / 2;
-  deskSprite.y = (H - deskSprite.texture.height * deskScale) / 2;
-  const dsW = deskSprite.texture.width * deskScale;
-  const dsH = deskSprite.texture.height * deskScale;
-  const deskShadow = new PIXI.Graphics();
-  deskShadow.roundRect(deskSprite.x + 6, deskSprite.y + 8, dsW, dsH, 4);
-  deskShadow.fill({ color: 0x000000, alpha: 0.3 });
-  const deskBlur = new PIXI.BlurFilter({ strength: 10, quality: 4 });
-  deskBlur.padding = 60;
-  deskShadow.filters = [deskBlur];
-  app.stage.addChild(deskShadow);
-  app.stage.addChild(deskSprite);
 
 
   // Desk bounds for particle boundary effects
   const deskBounds = {
-    left: deskSprite.x,
-    top: deskSprite.y,
-    right: deskSprite.x + deskSprite.texture.width * deskScale,
-    bottom: deskSprite.y + deskSprite.texture.height * deskScale,
+    left: 0,
+    top: 0,
+    right: W,
+    bottom: H,
   };
 
   // ─── DAPPLED LIGHT (CSS-Tricks method: dark overlay + bright spots, multiply blend) ───
@@ -473,8 +456,8 @@ console.log("wall.js loaded");
   const imgP2 = await loadImagePixels("photo2.png");
   const imgP3 = await loadImagePixels("photo3.png");
 
-  const deskH = deskSprite.texture.height * deskScale;
-  const deskW = deskSprite.texture.width * deskScale;
+  const deskH = H;
+  const deskW = W;
   const maxH = deskH * 0.45;
   const maxSW = deskW * 0.35;
   const photoMax = deskH * 0.35;
@@ -485,8 +468,8 @@ console.log("wall.js loaded");
   const p2Scale = Math.min(photoMaxW / imgP2.w, photoMax / imgP2.h);
   const p3Scale = Math.min(photoMaxW / imgP3.w, photoMax / imgP3.h);
 
-  const cx = deskBounds.left + deskW / 2;
-  const cy = deskBounds.top + deskH / 2;
+  const cx = W / 2;
+  const cy = H / 2;
 
   const sticker1 = new Sticker(img1, img2, cx, cy, s1Scale);
   const photo1 = new Sticker(imgP1, imgP1, cx - deskW * 0.3, cy - deskH * 0.15, p1Scale);
