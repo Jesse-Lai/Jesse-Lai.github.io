@@ -432,19 +432,37 @@ console.log("wall.js loaded");
   const dL = deskBounds.left, dT = deskBounds.top;
   const dW = deskBounds.right - deskBounds.left;
   const dH = deskBounds.bottom - deskBounds.top;
-  for (let i = 0; i < 18; i++) {
-    const g = new PIXI.Graphics();
-    const w = dW * (0.08 + Math.random() * 0.15);
-    const h = w * (0.5 + Math.random() * 0.8);
+
+  // Create soft light blob texture using radialGradient
+  function makeLightBlobTexture(size) {
+    const c = document.createElement("canvas");
+    c.width = size; c.height = size;
+    const ctx = c.getContext("2d");
+    const grad = ctx.createRadialGradient(size/2, size/2, 0, size/2, size/2, size/2);
+    grad.addColorStop(0, "rgba(255, 240, 200, 0.35)");
+    grad.addColorStop(0.4, "rgba(255, 235, 180, 0.15)");
+    grad.addColorStop(0.7, "rgba(255, 230, 170, 0.05)");
+    grad.addColorStop(1, "rgba(255, 225, 160, 0)");
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, size, size);
+    return PIXI.Texture.from(c);
+  }
+
+  const blobTex = makeLightBlobTexture(256);
+
+  for (let i = 0; i < 20; i++) {
+    const s = new PIXI.Sprite(blobTex);
+    s.anchor.set(0.5);
+    const scale = (0.3 + Math.random() * 0.7) * Math.min(dW, dH) / 256;
+    s.scale.set(scale * (0.8 + Math.random() * 0.6), scale * (0.5 + Math.random() * 0.8));
     const cx = dL + Math.random() * dW;
     const cy = dT + Math.random() * dH;
-    g.ellipse(0, 0, w / 2, h / 2);
-    g.fill({ color: 0xffeebb, alpha: 0.08 + Math.random() * 0.07 });
-    g.x = cx; g.y = cy;
-    g.rotation = Math.random() * Math.PI;
-    g.blendMode = "add";
-    lightContainer.addChild(g);
-    dapples.push({ g, baseX: cx, baseY: cy, baseAlpha: g.alpha, phaseX: Math.random() * Math.PI * 2, phaseY: Math.random() * Math.PI * 2, speedX: 0.3 + Math.random() * 0.4, speedY: 0.2 + Math.random() * 0.3, ampX: 3 + Math.random() * 5, ampY: 2 + Math.random() * 4 });
+    s.x = cx; s.y = cy;
+    s.rotation = Math.random() * Math.PI;
+    s.blendMode = "add";
+    s.alpha = 0.6 + Math.random() * 0.4;
+    lightContainer.addChild(s);
+    dapples.push({ g: s, baseX: cx, baseY: cy, baseAlpha: s.alpha, phaseX: Math.random() * Math.PI * 2, phaseY: Math.random() * Math.PI * 2, speedX: 0.3 + Math.random() * 0.4, speedY: 0.2 + Math.random() * 0.3, ampX: 3 + Math.random() * 5, ampY: 2 + Math.random() * 4 });
   }
   console.log("loading stickers...");
   // ─── LOAD STICKERS ───
