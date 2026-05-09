@@ -433,7 +433,7 @@ console.log("wall.js loaded");
   function drawDappleMap() {
     // Dark base - this darkens everything via multiply
     lctx.clearRect(0, 0, W, H);
-    lctx.fillStyle = "rgba(0, 0, 0, 0.12)";
+    lctx.fillStyle = "rgba(0, 0, 0, 0.18)";
     lctx.fillRect(0, 0, W, H);
 
     // Bright spots - these "punch through" the dark to restore/brighten
@@ -441,10 +441,10 @@ console.log("wall.js loaded");
     for (let i = 0; i < spots; i++) {
       const x = deskBounds.left + Math.random() * (deskBounds.right - deskBounds.left);
       const y = deskBounds.top + Math.random() * (deskBounds.bottom - deskBounds.top);
-      const r = 30 + Math.random() * 80;
+      const r = 50 + Math.random() * 120;
       const grad = lctx.createRadialGradient(x, y, 0, x, y, r);
-      grad.addColorStop(0, "rgba(255, 255, 240, 0.5)");
-      grad.addColorStop(0.5, "rgba(255, 250, 220, 0.25)");
+      grad.addColorStop(0, "rgba(255, 255, 240, 0.7)");
+      grad.addColorStop(0.5, "rgba(255, 250, 220, 0.4)");
       grad.addColorStop(1, "rgba(255, 245, 200, 0)");
       lctx.fillStyle = grad;
       // Random ellipse via scale
