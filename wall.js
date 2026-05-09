@@ -424,46 +424,47 @@ console.log("wall.js loaded");
     bottom: deskSprite.y + deskSprite.texture.height * deskScale,
   };
 
-  // ─── DAPPLED LIGHT ───
-  console.log("creating light dapples...");
-  const lightContainer = new PIXI.Container();
-  lightContainer.eventMode = "none";
-  const dapples = [];
-  const dL = deskBounds.left, dT = deskBounds.top;
-  const dW = deskBounds.right - deskBounds.left;
-  const dH = deskBounds.bottom - deskBounds.top;
+  // ─── DAPPLED LIGHT (CSS-Tricks method: dark overlay + bright spots, multiply blend) ───
+  // Create a single canvas with dark base + soft bright spots
+  const lightCanvas = document.createElement("canvas");
+  lightCanvas.width = W; lightCanvas.height = H;
+  const lctx = lightCanvas.getContext("2d");
 
-  // Create soft light blob texture using radialGradient
-  function makeLightBlobTexture(size) {
-    const c = document.createElement("canvas");
-    c.width = size; c.height = size;
-    const ctx = c.getContext("2d");
-    const grad = ctx.createRadialGradient(size/2, size/2, 0, size/2, size/2, size/2);
-    grad.addColorStop(0, "rgba(255, 240, 200, 0.35)");
-    grad.addColorStop(0.4, "rgba(255, 235, 180, 0.15)");
-    grad.addColorStop(0.7, "rgba(255, 230, 170, 0.05)");
-    grad.addColorStop(1, "rgba(255, 225, 160, 0)");
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, size, size);
-    return PIXI.Texture.from(c);
+  function drawDappleMap() {
+    // Dark base - this darkens everything via multiply
+    lctx.clearRect(0, 0, W, H);
+    lctx.fillStyle = "rgba(0, 0, 0, 0.25)";
+    lctx.fillRect(0, 0, W, H);
+
+    // Bright spots - these "punch through" the dark to restore/brighten
+    const spots = 22;
+    for (let i = 0; i < spots; i++) {
+      const x = deskBounds.left + Math.random() * (deskBounds.right - deskBounds.left);
+      const y = deskBounds.top + Math.random() * (deskBounds.bottom - deskBounds.top);
+      const r = 30 + Math.random() * 80;
+      const grad = lctx.createRadialGradient(x, y, 0, x, y, r);
+      grad.addColorStop(0, "rgba(255, 255, 240, 0.5)");
+      grad.addColorStop(0.5, "rgba(255, 250, 220, 0.25)");
+      grad.addColorStop(1, "rgba(255, 245, 200, 0)");
+      lctx.fillStyle = grad;
+      // Random ellipse via scale
+      lctx.save();
+      lctx.translate(x, y);
+      lctx.rotate(Math.random() * Math.PI);
+      lctx.scale(1, 0.5 + Math.random() * 1.0);
+      lctx.translate(-x, -y);
+      lctx.beginPath();
+      lctx.arc(x, y, r, 0, Math.PI * 2);
+      lctx.fill();
+      lctx.restore();
+    }
   }
+  drawDappleMap();
 
-  const blobTex = makeLightBlobTexture(256);
-
-  for (let i = 0; i < 20; i++) {
-    const s = new PIXI.Sprite(blobTex);
-    s.anchor.set(0.5);
-    const scale = (0.3 + Math.random() * 0.7) * Math.min(dW, dH) / 256;
-    s.scale.set(scale * (0.8 + Math.random() * 0.6), scale * (0.5 + Math.random() * 0.8));
-    const cx = dL + Math.random() * dW;
-    const cy = dT + Math.random() * dH;
-    s.x = cx; s.y = cy;
-    s.rotation = Math.random() * Math.PI;
-    s.blendMode = "add";
-    s.alpha = 0.6 + Math.random() * 0.4;
-    lightContainer.addChild(s);
-    dapples.push({ g: s, baseX: cx, baseY: cy, baseAlpha: s.alpha, phaseX: Math.random() * Math.PI * 2, phaseY: Math.random() * Math.PI * 2, speedX: 0.3 + Math.random() * 0.4, speedY: 0.2 + Math.random() * 0.3, ampX: 3 + Math.random() * 5, ampY: 2 + Math.random() * 4 });
-  }
+  const lightTex = PIXI.Texture.from(lightCanvas);
+  const lightSprite = new PIXI.Sprite(lightTex);
+  lightSprite.blendMode = "multiply";
+  lightSprite.eventMode = "none";
   console.log("loading stickers...");
   // ─── LOAD STICKERS ───
   const img1 = await loadImagePixels("sticker.png");
@@ -501,7 +502,7 @@ console.log("wall.js loaded");
   [photo1, photo2, photo3, photo4, photo6].forEach(p => { p.addShadow(); p.noParticles = true; p.container.rotation = (Math.random() * 8 - 4) * Math.PI / 180; });
 
   // Add light layer on top of everything
-  app.stage.addChild(lightContainer);
+  app.stage.addChild(lightSprite);
 
   // Initial text layout
   await document.fonts.ready;
@@ -533,7 +534,7 @@ console.log("wall.js loaded");
       draggedSticker = hovered;
       app.stage.removeChild(hovered.container);
       app.stage.addChild(hovered.container);
-      app.stage.addChild(lightContainer);
+      app.stage.addChild(lightSprite);
     }
   }
 
@@ -559,7 +560,7 @@ console.log("wall.js loaded");
         app.stage.removeChild(hovered.container);
         app.stage.addChild(hovered.container);
       }
-        app.stage.addChild(lightContainer);
+        app.stage.addChild(lightSprite);
     }
   });
   window.addEventListener("mouseup", () => {
@@ -598,13 +599,10 @@ console.log("wall.js loaded");
     const dt = Math.min(ticker.deltaMS / 1000, 0.05);
 
 
-    // Animate dappled light
+    // Animate dappled light - gentle drift
     const t = performance.now() / 1000;
-    for (const d of dapples) {
-      d.g.x = d.baseX + Math.sin(t * d.speedX + d.phaseX) * d.ampX;
-      d.g.y = d.baseY + Math.sin(t * d.speedY + d.phaseY) * d.ampY;
-      d.g.alpha = d.baseAlpha + Math.sin(t * 0.5 + d.phaseX) * 0.02;
-    }
+    lightSprite.x = Math.sin(t * 0.15) * 5;
+    lightSprite.y = Math.sin(t * 0.12 + 1) * 3;
     const hovered = draggedSticker ? null : getHoveredSticker();
     for (const s of stickers) {
       s.setHover(s === hovered);
