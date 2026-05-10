@@ -78,7 +78,14 @@
       <div id="atom-bar">
         <div class="atom-thumb active" data-atom="sticker" onclick="switchAtom('sticker')"><img src="sticker.png"></div>
         <div class="atom-thumb" data-atom="photo" onclick="switchAtom('photo')"><img src="photo3.png"></div>
-        <div class="atom-thumb" data-atom="clip" onclick="switchAtom('clip')"><img src="photo1.png" style="transform:rotate(-3deg) scale(0.85);"></div>
+        <div class="atom-thumb" data-atom="clip" onclick="switchAtom('clip')" style="width:56px;display:flex;align-items:center;justify-content:center;">
+          <svg width="48" height="56" viewBox="0 0 48 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="6" y="12" width="32" height="38" rx="2" fill="#2a2a2a" transform="rotate(-4 6 12)"/>
+            <rect x="9" y="9" width="32" height="38" rx="2" fill="#333" transform="rotate(2 9 9)"/>
+            <rect x="8" y="6" width="32" height="38" rx="2" fill="#444" transform="rotate(5 8 6)"/>
+            <path d="M28 2 L28 20 Q28 24 24 24 L16 24 Q12 24 12 20 L12 6 Q12 2 16 2 L20 2 Q22 2 22 4 L22 16" stroke="#888" stroke-width="2" stroke-linecap="round" fill="none"/>
+          </svg>
+        </div>
       </div>
     </div>
     <div id="panel">
