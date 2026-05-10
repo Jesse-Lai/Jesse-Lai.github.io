@@ -1,0 +1,82 @@
+{
+  "sticker": {
+    "name": "Sticker",
+    "description": "粒子化贴纸，支持 morph 变换",
+    "style": {
+      "particleGap": 3,
+      "particleScale": 1,
+      "shadowOffset": 2,
+      "shadowAlpha": 0.15
+    },
+    "behavior": {
+      "draggable": true,
+      "hoverScale": 1.05,
+      "springDamping": 0.7,
+      "springStiffness": 0.15,
+      "morphInterval": 1000,
+      "hasParticles": true,
+      "hasMorph": true,
+      "cornerPeel": true,
+      "expandOnHover": 12
+    },
+    "boundary": {
+      "minCount": 0,
+      "maxCount": 3,
+      "canExistAlone": true,
+      "mustAttachTo": null
+    },
+    "combines": ["photo", "note"]
+  },
+  "photo": {
+    "name": "Photo",
+    "description": "展示照片，带手写日期标记",
+    "style": {
+      "particleGap": 3,
+      "particleScale": 1,
+      "shadowOffset": 2,
+      "shadowAlpha": 0.15,
+      "rotation": { "min": -4, "max": 4 }
+    },
+    "behavior": {
+      "draggable": true,
+      "hoverScale": 1.05,
+      "springDamping": 0.7,
+      "springStiffness": 0.15,
+      "hasParticles": false,
+      "hasMorph": false,
+      "cornerPeel": false,
+      "expandOnHover": 0
+    },
+    "boundary": {
+      "minCount": 0,
+      "maxCount": 10,
+      "canExistAlone": true,
+      "mustAttachTo": null
+    },
+    "combines": ["pin", "sticker", "stamp"]
+  },
+  "clip": {
+    "name": "Paper Clip",
+    "description": "曲别针，夹住多张照片/图片",
+    "style": {
+      "clipColor": "#999999",
+      "clipWidth": 2.5,
+      "photoOffset": 12,
+      "photoRotationSpread": 0.08
+    },
+    "behavior": {
+      "draggable": true,
+      "hoverScale": 1.05,
+      "hasParticles": false
+    },
+    "boundary": {
+      "minCount": 0,
+      "maxCount": 5,
+      "canExistAlone": false,
+      "minPhotos": 2,
+      "maxPhotos": 3,
+      "mustAttachTo": "photo"
+    },
+    "combines": ["photo"]
+  }
+}
