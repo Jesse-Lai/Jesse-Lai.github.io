@@ -25,7 +25,10 @@
       "canExistAlone": true,
       "mustAttachTo": null
     },
-    "combines": ["photo", "note"]
+    "combines": [
+      "photo",
+      "note"
+    ]
   },
   "photo": {
     "name": "Photo",
@@ -35,7 +38,10 @@
       "particleScale": 1,
       "shadowOffset": 2,
       "shadowAlpha": 0.15,
-      "rotation": { "min": -4, "max": 4 }
+      "rotation": {
+        "min": -4,
+        "max": 4
+      }
     },
     "behavior": {
       "draggable": true,
@@ -53,7 +59,11 @@
       "canExistAlone": true,
       "mustAttachTo": null
     },
-    "combines": ["pin", "sticker", "stamp"]
+    "combines": [
+      "pin",
+      "sticker",
+      "stamp"
+    ]
   },
   "clip": {
     "name": "Paper Clip",
@@ -77,6 +87,32 @@
       "maxPhotos": 3,
       "mustAttachTo": "photo"
     },
-    "combines": ["photo"]
+    "combines": [
+      "photo"
+    ]
+  },
+  "lure": {
+    "name": "Lure",
+    "description": "路亚假饵，代表爱好钓鱼",
+    "style": {
+      "bodyColor": "#cc3333",
+      "bodyAccent": "#ffcc33",
+      "hookColor": "#888888",
+      "bodyWidth": 28,
+      "bodyHeight": 80
+    },
+    "behavior": {
+      "draggable": true,
+      "hoverScale": 1.05,
+      "hasParticles": false,
+      "hasMorph": false
+    },
+    "boundary": {
+      "minCount": 0,
+      "maxCount": 3,
+      "canExistAlone": true,
+      "mustAttachTo": null
+    },
+    "combines": []
   }
 }

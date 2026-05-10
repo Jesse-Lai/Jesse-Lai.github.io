@@ -86,6 +86,15 @@
             <path d="M28 2 L28 20 Q28 24 24 24 L16 24 Q12 24 12 20 L12 6 Q12 2 16 2 L20 2 Q22 2 22 4 L22 16" stroke="#888" stroke-width="2" stroke-linecap="round" fill="none"/>
           </svg>
         </div>
+        <div class="atom-thumb" data-atom="lure" onclick="switchAtom('lure')" style="width:40px;display:flex;align-items:center;justify-content:center;">
+          <svg width="24" height="56" viewBox="0 0 24 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="12" cy="20" rx="8" ry="18" fill="#cc3333"/>
+            <ellipse cx="12" cy="20" rx="4" ry="12" fill="#ffcc33" opacity="0.5"/>
+            <circle cx="12" cy="6" r="3" stroke="#888" stroke-width="1.5" fill="none"/>
+            <line x1="12" y1="38" x2="12" y2="44" stroke="#888" stroke-width="1.5"/>
+            <path d="M8 44 Q12 50 12 44 Q12 50 16 44" stroke="#888" stroke-width="1.5" fill="none"/>
+          </svg>
+        </div>
       </div>
     </div>
     <div id="panel">
@@ -103,6 +112,7 @@
       sticker: { images: ['sticker.png', 'sticker2.png'], type: 'sticker' },
       photo: { images: ['photo3.png'], type: 'photo' },
       clip: { images: ['photo1.png', 'photo2.png', 'photo4.png'], type: 'clip' },
+      lure: { images: [], type: 'lure' },
     };
 
     // Load config
@@ -287,6 +297,51 @@
       const cfg = atomsConfig[name];
       const W=app.screen.width, H=app.screen.height;
 
+      if(imgCfg.type==='lure'){
+        const group=new PIXI.Container();
+        const W2=app.screen.width,H2=app.screen.height;
+        group.x=W2/2;group.y=H2/2-20;
+        const bw=cfg?.style?.bodyWidth||28,bh=cfg?.style?.bodyHeight||80;
+        const sc=Math.min(W2*0.15/bw, H2*0.3/bh);
+        // Ring at top
+        const ring=new PIXI.Graphics();
+        ring.circle(0,-bh*sc/2-8*sc,5*sc);
+        ring.setStrokeStyle({width:2*sc,color:0x888888});ring.stroke();
+        group.addChild(ring);
+        // Body
+        const body=new PIXI.Graphics();
+        body.ellipse(0,0,bw*sc/2,bh*sc/2);
+        body.fill(parseInt((cfg?.style?.bodyColor||'#cc3333').replace('#',''),16));
+        group.addChild(body);
+        // Accent stripe
+        const accent=new PIXI.Graphics();
+        accent.ellipse(0,0,bw*sc/4,bh*sc/3);
+        accent.fill({color:parseInt((cfg?.style?.bodyAccent||'#ffcc33').replace('#',''),16),alpha:0.5});
+        group.addChild(accent);
+        // Eye
+        const eye=new PIXI.Graphics();
+        eye.circle(bw*sc/5,-bh*sc/5,3*sc);
+        eye.fill(0xffffff);eye.circle(bw*sc/5,-bh*sc/5,1.5*sc);eye.fill(0x000000);
+        group.addChild(eye);
+        // Hook stem
+        const hook=new PIXI.Graphics();
+        hook.setStrokeStyle({width:2*sc,color:parseInt((cfg?.style?.hookColor||'#888888').replace('#',''),16),cap:'round'});
+        hook.moveTo(0,bh*sc/2);hook.lineTo(0,bh*sc/2+15*sc);
+        // Treble hook
+        hook.moveTo(-6*sc,bh*sc/2+15*sc);hook.quadraticCurveTo(-8*sc,bh*sc/2+25*sc,0,bh*sc/2+15*sc);
+        hook.moveTo(6*sc,bh*sc/2+15*sc);hook.quadraticCurveTo(8*sc,bh*sc/2+25*sc,0,bh*sc/2+15*sc);
+        hook.moveTo(0,bh*sc/2+15*sc);hook.quadraticCurveTo(0,bh*sc/2+26*sc,-3*sc,bh*sc/2+20*sc);
+        hook.stroke();
+        group.addChild(hook);
+        app.stage.addChild(group);extraContainers.push(group);
+        // Draggable
+        let lureDrag=false,lureOffX=0,lureOffY=0;
+        const lureHit=(mx,my)=>{const r=bh*sc;return Math.abs(mx-group.x)<bw*sc&&Math.abs(my-group.y)<r;};
+        app.canvas.addEventListener('mousedown',e=>{if(lureHit(e.clientX,e.clientY)){lureDrag=true;lureOffX=group.x-e.clientX;lureOffY=group.y-e.clientY;}});
+        app.canvas.addEventListener('mousemove',e=>{if(lureDrag){group.x=e.clientX+lureOffX;group.y=e.clientY+lureOffY;}});
+        app.canvas.addEventListener('mouseup',()=>{lureDrag=false;});
+        return;
+      }
       if(imgCfg.type==='clip'){
         const group=new PIXI.Container();group.x=W/2;group.y=H/2-20;
         const imgs=[];for(const src of imgCfg.images)imgs.push(await loadImagePixels(src));
