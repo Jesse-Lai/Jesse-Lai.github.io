@@ -304,8 +304,16 @@
         const clipG=new PIXI.Graphics();const cw=24,ch=60;
         clipG.setStrokeStyle({width:cfg?.style?.clipWidth||2.5,color:parseInt((cfg?.style?.clipColor||'#999999').replace('#',''),16),cap:'round',join:'round'});
         clipG.moveTo(-cw/2,-ch/2);clipG.lineTo(-cw/2,ch/2-8);clipG.arcTo(-cw/2,ch/2,-cw/2+8,ch/2,8);clipG.lineTo(cw/2-8,ch/2);clipG.arcTo(cw/2,ch/2,cw/2,ch/2-8,8);clipG.lineTo(cw/2,-ch/2+12);clipG.arcTo(cw/2,-ch/2,cw/2-8,-ch/2,12);clipG.lineTo(-cw/4,-ch/2);clipG.arcTo(-cw/2+4,-ch/2,-cw/2+4,-ch/2+8,6);clipG.lineTo(-cw/2+4,ch/4);clipG.stroke();
-        clipG.x=maxW*0.35;clipG.y=-maxH*0.45;group.addChild(clipG);
-        app.stage.addChild(group);extraContainers.push(group);return;
+        clipG.x=8;clipG.y=-maxH*0.38;group.addChild(clipG);
+        app.stage.addChild(group);extraContainers.push(group);
+
+        // Make clip group draggable
+        let clipDrag=false, clipOffX=0, clipOffY=0;
+        const clipHit=(mx,my)=>{const b={x:group.x-maxW*0.6,y:group.y-maxH*0.5,w:maxW*1.2,h:maxH*1.1};return mx>b.x&&mx<b.x+b.w&&my>b.y&&my<b.y+b.h;};
+        app.canvas.addEventListener('mousedown',e=>{if(clipHit(e.clientX,e.clientY)){clipDrag=true;clipOffX=group.x-e.clientX;clipOffY=group.y-e.clientY;}});
+        app.canvas.addEventListener('mousemove',e=>{if(clipDrag){group.x=e.clientX+clipOffX;group.y=e.clientY+clipOffY;}});
+        app.canvas.addEventListener('mouseup',()=>{clipDrag=false;});
+        return;
       }
 
       const imgA=await loadImagePixels(imgCfg.images[0]);
