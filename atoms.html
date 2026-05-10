@@ -7,13 +7,291 @@
   <style>
     @font-face { font-family: 'Red Hat Mono'; src: url('fonts/RedHatMono-Regular.woff2') format('woff2'); font-weight: 400; }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: #0a0a0a; color: #999; font-family: 'Red Hat Mono', monospace; min-height: 100vh; }
-    a { color: #666; text-decoration: none; transition: color 0.2s; }
+    body { background: #0a0a0a; color: #999; font-family: 'Red Hat Mono', monospace; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+    a { color: #555; text-decoration: none; transition: color 0.2s; font-size: 13px; }
     a:hover { color: #fff; }
-    nav { padding: 20px 24px; font-size: 13px; }
+    nav { padding: 16px 24px; position: absolute; top: 0; left: 0; z-index: 10; }
+
+    #preview { flex: 1; position: relative; }
+    #preview canvas { display: block; }
+
+    #atom-bar {
+      height: 100px; padding: 16px 0;
+      display: flex; align-items: center; justify-content: center; gap: 12px;
+      border-top: 1px solid #1a1a1a;
+      background: #0a0a0a;
+    }
+    .atom-thumb {
+      width: 64px; height: 64px; border-radius: 8px;
+      background: #1a1a1a; border: 2px solid transparent;
+      cursor: pointer; transition: all 0.2s;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; color: #555;
+    }
+    .atom-thumb:hover { border-color: #333; }
+    .atom-thumb.active { border-color: #666; color: #ccc; }
+
+    #atom-name {
+      position: absolute; bottom: 120px; left: 50%;
+      transform: translateX(-50%);
+      font-size: 12px; color: #444; letter-spacing: 2px;
+      text-transform: uppercase; z-index: 10;
+    }
   </style>
 </head>
 <body>
   <nav><a href="index.html">← Back</a></nav>
+  <div id="preview"></div>
+  <div id="atom-name">Sticker</div>
+  <div id="atom-bar">
+    <div class="atom-thumb active" data-atom="sticker" onclick="switchAtom('sticker')">Sticker</div>
+    <div class="atom-thumb" data-atom="photo" onclick="switchAtom('photo')">Photo</div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/pixi.js@8/dist/pixi.min.js"></script>
+  <script>
+    let app, currentAtom = 'sticker', sticker = null;
+
+    const atoms = {
+      sticker: { images: ['sticker.png', 'sticker2.png'], hasMorph: true },
+      photo: { images: ['photo3.png'], hasMorph: false },
+    };
+
+    // Reuse core from wall.js
+    function sampleImage(imageData, w, h, gap) {
+      const pixels = imageData.data;
+      const points = [];
+      for (let y = 0; y < h; y += gap) {
+        for (let x = 0; x < w; x += gap) {
+          const i = (y * w + x) * 4;
+          if (pixels[i + 3] < 30) continue;
+          points.push({ nx: x / w, ny: y / h, r: pixels[i], g: pixels[i+1], b: pixels[i+2], a: pixels[i+3] });
+        }
+      }
+      return points;
+    }
+
+    async function loadImagePixels(src) {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.src = src;
+      await new Promise(r => img.onload = r);
+      const c = document.createElement("canvas");
+      c.width = img.naturalWidth; c.height = img.naturalHeight;
+      const ctx = c.getContext("2d");
+      ctx.drawImage(img, 0, 0);
+      const tex = PIXI.Texture.from(c);
+      return { data: ctx.getImageData(0, 0, c.width, c.height), w: c.width, h: c.height, tex };
+    }
+
+    class AtomSticker {
+      constructor(imgA, imgB, x, y, scale) {
+        this.posX = x; this.posY = y; this.scale = scale;
+        this.renderW = imgA.w * scale; this.renderH = imgA.h * scale;
+        this.container = new PIXI.Container();
+        this.flatSprite = new PIXI.Sprite(imgA.tex);
+        this.flatSprite.anchor.set(0.5);
+        this.flatSprite.width = this.renderW;
+        this.flatSprite.height = this.renderH;
+        this.container.addChild(this.flatSprite);
+        this.container.x = x; this.container.y = y;
+        this.particles = []; this.activated = false;
+        this.state = "idle"; this.hoverProgress = 0;
+        this.dragOffsetX = 0; this.dragOffsetY = 0;
+        this.morphProgress = 0; this.morphTarget = 0;
+        this.morphTimer = null; this.currentForm = 0;
+        this.imgDataA = imgA; this.imgDataB = imgB || imgA;
+        this.noParticles = false;
+      }
+
+      get bounds() {
+        return { x: this.posX - this.renderW/2, y: this.posY - this.renderH/2, w: this.renderW, h: this.renderH };
+      }
+      hitTest(mx, my) {
+        const b = this.bounds;
+        return mx > b.x && mx < b.x + b.w && my > b.y && my < b.y + b.h;
+      }
+      setHover(h) { if (this.state !== "dragging") this.state = h ? "hover" : "idle"; }
+      startDrag(mx, my) {
+        this.activate();
+        this.state = "dragging";
+        this.dragOffsetX = this.posX - mx;
+        this.dragOffsetY = this.posY - my;
+        this.hoverProgress = 1;
+        this.morphTimer = setInterval(() => {
+          this.morphTarget = this.morphTarget === 0 ? 1 : 0;
+        }, 1000);
+      }
+      moveDrag(mx, my) { this.posX = mx + this.dragOffsetX; this.posY = my + this.dragOffsetY; }
+      drop() {
+        this.state = "idle";
+        if (this.morphTimer) { clearInterval(this.morphTimer); this.morphTimer = null; }
+        this.currentForm = this.morphProgress > 0.5 ? 1 : 0;
+        this.morphTarget = this.currentForm;
+      }
+
+      activate() {
+        if (this.activated || this.noParticles) return;
+        this.activated = true;
+        this.flatSprite.visible = false;
+        const gap = 3;
+        const pointsA = sampleImage(this.imgDataA.data, this.imgDataA.w, this.imgDataA.h, gap);
+        const pointsB = sampleImage(this.imgDataB.data, this.imgDataB.w, this.imgDataB.h, gap);
+        const maxCount = Math.max(pointsA.length, pointsB.length);
+        while (pointsA.length < maxCount) pointsA.push(pointsA[Math.floor(Math.random() * pointsA.length)]);
+        while (pointsB.length < maxCount) pointsB.push(pointsB[Math.floor(Math.random() * pointsB.length)]);
+        for (let i = pointsB.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [pointsB[i], pointsB[j]] = [pointsB[j], pointsB[i]];
+        }
+        const ps = this.scale * gap / 2;
+        const dc = document.createElement("canvas"); dc.width=2; dc.height=2;
+        const dctx = dc.getContext("2d"); dctx.fillStyle="white"; dctx.fillRect(0,0,2,2);
+        const dt = PIXI.Texture.from(dc);
+        const rwB = this.imgDataB.w * this.scale, rhB = this.imgDataB.h * this.scale;
+        for (let i = 0; i < maxCount; i++) {
+          const pA = pointsA[i], pB = pointsB[i];
+          const lxA = (pA.nx-0.5)*this.renderW, lyA = (pA.ny-0.5)*this.renderH;
+          const lxB = (pB.nx-0.5)*rwB, lyB = (pB.ny-0.5)*rhB;
+          const sp = new PIXI.Sprite(dt); sp.anchor.set(0.5); sp.scale.set(ps);
+          sp.tint = (pA.r<<16)|(pA.g<<8)|pA.b; sp.alpha = pA.a/255;
+          this.container.addChild(sp);
+          this.particles.push({ sprite:sp, lxA,lyA,rA:pA.r,gA:pA.g,bA:pA.b,aA:pA.a,
+            lxB,lyB,rB:pB.r,gB:pB.g,bB:pB.b,aB:pB.a,
+            lx:lxA,ly:lyA, x:this.posX+lxA, y:this.posY+lyA, vx:0,vy:0,
+            nx:pA.nx,ny:pA.ny, origR:pA.r,origG:pA.g,origB:pA.b,origA:pA.a, isFlipped:false });
+        }
+        this.container.x = 0; this.container.y = 0;
+      }
+
+      update(dt) {
+        const ts = (this.state==="hover"||this.state==="dragging") ? 1.05 : 1.0;
+        const cs = this.container.scale.x;
+        this.container.scale.set(cs + (ts-cs)*0.1);
+
+        if (!this.activated) {
+          this.container.x = this.posX; this.container.y = this.posY;
+          if (this.state==="hover") this.activate();
+          if (!this.activated) return;
+        }
+        const th = (this.state==="hover"||this.state==="dragging") ? 1 : 0;
+        this.hoverProgress += (th - this.hoverProgress) * 0.1;
+        this.morphProgress += (this.morphTarget - this.morphProgress) * 0.05;
+
+        for (const p of this.particles) {
+          const m = this.morphProgress;
+          const clx = p.lxA+(p.lxB-p.lxA)*m, cly = p.lyA+(p.lyB-p.lyA)*m;
+          const cr=Math.round(p.rA+(p.rB-p.rA)*m), cg=Math.round(p.gA+(p.gB-p.gA)*m), cb=Math.round(p.bA+(p.bB-p.bA)*m);
+          p.lx=clx; p.ly=cly;
+          p.nx = clx/this.renderW+0.5; p.ny = cly/this.renderH+0.5;
+          let tx = this.posX+clx, ty = this.posY+cly;
+
+          // Corner peel
+          const foldRadius = 0.6;
+          const dc = Math.sqrt((1-p.nx)**2+(1-p.ny)**2);
+          if (dc < foldRadius) {
+            const fa = (foldRadius-dc)/foldRadius;
+            const hp = this.hoverProgress;
+            const flipX = 2*(1-p.nx)*fa*hp*this.renderW*0.3;
+            const flipY = 2*(1-p.ny)*fa*hp*this.renderH*0.3;
+            tx -= flipX; ty -= flipY;
+          }
+
+          // Expand on hover
+          if (this.hoverProgress > 0.01) {
+            const ex = (p.nx-0.5)*12*this.hoverProgress;
+            const ey = (p.ny-0.5)*12*this.hoverProgress;
+            tx += ex; ty += ey;
+          }
+
+          const lag = 0.15;
+          p.vx += (tx-p.x)*lag; p.vy += (ty-p.y)*lag;
+          p.vx *= 0.7; p.vy *= 0.7;
+          p.x += p.vx; p.y += p.vy;
+          p.sprite.x = p.x; p.sprite.y = p.y;
+          p.sprite.tint = (cr<<16)|(cg<<8)|cb;
+          p.sprite.alpha = (p.aA+(p.aB-p.aA)*m)/255;
+        }
+      }
+    }
+
+    async function init() {
+      const preview = document.getElementById('preview');
+      const W = preview.clientWidth, H = preview.clientHeight;
+      app = new PIXI.Application();
+      await app.init({ width: W, height: H, resolution: window.devicePixelRatio||1, autoDensity: true, backgroundColor: 0x0a0a0a });
+      preview.appendChild(app.canvas);
+      await loadAtom(currentAtom);
+
+      const mouse = { x: -9999, y: -9999 };
+      let dragged = null;
+
+      app.canvas.addEventListener("mousemove", e => {
+        const r = app.canvas.getBoundingClientRect();
+        mouse.x = e.clientX; mouse.y = e.clientY;
+        if (dragged) dragged.moveDrag(mouse.x, mouse.y);
+        else if (sticker) sticker.setHover(sticker.hitTest(mouse.x, mouse.y));
+      });
+      app.canvas.addEventListener("mousedown", e => {
+        mouse.x = e.clientX; mouse.y = e.clientY;
+        if (sticker && sticker.hitTest(mouse.x, mouse.y)) {
+          sticker.startDrag(mouse.x, mouse.y);
+          dragged = sticker;
+        }
+      });
+      app.canvas.addEventListener("mouseup", () => {
+        if (dragged) { dragged.drop(); dragged = null; }
+      });
+
+      // Touch
+      let longPress = null, touchMoved = false;
+      window.addEventListener("touchstart", e => {
+        const t = e.touches[0]; mouse.x=t.clientX; mouse.y=t.clientY; touchMoved=false;
+        longPress = setTimeout(() => {
+          if (!touchMoved && sticker && sticker.hitTest(mouse.x, mouse.y)) {
+            sticker.startDrag(mouse.x, mouse.y); dragged = sticker;
+          }
+        }, 400);
+      });
+      window.addEventListener("touchmove", e => {
+        if (dragged) e.preventDefault();
+        const t=e.touches[0]; mouse.x=t.clientX; mouse.y=t.clientY; touchMoved=true;
+        if (longPress) { clearTimeout(longPress); longPress=null; }
+        if (dragged) dragged.moveDrag(mouse.x, mouse.y);
+      }, { passive: false });
+      window.addEventListener("touchend", () => {
+        if (longPress) { clearTimeout(longPress); longPress=null; }
+        if (dragged) { dragged.drop(); dragged=null; }
+      });
+
+      app.ticker.add(ticker => {
+        const dt = Math.min(ticker.deltaMS/1000, 0.05);
+        if (sticker) sticker.update(dt);
+      });
+    }
+
+    async function loadAtom(name) {
+      // Clear
+      if (sticker) { app.stage.removeChild(sticker.container); sticker = null; }
+      const cfg = atoms[name];
+      const imgA = await loadImagePixels(cfg.images[0]);
+      const imgB = cfg.images[1] ? await loadImagePixels(cfg.images[1]) : imgA;
+      const W = app.screen.width, H = app.screen.height;
+      const maxW = W * 0.4, maxH = H * 0.5;
+      const scale = Math.min(maxW/imgA.w, maxH/imgA.h);
+      sticker = new AtomSticker(imgA, imgB, W/2, H/2 - 30, scale);
+      if (!cfg.hasMorph) sticker.noParticles = true;
+      app.stage.addChild(sticker.container);
+    }
+
+    function switchAtom(name) {
+      currentAtom = name;
+      document.querySelectorAll('.atom-thumb').forEach(el => el.classList.toggle('active', el.dataset.atom === name));
+      document.getElementById('atom-name').textContent = name.charAt(0).toUpperCase() + name.slice(1);
+      loadAtom(name);
+    }
+
+    init();
+  </script>
 </body>
 </html>
