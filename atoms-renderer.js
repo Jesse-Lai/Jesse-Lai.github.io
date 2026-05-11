@@ -479,7 +479,7 @@ export class PhotoSystem {
       droppedPhoto.clipped = true;
       existingClip.photos.push(droppedPhoto);
       const idx = existingClip.photos.length - 1;
-      await animateTo(droppedPhoto.group, targetPhoto.group.x + idx*4, targetPhoto.group.y - idx*4);
+      await animateTo(droppedPhoto.group, targetPhoto.group.x + idx*6, targetPhoto.group.y + idx*8);
       existingClip.clipSprite.x = existingClip.photos[0].group.x - existingClip.photos[0].imgData.w*existingClip.photos[0].scale*0.35;
       existingClip.clipSprite.y = existingClip.photos[0].group.y - existingClip.photos[0].imgData.h*existingClip.photos[0].scale*0.4;
       return;
@@ -490,8 +490,8 @@ export class PhotoSystem {
     const mx = (droppedPhoto.group.x + targetPhoto.group.x) / 2;
     const my = (droppedPhoto.group.y + targetPhoto.group.y) / 2;
     await Promise.all([
-      animateTo(targetPhoto.group, mx - 4, my + 4),
-      animateTo(droppedPhoto.group, mx + 4, my - 4),
+      animateTo(targetPhoto.group, mx, my),
+      animateTo(droppedPhoto.group, mx + 6, my + 8),
     ]);
 
     try {
@@ -570,11 +570,12 @@ export class PhotoSystem {
         photo.group.x = e.clientX+offX;
         photo.group.y = e.clientY+offY;
       }
-      // Hover scale
+      // Hover scale + cursor
       const hovering = !drag && hitTest(e.clientX, e.clientY) && !photo.clipped;
       const targetScale = hovering || drag ? 1.05 : 1.0;
       const cur = photo.group.scale.x;
       photo.group.scale.set(cur + (targetScale - cur) * 0.15);
+      if (hovering) this.canvas.style.cursor = 'pointer';
     };
     const onUp = () => {
       if (!drag) return;
@@ -625,9 +626,11 @@ export class PhotoSystem {
   }
 
   _setupClickHandler() {
+    let groupDrag = null, groupOffX = 0, groupOffY = 0;
+
     this.canvas.addEventListener('mousedown', e => {
       const mx = e.clientX, my = e.clientY;
-      // Check clip click
+      // Check clip click (split)
       for (const cg of [...this.clipGroups]) {
         const cs = cg.clipSprite;
         if (Math.abs(mx-cs.x)<60 && Math.abs(my-cs.y)<60) {
@@ -635,8 +638,49 @@ export class PhotoSystem {
           return;
         }
       }
-      // Only clip sprite area triggers split (not photos)
+      // Check click on clipped photos (drag whole group)
+      for (const cg of this.clipGroups) {
+        for (const p of cg.photos) {
+          const pw = p.imgData.w*p.scale, ph = p.imgData.h*p.scale;
+          if (Math.abs(mx-p.group.x)<pw*0.6 && Math.abs(my-p.group.y)<ph*0.6) {
+            groupDrag = cg;
+            groupOffX = mx; groupOffY = my;
+            return;
+          }
+        }
+      }
     });
+    this.canvas.addEventListener('mousemove', e => {
+      if (groupDrag) {
+        const dx = e.clientX - groupOffX, dy = e.clientY - groupOffY;
+        for (const p of groupDrag.photos) { p.group.x += dx; p.group.y += dy; }
+        groupDrag.clipSprite.x += dx; groupDrag.clipSprite.y += dy;
+        groupOffX = e.clientX; groupOffY = e.clientY;
+        return;
+      }
+      // Cursor: check if hovering any interactive element
+      let hovering = false;
+      const mx = e.clientX, my = e.clientY;
+      for (const p of this.photos) {
+        if (p.clipped) continue;
+        const pw = p.imgData.w*p.scale, ph = p.imgData.h*p.scale;
+        if (Math.abs(mx-p.group.x)<pw*0.6 && Math.abs(my-p.group.y)<ph*0.6) { hovering = true; break; }
+      }
+      if (!hovering) {
+        for (const cg of this.clipGroups) {
+          const cs = cg.clipSprite;
+          if (Math.abs(mx-cs.x)<60 && Math.abs(my-cs.y)<60) { hovering = true; break; }
+          for (const p of cg.photos) {
+            const pw = p.imgData.w*p.scale, ph = p.imgData.h*p.scale;
+            if (Math.abs(mx-p.group.x)<pw*0.6 && Math.abs(my-p.group.y)<ph*0.6) { hovering = true; break; }
+          }
+          if (hovering) break;
+        }
+      }
+      this.canvas.style.cursor = hovering ? 'pointer' : 'default';
+    });
+    this.canvas.addEventListener('mouseup', () => { groupDrag = null; });
+
     // Touch tap for clip split
     this.canvas.addEventListener('touchend', e => {
       const t = e.changedTouches[0];
@@ -646,7 +690,6 @@ export class PhotoSystem {
         const cs = cg.clipSprite;
         if (Math.abs(mx-cs.x)<60 && Math.abs(my-cs.y)<60) { this._splitPhotos(cg); return; }
       }
-
     });
   }
 }
