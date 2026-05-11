@@ -109,7 +109,7 @@ import { loadImagePixels, AtomSticker, renderPhoto, renderClip, renderLure, make
 
       const clipInfo = { clipSprite: clipSp, photos: [targetPhoto, droppedPhoto] };
       clipGroups.push(clipInfo);
-      clipSp.on('pointerdown', (e) => { e.stopPropagation(); splitPhotos(clipInfo); });
+      // Click handled via canvas mousedown below
     } catch(err) {
       console.error('Failed to load paperclip:', err);
       droppedPhoto.clipped = false; targetPhoto.clipped = false;
@@ -229,6 +229,15 @@ import { loadImagePixels, AtomSticker, renderPhoto, renderClip, renderLure, make
   });
   app.canvas.addEventListener("mousedown", e => {
     mouse.x=e.clientX; mouse.y=e.clientY;
+    // Check clip click first
+    for (const cg of clipGroups) {
+      const cs = cg.clipSprite;
+      const cb = cs.getBounds();
+      if (mouse.x >= cb.x && mouse.x <= cb.x+cb.width && mouse.y >= cb.y && mouse.y <= cb.y+cb.height) {
+        splitPhotos(cg);
+        return;
+      }
+    }
     if(sticker1.hitTest(mouse.x,mouse.y)){
       sticker1.startDrag(mouse.x,mouse.y);
       draggedSticker=sticker1;
