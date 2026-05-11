@@ -18,7 +18,6 @@
   const photos = []; // { group, imgData, scale, config, clipped: false, clipGroup: null }
   const clipGroups = []; // { group, photos: [photoA, photoB], clipSprite }
   const otherElements = [];
-  }
 
   // ─── Overlap detection ───
   function getPhotoBounds(p) {
@@ -215,11 +214,22 @@
     // Check clip click first (generous hit area around clip sprite)
     for (const cg of [...clipGroups]) {
       const cs = cg.clipSprite;
-      const hitRadius = 40;
-      if (Math.abs(mouse.x - cs.x) < hitRadius && Math.abs(mouse.y - cs.y) < hitRadius) {
-        console.log('Clip clicked, splitting');
+      const hitRadius = 60;
+      const dx = Math.abs(mouse.x - cs.x);
+      const dy = Math.abs(mouse.y - cs.y);
+      if (dx < hitRadius && dy < hitRadius) {
         splitPhotos(cg);
         return;
+      }
+    }
+    // Also check click on clipped photo area to trigger split
+    for (const cg of [...clipGroups]) {
+      for (const p of cg.photos) {
+        const pw=p.imgData.w*p.scale, ph=p.imgData.h*p.scale;
+        if (Math.abs(mouse.x-p.group.x)<pw*0.5 && Math.abs(mouse.y-p.group.y)<ph*0.5) {
+          splitPhotos(cg);
+          return;
+        }
       }
     }
     if(sticker1.hitTest(mouse.x,mouse.y)){
