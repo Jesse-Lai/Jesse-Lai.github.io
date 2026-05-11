@@ -19,8 +19,6 @@ import { loadImagePixels, AtomSticker, renderPhoto, renderClip, renderLure, make
   const photos = []; // { group, imgData, scale, config, clipped: false, clipGroup: null }
   const clipGroups = []; // { group, photos: [photoA, photoB], clipSprite }
   const otherElements = [];
-
-  // ─── Animate helper ───
   }
 
   // ─── Overlap detection ───
