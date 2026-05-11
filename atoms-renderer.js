@@ -189,7 +189,12 @@ export async function renderPhoto(app, imgData, x, y, scale, imgCfg, cfg) {
   frame.fill(0xf5f5f0);
   group.addChild(frame);
 
-  // No mask — text can write into photo area
+  // Mask to clip text within frame (text can cover photo but not exceed white border)
+  const mask = new PIXI.Graphics();
+  mask.roundRect(-pw/2-border, -ph/2-border, pw+border*2, ph+border+bottomBorder, 3);
+  mask.fill(0xffffff);
+  group.addChild(mask);
+  group.mask = mask;
 
   // Shadow
   const shadow = new PIXI.Graphics();
@@ -207,13 +212,12 @@ export async function renderPhoto(app, imgData, x, y, scale, imgCfg, cfg) {
   // Handwritten text
   const caption = imgCfg?.caption || '';
   const date = imgCfg?.date || '';
-  const textRot = (Math.random()*6-3) * Math.PI/180; // reduced rotation
+  const textRot = (Math.random()*6-3) * Math.PI/180;
   const textColor = sampleDominantColor(imgData);
-  const safeMargin = border * 0.6;
-  const availableH = bottomBorder - safeMargin * 2;
-  const fontSize1 = Math.min(Math.max(18, pw*0.09), availableH * 0.5);
-  const fontSize2 = Math.min(Math.max(14, pw*0.07), availableH * 0.4);
-  const textAreaTop = ph/2 + safeMargin;
+  const safeMargin = border * 0.5;
+  const fontSize1 = Math.max(24, pw*0.11);
+  const fontSize2 = Math.max(20, pw*0.09);
+  const textAreaTop = ph/2 - fontSize1*0.2;
 
   if (caption) {
     const capText = new PIXI.Text({text:caption, style:{fontFamily:'Schoolbell', fontSize:fontSize1, fill:textColor}});
