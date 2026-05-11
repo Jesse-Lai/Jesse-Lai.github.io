@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Atoms</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Schoolbell&display=swap');
     @font-face { font-family: 'Red Hat Mono'; src: url('fonts/RedHatMono-Regular.woff2') format('woff2'); font-weight: 400; }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { background: #0a0a0a; color: #999; font-family: 'Red Hat Mono', monospace; height: 100vh; overflow: hidden; }
@@ -441,19 +441,19 @@
         const sp=new PIXI.Sprite(imgA.tex);
         sp.anchor.set(0.5,0.5);
         sp.width=pw;sp.height=ph;
-        sp.y=-bottomBorder/2+border/2;
+        sp.y=-(bottomBorder-border)/2;
         group.addChild(sp);
         // Caption text (hand-written style)
         const caption=imgCfg.caption||'';
         const date=imgCfg.date||'';
         if(caption){
-          const capText=new PIXI.Text({text:caption,style:{fontFamily:'Permanent Marker',fontSize:Math.max(14,pw*0.06),fill:0x333333}});
+          const capText=new PIXI.Text({text:caption,style:{fontFamily:'Schoolbell',fontSize:Math.max(14,pw*0.06),fill:0x333333}});
           capText.x=-pw/2;
           capText.y=ph/2-bottomBorder/2+border*0.8;
           group.addChild(capText);
         }
         if(date){
-          const dateText=new PIXI.Text({text:date,style:{fontFamily:'Permanent Marker',fontSize:Math.max(12,pw*0.05),fill:0x555555}});
+          const dateText=new PIXI.Text({text:date,style:{fontFamily:'Schoolbell',fontSize:Math.max(12,pw*0.05),fill:0x555555}});
           dateText.anchor.set(1,0);
           dateText.x=pw/2;
           dateText.y=ph/2-bottomBorder/2+border*0.8;
