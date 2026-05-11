@@ -404,6 +404,12 @@
         clipSp.y=-maxH/2-clipSp.texture.height*clipScale*0.25;
         group.addChild(clipSp);
 
+
+        // Group shadow (50% of photo shadow)
+        const clipShadow=new PIXI.Graphics();
+        clipShadow.roundRect(-maxW/2+1.5,-maxH/2+1.5,maxW,maxH,2);
+        clipShadow.fill({color:0x000000,alpha:0.06});
+        group.addChildAt(clipShadow,0);
         app.stage.addChild(group);extraContainers.push(group);
         // Draggable
         let clipDrag=false,clipOffX=0,clipOffY=0;
