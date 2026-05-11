@@ -491,17 +491,21 @@ export class PhotoSystem {
     if (droppedPhoto.clipped || targetPhoto.clipped) return;
     droppedPhoto.clipped = true; targetPhoto.clipped = true;
 
-    // Align top-left: dropped photo's top-left aligns to target's top-left
-    const tBounds = this._getPhotoBounds(targetPhoto);
-    const dBounds = this._getPhotoBounds(droppedPhoto);
-    // Target stays where it is, dropped moves to align top-left
-    const droppedNewLeft = tBounds.x;
-    const droppedNewTop = tBounds.y;
-    // Convert to center coords for dropped photo
+    // Align top-left: simple calculation from group center coords
+    // Top of a photo = group.y - ph/2 - border
+    // Left of a photo = group.x - pw/2 - border
+    const tPw = targetPhoto.imgData.w*targetPhoto.scale;
+    const tPh = targetPhoto.imgData.h*targetPhoto.scale;
+    const tBorder = tPw*0.06;
     const dPw = droppedPhoto.imgData.w*droppedPhoto.scale;
+    const dPh = droppedPhoto.imgData.h*droppedPhoto.scale;
     const dBorder = dPw*0.06;
-    const droppedCx = droppedNewLeft + dPw/2 + dBorder;
-    const droppedCy = droppedNewTop + droppedPhoto.imgData.h*droppedPhoto.scale/2 + dBorder;
+    // Target top/left in world coords
+    const targetTop = targetPhoto.group.y - tPh/2 - tBorder;
+    const targetLeft = targetPhoto.group.x - tPw/2 - tBorder;
+    // Dropped needs: group.y such that its top = targetTop
+    const droppedCy = targetTop + dPh/2 + dBorder;
+    const droppedCx = targetLeft + dPw/2 + dBorder;
     await Promise.all([
       animateTo(targetPhoto.group, targetPhoto.group.x, targetPhoto.group.y), // stays
       animateTo(droppedPhoto.group, droppedCx, droppedCy),
@@ -518,8 +522,8 @@ export class PhotoSystem {
       clipSp.scale.set(clipScale);
       clipSp.anchor.set(0.5, 0.5);
       // Top-left corner, protruding above photos
-      clipSp.x = tBounds.x - dBorder;
-      clipSp.y = tBounds.y - dBorder;
+      clipSp.x = targetLeft - dBorder*2;
+      clipSp.y = targetTop - dBorder*2;
       clipSp.alpha = 0;
       clipSp.zIndex = 9999;
       this.app.stage.addChild(clipSp);
