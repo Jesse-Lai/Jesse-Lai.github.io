@@ -118,14 +118,16 @@ import { loadImagePixels, AtomSticker, renderPhoto, renderClip, makeDraggable, a
 
     // Animate all photos apart in a circle
     const cx=clipPhotos[0].group.x, cy=clipPhotos[0].group.y;
-    const spread=80+Math.random()*40;
+    const spread=200+Math.random()*100;
     const angleStep=Math.PI*2/clipPhotos.length;
     const baseAngle=Math.random()*Math.PI*2;
+    // Temporarily prevent re-merge during split animation
+    const splitGuard = true;
     await Promise.all(clipPhotos.map((p,i) => 
       animateTo(p.group, cx+Math.cos(baseAngle+angleStep*i)*spread, cy+Math.sin(baseAngle+angleStep*i)*spread)
     ));
 
-    clipPhotos.forEach(p => p.clipped=false);
+    clipPhotos.forEach(p => { p.clipped=false; p.splitCooldown=Date.now()+500; });
     const idx=clipGroups.indexOf(clipInfo);
     if(idx>=0) clipGroups.splice(idx,1);
   }
@@ -159,6 +161,8 @@ import { loadImagePixels, AtomSticker, renderPhoto, renderClip, makeDraggable, a
       const boundsA=getPhotoBounds(photo);
       for(const other of photos) {
         if(other===photo || other.clipped || photo.clipped) continue;
+        if(photo.splitCooldown && Date.now()<photo.splitCooldown) continue;
+        if(other.splitCooldown && Date.now()<other.splitCooldown) continue;
         const boundsB=getPhotoBounds(other);
         if(overlapRatio(boundsA, boundsB)>0.2) {
           mergePhotos(photo, other);
