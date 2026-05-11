@@ -9,6 +9,7 @@ import { loadImagePixels, PhotoSystem } from "./atoms-renderer.js?v=5";
   const app = new PIXI.Application();
   await app.init({ width: W, height: H, antialias: true, resolution: dpr, autoDensity: true, backgroundColor: 0x0a0a0a });
   document.body.appendChild(app.canvas);
+  app.canvas.style.touchAction = "pan-y";
   app.stage.sortableChildren = true;
 
   const configResp = await fetch('atoms-config.json');
