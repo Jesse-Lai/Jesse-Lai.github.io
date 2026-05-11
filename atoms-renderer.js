@@ -480,6 +480,7 @@ export class PhotoSystem {
       existingClip.photos.push(droppedPhoto);
       const idx = existingClip.photos.length - 1;
       await animateTo(droppedPhoto.group, targetPhoto.group.x, targetPhoto.group.y);
+      droppedPhoto.group.rotation = targetPhoto.group.rotation;
       existingClip.clipSprite.x = existingClip.photos[0].group.x - existingClip.photos[0].imgData.w*existingClip.photos[0].scale*0.35;
       existingClip.clipSprite.y = existingClip.photos[0].group.y - existingClip.photos[0].imgData.h*existingClip.photos[0].scale*0.4;
       return;
@@ -493,6 +494,9 @@ export class PhotoSystem {
       animateTo(targetPhoto.group, mx, my),
       animateTo(droppedPhoto.group, mx, my),
     ]);
+
+    // Align rotation to first photo
+    droppedPhoto.group.rotation = targetPhoto.group.rotation;
 
     try {
       const clipTex = await PIXI.Assets.load({src:'paperclip.svg', data:{resolution:4}});
