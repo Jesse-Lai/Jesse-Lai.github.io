@@ -367,28 +367,41 @@
         return;
       }
       if(imgCfg.type==='clip'){
-        const group=new PIXI.Container();group.x=W/2;group.y=H/2-20;
+        const group=new PIXI.Container();
+        const W2=app.screen.width,H2=app.screen.height;
+        group.x=W2/2;group.y=H2/2-20;
         const imgs=[];for(const src of imgCfg.images)imgs.push(await loadImagePixels(src));
-        const maxW=W*0.25,maxH=H*0.35;
-        const spread=cfg?.style?.photoRotationSpread||0.08;
-        const off=cfg?.style?.photoOffset||12;
-        const offsets=[{x:-off,y:off*0.6,rot:-spread},{x:0,y:0,rot:spread*0.3},{x:off*0.8,y:-off*0.5,rot:spread}];
+        const maxW=W2*0.22,maxH=H2*0.32;
+        // Photos stacked, left-top aligned, slight random rotation
         for(let i=0;i<imgs.length;i++){
           const img=imgs[i];const sc=Math.min(maxW/img.w,maxH/img.h);
-          const sh=new PIXI.Graphics();sh.roundRect(-img.w*sc/2+2,-img.h*sc/2+2,img.w*sc,img.h*sc,2);sh.fill({color:0,alpha:0.12});
-          sh.x=offsets[i].x;sh.y=offsets[i].y;sh.rotation=offsets[i].rot;group.addChild(sh);
-          const sp=new PIXI.Sprite(img.tex);sp.anchor.set(0.5);sp.width=img.w*sc;sp.height=img.h*sc;
-          sp.x=offsets[i].x;sp.y=offsets[i].y;sp.rotation=offsets[i].rot;group.addChild(sp);
+          const rot=(Math.random()*8-4)*Math.PI/180;
+          const offX=i*4, offY=i*6;
+          // Shadow
+          const sh=new PIXI.Graphics();
+          sh.roundRect(2,2,img.w*sc,img.h*sc,2);
+          sh.fill({color:0,alpha:0.1});
+          sh.x=-maxW/2+offX;sh.y=-maxH/2+offY;sh.rotation=rot;
+          group.addChild(sh);
+          // Photo
+          const sp=new PIXI.Sprite(img.tex);
+          sp.width=img.w*sc;sp.height=img.h*sc;
+          sp.x=-maxW/2+offX;sp.y=-maxH/2+offY;sp.rotation=rot;
+          group.addChild(sp);
         }
-        const clipG=new PIXI.Graphics();const cw=24,ch=60;
-        clipG.setStrokeStyle({width:cfg?.style?.clipWidth||2.5,color:parseInt((cfg?.style?.clipColor||'#999999').replace('#',''),16),cap:'round',join:'round'});
-        clipG.moveTo(-cw/2,-ch/2);clipG.lineTo(-cw/2,ch/2-8);clipG.arcTo(-cw/2,ch/2,-cw/2+8,ch/2,8);clipG.lineTo(cw/2-8,ch/2);clipG.arcTo(cw/2,ch/2,cw/2,ch/2-8,8);clipG.lineTo(cw/2,-ch/2+12);clipG.arcTo(cw/2,-ch/2,cw/2-8,-ch/2,12);clipG.lineTo(-cw/4,-ch/2);clipG.arcTo(-cw/2+4,-ch/2,-cw/2+4,-ch/2+8,6);clipG.lineTo(-cw/2+4,ch/4);clipG.stroke();
-        clipG.x=8;clipG.y=-maxH*0.38;group.addChild(clipG);
-        app.stage.addChild(group);extraContainers.push(group);
+        // Paper clip SVG on top-left, protruding above photos
+        const clipTex=await PIXI.Assets.load('paperclip.svg');
+        const clipSp=new PIXI.Sprite(clipTex);
+        const clipScale=Math.min(maxW*0.25/clipSp.texture.width, maxH*0.55/clipSp.texture.height);
+        clipSp.scale.set(clipScale);
+        clipSp.x=-maxW/2+8;
+        clipSp.y=-maxH/2-clipSp.texture.height*clipScale*0.25;
+        group.addChild(clipSp);
 
-        // Make clip group draggable
-        let clipDrag=false, clipOffX=0, clipOffY=0;
-        const clipHit=(mx,my)=>{const b={x:group.x-maxW*0.6,y:group.y-maxH*0.5,w:maxW*1.2,h:maxH*1.1};return mx>b.x&&mx<b.x+b.w&&my>b.y&&my<b.y+b.h;};
+        app.stage.addChild(group);extraContainers.push(group);
+        // Draggable
+        let clipDrag=false,clipOffX=0,clipOffY=0;
+        const clipHit=(mx,my)=>{return Math.abs(mx-group.x)<maxW*0.7&&Math.abs(my-group.y)<maxH*0.7;};
         app.canvas.addEventListener('mousedown',e=>{if(clipHit(e.clientX,e.clientY)){clipDrag=true;clipOffX=group.x-e.clientX;clipOffY=group.y-e.clientY;}});
         app.canvas.addEventListener('mousemove',e=>{if(clipDrag){group.x=e.clientX+clipOffX;group.y=e.clientY+clipOffY;}});
         app.canvas.addEventListener('mouseup',()=>{clipDrag=false;});

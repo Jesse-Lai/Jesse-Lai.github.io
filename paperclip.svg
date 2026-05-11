@@ -1,0 +1,26 @@
+<svg width="80" height="200" viewBox="0 0 80 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="metal" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#a8a8a8"/>
+      <stop offset="15%" stop-color="#e8e8e8"/>
+      <stop offset="30%" stop-color="#c0c0c0"/>
+      <stop offset="50%" stop-color="#f0f0f0"/>
+      <stop offset="70%" stop-color="#b8b8b8"/>
+      <stop offset="85%" stop-color="#e0e0e0"/>
+      <stop offset="100%" stop-color="#a0a0a0"/>
+    </linearGradient>
+    <linearGradient id="metal-inner" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#b0b0b0"/>
+      <stop offset="25%" stop-color="#d8d8d8"/>
+      <stop offset="50%" stop-color="#eaeaea"/>
+      <stop offset="75%" stop-color="#c8c8c8"/>
+      <stop offset="100%" stop-color="#b0b0b0"/>
+    </linearGradient>
+  </defs>
+  <!-- Outer wire -->
+  <path d="M25 10 L25 160 Q25 185 40 185 Q55 185 55 160 L55 30 Q55 15 45 15 L35 15 Q28 15 28 25 L28 140"
+        stroke="url(#metal)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- Inner highlight line -->
+  <path d="M25 10 L25 160 Q25 185 40 185 Q55 185 55 160 L55 30 Q55 15 45 15 L35 15 Q28 15 28 25 L28 140"
+        stroke="url(#metal-inner)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.4"/>
+</svg>
