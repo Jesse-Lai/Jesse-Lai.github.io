@@ -460,8 +460,12 @@ export class PhotoSystem {
   _getPhotoBounds(p) {
     const pw = p.imgData.w*p.scale, ph = p.imgData.h*p.scale;
     const border = pw*0.06, bottomBorder = border*3;
-    const totalW = pw+border*2, totalH = ph+border+bottomBorder;
-    return { x: p.group.x-totalW/2, y: p.group.y-totalH/2, w: totalW, h: totalH };
+    const totalW = pw+border*2;
+    const totalH = ph+border+bottomBorder;
+    // Frame is NOT vertically centered: top = -ph/2-border, bottom = ph/2+bottomBorder
+    const top = p.group.y - ph/2 - border;
+    const left = p.group.x - pw/2 - border;
+    return { x: left, y: top, w: totalW, h: totalH };
   }
 
   _overlapRatio(a, b) {
@@ -487,19 +491,19 @@ export class PhotoSystem {
     if (droppedPhoto.clipped || targetPhoto.clipped) return;
     droppedPhoto.clipped = true; targetPhoto.clipped = true;
 
-    // Align top-left corners: compute each photo's top-left
+    // Align top-left: dropped photo's top-left aligns to target's top-left
     const tBounds = this._getPhotoBounds(targetPhoto);
     const dBounds = this._getPhotoBounds(droppedPhoto);
-    // Use midpoint of their top-left corners as the merge point
-    const tlx = (tBounds.x + dBounds.x) / 2;
-    const tly = (tBounds.y + dBounds.y) / 2;
-    // Convert back to center coordinates for each photo
-    const targetCx = tlx + tBounds.w / 2;
-    const targetCy = tly + tBounds.h / 2;
-    const droppedCx = tlx + dBounds.w / 2;
-    const droppedCy = tly + dBounds.h / 2;
+    // Target stays where it is, dropped moves to align top-left
+    const droppedNewLeft = tBounds.x;
+    const droppedNewTop = tBounds.y;
+    // Convert to center coords for dropped photo
+    const dPw = droppedPhoto.imgData.w*droppedPhoto.scale;
+    const dBorder = dPw*0.06;
+    const droppedCx = droppedNewLeft + dPw/2 + dBorder;
+    const droppedCy = droppedNewTop + droppedPhoto.imgData.h*droppedPhoto.scale/2 + dBorder;
     await Promise.all([
-      animateTo(targetPhoto.group, targetCx, targetCy),
+      animateTo(targetPhoto.group, targetPhoto.group.x, targetPhoto.group.y), // stays
       animateTo(droppedPhoto.group, droppedCx, droppedCy),
     ]);
 
@@ -514,8 +518,8 @@ export class PhotoSystem {
       clipSp.scale.set(clipScale);
       clipSp.anchor.set(0.5, 0.5);
       // Top-left corner, protruding above photos
-      clipSp.x = tlx - border;
-      clipSp.y = tly - border;
+      clipSp.x = tBounds.x - dBorder;
+      clipSp.y = tBounds.y - dBorder;
       clipSp.alpha = 0;
       clipSp.zIndex = 9999;
       this.app.stage.addChild(clipSp);
