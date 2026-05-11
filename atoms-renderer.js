@@ -479,7 +479,7 @@ export class PhotoSystem {
       droppedPhoto.clipped = true;
       existingClip.photos.push(droppedPhoto);
       const idx = existingClip.photos.length - 1;
-      await animateTo(droppedPhoto.group, targetPhoto.group.x + idx*6, targetPhoto.group.y + idx*8);
+      await animateTo(droppedPhoto.group, targetPhoto.group.x, targetPhoto.group.y);
       existingClip.clipSprite.x = existingClip.photos[0].group.x - existingClip.photos[0].imgData.w*existingClip.photos[0].scale*0.35;
       existingClip.clipSprite.y = existingClip.photos[0].group.y - existingClip.photos[0].imgData.h*existingClip.photos[0].scale*0.4;
       return;
@@ -491,7 +491,7 @@ export class PhotoSystem {
     const my = (droppedPhoto.group.y + targetPhoto.group.y) / 2;
     await Promise.all([
       animateTo(targetPhoto.group, mx, my),
-      animateTo(droppedPhoto.group, mx + 6, my + 8),
+      animateTo(droppedPhoto.group, mx, my),
     ]);
 
     try {
