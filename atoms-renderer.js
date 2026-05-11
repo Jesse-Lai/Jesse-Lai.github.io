@@ -522,9 +522,15 @@ export class PhotoSystem {
       }
     };
     const onMove = e => {
-      if (!drag) return;
-      photo.group.x = e.clientX+offX;
-      photo.group.y = e.clientY+offY;
+      if (drag) {
+        photo.group.x = e.clientX+offX;
+        photo.group.y = e.clientY+offY;
+      }
+      // Hover scale
+      const hovering = !drag && hitTest(e.clientX, e.clientY) && !photo.clipped;
+      const targetScale = hovering || drag ? 1.05 : 1.0;
+      const cur = photo.group.scale.x;
+      photo.group.scale.set(cur + (targetScale - cur) * 0.15);
     };
     const onUp = () => {
       if (!drag) return;
