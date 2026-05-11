@@ -81,7 +81,7 @@ export function sampleDominantColor(imgData) {
     h=Math.round(h*60); if(h<0) h+=360;
   }
   // Max saturation, lightness ~0.4 for vivid marker look
-  const s=1.0, l=0.4;
+  const s=1.0, l=0.32;
   const c2=(1-Math.abs(2*l-1))*s;
   const x=c2*(1-Math.abs((h/60)%2-1));
   const m=l-c2/2;
@@ -265,7 +265,7 @@ export async function renderPhoto(app, imgData, x, y, scale, imgCfg, cfg) {
     capText.x = -pw/2 + border*0.5 + Math.random()*pw*0.1;
     capText.y = capY;
     capText.rotation = textRot;
-    capText.alpha = 0.9;
+    capText.alpha = 1.0;
     group.addChild(capText);
   }
   if (date) {
@@ -273,7 +273,7 @@ export async function renderPhoto(app, imgData, x, y, scale, imgCfg, cfg) {
     dateText.x = -pw/2 + border*0.8 + Math.random()*pw*0.15;
     dateText.y = dateY;
     dateText.rotation = textRot + (Math.random()-0.5)*0.02;
-    dateText.alpha = 0.85;
+    dateText.alpha = 0.95;
     group.addChild(dateText);
   }
 
