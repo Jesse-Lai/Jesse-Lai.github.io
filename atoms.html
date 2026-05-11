@@ -449,6 +449,12 @@
         frame.roundRect(-pw/2-border,-ph/2-border,pw+border*2,ph+border+bottomBorder,3);
         frame.fill(0xf5f5f0);
         group.addChild(frame);
+        // Mask to clip everything inside frame
+        const mask=new PIXI.Graphics();
+        mask.roundRect(-pw/2-border,-ph/2-border,pw+border*2,ph+border+bottomBorder,3);
+        mask.fill(0xffffff);
+        group.addChild(mask);
+        group.mask=mask;
         // Shadow under frame
         const shadow=new PIXI.Graphics();
         shadow.roundRect(-pw/2-border+3,-ph/2-border+3,pw+border*2,ph+border+bottomBorder,3);
