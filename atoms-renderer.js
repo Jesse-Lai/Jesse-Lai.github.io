@@ -239,12 +239,7 @@ export async function renderPhoto(app, imgData, x, y, scale, imgCfg, cfg) {
   frame.fill(0xf5f5f0);
   group.addChild(frame);
 
-  // Mask to clip text within frame
-  const mask = new PIXI.Graphics();
-  mask.roundRect(-pw/2-border, -ph/2-border, pw+border*2, ph+border+bottomBorder, 3);
-  mask.fill(0xffffff);
-  group.addChild(mask);
-  group.mask = mask;
+  // No mask — text positioned precisely within bounds
 
   // Photo sprite
   const sp = new PIXI.Sprite(imgData.tex);
