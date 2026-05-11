@@ -649,6 +649,8 @@ export class PhotoSystem {
           if (Math.abs(mx-p.group.x)<pw*0.6 && Math.abs(my-p.group.y)<ph*0.6) {
             groupDrag = cg;
             groupOffX = mx; groupOffY = my;
+            // Scale up group
+            for (const gp of cg.photos) gp.group.scale.set(1.05);
             return;
           }
         }
@@ -682,8 +684,18 @@ export class PhotoSystem {
         }
       }
       this.canvas.style.cursor = hovering ? 'pointer' : 'default';
+      // Hover scale for clipped groups
+      for (const cg of this.clipGroups) {
+        let groupHovered = false;
+        for (const p of cg.photos) {
+          const pw2 = p.imgData.w*p.scale, ph2 = p.imgData.h*p.scale;
+          if (Math.abs(mx-p.group.x)<pw2*0.6 && Math.abs(my-p.group.y)<ph2*0.6) { groupHovered = true; break; }
+        }
+        const ts = groupHovered || groupDrag===cg ? 1.05 : 1.0;
+        for (const p of cg.photos) { const c=p.group.scale.x; p.group.scale.set(c+(ts-c)*0.15); }
+      }
     });
-    this.canvas.addEventListener('mouseup', () => { groupDrag = null; });
+    this.canvas.addEventListener('mouseup', () => { if(groupDrag){ for(const gp of groupDrag.photos) gp.group.scale.set(1.0); } groupDrag = null; });
 
     // Touch tap for clip split
     this.canvas.addEventListener('touchend', e => {
