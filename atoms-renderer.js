@@ -545,6 +545,29 @@ export class PhotoSystem {
     this.canvas.addEventListener('mousedown', onDown);
     this.canvas.addEventListener('mousemove', onMove);
     this.canvas.addEventListener('mouseup', onUp);
+
+    // Touch support
+    let longPress = null, touchMoved = false;
+    this.canvas.addEventListener('touchstart', e => {
+      const t = e.touches[0];
+      touchMoved = false;
+      longPress = setTimeout(() => {
+        if (!touchMoved) onDown({clientX:t.clientX, clientY:t.clientY});
+      }, 300);
+    });
+    this.canvas.addEventListener('touchmove', e => {
+      touchMoved = true;
+      if (longPress) { clearTimeout(longPress); longPress = null; }
+      if (drag) {
+        e.preventDefault();
+        const t = e.touches[0];
+        onMove({clientX:t.clientX, clientY:t.clientY});
+      }
+    }, {passive:false});
+    this.canvas.addEventListener('touchend', () => {
+      if (longPress) { clearTimeout(longPress); longPress = null; }
+      onUp();
+    });
   }
 
   _setupClickHandler() {
@@ -566,6 +589,22 @@ export class PhotoSystem {
             this._splitPhotos(cg);
             return;
           }
+        }
+      }
+    });
+    // Touch tap for clip split
+    this.canvas.addEventListener('touchend', e => {
+      const t = e.changedTouches[0];
+      if (!t) return;
+      const mx = t.clientX, my = t.clientY;
+      for (const cg of [...this.clipGroups]) {
+        const cs = cg.clipSprite;
+        if (Math.abs(mx-cs.x)<60 && Math.abs(my-cs.y)<60) { this._splitPhotos(cg); return; }
+      }
+      for (const cg of [...this.clipGroups]) {
+        for (const p of cg.photos) {
+          const pw = p.imgData.w*p.scale, ph = p.imgData.h*p.scale;
+          if (Math.abs(mx-p.group.x)<pw*0.5 && Math.abs(my-p.group.y)<ph*0.5) { this._splitPhotos(cg); return; }
         }
       }
     });
