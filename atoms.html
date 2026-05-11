@@ -298,6 +298,11 @@
       b.textContent = p.classList.contains("open") ? "✕" : "⚙";
     }
     init();
+    // Expose to global for onclick handlers
+    window.switchAtom = switchAtom;
+    window.updateProp = updateProp;
+    window.collapsePanel = collapsePanel;
+    window.togglePanel = togglePanel;
   </script>
 </body>
 </html>
