@@ -546,6 +546,7 @@ export class PhotoSystem {
       const mx = e.clientX, my = e.clientY;
       if (hitTest(mx,my)) {
         drag = true; offX = photo.group.x-mx; offY = photo.group.y-my;
+        photo.group.scale.set(1.05);
         this.app.stage.removeChild(photo.group);
         this.app.stage.addChild(photo.group);
       }
@@ -564,6 +565,8 @@ export class PhotoSystem {
     const onUp = () => {
       if (!drag) return;
       drag = false;
+      // Reset scale
+      photo.group.scale.set(1.0);
       if (photo.clipped) return;
       const boundsA = this._getPhotoBounds(photo);
       // Check overlap with unclipped photos (new merge)
