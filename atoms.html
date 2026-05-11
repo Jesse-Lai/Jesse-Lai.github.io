@@ -217,15 +217,22 @@
         return;
       }
       if(imgCfg.type==='clip'){
-        const imgs=[];for(const src of imgCfg.images) imgs.push(await loadImagePixels(src));
-        const maxW=W*0.22, maxH=H*0.32;
-        const result = await renderClip(app, imgs, W/2, H/2-20, maxW, maxH, cfg);
-        app.stage.addChild(result.group);extraContainers.push(result.group);
-        cleanups.push(makeDraggable(app.canvas, result.group, result.hitTest));
-        // Click clip to toggle split
-        app.canvas.addEventListener('mousedown', e => {
-          if(result.clipHitTest(e.clientX, e.clientY)) result.toggleSplit();
-        });
+        // Use PhotoSystem for full merge/split cycle
+        const clipPS = new PhotoSystem(app, app.canvas, atomsConfig);
+        const cx = W/2, cy = H/2 - 20;
+        const targetW = W * 0.15;
+        // Add photos close together so they auto-overlap
+        for (let i=0; i<imgCfg.images.length; i++) {
+          await clipPS.addPhoto(imgCfg.images[i], cx + i*8, cy + i*10, null, {caption:'', date:''});
+        }
+        // Auto-merge after render
+        setTimeout(async () => {
+          if (clipPS.photos.length >= 2) {
+            for (let i=1; i<clipPS.photos.length; i++) {
+              await clipPS._mergePhotos(clipPS.photos[i], clipPS.photos[0]);
+            }
+          }
+        }, 500);
         return;
       }
       if(imgCfg.type==='photo'){
