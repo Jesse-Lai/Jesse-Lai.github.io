@@ -177,11 +177,21 @@ export class AtomSticker {
 
 // ─── Render Photo (Polaroid) ───
 export async function renderPhoto(app, imgData, x, y, scale, imgCfg, cfg) {
-  const group = new PIXI.Container();
-  group.x = x; group.y = y;
+  const wrapper = new PIXI.Container();
+  wrapper.x = x; wrapper.y = y;
   const pw = imgData.w*scale, ph = imgData.h*scale;
   const border = pw*0.06;
   const bottomBorder = border*3;
+
+  // Shadow (outside mask so it's visible)
+  const shadow = new PIXI.Graphics();
+  shadow.roundRect(-pw/2-border+3, -ph/2-border+3, pw+border*2, ph+border+bottomBorder, 3);
+  shadow.fill({color:0x000000, alpha:0.12});
+  wrapper.addChild(shadow);
+
+  // Inner group (masked)
+  const group = new PIXI.Container();
+  wrapper.addChild(group);
 
   // White frame
   const frame = new PIXI.Graphics();
@@ -189,18 +199,12 @@ export async function renderPhoto(app, imgData, x, y, scale, imgCfg, cfg) {
   frame.fill(0xf5f5f0);
   group.addChild(frame);
 
-  // Mask to clip text within frame (text can cover photo but not exceed white border)
+  // Mask to clip text within frame
   const mask = new PIXI.Graphics();
   mask.roundRect(-pw/2-border, -ph/2-border, pw+border*2, ph+border+bottomBorder, 3);
   mask.fill(0xffffff);
   group.addChild(mask);
   group.mask = mask;
-
-  // Shadow
-  const shadow = new PIXI.Graphics();
-  shadow.roundRect(-pw/2-border+3, -ph/2-border+3, pw+border*2, ph+border+bottomBorder, 3);
-  shadow.fill({color:0x000000, alpha:0.12});
-  group.addChildAt(shadow, 0);
 
   // Photo sprite
   const sp = new PIXI.Sprite(imgData.tex);
@@ -237,9 +241,9 @@ export async function renderPhoto(app, imgData, x, y, scale, imgCfg, cfg) {
   }
 
   // Rotation
-  group.rotation = (Math.random()*8-4) * Math.PI/180;
+  wrapper.rotation = (Math.random()*8-4) * Math.PI/180;
 
-  return { group, hitTest: (mx,my) => Math.abs(mx-group.x)<pw*0.6 && Math.abs(my-group.y)<(ph+bottomBorder)*0.6 };
+  return { group: wrapper, hitTest: (mx,my) => Math.abs(mx-wrapper.x)<pw*0.6 && Math.abs(my-wrapper.y)<(ph+bottomBorder)*0.6 };
 }
 
 // ─── Render Clip ───
