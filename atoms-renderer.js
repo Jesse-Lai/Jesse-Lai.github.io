@@ -409,3 +409,165 @@ export function renderLure(app, x, y, cfg) {
 
   return { group, hitTest: (mx,my) => Math.abs(mx-group.x)<bw*sc && Math.abs(my-group.y)<bh*sc };
 }
+// ─── PhotoSystem — manages photos with clip merge/split behavior ───
+export class PhotoSystem {
+  constructor(app, canvas, atomsConfig) {
+    this.app = app;
+    this.canvas = canvas;
+    this.config = atomsConfig;
+    this.photos = [];
+    this.clipGroups = [];
+    this._setupClickHandler();
+  }
+
+  async addPhoto(imgSrc, x, y, scale, meta) {
+    const imgData = await loadImagePixels(imgSrc);
+    const sc = scale || Math.min(200/imgData.w, 300/imgData.h);
+    const { group } = await renderPhoto(this.app, imgData, x, y, sc, meta, this.config?.photo);
+    this.app.stage.addChild(group);
+    const photo = { group, imgData, scale: sc, config: meta, clipped: false, splitCooldown: 0 };
+    this.photos.push(photo);
+    this._makePhotoDraggable(photo);
+    return photo;
+  }
+
+  _getPhotoBounds(p) {
+    const pw = p.imgData.w*p.scale, ph = p.imgData.h*p.scale;
+    const border = pw*0.06, bottomBorder = border*3;
+    const totalW = pw+border*2, totalH = ph+border+bottomBorder;
+    return { x: p.group.x-totalW/2, y: p.group.y-totalH/2, w: totalW, h: totalH };
+  }
+
+  _overlapRatio(a, b) {
+    const ax2=a.x+a.w, ay2=a.y+a.h, bx2=b.x+b.w, by2=b.y+b.h;
+    const ox = Math.max(0, Math.min(ax2,bx2)-Math.max(a.x,b.x));
+    const oy = Math.max(0, Math.min(ay2,by2)-Math.max(a.y,b.y));
+    const overlap = ox*oy;
+    const smaller = Math.min(a.w*a.h, b.w*b.h);
+    return smaller>0 ? overlap/smaller : 0;
+  }
+
+  async _mergePhotos(droppedPhoto, targetPhoto) {
+    let existingClip = this.clipGroups.find(cg => cg.photos.includes(targetPhoto));
+    if (existingClip) {
+      droppedPhoto.clipped = true;
+      existingClip.photos.push(droppedPhoto);
+      const idx = existingClip.photos.length - 1;
+      await animateTo(droppedPhoto.group, targetPhoto.group.x + idx*4, targetPhoto.group.y - idx*4);
+      existingClip.clipSprite.x = existingClip.photos[0].group.x - existingClip.photos[0].imgData.w*existingClip.photos[0].scale*0.35;
+      existingClip.clipSprite.y = existingClip.photos[0].group.y - existingClip.photos[0].imgData.h*existingClip.photos[0].scale*0.4;
+      return;
+    }
+    if (droppedPhoto.clipped || targetPhoto.clipped) return;
+    droppedPhoto.clipped = true; targetPhoto.clipped = true;
+
+    const mx = (droppedPhoto.group.x + targetPhoto.group.x) / 2;
+    const my = (droppedPhoto.group.y + targetPhoto.group.y) / 2;
+    await Promise.all([
+      animateTo(targetPhoto.group, mx - 4, my + 4),
+      animateTo(droppedPhoto.group, mx + 4, my - 4),
+    ]);
+
+    try {
+      const clipTex = await PIXI.Assets.load({src:'paperclip.svg', data:{resolution:4}});
+      const clipSp = new PIXI.Sprite(clipTex);
+      const pw = droppedPhoto.imgData.w * droppedPhoto.scale;
+      const clipScale = Math.min(pw*0.2/clipSp.texture.width, pw*0.4/clipSp.texture.height);
+      clipSp.scale.set(clipScale);
+      clipSp.anchor.set(0.5, 0.5);
+      clipSp.x = mx - pw*0.35;
+      clipSp.y = my - droppedPhoto.imgData.h*droppedPhoto.scale*0.4;
+      clipSp.alpha = 0;
+      clipSp.zIndex = 9999;
+      this.app.stage.addChild(clipSp);
+      await fadeIn(clipSp);
+      const clipInfo = { clipSprite: clipSp, photos: [targetPhoto, droppedPhoto] };
+      this.clipGroups.push(clipInfo);
+    } catch(err) {
+      console.error('Failed to load paperclip:', err);
+      droppedPhoto.clipped = false; targetPhoto.clipped = false;
+    }
+  }
+
+  async _splitPhotos(clipInfo) {
+    const { clipSprite, photos: clipPhotos } = clipInfo;
+    await fadeOut(clipSprite);
+    this.app.stage.removeChild(clipSprite);
+    clipSprite.destroy();
+
+    const cx = clipPhotos[0].group.x, cy = clipPhotos[0].group.y;
+    const spread = 200 + Math.random()*100;
+    const angleStep = Math.PI*2 / clipPhotos.length;
+    const baseAngle = Math.random()*Math.PI*2;
+    await Promise.all(clipPhotos.map((p,i) =>
+      animateTo(p.group, cx+Math.cos(baseAngle+angleStep*i)*spread, cy+Math.sin(baseAngle+angleStep*i)*spread)
+    ));
+    clipPhotos.forEach(p => { p.clipped = false; p.splitCooldown = Date.now()+500; });
+    const idx = this.clipGroups.indexOf(clipInfo);
+    if (idx>=0) this.clipGroups.splice(idx, 1);
+  }
+
+  _makePhotoDraggable(photo) {
+    let drag = false, offX = 0, offY = 0;
+    const hitTest = (mx,my) => {
+      const pw = photo.imgData.w*photo.scale, ph = photo.imgData.h*photo.scale;
+      return Math.abs(mx-photo.group.x)<pw*0.6 && Math.abs(my-photo.group.y)<ph*0.6;
+    };
+    const onDown = e => {
+      if (photo.clipped) return;
+      const mx = e.clientX, my = e.clientY;
+      if (hitTest(mx,my)) {
+        drag = true; offX = photo.group.x-mx; offY = photo.group.y-my;
+        this.app.stage.removeChild(photo.group);
+        this.app.stage.addChild(photo.group);
+      }
+    };
+    const onMove = e => {
+      if (!drag) return;
+      photo.group.x = e.clientX+offX;
+      photo.group.y = e.clientY+offY;
+    };
+    const onUp = () => {
+      if (!drag) return;
+      drag = false;
+      const boundsA = this._getPhotoBounds(photo);
+      for (const other of this.photos) {
+        if (other===photo || other.clipped || photo.clipped) continue;
+        if (photo.splitCooldown && Date.now()<photo.splitCooldown) continue;
+        if (other.splitCooldown && Date.now()<other.splitCooldown) continue;
+        const boundsB = this._getPhotoBounds(other);
+        if (this._overlapRatio(boundsA, boundsB)>0.2) {
+          this._mergePhotos(photo, other);
+          break;
+        }
+      }
+    };
+    this.canvas.addEventListener('mousedown', onDown);
+    this.canvas.addEventListener('mousemove', onMove);
+    this.canvas.addEventListener('mouseup', onUp);
+  }
+
+  _setupClickHandler() {
+    this.canvas.addEventListener('mousedown', e => {
+      const mx = e.clientX, my = e.clientY;
+      // Check clip click
+      for (const cg of [...this.clipGroups]) {
+        const cs = cg.clipSprite;
+        if (Math.abs(mx-cs.x)<60 && Math.abs(my-cs.y)<60) {
+          this._splitPhotos(cg);
+          return;
+        }
+      }
+      // Check clipped photo click
+      for (const cg of [...this.clipGroups]) {
+        for (const p of cg.photos) {
+          const pw = p.imgData.w*p.scale, ph = p.imgData.h*p.scale;
+          if (Math.abs(mx-p.group.x)<pw*0.5 && Math.abs(my-p.group.y)<ph*0.5) {
+            this._splitPhotos(cg);
+            return;
+          }
+        }
+      }
+    });
+  }
+}
