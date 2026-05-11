@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Atoms</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
     @font-face { font-family: 'Red Hat Mono'; src: url('fonts/RedHatMono-Regular.woff2') format('woff2'); font-weight: 400; }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { background: #0a0a0a; color: #999; font-family: 'Red Hat Mono', monospace; height: 100vh; overflow: hidden; }
@@ -139,7 +140,7 @@
 
     const atomImages = {
       sticker: { images: ['sticker.png', 'sticker2.png'], type: 'sticker' },
-      photo: { images: ['photo3.png'], type: 'photo' },
+      photo: { images: ['photo3.png'], type: 'photo', caption: 'Koala friend', date: "'25 04 28" },
       clip: { images: ['photo1.png', 'photo2.png', 'photo4.png'], type: 'clip' },
       lure: { images: [], type: 'lure' },
     };
@@ -417,6 +418,57 @@
       const imgB=imgCfg.images[1]?await loadImagePixels(imgCfg.images[1]):imgA;
       const maxW2=W*0.4,maxH2=H*0.5;
       const scale=Math.min(maxW2/imgA.w,maxH2/imgA.h);
+
+      if(imgCfg.type==='photo'){
+        // Polaroid style
+        const group=new PIXI.Container();
+        const W2=app.screen.width,H2=app.screen.height;
+        group.x=W2/2;group.y=H2/2-20;
+        const pw=imgA.w*scale, ph=imgA.h*scale;
+        const border=pw*0.06;
+        const bottomBorder=border*3;
+        // White frame
+        const frame=new PIXI.Graphics();
+        frame.roundRect(-pw/2-border,-ph/2-border,pw+border*2,ph+border+bottomBorder,3);
+        frame.fill(0xf5f5f0);
+        group.addChild(frame);
+        // Shadow under frame
+        const shadow=new PIXI.Graphics();
+        shadow.roundRect(-pw/2-border+3,-ph/2-border+3,pw+border*2,ph+border+bottomBorder,3);
+        shadow.fill({color:0x000000,alpha:0.12});
+        group.addChildAt(shadow,0);
+        // Photo
+        const sp=new PIXI.Sprite(imgA.tex);
+        sp.anchor.set(0.5,0.5);
+        sp.width=pw;sp.height=ph;
+        sp.y=-bottomBorder/2+border/2;
+        group.addChild(sp);
+        // Caption text (hand-written style)
+        const caption=imgCfg.caption||'';
+        const date=imgCfg.date||'';
+        if(caption){
+          const capText=new PIXI.Text({text:caption,style:{fontFamily:'Permanent Marker',fontSize:Math.max(14,pw*0.06),fill:0x333333}});
+          capText.x=-pw/2;
+          capText.y=ph/2-bottomBorder/2+border*0.8;
+          group.addChild(capText);
+        }
+        if(date){
+          const dateText=new PIXI.Text({text:date,style:{fontFamily:'Permanent Marker',fontSize:Math.max(12,pw*0.05),fill:0x555555}});
+          dateText.anchor.set(1,0);
+          dateText.x=pw/2;
+          dateText.y=ph/2-bottomBorder/2+border*0.8;
+          group.addChild(dateText);
+        }
+        app.stage.addChild(group);extraContainers.push(group);
+        // Draggable
+        let photoDrag=false,photoOffX=0,photoOffY=0;
+        const photoHit=(mx,my)=>Math.abs(mx-group.x)<pw*0.6&&Math.abs(my-group.y)<(ph+bottomBorder)*0.6;
+        app.canvas.addEventListener('mousedown',e=>{if(photoHit(e.clientX,e.clientY)){photoDrag=true;photoOffX=group.x-e.clientX;photoOffY=group.y-e.clientY;}});
+        app.canvas.addEventListener('mousemove',e=>{if(photoDrag){group.x=e.clientX+photoOffX;group.y=e.clientY+photoOffY;}});
+        app.canvas.addEventListener('mouseup',()=>{photoDrag=false;});
+        return;
+      }
+
       sticker=new AtomSticker(imgA,imgB,W/2,H/2-30,scale,cfg);
       app.stage.addChild(sticker.container);
     }
