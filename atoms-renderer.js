@@ -472,11 +472,14 @@ export class PhotoSystem {
       const clipTex = await PIXI.Assets.load({src:'paperclip.svg', data:{resolution:4}});
       const clipSp = new PIXI.Sprite(clipTex);
       const pw = droppedPhoto.imgData.w * droppedPhoto.scale;
-      const clipScale = Math.min(pw*0.2/clipSp.texture.width, pw*0.4/clipSp.texture.height);
+      const ph = droppedPhoto.imgData.h * droppedPhoto.scale;
+      const border = pw*0.06;
+      const clipScale = Math.min(pw*0.35/clipSp.texture.width, ph*0.5/clipSp.texture.height);
       clipSp.scale.set(clipScale);
       clipSp.anchor.set(0.5, 0.5);
-      clipSp.x = mx - pw*0.35;
-      clipSp.y = my - droppedPhoto.imgData.h*droppedPhoto.scale*0.4;
+      // Top-left corner, protruding above photos
+      clipSp.x = mx - pw*0.4 - border;
+      clipSp.y = my - ph*0.45 - border;
       clipSp.alpha = 0;
       clipSp.zIndex = 9999;
       this.app.stage.addChild(clipSp);
@@ -496,7 +499,7 @@ export class PhotoSystem {
     clipSprite.destroy();
 
     const cx = clipPhotos[0].group.x, cy = clipPhotos[0].group.y;
-    const spread = 200 + Math.random()*100;
+    const spread = 60 + Math.random()*40;
     const angleStep = Math.PI*2 / clipPhotos.length;
     const baseAngle = Math.random()*Math.PI*2;
     await Promise.all(clipPhotos.map((p,i) =>
@@ -581,16 +584,7 @@ export class PhotoSystem {
           return;
         }
       }
-      // Check clipped photo click
-      for (const cg of [...this.clipGroups]) {
-        for (const p of cg.photos) {
-          const pw = p.imgData.w*p.scale, ph = p.imgData.h*p.scale;
-          if (Math.abs(mx-p.group.x)<pw*0.5 && Math.abs(my-p.group.y)<ph*0.5) {
-            this._splitPhotos(cg);
-            return;
-          }
-        }
-      }
+      // Only clip sprite area triggers split (not photos)
     });
     // Touch tap for clip split
     this.canvas.addEventListener('touchend', e => {
@@ -601,12 +595,7 @@ export class PhotoSystem {
         const cs = cg.clipSprite;
         if (Math.abs(mx-cs.x)<60 && Math.abs(my-cs.y)<60) { this._splitPhotos(cg); return; }
       }
-      for (const cg of [...this.clipGroups]) {
-        for (const p of cg.photos) {
-          const pw = p.imgData.w*p.scale, ph = p.imgData.h*p.scale;
-          if (Math.abs(mx-p.group.x)<pw*0.5 && Math.abs(my-p.group.y)<ph*0.5) { this._splitPhotos(cg); return; }
-        }
-      }
+
     });
   }
 }
