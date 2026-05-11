@@ -223,7 +223,8 @@
         const targetW = W * 0.15;
         // Add photos close together so they auto-overlap
         for (let i=0; i<imgCfg.images.length; i++) {
-          await clipPS.addPhoto(imgCfg.images[i], cx + i*8, cy + i*10, null, {caption:'', date:''});
+          const clipCaptions=[{caption:'Powder day',date:"'25 01 15"},{caption:'Wildflowers',date:"'25 05 10"},{caption:'Avalanche!',date:"'25 02 08"}];
+          await clipPS.addPhoto(imgCfg.images[i], cx + i*8, cy + i*10, null, clipCaptions[i]||{});
         }
         // Auto-merge after render
         setTimeout(async () => {
