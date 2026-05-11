@@ -447,19 +447,19 @@
         const caption=imgCfg.caption||'';
         const date=imgCfg.date||'';
         const textRot=(Math.random()*8-4)*Math.PI/180;
+        const textBaseY=ph/2+border*0.5;
         if(caption){
           const capText=new PIXI.Text({text:caption,style:{fontFamily:'Schoolbell',fontSize:Math.max(28,pw*0.12),fill:0x333333}});
-          capText.x=-pw/2+border*(0.3+Math.random()*0.5);
-          capText.y=ph/2-bottomBorder/2+border*(0.2+Math.random()*0.6)-border*0.5;
+          capText.x=-pw/2+border*(0.5+Math.random()*0.8);
+          capText.y=textBaseY+Math.random()*border*0.3;
           capText.rotation=textRot;
           group.addChild(capText);
         }
         if(date){
-          const dateText=new PIXI.Text({text:date,style:{fontFamily:'Schoolbell',fontSize:Math.max(24,pw*0.10),fill:0x555555}});
-          dateText.anchor.set(1,0);
-          dateText.x=pw/2-border*(0.2+Math.random()*0.4);
-          dateText.y=ph/2-bottomBorder/2+border*(0.4+Math.random()*0.8)-border*0.3;
-          dateText.rotation=textRot;
+          const dateText=new PIXI.Text({text:date,style:{fontFamily:'Schoolbell',fontSize:Math.max(20,pw*0.09),fill:0x666666}});
+          dateText.x=-pw/2+border*(0.8+Math.random()*1.2);
+          dateText.y=textBaseY+pw*0.12+border*0.3+Math.random()*border*0.3;
+          dateText.rotation=textRot+(Math.random()-0.5)*0.03;
           group.addChild(dateText);
         }
         app.stage.addChild(group);extraContainers.push(group);
