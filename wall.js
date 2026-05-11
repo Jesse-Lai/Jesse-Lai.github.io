@@ -43,7 +43,7 @@ import { loadImagePixels, PhotoSystem } from "./atoms-renderer.js?v=5";
   if (isPortrait) {
     const padding = W * 0.1;
     const photoW = W * 0.6;
-    let curY = padding * 2;
+    let curY = padding + photoW * 0.8;
     for (let i=0; i<photoConfigs.length; i++) {
       const pc = photoConfigs[i];
       pc.x = W * 0.5 + (Math.random()-0.5) * W * 0.08;
