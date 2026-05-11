@@ -189,10 +189,10 @@ import { loadImagePixels, AtomSticker, renderPhoto, renderClip, renderLure, make
 
   // ─── Create photos ───
   const photoConfigs = [
-    { src: 'photo1.png', caption: 'Blackboard', date: "'25 03 12", x: W*0.2, y: H*0.3 },
+    { src: 'photo_flowers.png', caption: 'Wildflowers', date: "'25 05 10", x: W*0.2, y: H*0.3 },
     { src: 'photo2.png', caption: 'Design notes', date: "'25 04 01", x: W*0.75, y: H*0.25 },
-    { src: 'photo3.png', caption: 'Koala friend', date: "'25 04 28", x: W*0.8, y: H*0.65 },
-    { src: 'photo4.png', caption: 'Charizard!', date: "'24 12 20", x: W*0.25, y: H*0.7 },
+    { src: 'photo_ski.png', caption: 'Powder day', date: "'25 01 15", x: W*0.8, y: H*0.65 },
+    { src: 'photo_avalanche.png', caption: 'Avalanche!', date: "'25 02 08", x: W*0.25, y: H*0.7 },
     { src: 'photo_fishing.jpg', caption: 'Big catch!', date: "'25 06 15", x: W*0.55, y: H*0.75 },
   ];
 
