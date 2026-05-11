@@ -15,15 +15,15 @@ import { loadImagePixels, PhotoSystem } from "./atoms-renderer.js?v=5";
   const configResp = await fetch('atoms-config.json');
   const atomsConfig = await configResp.json();
   // Preload Schoolbell font before rendering
-  await new Promise(r => {
-    const testEl = document.createElement('span');
-    testEl.style.fontFamily = 'Schoolbell';
-    testEl.style.position = 'absolute';
-    testEl.style.visibility = 'hidden';
-    testEl.textContent = 'test';
-    document.body.appendChild(testEl);
-    document.fonts.ready.then(() => { document.body.removeChild(testEl); r(); });
-  });
+  try {
+    await document.fonts.load('24px Schoolbell');
+  } catch(e) {}
+  // Double-check: wait until font is actually available
+  let fontRetries = 0;
+  while (fontRetries < 20 && !document.fonts.check('24px Schoolbell')) {
+    await new Promise(r => setTimeout(r, 100));
+    fontRetries++;
+  }
 
   // ─── Photo System (shared behavior from atoms-renderer) ───
   const photoSystem = new PhotoSystem(app, app.canvas, atomsConfig);
