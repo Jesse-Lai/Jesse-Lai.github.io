@@ -27,16 +27,49 @@ import { loadImagePixels, PhotoSystem } from "./atoms-renderer.js?v=5";
   // ─── Photo System (shared behavior from atoms-renderer) ───
   const photoSystem = new PhotoSystem(app, app.canvas, atomsConfig);
 
+  const isMobile = W < 768;
+  const isPortrait = H > W;
+
   const photoConfigs = [
-    { src: 'photo_flowers.png', caption: 'Wildflowers', date: "'25 05 10", x: W*0.2, y: H*0.3 },
-    { src: 'photo2.png', caption: 'Design notes', date: "'25 04 01", x: W*0.75, y: H*0.25 },
-    { src: 'photo_ski.png', caption: 'Powder day', date: "'25 01 15", x: W*0.8, y: H*0.65 },
-    { src: 'photo_avalanche.png', caption: 'Avalanche!', date: "'25 02 08", x: W*0.25, y: H*0.7 },
-    { src: 'photo_fishing.jpg', caption: 'Big catch!', date: "'25 06 15", x: W*0.55, y: H*0.75 },
+    { src: 'photo_flowers.png', caption: 'Wildflowers', date: "'25 05 10" },
+    { src: 'photo2.png', caption: 'Design notes', date: "'25 04 01" },
+    { src: 'photo_ski.png', caption: 'Powder day', date: "'25 01 15" },
+    { src: 'photo_avalanche.png', caption: 'Avalanche!', date: "'25 02 08" },
+    { src: 'photo_fishing.jpg', caption: 'Big catch!', date: "'25 06 15" },
   ];
 
+  // Layout: mobile portrait = vertical stack, desktop = scattered
+  if (isPortrait) {
+    const padding = W * 0.1;
+    const photoW = W * 0.6;
+    let curY = padding * 2;
+    for (let i=0; i<photoConfigs.length; i++) {
+      const pc = photoConfigs[i];
+      pc.x = W * 0.3 + (Math.random()-0.5) * W * 0.15;
+      pc.y = curY;
+      curY += photoW * 1.4 + padding * 0.5;
+    }
+    // Extend canvas height if needed
+    const totalH = curY + padding;
+    if (totalH > H) {
+      app.renderer.resize(W, totalH);
+      document.body.style.overflow = 'auto';
+    }
+  } else {
+    const positions = [
+      {x: W*0.2, y: H*0.3}, {x: W*0.75, y: H*0.25}, {x: W*0.8, y: H*0.65},
+      {x: W*0.25, y: H*0.7}, {x: W*0.55, y: H*0.75},
+    ];
+    for (let i=0; i<photoConfigs.length; i++) {
+      photoConfigs[i].x = positions[i].x;
+      photoConfigs[i].y = positions[i].y;
+    }
+  }
+
   for (const pc of photoConfigs) {
-    await photoSystem.addPhoto(pc.src, pc.x, pc.y, null, pc);
+    const imgData = await loadImagePixels(pc.src);
+    const photoScale = isPortrait ? Math.min((W*0.55)/imgData.w, (W*0.7)/imgData.h) : Math.min((W*0.15)/imgData.w, (H*0.25)/imgData.h);
+    await photoSystem.addPhoto(pc.src, pc.x, pc.y, photoScale, pc);
   }
 
 
