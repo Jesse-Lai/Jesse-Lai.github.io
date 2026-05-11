@@ -1,4 +1,5 @@
 // wall.js — Main view, uses atoms-renderer.js
+import { loadImagePixels, PhotoSystem } from "./atoms-renderer.js?v=5";
 
 (async () => {
   const W = window.innerWidth;
