@@ -430,11 +430,20 @@
         }
         if(!count) return 0x555555;
         const r=Math.round(rT/count), g=Math.round(gT/count), b=Math.round(bT/count);
-        // Darken slightly for readability on white
-        const dr=Math.max(0,Math.round(r*0.5));
-        const dg=Math.max(0,Math.round(g*0.5));
-        const db=Math.max(0,Math.round(b*0.5));
-        return (dr<<16)|(dg<<8)|db;
+        // Boost saturation + darken slightly for marker pen feel
+        const max=Math.max(r,g,b), min=Math.min(r,g,b);
+        const mid=(max+min)/2;
+        // Push each channel away from mid to boost saturation
+        const sat=1.8;
+        let sr=Math.round(mid+(r-mid)*sat);
+        let sg=Math.round(mid+(g-mid)*sat);
+        let sb=Math.round(mid+(b-mid)*sat);
+        // Darken just a bit for readability
+        const dark=0.7;
+        sr=Math.max(0,Math.min(255,Math.round(sr*dark)));
+        sg=Math.max(0,Math.min(255,Math.round(sg*dark)));
+        sb=Math.max(0,Math.min(255,Math.round(sb*dark)));
+        return (sr<<16)|(sg<<8)|sb;
       }
       if(imgCfg.type==='photo'){
         // Polaroid style
