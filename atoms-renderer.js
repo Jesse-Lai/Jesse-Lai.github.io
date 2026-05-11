@@ -288,27 +288,23 @@ export async function renderClip(app, images, x, y, maxW, maxH, cfg) {
   const group = new PIXI.Container();
   group.x = x; group.y = y;
 
-  // Track photo sprites for split animation
-  const photoSprites = [];
+  // Render each image as a polaroid photo (reuses renderPhoto)
+  const photoContainers = [];
   const origPositions = [];
 
   for (let i=0; i<images.length; i++) {
     const img = images[i];
     const sc = Math.min(maxW/img.w, maxH/img.h);
-    const rot = (Math.random()*8-4)*Math.PI/180;
-    const offX = i*4, offY = i*6;
-    const sh = new PIXI.Graphics();
-    sh.roundRect(2,2,img.w*sc,img.h*sc,2);
-    sh.fill({color:0,alpha:0.1});
-    sh.x=-maxW/2+offX; sh.y=-maxH/2+offY; sh.rotation=rot;
-    group.addChild(sh);
-    const sp = new PIXI.Sprite(img.tex);
-    sp.width=img.w*sc; sp.height=img.h*sc;
-    sp.x=-maxW/2+offX; sp.y=-maxH/2+offY; sp.rotation=rot;
-    group.addChild(sp);
-    photoSprites.push(sp);
-    origPositions.push({x: -maxW/2+offX, y: -maxH/2+offY});
+    const offX = i*5, offY = i*7;
+    const posX = offX, posY = offY;
+    const { group: photoGroup } = await renderPhoto(app, img, posX, posY, sc, {caption:'',date:''}, cfg);
+    // Override rotation to be slight random
+    photoGroup.rotation = (Math.random()*8-4)*Math.PI/180;
+    group.addChild(photoGroup);
+    photoContainers.push(photoGroup);
+    origPositions.push({x: posX, y: posY});
   }
+  const photoSprites = photoContainers; // alias for toggle logic
 
   // Paperclip SVG
   const clipTex = await PIXI.Assets.load({src:'paperclip.svg', data:{resolution:4}});
