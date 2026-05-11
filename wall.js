@@ -54,80 +54,94 @@ import { loadImagePixels, AtomSticker, renderPhoto, renderClip, renderLure, make
   }
 
   // ─── Clip merge ───
-  async function mergePhotos(photoA, photoB) {
-    if(photoA.clipped || photoB.clipped) return;
-    photoA.clipped=true; photoB.clipped=true;
+  async function mergePhotos(droppedPhoto, targetPhoto) {
+    // Find if target is already in a clip group
+    let existingClip = clipGroups.find(cg => cg.photos.includes(targetPhoto));
+    
+    if (existingClip) {
+      // Add to existing clip group
+      droppedPhoto.clipped = true;
+      existingClip.photos.push(droppedPhoto);
+      const idx = existingClip.photos.length - 1;
+      await animateTo(droppedPhoto.group, targetPhoto.group.x + idx*4, targetPhoto.group.y - idx*4);
+      // Move clip sprite to top
+      existingClip.clipSprite.x = existingClip.photos[0].group.x - existingClip.photos[0].imgData.w*existingClip.photos[0].scale*0.35;
+      existingClip.clipSprite.y = existingClip.photos[0].group.y - existingClip.photos[0].imgData.h*existingClip.photos[0].scale*0.4;
+      return;
+    }
+    
+    if (droppedPhoto.clipped || targetPhoto.clipped) return;
+    droppedPhoto.clipped = true; targetPhoto.clipped = true;
 
     // Animate both to midpoint, stacked
-    const mx=(photoA.group.x+photoB.group.x)/2;
-    const my=(photoA.group.y+photoB.group.y)/2;
+    const mx = (droppedPhoto.group.x + targetPhoto.group.x) / 2;
+    const my = (droppedPhoto.group.y + targetPhoto.group.y) / 2;
     await Promise.all([
-      animateTo(photoA.group, mx-4, my+4),
-      animateTo(photoB.group, mx+4, my-4),
+      animateTo(targetPhoto.group, mx - 4, my + 4),
+      animateTo(droppedPhoto.group, mx + 4, my - 4),
     ]);
 
     // Load and place paperclip SVG
-    const clipTex = await PIXI.Assets.load({src:'paperclip.svg', data:{resolution:4}});
-    const clipSp = new PIXI.Sprite(clipTex);
-    const pw=photoA.imgData.w*photoA.scale;
-    const clipScale = Math.min(pw*0.15/clipSp.texture.width, pw*0.35/clipSp.texture.height);
-    clipSp.scale.set(clipScale);
-    clipSp.anchor.set(0.5, 0.5);
-    clipSp.x = mx - pw*0.35;
-    clipSp.y = my - photoA.imgData.h*photoA.scale*0.4;
-    clipSp.eventMode = 'static';
-    clipSp.cursor = 'pointer';
-    clipSp.alpha = 0;
-    clipSp.zIndex = 9999;
-    app.stage.addChild(clipSp);
+    try {
+      const clipTex = await PIXI.Assets.load({src:'paperclip.svg', data:{resolution:4}});
+      const clipSp = new PIXI.Sprite(clipTex);
+      const pw = droppedPhoto.imgData.w * droppedPhoto.scale;
+      const clipScale = Math.min(pw*0.2/clipSp.texture.width, pw*0.4/clipSp.texture.height);
+      clipSp.scale.set(clipScale);
+      clipSp.anchor.set(0.5, 0.5);
+      clipSp.x = mx - pw*0.35;
+      clipSp.y = my - droppedPhoto.imgData.h*droppedPhoto.scale*0.4;
+      clipSp.eventMode = 'static';
+      clipSp.cursor = 'pointer';
+      clipSp.alpha = 0;
+      clipSp.zIndex = 9999;
+      app.stage.addChild(clipSp);
 
-    // Fade in clip
-    const fadeIn = () => new Promise(resolve => {
-      const start=performance.now();
-      function tick(){
-        const t=Math.min(1,(performance.now()-start)/200);
-        clipSp.alpha=t;
-        if(t<1) requestAnimationFrame(tick); else resolve();
-      }
-      tick();
-    });
-    await fadeIn();
+      // Fade in
+      await new Promise(resolve => {
+        const start = performance.now();
+        (function tick() {
+          const t = Math.min(1, (performance.now()-start)/200);
+          clipSp.alpha = t;
+          if (t<1) requestAnimationFrame(tick); else resolve();
+        })();
+      });
 
-    const clipInfo = { clipSprite: clipSp, photos: [photoA, photoB] };
-    clipGroups.push(clipInfo);
-
-    // Click clip to split
-    clipSp.on('pointerdown', () => splitPhotos(clipInfo));
+      const clipInfo = { clipSprite: clipSp, photos: [targetPhoto, droppedPhoto] };
+      clipGroups.push(clipInfo);
+      clipSp.on('pointerdown', (e) => { e.stopPropagation(); splitPhotos(clipInfo); });
+    } catch(err) {
+      console.error('Failed to load paperclip:', err);
+      droppedPhoto.clipped = false; targetPhoto.clipped = false;
+    }
   }
 
   // ─── Clip split ───
   async function splitPhotos(clipInfo) {
-    const {clipSprite, photos: [photoA, photoB]} = clipInfo;
+    const {clipSprite, photos: clipPhotos} = clipInfo;
 
     // Fade out clip
-    const fadeOut = () => new Promise(resolve => {
+    await new Promise(resolve => {
       const start=performance.now();
-      function tick(){
+      (function tick(){
         const t=Math.min(1,(performance.now()-start)/200);
         clipSprite.alpha=1-t;
         if(t<1) requestAnimationFrame(tick); else resolve();
-      }
-      tick();
+      })();
     });
-    await fadeOut();
     app.stage.removeChild(clipSprite);
+    clipSprite.destroy();
 
-    // Animate photos apart
-    const cx=photoA.group.x, cy=photoA.group.y;
+    // Animate all photos apart in a circle
+    const cx=clipPhotos[0].group.x, cy=clipPhotos[0].group.y;
     const spread=80+Math.random()*40;
-    const angle=Math.random()*Math.PI*2;
-    await Promise.all([
-      animateTo(photoA.group, cx+Math.cos(angle)*spread, cy+Math.sin(angle)*spread),
-      animateTo(photoB.group, cx-Math.cos(angle)*spread, cy-Math.sin(angle)*spread),
-    ]);
+    const angleStep=Math.PI*2/clipPhotos.length;
+    const baseAngle=Math.random()*Math.PI*2;
+    await Promise.all(clipPhotos.map((p,i) => 
+      animateTo(p.group, cx+Math.cos(baseAngle+angleStep*i)*spread, cy+Math.sin(baseAngle+angleStep*i)*spread)
+    ));
 
-    photoA.clipped=false;
-    photoB.clipped=false;
+    clipPhotos.forEach(p => p.clipped=false);
     const idx=clipGroups.indexOf(clipInfo);
     if(idx>=0) clipGroups.splice(idx,1);
   }
