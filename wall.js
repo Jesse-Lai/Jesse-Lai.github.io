@@ -69,7 +69,8 @@ import { loadImagePixels, PhotoSystem } from "./atoms-renderer.js?v=26";
 
   for (const pc of photoConfigs) {
     const imgData = await loadImagePixels(pc.src);
-    const photoScale = isPortrait ? Math.min((W*0.55)/imgData.w, (W*0.7)/imgData.h) : Math.min((W*0.15)/imgData.w, (H*0.25)/imgData.h);
+    const targetW = isPortrait ? W*0.55 : W*0.13;
+    const photoScale = targetW / imgData.w;
     await photoSystem.addPhoto(pc.src, pc.x, pc.y, photoScale, pc);
   }
 
