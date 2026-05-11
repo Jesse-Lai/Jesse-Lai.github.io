@@ -12,7 +12,16 @@
 
   const configResp = await fetch('atoms-config.json');
   const atomsConfig = await configResp.json();
-  await document.fonts.ready;
+  // Preload Schoolbell font before rendering
+  await new Promise(r => {
+    const testEl = document.createElement('span');
+    testEl.style.fontFamily = 'Schoolbell';
+    testEl.style.position = 'absolute';
+    testEl.style.visibility = 'hidden';
+    testEl.textContent = 'test';
+    document.body.appendChild(testEl);
+    document.fonts.ready.then(() => { document.body.removeChild(testEl); r(); });
+  });
 
   // ─── Photo System (shared behavior from atoms-renderer) ───
   const photoSystem = new PhotoSystem(app, app.canvas, atomsConfig);
