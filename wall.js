@@ -1,5 +1,5 @@
 // wall.js — Main view, uses atoms-renderer.js
-import { loadImagePixels, AtomSticker, renderPhoto, renderClip, renderLure, makeDraggable } from './atoms-renderer.js';
+import { loadImagePixels, AtomSticker, renderPhoto, renderClip, renderLure, makeDraggable } from './atoms-renderer.js?v=2';
 
 (async () => {
   const W = window.innerWidth;
