@@ -1,6 +1,46 @@
 // atoms-renderer.js — Shared atom rendering module
 // All atom types are rendered from here. Both atoms.html and wall.js import this.
 
+
+// ─── Animation utility ───
+export function animateTo(obj, tx, ty, duration=300) {
+  const sx=obj.x, sy=obj.y;
+  const start=performance.now();
+  return new Promise(resolve => {
+    (function tick() {
+      const t=Math.min(1,(performance.now()-start)/duration);
+      const ease=1-Math.pow(1-t,3);
+      obj.x=sx+(tx-sx)*ease;
+      obj.y=sy+(ty-sy)*ease;
+      if(t<1) requestAnimationFrame(tick); else resolve();
+    })();
+  });
+}
+
+export function fadeOut(obj, duration=200) {
+  const sa=obj.alpha;
+  const start=performance.now();
+  return new Promise(resolve => {
+    (function tick() {
+      const t=Math.min(1,(performance.now()-start)/duration);
+      obj.alpha=sa*(1-t);
+      if(t<1) requestAnimationFrame(tick); else resolve();
+    })();
+  });
+}
+
+export function fadeIn(obj, duration=200) {
+  obj.alpha=0;
+  const start=performance.now();
+  return new Promise(resolve => {
+    (function tick() {
+      const t=Math.min(1,(performance.now()-start)/duration);
+      obj.alpha=t;
+      if(t<1) requestAnimationFrame(tick); else resolve();
+    })();
+  });
+}
+
 // ─── Utilities ───
 export function sampleImage(imageData, w, h, gap) {
   const pixels = imageData.data, points = [];
@@ -251,6 +291,10 @@ export async function renderClip(app, images, x, y, maxW, maxH, cfg) {
   const group = new PIXI.Container();
   group.x = x; group.y = y;
 
+  // Track photo sprites for split animation
+  const photoSprites = [];
+  const origPositions = [];
+
   for (let i=0; i<images.length; i++) {
     const img = images[i];
     const sc = Math.min(maxW/img.w, maxH/img.h);
@@ -265,6 +309,8 @@ export async function renderClip(app, images, x, y, maxW, maxH, cfg) {
     sp.width=img.w*sc; sp.height=img.h*sc;
     sp.x=-maxW/2+offX; sp.y=-maxH/2+offY; sp.rotation=rot;
     group.addChild(sp);
+    photoSprites.push(sp);
+    origPositions.push({x: -maxW/2+offX, y: -maxH/2+offY});
   }
 
   // Paperclip SVG
@@ -282,7 +328,47 @@ export async function renderClip(app, images, x, y, maxW, maxH, cfg) {
   clipShadow.fill({color:0x000000, alpha:0.06});
   group.addChildAt(clipShadow, 0);
 
-  clipSp.eventMode='static'; clipSp.cursor='pointer'; return { group, clipSprite: clipSp, hitTest: (mx,my) => Math.abs(mx-group.x)<maxW*0.7 && Math.abs(my-group.y)<maxH*0.7 };
+  // Split/merge toggle
+  let isSplit = false;
+  const splitSpread = 70;
+
+  async function toggleSplit() {
+    isSplit = !isSplit;
+    if (isSplit) {
+      // Fade out clip
+      await fadeOut(clipSp);
+      // Spread photos
+      const angleStep = Math.PI*2/photoSprites.length;
+      const baseAngle = Math.random()*Math.PI*2;
+      await Promise.all(photoSprites.map((sp,i) => 
+        animateTo(sp, origPositions[i].x + Math.cos(baseAngle+angleStep*i)*splitSpread, 
+                      origPositions[i].y + Math.sin(baseAngle+angleStep*i)*splitSpread)
+      ));
+    } else {
+      // Gather photos back
+      await Promise.all(photoSprites.map((sp,i) => 
+        animateTo(sp, origPositions[i].x, origPositions[i].y)
+      ));
+      // Fade in clip
+      await fadeIn(clipSp);
+    }
+  }
+
+  // Click detection via canvas (shared approach)
+  const clipHitTest = (mx, my) => {
+    const worldX = group.x + clipSp.x;
+    const worldY = group.y + clipSp.y;
+    return Math.abs(mx - worldX) < 40 && Math.abs(my - worldY) < 40;
+  };
+
+  return { 
+    group, 
+    clipSprite: clipSp, 
+    photoSprites,
+    toggleSplit,
+    clipHitTest,
+    hitTest: (mx,my) => Math.abs(mx-group.x)<maxW*0.7 && Math.abs(my-group.y)<maxH*0.7 
+  };
 }
 
 // ─── Render Lure ───

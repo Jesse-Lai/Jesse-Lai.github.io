@@ -1,5 +1,5 @@
 // wall.js — Main view, uses atoms-renderer.js
-import { loadImagePixels, AtomSticker, renderPhoto, renderClip, renderLure, makeDraggable } from './atoms-renderer.js?v=2';
+import { loadImagePixels, AtomSticker, renderPhoto, renderClip, renderLure, makeDraggable, animateTo, fadeIn, fadeOut } from './atoms-renderer.js?v=2';
 
 (async () => {
   const W = window.innerWidth;
@@ -21,19 +21,6 @@ import { loadImagePixels, AtomSticker, renderPhoto, renderClip, renderLure, make
   const otherElements = [];
 
   // ─── Animate helper ───
-  function animateTo(group, tx, ty, duration=300) {
-    const sx=group.x, sy=group.y;
-    const start=performance.now();
-    return new Promise(resolve => {
-      function tick() {
-        const t=Math.min(1,(performance.now()-start)/duration);
-        const ease=1-Math.pow(1-t,3); // ease-out cubic
-        group.x=sx+(tx-sx)*ease;
-        group.y=sy+(ty-sy)*ease;
-        if(t<1) requestAnimationFrame(tick); else resolve();
-      }
-      tick();
-    });
   }
 
   // ─── Overlap detection ───
