@@ -1,5 +1,4 @@
 // wall.js — Main view, uses atoms-renderer.js
-import { loadImagePixels, AtomSticker, renderPhoto, renderClip, renderLure, makeDraggable, animateTo, fadeIn, fadeOut } from './atoms-renderer.js?v=3';
 
 (async () => {
   const W = window.innerWidth;
@@ -199,7 +198,6 @@ import { loadImagePixels, AtomSticker, renderPhoto, renderClip, renderLure, make
   app.stage.addChild(sticker1.container);
 
   // ─── Lure ───
-  const { group: lureGroup, hitTest: lureHit } = renderLure(app, W*0.88, H*0.45, atomsConfig.lure);
   app.stage.addChild(lureGroup);
   makeDraggable(app.canvas, lureGroup, lureHit);
 
