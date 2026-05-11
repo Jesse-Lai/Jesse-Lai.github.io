@@ -442,6 +442,7 @@ export class PhotoSystem {
     this.config = atomsConfig;
     this.photos = [];
     this.clipGroups = [];
+    this._activeDrag = null; // only one photo dragged at a time
     this._setupClickHandler();
   }
 
@@ -542,10 +543,23 @@ export class PhotoSystem {
       return Math.abs(mx-photo.group.x)<pw*0.6 && Math.abs(my-photo.group.y)<ph*0.6;
     };
     const onDown = e => {
-      if (photo.clipped) return;
+      if (photo.clipped || this._activeDrag) return;
       const mx = e.clientX, my = e.clientY;
+      // Check this photo is the topmost hit
+      let topPhoto = null;
+      for (const p of this.photos) {
+        if (p.clipped) continue;
+        const pw2 = p.imgData.w*p.scale, ph2 = p.imgData.h*p.scale;
+        if (Math.abs(mx-p.group.x)<pw2*0.6 && Math.abs(my-p.group.y)<ph2*0.6) {
+          if (!topPhoto || this.app.stage.children.indexOf(p.group) > this.app.stage.children.indexOf(topPhoto.group)) {
+            topPhoto = p;
+          }
+        }
+      }
+      if (topPhoto !== photo) return;
       if (hitTest(mx,my)) {
         drag = true; offX = photo.group.x-mx; offY = photo.group.y-my;
+        this._activeDrag = photo;
         photo.group.scale.set(1.05);
         this.app.stage.removeChild(photo.group);
         this.app.stage.addChild(photo.group);
@@ -565,6 +579,7 @@ export class PhotoSystem {
     const onUp = () => {
       if (!drag) return;
       drag = false;
+      this._activeDrag = null;
       // Reset scale
       photo.group.scale.set(1.0);
       if (photo.clipped) return;
