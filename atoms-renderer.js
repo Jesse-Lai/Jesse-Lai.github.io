@@ -522,8 +522,8 @@ export class PhotoSystem {
       clipSp.scale.set(clipScale);
       clipSp.anchor.set(0.5, 0.5);
       // Top-left corner, protruding above photos
-      clipSp.x = targetLeft - dBorder*2;
-      clipSp.y = targetTop - dBorder*2;
+      clipSp.x = targetLeft;
+      clipSp.y = targetTop;
       clipSp.alpha = 0;
       clipSp.zIndex = 9999;
       this.app.stage.addChild(clipSp);
