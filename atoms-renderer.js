@@ -480,7 +480,6 @@ export class PhotoSystem {
       existingClip.photos.push(droppedPhoto);
       const idx = existingClip.photos.length - 1;
       await animateTo(droppedPhoto.group, targetPhoto.group.x, targetPhoto.group.y);
-      droppedPhoto.group.rotation = targetPhoto.group.rotation;
       existingClip.clipSprite.x = existingClip.photos[0].group.x - existingClip.photos[0].imgData.w*existingClip.photos[0].scale*0.35;
       existingClip.clipSprite.y = existingClip.photos[0].group.y - existingClip.photos[0].imgData.h*existingClip.photos[0].scale*0.4;
       return;
@@ -488,15 +487,22 @@ export class PhotoSystem {
     if (droppedPhoto.clipped || targetPhoto.clipped) return;
     droppedPhoto.clipped = true; targetPhoto.clipped = true;
 
-    const mx = (droppedPhoto.group.x + targetPhoto.group.x) / 2;
-    const my = (droppedPhoto.group.y + targetPhoto.group.y) / 2;
+    // Align top-left corners: compute each photo's top-left
+    const tBounds = this._getPhotoBounds(targetPhoto);
+    const dBounds = this._getPhotoBounds(droppedPhoto);
+    // Use midpoint of their top-left corners as the merge point
+    const tlx = (tBounds.x + dBounds.x) / 2;
+    const tly = (tBounds.y + dBounds.y) / 2;
+    // Convert back to center coordinates for each photo
+    const targetCx = tlx + tBounds.w / 2;
+    const targetCy = tly + tBounds.h / 2;
+    const droppedCx = tlx + dBounds.w / 2;
+    const droppedCy = tly + dBounds.h / 2;
     await Promise.all([
-      animateTo(targetPhoto.group, mx, my),
-      animateTo(droppedPhoto.group, mx, my),
+      animateTo(targetPhoto.group, targetCx, targetCy),
+      animateTo(droppedPhoto.group, droppedCx, droppedCy),
     ]);
 
-    // Align rotation to first photo
-    droppedPhoto.group.rotation = targetPhoto.group.rotation;
 
     try {
       const clipTex = await PIXI.Assets.load({src:'paperclip.svg', data:{resolution:4}});
@@ -508,8 +514,8 @@ export class PhotoSystem {
       clipSp.scale.set(clipScale);
       clipSp.anchor.set(0.5, 0.5);
       // Top-left corner, protruding above photos
-      clipSp.x = mx - pw*0.4 - border;
-      clipSp.y = my - ph*0.45 - border;
+      clipSp.x = tlx - border;
+      clipSp.y = tly - border;
       clipSp.alpha = 0;
       clipSp.zIndex = 9999;
       this.app.stage.addChild(clipSp);
