@@ -251,27 +251,29 @@ export async function renderPhoto(app, imgData, x, y, scale, imgCfg, cfg) {
   // Handwritten text
   const caption = imgCfg?.caption || '';
   const date = imgCfg?.date || '';
-  const textRot = (Math.random()*6-3) * Math.PI/180;
   const textColor = sampleDominantColor(imgData);
-  const safeMargin = border * 0.5;
-  const fontSize1 = Math.max(24, pw*0.11);
-  const fontSize2 = Math.max(20, pw*0.09);
-  const textAreaTop = ph/2 - fontSize1*0.2;
+  const fontSize1 = Math.max(20, pw*0.10);
+  const fontSize2 = Math.max(16, pw*0.08);
+  const bottomSafe = border * 0.4;
+  const frameBottom = ph/2 + bottomBorder;
+  const capY = frameBottom - bottomSafe - fontSize1*1.3 - fontSize2*1.3;
+  const dateY = frameBottom - bottomSafe - fontSize2*1.3;
+  const textRot = (Math.random()*6-3) * Math.PI/180;
 
   if (caption) {
     const capText = new PIXI.Text({text:caption, style:{fontFamily:'Schoolbell', fontSize:fontSize1, fill:textColor}});
-    capText.x = -pw/2 + safeMargin + Math.random()*pw*0.15;
-    capText.y = textAreaTop + (Math.random()-0.3)*border*2;
+    capText.x = -pw/2 + border*0.5 + Math.random()*pw*0.1;
+    capText.y = capY;
     capText.rotation = textRot;
     capText.alpha = 0.9;
     group.addChild(capText);
   }
   if (date) {
     const dateText = new PIXI.Text({text:date, style:{fontFamily:'Schoolbell', fontSize:fontSize2, fill:textColor}});
-    dateText.x = -pw/2 + safeMargin + Math.random()*pw*0.2;
-    dateText.y = textAreaTop + fontSize1*1.1 + (Math.random()-0.3)*border;
+    dateText.x = -pw/2 + border*0.8 + Math.random()*pw*0.15;
+    dateText.y = dateY;
     dateText.rotation = textRot + (Math.random()-0.5)*0.02;
-    dateText.alpha = 0.9;
+    dateText.alpha = 0.85;
     group.addChild(dateText);
   }
 
