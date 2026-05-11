@@ -7,7 +7,7 @@ import { loadImagePixels, AtomSticker, renderPhoto, renderClip, renderLure, make
   const dpr = window.devicePixelRatio || 1;
 
   const app = new PIXI.Application();
-  await app.init({ width: W, height: H, resolution: dpr, autoDensity: true, backgroundColor: 0x0a0a0a });
+  await app.init({ width: W, height: H, antialias: true, resolution: dpr, autoDensity: true, backgroundColor: 0x0a0a0a });
   document.body.appendChild(app.canvas);
   app.stage.sortableChildren = true;
 
