@@ -533,15 +533,17 @@ export class PhotoSystem {
     const onUp = () => {
       if (!drag) return;
       drag = false;
+      if (photo.clipped) return;
       const boundsA = this._getPhotoBounds(photo);
+      // Check overlap with unclipped photos (new merge)
       for (const other of this.photos) {
-        if (other===photo || other.clipped || photo.clipped) continue;
+        if (other===photo || photo.clipped) continue;
         if (photo.splitCooldown && Date.now()<photo.splitCooldown) continue;
         if (other.splitCooldown && Date.now()<other.splitCooldown) continue;
         const boundsB = this._getPhotoBounds(other);
         if (this._overlapRatio(boundsA, boundsB)>0.2) {
           this._mergePhotos(photo, other);
-          break;
+          return;
         }
       }
     };
