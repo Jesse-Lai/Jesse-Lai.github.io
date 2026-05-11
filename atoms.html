@@ -217,20 +217,15 @@
         return;
       }
       if(imgCfg.type==='clip'){
-        // Use PhotoSystem — same behavior as wall
-        const ps = new PhotoSystem(app, app.canvas, atomsConfig);
-        const spacing = W*0.12;
-        for (let i=0; i<imgCfg.images.length; i++) {
-          await ps.addPhoto(imgCfg.images[i], W/2 - spacing + i*spacing*0.3, H/2 - 20 + i*8, null, {caption:'', date:''});
-        }
-        // Auto-merge them after a short delay
-        setTimeout(async () => {
-          if (ps.photos.length >= 2) {
-            for (let i=1; i<ps.photos.length; i++) {
-              await ps._mergePhotos(ps.photos[i], ps.photos[0]);
-            }
-          }
-        }, 300);
+        const imgs=[];for(const src of imgCfg.images) imgs.push(await loadImagePixels(src));
+        const maxW=W*0.22, maxH=H*0.32;
+        const result = await renderClip(app, imgs, W/2, H/2-20, maxW, maxH, cfg);
+        app.stage.addChild(result.group);extraContainers.push(result.group);
+        cleanups.push(makeDraggable(app.canvas, result.group, result.hitTest));
+        // Click clip to toggle split
+        app.canvas.addEventListener('mousedown', e => {
+          if(result.clipHitTest(e.clientX, e.clientY)) result.toggleSplit();
+        });
         return;
       }
       if(imgCfg.type==='photo'){
