@@ -229,11 +229,12 @@ import { loadImagePixels, AtomSticker, renderPhoto, renderClip, renderLure, make
   });
   app.canvas.addEventListener("mousedown", e => {
     mouse.x=e.clientX; mouse.y=e.clientY;
-    // Check clip click first
-    for (const cg of clipGroups) {
+    // Check clip click first (generous hit area around clip sprite)
+    for (const cg of [...clipGroups]) {
       const cs = cg.clipSprite;
-      const cb = cs.getBounds();
-      if (mouse.x >= cb.x && mouse.x <= cb.x+cb.width && mouse.y >= cb.y && mouse.y <= cb.y+cb.height) {
+      const hitRadius = 40;
+      if (Math.abs(mouse.x - cs.x) < hitRadius && Math.abs(mouse.y - cs.y) < hitRadius) {
+        console.log('Clip clicked, splitting');
         splitPhotos(cg);
         return;
       }
