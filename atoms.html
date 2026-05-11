@@ -439,9 +439,9 @@
         group.addChildAt(shadow,0);
         // Photo
         const sp=new PIXI.Sprite(imgA.tex);
-        sp.anchor.set(0.5,0.5);
+        sp.anchor.set(0.5,0);
         sp.width=pw;sp.height=ph;
-        sp.y=(bottomBorder-border)/2;
+        sp.y=-ph/2;
         group.addChild(sp);
         // Caption text (hand-written style)
         const caption=imgCfg.caption||'';
