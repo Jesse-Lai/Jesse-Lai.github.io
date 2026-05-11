@@ -482,10 +482,20 @@ export class PhotoSystem {
     if (existingClip) {
       droppedPhoto.clipped = true;
       existingClip.photos.push(droppedPhoto);
-      const idx = existingClip.photos.length - 1;
-      await animateTo(droppedPhoto.group, targetPhoto.group.x, targetPhoto.group.y);
-      existingClip.clipSprite.x = existingClip.photos[0].group.x - existingClip.photos[0].imgData.w*existingClip.photos[0].scale*0.35;
-      existingClip.clipSprite.y = existingClip.photos[0].group.y - existingClip.photos[0].imgData.h*existingClip.photos[0].scale*0.4;
+      // Align top-left to first photo
+      const first = existingClip.photos[0];
+      const fPw = first.imgData.w*first.scale;
+      const fPh = first.imgData.h*first.scale;
+      const fBorder = fPw*0.06;
+      const firstTop = first.group.y - fPh/2 - fBorder;
+      const firstLeft = first.group.x - fPw/2 - fBorder;
+      const dPw2 = droppedPhoto.imgData.w*droppedPhoto.scale;
+      const dPh2 = droppedPhoto.imgData.h*droppedPhoto.scale;
+      const dBorder2 = dPw2*0.06;
+      await animateTo(droppedPhoto.group, firstLeft + dPw2/2 + dBorder2, firstTop + dPh2/2 + dBorder2);
+      // Update clip position
+      existingClip.clipSprite.x = firstLeft;
+      existingClip.clipSprite.y = firstTop;
       return;
     }
     if (droppedPhoto.clipped || targetPhoto.clipped) return;
