@@ -67,6 +67,29 @@
     }
     .prop-value span { color: #555; font-size: 11px; }
     .tag { display: inline-block; padding: 1px 6px; background: #1a1a1a; border-radius: 3px; color: #666; font-size: 10px; margin: 1px; }
+
+    #panel-toggle {
+      display: none; position: fixed; bottom: 90px; right: 16px; z-index: 20;
+      width: 36px; height: 36px; border-radius: 50%;
+      background: none; border: 1px solid #333; color: #666;
+      cursor: pointer; font-size: 14px; transition: all 0.2s;
+    }
+    #panel-toggle:hover { border-color: #666; color: #fff; }
+    #panel-toggle.open { color: #fff; border-color: #555; }
+
+    @media (max-width: 768px) {
+      #layout { flex-direction: column; }
+      #panel {
+        position: fixed; top: 0; right: 0; bottom: 0; width: 280px;
+        transform: translateX(100%); transition: transform 0.3s;
+        z-index: 50; background: #0a0a0a;
+      }
+      #panel.open { transform: translateX(0); }
+      #panel-toggle { display: flex; align-items: center; justify-content: center; }
+      #atom-bar { height: 64px; padding: 8px 0; }
+      .atom-thumb { height: 40px; }
+      #atom-name { bottom: 72px; font-size: 10px; }
+    }
   </style>
 </head>
 <body>
@@ -97,6 +120,7 @@
         </div>
       </div>
     </div>
+    <button id="panel-toggle" onclick="togglePanel()">⚙</button>
     <div id="panel">
       <h2 id="panel-name">Sticker</h2>
       <div class="desc" id="panel-desc">粒子化贴纸，支持 morph 变换</div>
@@ -409,6 +433,13 @@
 
       renderPanel(currentAtom);
       await loadAtom(currentAtom);
+    }
+    function togglePanel() {
+      const p = document.getElementById("panel");
+      const b = document.getElementById("panel-toggle");
+      p.classList.toggle("open");
+      b.classList.toggle("open");
+      b.textContent = p.classList.contains("open") ? "✕" : "⚙";
     }
     init();
   </script>
