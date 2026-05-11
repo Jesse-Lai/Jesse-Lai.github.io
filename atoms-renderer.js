@@ -328,24 +328,53 @@ export async function renderClip(app, images, x, y, maxW, maxH, cfg) {
   async function toggleSplit() {
     isSplit = !isSplit;
     if (isSplit) {
-      // Fade out clip
       await fadeOut(clipSp);
-      // Spread photos
+      // Move each photo out of group into stage as independent element
       const angleStep = Math.PI*2/photoSprites.length;
       const baseAngle = Math.random()*Math.PI*2;
+      const spread = 80;
+      for (let i=0; i<photoSprites.length; i++) {
+        const sp = photoSprites[i];
+        // Convert local position to world position
+        const wx = group.x + sp.x;
+        const wy = group.y + sp.y;
+        group.removeChild(sp);
+        sp.x = wx; sp.y = wy;
+        app.stage.addChild(sp);
+        // Add individual drag
+        const dragState = {drag:false, offX:0, offY:0};
+        const onDown = e => {
+          const pw = sp.width, ph = sp.height;
+          if (Math.abs(e.clientX-sp.x)<pw*0.6 && Math.abs(e.clientY-sp.y)<ph*0.6) {
+            dragState.drag=true; dragState.offX=sp.x-e.clientX; dragState.offY=sp.y-e.clientY;
+            app.stage.removeChild(sp); app.stage.addChild(sp);
+          }
+        };
+        const onMove = e => { if(dragState.drag){sp.x=e.clientX+dragState.offX;sp.y=e.clientY+dragState.offY;} };
+        const onUp = () => { dragState.drag=false; };
+        app.canvas.addEventListener('mousedown',onDown);
+        app.canvas.addEventListener('mousemove',onMove);
+        app.canvas.addEventListener('mouseup',onUp);
+        splitCleanups.push(()=>{app.canvas.removeEventListener('mousedown',onDown);app.canvas.removeEventListener('mousemove',onMove);app.canvas.removeEventListener('mouseup',onUp);});
+      }
+      // Animate spread
       await Promise.all(photoSprites.map((sp,i) => 
-        animateTo(sp, origPositions[i].x + Math.cos(baseAngle+angleStep*i)*splitSpread, 
-                      origPositions[i].y + Math.sin(baseAngle+angleStep*i)*splitSpread)
+        animateTo(sp, sp.x + Math.cos(baseAngle+angleStep*i)*spread, sp.y + Math.sin(baseAngle+angleStep*i)*spread)
       ));
     } else {
-      // Gather photos back
-      await Promise.all(photoSprites.map((sp,i) => 
-        animateTo(sp, origPositions[i].x, origPositions[i].y)
-      ));
-      // Fade in clip
+      // Remove drag listeners
+      splitCleanups.forEach(fn=>fn()); splitCleanups.length=0;
+      // Move photos back into group
+      for (let i=0; i<photoSprites.length; i++) {
+        const sp = photoSprites[i];
+        app.stage.removeChild(sp);
+        sp.x = origPositions[i].x; sp.y = origPositions[i].y;
+        group.addChild(sp);
+      }
       await fadeIn(clipSp);
     }
   }
+  const splitCleanups = [];
 
   // Click detection via canvas (shared approach)
   const clipHitTest = (mx, my) => {
