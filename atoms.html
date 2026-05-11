@@ -390,7 +390,7 @@
           group.addChild(sp);
         }
         // Paper clip SVG on top-left, protruding above photos
-        const clipTex=await PIXI.Assets.load('paperclip.svg');
+        const clipTex=await PIXI.Assets.load({src:'paperclip.svg',data:{resolution:4}});
         const clipSp=new PIXI.Sprite(clipTex);
         const clipScale=Math.min(maxW*0.25/clipSp.texture.width, maxH*0.55/clipSp.texture.height);
         clipSp.scale.set(clipScale);
