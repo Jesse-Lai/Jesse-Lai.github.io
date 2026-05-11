@@ -221,16 +221,16 @@ export async function renderPhoto(app, imgData, x, y, scale, imgCfg, cfg) {
 
   if (caption) {
     const capText = new PIXI.Text({text:caption, style:{fontFamily:'Schoolbell', fontSize:fontSize1, fill:textColor}});
-    capText.x = -pw/2 + safeMargin + Math.random()*border*0.5;
-    capText.y = textAreaTop;
+    capText.x = -pw/2 + safeMargin + Math.random()*pw*0.15;
+    capText.y = textAreaTop + (Math.random()-0.3)*border*2;
     capText.rotation = textRot;
     capText.alpha = 0.9;
     group.addChild(capText);
   }
   if (date) {
     const dateText = new PIXI.Text({text:date, style:{fontFamily:'Schoolbell', fontSize:fontSize2, fill:textColor}});
-    dateText.x = -pw/2 + safeMargin + Math.random()*border*0.8;
-    dateText.y = textAreaTop + fontSize1*1.15;
+    dateText.x = -pw/2 + safeMargin + Math.random()*pw*0.2;
+    dateText.y = textAreaTop + fontSize1*1.1 + (Math.random()-0.3)*border;
     dateText.rotation = textRot + (Math.random()-0.5)*0.02;
     dateText.alpha = 0.9;
     group.addChild(dateText);
