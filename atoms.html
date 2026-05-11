@@ -228,9 +228,25 @@
       if(imgCfg.type==='clip'){
         const imgs=[];for(const src of imgCfg.images) imgs.push(await loadImagePixels(src));
         const maxW=W*0.22, maxH=H*0.32;
-        const {group, hitTest} = await renderClip(app, imgs, W/2, H/2-20, maxW, maxH, cfg);
+        const {group, clipSprite, hitTest} = await renderClip(app, imgs, W/2, H/2-20, maxW, maxH, cfg);
         app.stage.addChild(group);extraContainers.push(group);
         cleanups.push(makeDraggable(app.canvas, group, hitTest));
+        // Click clip to toggle split/merge demo
+        let split=false;
+        const photoChildren=group.children.filter(c=>c instanceof PIXI.Sprite && c!==clipSprite);
+        const origPositions=photoChildren.map(c=>({x:c.x,y:c.y}));
+        clipSprite.on('pointerdown',()=>{
+          split=!split;
+          photoChildren.forEach((c,i)=>{
+            const tx=split?origPositions[i].x+(i-1)*60:origPositions[i].x;
+            const ty=split?origPositions[i].y:origPositions[i].y;
+            const sx=c.x,sy=c.y,start=performance.now();
+            (function tick(){const t=Math.min(1,(performance.now()-start)/300);const e=1-Math.pow(1-t,3);c.x=sx+(tx-sx)*e;c.y=sy+(ty-sy)*e;if(t<1)requestAnimationFrame(tick);})();
+          });
+          // Clip fades
+          const sa=clipSprite.alpha,ta=split?0.3:1,start=performance.now();
+          (function tick(){const t=Math.min(1,(performance.now()-start)/200);clipSprite.alpha=sa+(ta-sa)*t;if(t<1)requestAnimationFrame(tick);})();
+        });
         return;
       }
       if(imgCfg.type==='photo'){

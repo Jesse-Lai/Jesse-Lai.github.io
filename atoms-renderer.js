@@ -209,10 +209,10 @@ export async function renderPhoto(app, imgData, x, y, scale, imgCfg, cfg) {
   const date = imgCfg?.date || '';
   const textRot = (Math.random()*8-4) * Math.PI/180;
   const textColor = sampleDominantColor(imgData);
-  const textAreaTop = ph/2 - fontSize1*0.3; // start slightly in photo area
   const fontSize1 = Math.max(24, pw*0.11);
   const fontSize2 = Math.max(20, pw*0.09);
   // Ensure bottomBorder has room for descenders
+  const textAreaTop = ph/2 - fontSize1*0.3; // start slightly in photo area
 
   if (caption) {
     const capText = new PIXI.Text({text:caption, style:{fontFamily:'Schoolbell', fontSize:fontSize1, fill:textColor}});
@@ -273,7 +273,7 @@ export async function renderClip(app, images, x, y, maxW, maxH, cfg) {
   clipShadow.fill({color:0x000000, alpha:0.06});
   group.addChildAt(clipShadow, 0);
 
-  return { group, hitTest: (mx,my) => Math.abs(mx-group.x)<maxW*0.7 && Math.abs(my-group.y)<maxH*0.7 };
+  clipSp.eventMode='static'; clipSp.cursor='pointer'; return { group, clipSprite: clipSp, hitTest: (mx,my) => Math.abs(mx-group.x)<maxW*0.7 && Math.abs(my-group.y)<maxH*0.7 };
 }
 
 // ─── Render Lure ───
