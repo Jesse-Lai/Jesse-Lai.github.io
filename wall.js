@@ -9,6 +9,7 @@ import { loadImagePixels, AtomSticker, renderPhoto, renderClip, renderLure, make
   const app = new PIXI.Application();
   await app.init({ width: W, height: H, resolution: dpr, autoDensity: true, backgroundColor: 0x0a0a0a });
   document.body.appendChild(app.canvas);
+  app.stage.sortableChildren = true;
 
   const configResp = await fetch('atoms-config.json');
   const atomsConfig = await configResp.json();
@@ -77,6 +78,7 @@ import { loadImagePixels, AtomSticker, renderPhoto, renderClip, renderLure, make
     clipSp.eventMode = 'static';
     clipSp.cursor = 'pointer';
     clipSp.alpha = 0;
+    clipSp.zIndex = 9999;
     app.stage.addChild(clipSp);
 
     // Fade in clip
