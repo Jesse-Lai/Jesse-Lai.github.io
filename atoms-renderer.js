@@ -30,17 +30,30 @@ export function sampleDominantColor(imgData) {
   }
   if(!count) return 0x555555;
   const r=Math.round(rT/count), g=Math.round(gT/count), b=Math.round(bT/count);
-  const max=Math.max(r,g,b), min=Math.min(r,g,b);
-  const mid=(max+min)/2;
-  const sat=3.0;
-  let sr=Math.round(mid+(r-mid)*sat);
-  let sg=Math.round(mid+(g-mid)*sat);
-  let sb=Math.round(mid+(b-mid)*sat);
-  const dark=0.85;
-  sr=Math.max(0,Math.min(255,Math.round(sr*dark)));
-  sg=Math.max(0,Math.min(255,Math.round(sg*dark)));
-  sb=Math.max(0,Math.min(255,Math.round(sb*dark)));
-  return (sr<<16)|(sg<<8)|sb;
+  // Convert to HSL, maximize saturation, darken slightly
+  const rn=r/255,gn=g/255,bn=b/255;
+  const cmax=Math.max(rn,gn,bn),cmin=Math.min(rn,gn,bn),delta=cmax-cmin;
+  let h=0;
+  if(delta>0){
+    if(cmax===rn) h=((gn-bn)/delta)%6;
+    else if(cmax===gn) h=(bn-rn)/delta+2;
+    else h=(rn-gn)/delta+4;
+    h=Math.round(h*60); if(h<0) h+=360;
+  }
+  // Max saturation, lightness ~0.4 for vivid marker look
+  const s=1.0, l=0.4;
+  const c2=(1-Math.abs(2*l-1))*s;
+  const x=c2*(1-Math.abs((h/60)%2-1));
+  const m=l-c2/2;
+  let r1,g1,b1;
+  if(h<60){r1=c2;g1=x;b1=0;}
+  else if(h<120){r1=x;g1=c2;b1=0;}
+  else if(h<180){r1=0;g1=c2;b1=x;}
+  else if(h<240){r1=0;g1=x;b1=c2;}
+  else if(h<300){r1=x;g1=0;b1=c2;}
+  else{r1=c2;g1=0;b1=x;}
+  const fr=Math.round((r1+m)*255),fg=Math.round((g1+m)*255),fb=Math.round((b1+m)*255);
+  return (fr<<16)|(fg<<8)|fb;
 }
 
 // ─── Draggable mixin ───
@@ -176,12 +189,7 @@ export async function renderPhoto(app, imgData, x, y, scale, imgCfg, cfg) {
   frame.fill(0xf5f5f0);
   group.addChild(frame);
 
-  // Mask
-  const mask = new PIXI.Graphics();
-  mask.roundRect(-pw/2-border, -ph/2-border, pw+border*2, ph+border+bottomBorder, 3);
-  mask.fill(0xffffff);
-  group.addChild(mask);
-  group.mask = mask;
+  // No mask — text can write into photo area
 
   // Shadow
   const shadow = new PIXI.Graphics();
@@ -201,9 +209,10 @@ export async function renderPhoto(app, imgData, x, y, scale, imgCfg, cfg) {
   const date = imgCfg?.date || '';
   const textRot = (Math.random()*8-4) * Math.PI/180;
   const textColor = sampleDominantColor(imgData);
-  const textAreaTop = ph/2 + border*0.3;
+  const textAreaTop = ph/2 - fontSize1*0.3; // start slightly in photo area
   const fontSize1 = Math.max(24, pw*0.11);
   const fontSize2 = Math.max(20, pw*0.09);
+  // Ensure bottomBorder has room for descenders
 
   if (caption) {
     const capText = new PIXI.Text({text:caption, style:{fontFamily:'Schoolbell', fontSize:fontSize1, fill:textColor}});
