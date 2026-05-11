@@ -419,6 +419,23 @@
       const maxW2=W*0.4,maxH2=H*0.5;
       const scale=Math.min(maxW2/imgA.w,maxH2/imgA.h);
 
+      // Sample dominant color from image
+      function sampleDominantColor(imgData) {
+        const px = imgData.data.data;
+        let rT=0,gT=0,bT=0,count=0;
+        const step = Math.max(1, Math.floor(px.length / 4 / 500));
+        for(let i=0;i<px.length;i+=step*4){
+          if(px[i+3]<128) continue;
+          rT+=px[i]; gT+=px[i+1]; bT+=px[i+2]; count++;
+        }
+        if(!count) return 0x555555;
+        const r=Math.round(rT/count), g=Math.round(gT/count), b=Math.round(bT/count);
+        // Darken slightly for readability on white
+        const dr=Math.max(0,Math.round(r*0.5));
+        const dg=Math.max(0,Math.round(g*0.5));
+        const db=Math.max(0,Math.round(b*0.5));
+        return (dr<<16)|(dg<<8)|db;
+      }
       if(imgCfg.type==='photo'){
         // Polaroid style
         const group=new PIXI.Container();
@@ -447,19 +464,22 @@
         const caption=imgCfg.caption||'';
         const date=imgCfg.date||'';
         const textRot=(Math.random()*8-4)*Math.PI/180;
+        const textColor=sampleDominantColor(imgA);
         const textBaseY=ph/2+border*0.5;
         if(caption){
-          const capText=new PIXI.Text({text:caption,style:{fontFamily:'Schoolbell',fontSize:Math.max(28,pw*0.12),fill:0x333333}});
+          const capText=new PIXI.Text({text:caption,style:{fontFamily:'Schoolbell',fontSize:Math.max(28,pw*0.12),fill:textColor}});
           capText.x=-pw/2+border*(0.5+Math.random()*0.8);
           capText.y=textBaseY+Math.random()*border*0.3;
           capText.rotation=textRot;
+          capText.alpha=0.9;
           group.addChild(capText);
         }
         if(date){
-          const dateText=new PIXI.Text({text:date,style:{fontFamily:'Schoolbell',fontSize:Math.max(20,pw*0.09),fill:0x666666}});
+          const dateText=new PIXI.Text({text:date,style:{fontFamily:'Schoolbell',fontSize:Math.max(20,pw*0.09),fill:textColor}});
           dateText.x=-pw/2+border*(0.8+Math.random()*1.2);
           dateText.y=textBaseY+pw*0.12+border*0.3+Math.random()*border*0.3;
           dateText.rotation=textRot+(Math.random()-0.5)*0.03;
+          dateText.alpha=0.9;
           group.addChild(dateText);
         }
         app.stage.addChild(group);extraContainers.push(group);
