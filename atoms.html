@@ -434,12 +434,12 @@
         const max=Math.max(r,g,b), min=Math.min(r,g,b);
         const mid=(max+min)/2;
         // Push each channel away from mid to boost saturation
-        const sat=1.8;
+        const sat=3.0;
         let sr=Math.round(mid+(r-mid)*sat);
         let sg=Math.round(mid+(g-mid)*sat);
         let sb=Math.round(mid+(b-mid)*sat);
         // Darken just a bit for readability
-        const dark=0.7;
+        const dark=0.85;
         sr=Math.max(0,Math.min(255,Math.round(sr*dark)));
         sg=Math.max(0,Math.min(255,Math.round(sg*dark)));
         sb=Math.max(0,Math.min(255,Math.round(sb*dark)));
