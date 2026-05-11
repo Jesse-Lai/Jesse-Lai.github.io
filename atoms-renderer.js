@@ -261,7 +261,7 @@ export async function renderPhoto(app, imgData, x, y, scale, imgCfg, cfg) {
   const textRot = (Math.random()*6-3) * Math.PI/180;
 
   if (caption) {
-    const capText = new PIXI.Text({text:caption, style:{fontFamily:'Schoolbell', fontSize:fontSize1, fill:textColor}});
+    const capText = new PIXI.Text({text:caption, style:{fontFamily:'Schoolbell', fontSize:fontSize1, fill:textColor, padding:fontSize1*0.3}});
     capText.x = -pw/2 + border*0.5 + Math.random()*pw*0.1;
     capText.y = capY;
     capText.rotation = textRot;
@@ -269,7 +269,7 @@ export async function renderPhoto(app, imgData, x, y, scale, imgCfg, cfg) {
     group.addChild(capText);
   }
   if (date) {
-    const dateText = new PIXI.Text({text:date, style:{fontFamily:'Schoolbell', fontSize:fontSize2, fill:textColor}});
+    const dateText = new PIXI.Text({text:date, style:{fontFamily:'Schoolbell', fontSize:fontSize2, fill:textColor, padding:fontSize2*0.3}});
     dateText.x = -pw/2 + border*0.8 + Math.random()*pw*0.15;
     dateText.y = dateY;
     dateText.rotation = textRot + (Math.random()-0.5)*0.02;
