@@ -254,7 +254,7 @@ export async function renderPhoto(app, imgData, x, y, scale, imgCfg, cfg) {
   const textColor = sampleDominantColor(imgData);
   const fontSize1 = Math.max(20, pw*0.10);
   const fontSize2 = Math.max(16, pw*0.08);
-  const bottomSafe = border * 0.4;
+  const bottomSafe = border * 0.2;
   const frameBottom = ph/2 + bottomBorder;
   const capY = frameBottom - bottomSafe - fontSize1*1.3 - fontSize2*1.3;
   const dateY = frameBottom - bottomSafe - fontSize2*1.3;
