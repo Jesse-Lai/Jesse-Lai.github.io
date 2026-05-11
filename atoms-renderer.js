@@ -81,7 +81,7 @@ export function sampleDominantColor(imgData) {
     h=Math.round(h*60); if(h<0) h+=360;
   }
   // Max saturation, lightness ~0.4 for vivid marker look
-  const s=1.0, l=0.32;
+  const s=1.0, l=0.36;
   const c2=(1-Math.abs(2*l-1))*s;
   const x=c2*(1-Math.abs((h/60)%2-1));
   const m=l-c2/2;
