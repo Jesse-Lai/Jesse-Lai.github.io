@@ -46,7 +46,7 @@ import { loadImagePixels, PhotoSystem } from "./atoms-renderer.js?v=5";
     let curY = padding * 2;
     for (let i=0; i<photoConfigs.length; i++) {
       const pc = photoConfigs[i];
-      pc.x = W * 0.3 + (Math.random()-0.5) * W * 0.15;
+      pc.x = W * 0.5 + (Math.random()-0.5) * W * 0.08;
       pc.y = curY;
       curY += photoW * 1.4 + padding * 0.5;
     }
