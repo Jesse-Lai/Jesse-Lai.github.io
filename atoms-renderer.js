@@ -592,6 +592,33 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
     wrapper.addChild(dateText);
   }
 
+  // Wrinkle/crease texture overlay
+  const wrinkleCanvas = document.createElement('canvas');
+  wrinkleCanvas.width = noteW;
+  wrinkleCanvas.height = 400; // will be cropped by noteH later
+  const wctx = wrinkleCanvas.getContext('2d');
+  // Generate subtle noise/crease pattern
+  const imgData2 = wctx.createImageData(noteW, 400);
+  for (let i = 0; i < imgData2.data.length; i += 4) {
+    const x = (i/4) % noteW;
+    const y = Math.floor((i/4) / noteW);
+    // Subtle diagonal creases
+    const crease1 = Math.sin(x * 0.05 + y * 0.03) * Math.sin(x * 0.02 - y * 0.04);
+    const crease2 = Math.sin(x * 0.08 - y * 0.06) * 0.5;
+    const noise = (Math.random() - 0.5) * 8;
+    const val = 128 + crease1 * 20 + crease2 * 10 + noise;
+    imgData2.data[i] = val;
+    imgData2.data[i+1] = val;
+    imgData2.data[i+2] = val;
+    imgData2.data[i+3] = 25; // very subtle
+  }
+  wctx.putImageData(imgData2, 0, 0);
+  const wrinkleTex = PIXI.Texture.from(wrinkleCanvas);
+  const wrinkleSprite = new PIXI.Sprite(wrinkleTex);
+  wrinkleSprite.width = noteW;
+  wrinkleSprite.blendMode = 'multiply';
+  wrapper.addChild(wrinkleSprite);
+
   // Calculate actual content height
   let contentBottom = padding;
   for (const child of wrapper.children) {
