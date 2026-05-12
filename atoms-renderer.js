@@ -555,10 +555,10 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
     stampContainer.addChild(perf);
 
     // Random position in lower half
-    const stampMinY = 80;
-    const stampMaxY = 300 - stampH * 0.5; // allow bottom overflow
-    const stampMinX = padding - stampW * 0.15; // allow left overflow
-    const stampMaxX = noteW - stampW * 0.7; // allow right overflow
+    const stampMinY = 70;
+    const stampMaxY = 300 - stampH * 0.3; // more bottom overflow
+    const stampMinX = -stampW * 0.25; // more left overflow
+    const stampMaxX = noteW - stampW * 0.5; // more right overflow
     stampContainer.x = stampMinX + Math.random() * (stampMaxX - stampMinX);
     stampContainer.y = stampMinY + Math.random() * (stampMaxY - stampMinY);
     stampContainer.rotation = (Math.random() * 10 - 5) * Math.PI / 180;
