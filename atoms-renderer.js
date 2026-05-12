@@ -1269,7 +1269,7 @@ export class FocusOverlay {
       mesh.y = startY + (targetMeshY - startY) * ease;
       mesh.width = startW + (targetW - startW) * ease;
       mesh.height = startH + (targetH - startH) * ease;
-      mesh.rotation = startRot * (1 - ease);
+      // 保持原始角度，不归零
 
       // Wave sweeps from bottom-right to top-left over the duration
       this._applyPaperCurl(buffer, origPositions, baseW, baseH, ease);
@@ -1339,7 +1339,7 @@ export class FocusOverlay {
       mesh.y = startY + (targetY - startY) * ease;
       mesh.width = startW + (targetW - startW) * ease;
       mesh.height = startH + (targetH - startH) * ease;
-      mesh.rotation = targetRot * ease;
+      // 角度始终保持不变
 
       // Reverse wave: progress goes from 1 back to 0
       this._applyPaperCurl(buffer, origPositions, baseW, baseH, 1 - ease);
@@ -1412,7 +1412,7 @@ export class FocusOverlay {
 
         // 文章容器，定位在 mesh 下方
         const articleWrap = document.createElement('div');
-        articleWrap.style.cssText = `position:absolute;top:${meshBottom + 24}px;left:0;right:0;max-width:640px;margin:0 auto;padding:0 24px 80px;opacity:0;transform:translateY(30px);transition:opacity 0.5s ease,transform 0.5s ease;`;
+        articleWrap.style.cssText = `position:absolute;top:${meshBottom + 48}px;left:0;right:0;max-width:640px;margin:0 auto;padding:0 24px 80px;opacity:0;transform:translateY(30px);transition:opacity 0.5s ease,transform 0.5s ease;`;
 
         // 标题
         let html = '';
