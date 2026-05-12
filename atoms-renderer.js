@@ -548,10 +548,10 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
     stampContainer.addChild(perf);
 
     // Random position in lower half
-    const stampMinY = 80; // approximate: after title+some body
-    const stampMaxY = 300 - stampH - padding; // will be within content area
-    const stampMinX = padding;
-    const stampMaxX = noteW - stampW - padding;
+    const stampMinY = 80;
+    const stampMaxY = 300 - stampH * 0.5; // allow bottom overflow
+    const stampMinX = padding - stampW * 0.15; // allow left overflow
+    const stampMaxX = noteW - stampW * 0.7; // allow right overflow
     stampContainer.x = stampMinX + Math.random() * (stampMaxX - stampMinX);
     stampContainer.y = stampMinY + Math.random() * (stampMaxY - stampMinY);
     stampContainer.rotation = (Math.random() * 10 - 5) * Math.PI / 180;
@@ -565,7 +565,7 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
     const bodyLines = layoutTextWithObstacles(noteData.body, {
       areaX: padding, areaY: titleBottom,
       areaW: noteW - padding*2,
-      areaH: noteH * 0.85 - titleBottom,
+      areaH: 250 - titleBottom, // max text area before stamp
       fontSize: 17, fontFamily: 'Special Elite', fill: 0x444444,
       obstacles,
     });
