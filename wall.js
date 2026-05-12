@@ -1,5 +1,5 @@
 // wall.js — Main view, uses atoms-renderer.js
-import { loadImagePixels, PhotoSystem } from "./atoms-renderer.js?v=26";
+import { loadImagePixels, PhotoSystem } from "./atoms-renderer.js?v=43";
 
 (async () => {
   const W = window.innerWidth;
@@ -60,7 +60,7 @@ import { loadImagePixels, PhotoSystem } from "./atoms-renderer.js?v=26";
   } else {
     const positions = [
       {x: W*0.2, y: H*0.3}, {x: W*0.75, y: H*0.25}, {x: W*0.8, y: H*0.65},
-      {x: W*0.25, y: H*0.7}, {x: W*0.55, y: H*0.75},
+      {x: W*0.25, y: H*0.7}, {x: W*0.55, y: H*0.75}, {x: W*0.45, y: H*0.35},
     ];
     for (let i=0; i<photoConfigs.length; i++) {
       photoConfigs[i].x = positions[i].x;
