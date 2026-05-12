@@ -530,10 +530,6 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
     const stampBorder = 7;
     const holeR = 2.5, holeSpacing = 11;
 
-    const stampBg = new PIXI.Graphics();
-    stampBg.rect(0, 0, stampW, stampH);
-    stampBg.fill(0xffffff);
-    stampContainer.addChild(stampBg);
 
     const stampSprite = new PIXI.Sprite(stampImgData.tex);
     stampSprite.x = stampBorder;
