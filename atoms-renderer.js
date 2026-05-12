@@ -48,7 +48,7 @@ export function fadeIn(obj, duration=200) {
 export function layoutTextWithObstacles(text, options) {
   const {
     areaX = 0, areaY = 0, areaW = 200, areaH = 300,
-    fontSize = 17, fontFamily = 'Patrick Hand', lineHeight = null,
+    fontSize = 17, fontFamily = 'Special Elite', lineHeight = null,
     fill = 0x444444, obstacles = [],
   } = options;
 
@@ -509,7 +509,7 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
   let titleBottom = padding;
   if (noteData.title) {
     const titleText = new PIXI.Text({text: noteData.title, style: {
-      fontFamily: 'Patrick Hand', fontSize: 28, fill: 0x222222,
+      fontFamily: 'Special Elite', fontSize: 28, fill: 0x222222,
       wordWrap: true, wordWrapWidth: noteW - padding*2,
       padding: 8,
     }});
@@ -576,7 +576,7 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
       areaX: padding, areaY: titleBottom,
       areaW: noteW - padding*2,
       areaH: noteH * 0.85 - titleBottom,
-      fontSize: 17, fontFamily: 'Patrick Hand', fill: 0x444444,
+      fontSize: 17, fontFamily: 'Special Elite', fill: 0x444444,
       obstacles,
     });
     renderTextLines(wrapper, bodyLines);
