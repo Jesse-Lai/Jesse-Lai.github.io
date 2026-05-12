@@ -87,7 +87,7 @@ export function layoutTextWithObstacles(text, options) {
       }
     }
 
-    if (lineW < fontSize * 2) {
+    if (lineW < fontSize * 6) {
       // Too narrow, skip this line
       curY += lh;
       continue;
@@ -580,7 +580,7 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
     }});
     // Try bottom-left, if stamp is there try other spots
     let dx = padding + Math.random()*20;
-    let dy = 280; // will be adjusted after content height calc
+    let dy = (stampRect ? stampRect.y + stampRect.h + 8 : 200);
     if (stampRect && dx < stampRect.x + stampRect.w && dx + 80 > stampRect.x && dy < stampRect.y + stampRect.h && dy + 20 > stampRect.y) {
       // Stamp overlaps bottom-left, put date above stamp or top-right area
       dy = noteH * 0.5 + Math.random() * 30;
