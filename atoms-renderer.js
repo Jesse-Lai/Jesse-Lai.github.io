@@ -493,14 +493,12 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
   const noteW = 280;
   const padding = 20;
 
-  // Background and lifted corner shadows
+  // Background
   const bg = new PIXI.Graphics();
   wrapper.addChild(bg);
-  // Lifted corner shadows (drawn after noteH is known)
+  // Lifted corner shadows will be added after bg is drawn (need to peek below bg)
   const shadowLeft = new PIXI.Graphics();
   const shadowRight = new PIXI.Graphics();
-  wrapper.addChildAt(shadowRight, 0);
-  wrapper.addChildAt(shadowLeft, 0);
 
   // ── Title (always at top, no wrapping around obstacles) ──
   let titleBottom = padding;
@@ -612,14 +610,15 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
     const x = (i/4) % noteW;
     const y = Math.floor((i/4) / noteW);
     // Subtle diagonal creases
-    const crease1 = Math.sin(x * 0.05 + y * 0.03) * Math.sin(x * 0.02 - y * 0.04);
-    const crease2 = Math.sin(x * 0.08 - y * 0.06) * 0.5;
-    const noise = (Math.random() - 0.5) * 8;
-    const val = 128 + crease1 * 20 + crease2 * 10 + noise;
+    const crease1 = Math.sin(x * 0.04 + y * 0.025) * Math.sin(x * 0.015 - y * 0.035);
+    const crease2 = Math.sin(x * 0.07 - y * 0.05) * 0.6;
+    const crease3 = Math.sin((x+y) * 0.03) * Math.sin((x-y) * 0.02) * 0.4;
+    const noise = (Math.random() - 0.5) * 12;
+    const val = 128 + crease1 * 35 + crease2 * 18 + crease3 * 12 + noise;
     imgData2.data[i] = val;
     imgData2.data[i+1] = val;
     imgData2.data[i+2] = val;
-    imgData2.data[i+3] = 35; // very subtle
+    imgData2.data[i+3] = 50; // visible but not overwhelming
   }
   wctx.putImageData(imgData2, 0, 0);
   const wrinkleTex = PIXI.Texture.from(wrinkleCanvas);
@@ -652,16 +651,25 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
   bg.roundRect(0, 0, noteW, noteH, 4);
   bg.fill(0xfff9c4);
 
-  // Lifted corner shadows (bottom-left and bottom-right)
+  // Lifted corner shadows - positioned below the note, peeking out
+  // Must be behind bg but visible below it
   shadowLeft.clear();
-  shadowLeft.ellipse(30, noteH + 2, 50, 10);
-  shadowLeft.fill({color:0x000000, alpha:0.18});
-  shadowLeft.rotation = 0.06;
+  shadowLeft.ellipse(35, noteH + 4, 45, 8);
+  shadowLeft.fill({color:0x000000, alpha:0.2});
+  shadowLeft.rotation = 0.05;
+  wrapper.addChildAt(shadowLeft, 0); // behind bg
 
   shadowRight.clear();
-  shadowRight.ellipse(noteW - 30, noteH + 2, 50, 10);
-  shadowRight.fill({color:0x000000, alpha:0.18});
-  shadowRight.rotation = -0.06;
+  shadowRight.ellipse(noteW - 35, noteH + 4, 45, 8);
+  shadowRight.fill({color:0x000000, alpha:0.2});
+  shadowRight.rotation = -0.05;
+  wrapper.addChildAt(shadowRight, 0); // behind bg
+  
+  // Also add a subtle bottom-center shadow for depth
+  const shadowCenter = new PIXI.Graphics();
+  shadowCenter.roundRect(15, noteH - 2, noteW - 30, 12, 4);
+  shadowCenter.fill({color:0x000000, alpha:0.1});
+  wrapper.addChildAt(shadowCenter, 0);
 
   // Resize wrinkle to match note height
   wrinkleSprite.height = noteH;
