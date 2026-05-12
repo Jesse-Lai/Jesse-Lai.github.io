@@ -603,12 +603,24 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
     stampContainer.addChild(perf);
 
     // Random position in lower half
-    const stampMinY = 70;
-    const stampMaxY = 300 - stampH * 0.3; // more bottom overflow
-    const stampMinX = -stampW * 0.25; // more left overflow
-    const stampMaxX = noteW - stampW * 0.5; // more right overflow
-    stampContainer.x = stampMinX + Math.random() * (stampMaxX - stampMinX);
-    stampContainer.y = stampMinY + Math.random() * (stampMaxY - stampMinY);
+    // Position stamp near an edge (not center)
+    const edge = Math.floor(Math.random() * 4); // 0=right, 1=bottom, 2=left, 3=bottom-right
+    let sx, sy;
+    if (edge === 0) { // right edge
+      sx = noteW - stampW * (0.6 + Math.random()*0.2);
+      sy = 60 + Math.random() * 120;
+    } else if (edge === 1) { // bottom edge
+      sx = padding + Math.random() * (noteW - stampW - padding);
+      sy = 200 - stampH * (0.3 + Math.random()*0.3);
+    } else if (edge === 2) { // left edge
+      sx = -stampW * (0.1 + Math.random()*0.15);
+      sy = 60 + Math.random() * 120;
+    } else { // bottom-right corner
+      sx = noteW - stampW * (0.7 + Math.random()*0.2);
+      sy = 200 - stampH * (0.2 + Math.random()*0.3);
+    }
+    stampContainer.x = sx;
+    stampContainer.y = sy;
     stampContainer.rotation = (Math.random() * 10 - 5) * Math.PI / 180;
     wrapper.addChild(stampContainer);
     stampRect = {x: stampContainer.x, y: stampContainer.y, w: stampW, h: stampH};
