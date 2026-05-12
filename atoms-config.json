@@ -114,5 +114,29 @@
       "mustAttachTo": null
     },
     "combines": []
+  },
+  "sticky": {
+    "name": "Sticky Note",
+    "description": "便利贴，包含标题、正文、日期和邮票图像",
+    "style": {
+      "bgColor": "#fff9c4",
+      "titleSize": 28,
+      "bodySize": 17,
+      "noteWidth": 280,
+      "noteHeight": 300
+    },
+    "behavior": {
+      "draggable": true,
+      "hoverScale": 1.05,
+      "hasParticles": false
+    },
+    "boundary": {
+      "minCount": 0,
+      "maxCount": 10,
+      "canExistAlone": true
+    },
+    "combines": [
+      "clip"
+    ]
   }
 }

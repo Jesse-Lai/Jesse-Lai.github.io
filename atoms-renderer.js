@@ -393,6 +393,117 @@ export async function renderClip(app, images, x, y, maxW, maxH, cfg) {
   };
 }
 
+
+// ─── Render Sticky Note ───
+export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
+  // noteData: { title, body, date, stampSrc }
+  const wrapper = new PIXI.Container();
+  wrapper.x = x; wrapper.y = y;
+
+  const noteW = 280, noteH = 300;
+  const padding = 20;
+
+  // Shadow
+  const shadow = new PIXI.Graphics();
+  shadow.roundRect(3, 3, noteW, noteH, 4);
+  shadow.fill({color:0x000000, alpha:0.1});
+  wrapper.addChild(shadow);
+
+  // Yellow background
+  const bg = new PIXI.Graphics();
+  bg.roundRect(0, 0, noteW, noteH, 4);
+  bg.fill(0xfff9c4);
+  wrapper.addChild(bg);
+
+  // Title text
+  if (noteData.title) {
+    const titleText = new PIXI.Text({text: noteData.title, style: {
+      fontFamily: 'Patrick Hand', fontSize: 28, fill: 0x222222,
+      wordWrap: true, wordWrapWidth: noteW - padding*2,
+      padding: 8,
+    }});
+    titleText.x = padding;
+    titleText.y = padding;
+    wrapper.addChild(titleText);
+  }
+
+  // Body text
+  if (noteData.body) {
+    const bodyText = new PIXI.Text({text: noteData.body, style: {
+      fontFamily: 'Patrick Hand', fontSize: 17, fill: 0x444444,
+      wordWrap: true, wordWrapWidth: noteW - padding*2 - (stampImgData ? 110 : 0),
+      lineHeight: 24,
+      padding: 6,
+    }});
+    bodyText.x = padding;
+    bodyText.y = padding + 38;
+    wrapper.addChild(bodyText);
+  }
+
+  // Date
+  if (noteData.date) {
+    const dateText = new PIXI.Text({text: noteData.date, style: {
+      fontFamily: 'Schoolbell', fontSize: 18, fill: 0x666666,
+      padding: 6,
+    }});
+    dateText.x = padding;
+    dateText.y = noteH - 35;
+    wrapper.addChild(dateText);
+  }
+
+  // Stamp (with perforated edge)
+  if (stampImgData) {
+    const stampContainer = new PIXI.Container();
+    const stampW = 120, stampH = 100;
+    const stampBorder = 8;
+    const holeR = 3, holeSpacing = 12;
+
+    // White background for stamp
+    const stampBg = new PIXI.Graphics();
+    stampBg.rect(0, 0, stampW, stampH);
+    stampBg.fill(0xffffff);
+    stampContainer.addChild(stampBg);
+
+    // Stamp image
+    const stampSprite = new PIXI.Sprite(stampImgData.tex);
+    stampSprite.x = stampBorder;
+    stampSprite.y = stampBorder;
+    stampSprite.width = stampW - stampBorder*2;
+    stampSprite.height = stampH - stampBorder*2;
+    stampContainer.addChild(stampSprite);
+
+    // Perforated edges using mask with holes
+    const perf = new PIXI.Graphics();
+    perf.rect(0, 0, stampW, stampH);
+    perf.fill(0xffffff);
+    // Cut holes along all 4 edges
+    for (let hx = holeSpacing/2; hx < stampW; hx += holeSpacing) {
+      perf.circle(hx, 0, holeR); perf.cut();
+      perf.circle(hx, stampH, holeR); perf.cut();
+    }
+    for (let hy = holeSpacing/2; hy < stampH; hy += holeSpacing) {
+      perf.circle(0, hy, holeR); perf.cut();
+      perf.circle(stampW, hy, holeR); perf.cut();
+    }
+    stampContainer.mask = perf;
+    stampContainer.addChild(perf);
+
+    // Position stamp in bottom-right
+    stampContainer.x = noteW - stampW - padding + 10;
+    stampContainer.y = noteH - stampH - padding + 10;
+    stampContainer.rotation = (Math.random() * 6 - 3) * Math.PI / 180;
+    wrapper.addChild(stampContainer);
+  }
+
+  // Random slight rotation
+  wrapper.rotation = (Math.random() * 6 - 3) * Math.PI / 180;
+
+  return {
+    group: wrapper,
+    hitTest: (mx, my) => Math.abs(mx - wrapper.x - noteW/2) < noteW*0.6 && Math.abs(my - wrapper.y - noteH/2) < noteH*0.6,
+  };
+}
+
 // ─── Render Lure ───
 export function renderLure(app, x, y, cfg) {
   const group = new PIXI.Container();
