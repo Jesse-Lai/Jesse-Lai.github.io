@@ -621,6 +621,8 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
   wrinkleSprite.width = noteW;
   wrinkleSprite.blendMode = 'multiply';
   wrapper.addChild(wrinkleSprite);
+  // Move stamp above wrinkle so it is not affected by texture
+  if (stampContainer) { wrapper.removeChild(stampContainer); wrapper.addChild(stampContainer); }
 
   // Calculate actual content height from known content positions
   let contentBottom = titleBottom; // at least title height
@@ -658,26 +660,7 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
   // Resize wrinkle to match note height
   wrinkleSprite.height = noteH;
 
-  // Darken stamp parts outside note boundary
-  if (stampRect) {
-    const darkOverlay = new PIXI.Graphics();
-    // Right overflow
-    if (stampRect.x + stampRect.w > noteW) {
-      darkOverlay.rect(noteW, stampRect.y, stampRect.x + stampRect.w - noteW, stampRect.h);
-    }
-    // Bottom overflow
-    if (stampRect.y + stampRect.h > noteH) {
-      darkOverlay.rect(stampRect.x, noteH, stampRect.w, stampRect.y + stampRect.h - noteH);
-    }
-    // Left overflow
-    if (stampRect.x < 0) {
-      darkOverlay.rect(stampRect.x, stampRect.y, -stampRect.x, stampRect.h);
-    }
-    darkOverlay.fill({color: 0x000000, alpha: 0.15});
-    stampContainer.addChild(darkOverlay);
-    darkOverlay.x = -stampContainer.x;
-    darkOverlay.y = -stampContainer.y;
-  }
+  // Stamp is above wrinkle layer - inside is bright, outside against dark bg looks natural
 
   // Random slight rotation
   wrapper.rotation = (Math.random() * 6 - 3) * Math.PI / 180;
