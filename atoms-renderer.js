@@ -490,20 +490,14 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
   const wrapper = new PIXI.Container();
   wrapper.x = x; wrapper.y = y;
 
-  const noteW = 280, noteH = 300;
+  const noteW = 280;
   const padding = 20;
 
-  // Shadow
-  const shadow = new PIXI.Graphics();
-  shadow.roundRect(3, 3, noteW, noteH, 4);
-  shadow.fill({color:0x000000, alpha:0.1});
-  wrapper.addChild(shadow);
-
-  // Yellow background
+  // Background and shadow will be drawn after content height is known
   const bg = new PIXI.Graphics();
-  bg.roundRect(0, 0, noteW, noteH, 4);
-  bg.fill(0xfff9c4);
   wrapper.addChild(bg);
+  const shadow = new PIXI.Graphics();
+  wrapper.addChildAt(shadow, 0);
 
   // ── Title (always at top, no wrapping around obstacles) ──
   let titleBottom = padding;
@@ -554,8 +548,8 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
     stampContainer.addChild(perf);
 
     // Random position in lower half
-    const stampMinY = noteH * 0.45;
-    const stampMaxY = noteH - stampH - padding;
+    const stampMinY = 80; // approximate: after title+some body
+    const stampMaxY = 300 - stampH - padding; // will be within content area
     const stampMinX = padding;
     const stampMaxX = noteW - stampW - padding;
     stampContainer.x = stampMinX + Math.random() * (stampMaxX - stampMinX);
@@ -586,7 +580,7 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
     }});
     // Try bottom-left, if stamp is there try other spots
     let dx = padding + Math.random()*20;
-    let dy = noteH - 35;
+    let dy = 280; // will be adjusted after content height calc
     if (stampRect && dx < stampRect.x + stampRect.w && dx + 80 > stampRect.x && dy < stampRect.y + stampRect.h && dy + 20 > stampRect.y) {
       // Stamp overlaps bottom-left, put date above stamp or top-right area
       dy = noteH * 0.5 + Math.random() * 30;
@@ -598,12 +592,29 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
     wrapper.addChild(dateText);
   }
 
+  // Calculate actual content height
+  let contentBottom = padding;
+  for (const child of wrapper.children) {
+    if (child === bg || child === shadow) continue;
+    const b = child.y + (child.height || 0);
+    if (b > contentBottom) contentBottom = b;
+  }
+  const noteH = contentBottom + padding;
+
+  // Draw background and shadow with actual height
+  bg.clear();
+  bg.roundRect(0, 0, noteW, noteH, 4);
+  bg.fill(0xfff9c4);
+  shadow.clear();
+  shadow.roundRect(3, 3, noteW, noteH, 4);
+  shadow.fill({color:0x000000, alpha:0.1});
+
   // Random slight rotation
   wrapper.rotation = (Math.random() * 6 - 3) * Math.PI / 180;
 
   return {
     group: wrapper,
-    hitTest: (mx, my) => Math.abs(mx - wrapper.x - noteW/2) < noteW*0.6 && Math.abs(my - wrapper.y - noteH/2) < noteH*0.6,
+    hitTest: (mx, my) => { const h = wrapper.height; return Math.abs(mx - wrapper.x - noteW/2) < noteW*0.6 && Math.abs(my - wrapper.y - h/2) < h*0.6; },
   };
 }
 
