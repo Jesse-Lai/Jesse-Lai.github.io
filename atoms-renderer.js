@@ -41,6 +41,96 @@ export function fadeIn(obj, duration=200) {
   });
 }
 
+
+// ─── Text Layout with obstacle avoidance (reusable) ───
+// obstacles: [{x, y, w, h}] in local coords
+// Returns array of {text, x, y} line objects
+export function layoutTextWithObstacles(text, options) {
+  const {
+    areaX = 0, areaY = 0, areaW = 200, areaH = 300,
+    fontSize = 17, fontFamily = 'Patrick Hand', lineHeight = null,
+    fill = 0x444444, obstacles = [],
+  } = options;
+
+  const lh = lineHeight || fontSize * 1.4;
+  // Create offscreen canvas for text measurement
+  const measureCanvas = document.createElement('canvas');
+  const mctx = measureCanvas.getContext('2d');
+  mctx.font = `${fontSize}px ${fontFamily}`;
+
+  const words = text.split(/\s+/);
+  const lines = [];
+  let curY = areaY;
+
+  let wordIdx = 0;
+  while (wordIdx < words.length && curY + lh <= areaY + areaH) {
+    // Determine available width at this Y, considering obstacles
+    let lineX = areaX;
+    let lineW = areaW;
+
+    for (const obs of obstacles) {
+      // Check if this line overlaps with obstacle vertically
+      if (curY + lh > obs.y && curY < obs.y + obs.h) {
+        // Obstacle overlaps this line
+        if (obs.x <= areaX + areaW/2) {
+          // Obstacle on left side — text starts after obstacle
+          const obstacleRight = obs.x + obs.w;
+          if (obstacleRight > lineX) {
+            lineX = obstacleRight + 8;
+            lineW = areaX + areaW - lineX;
+          }
+        } else {
+          // Obstacle on right side — text ends before obstacle
+          const obstacleLeft = obs.x;
+          lineW = Math.min(lineW, obstacleLeft - lineX - 8);
+        }
+      }
+    }
+
+    if (lineW < fontSize * 2) {
+      // Too narrow, skip this line
+      curY += lh;
+      continue;
+    }
+
+    // Fill words into this line
+    let lineText = '';
+    while (wordIdx < words.length) {
+      const testLine = lineText ? lineText + ' ' + words[wordIdx] : words[wordIdx];
+      const measured = mctx.measureText(testLine);
+      if (measured.width > lineW && lineText) break;
+      lineText = testLine;
+      wordIdx++;
+    }
+
+    if (lineText) {
+      lines.push({ text: lineText, x: lineX, y: curY, fontSize, fontFamily, fill });
+    }
+    curY += lh;
+  }
+
+  return lines;
+}
+
+// Render laid out lines as PIXI.Text objects into a container
+export function renderTextLines(container, lines, options = {}) {
+  const { padding = 0 } = options;
+  const textObjects = [];
+  for (const line of lines) {
+    const t = new PIXI.Text({text: line.text, style: {
+      fontFamily: line.fontFamily,
+      fontSize: line.fontSize,
+      fill: line.fill,
+      padding: padding || line.fontSize * 0.2,
+    }});
+    t.x = line.x;
+    t.y = line.y;
+    container.addChild(t);
+    textObjects.push(t);
+  }
+  return textObjects;
+}
+
 // ─── Utilities ───
 export function sampleImage(imageData, w, h, gap) {
   const pixels = imageData.data, points = [];
@@ -415,7 +505,8 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
   bg.fill(0xfff9c4);
   wrapper.addChild(bg);
 
-  // ── Text area (upper ~50%) ──
+  // ── Title (always at top, no wrapping around obstacles) ──
+  let titleBottom = padding;
   if (noteData.title) {
     const titleText = new PIXI.Text({text: noteData.title, style: {
       fontFamily: 'Patrick Hand', fontSize: 28, fill: 0x222222,
@@ -425,19 +516,11 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
     titleText.x = padding;
     titleText.y = padding;
     wrapper.addChild(titleText);
+    titleBottom = padding + 40;
   }
 
-  if (noteData.body) {
-    const bodyText = new PIXI.Text({text: noteData.body, style: {
-      fontFamily: 'Patrick Hand', fontSize: 17, fill: 0x444444,
-      wordWrap: true, wordWrapWidth: noteW - padding*2,
-      lineHeight: 24,
-      padding: 6,
-    }});
-    bodyText.x = padding;
-    bodyText.y = padding + 40;
-    wrapper.addChild(bodyText);
-  }
+  // ── Body text with obstacle avoidance (wraps around stamp) ──
+  // Build obstacles list from stamp position (calculated below)
 
   // ── Stamp (lower area, random position) ──
   let stampRect = null;
@@ -484,6 +567,19 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
     stampContainer.rotation = (Math.random() * 10 - 5) * Math.PI / 180;
     wrapper.addChild(stampContainer);
     stampRect = {x: stampContainer.x, y: stampContainer.y, w: stampW, h: stampH};
+  }
+
+  // ── Now render body text, wrapping around stamp obstacle ──
+  if (noteData.body) {
+    const obstacles = stampRect ? [stampRect] : [];
+    const bodyLines = layoutTextWithObstacles(noteData.body, {
+      areaX: padding, areaY: titleBottom,
+      areaW: noteW - padding*2,
+      areaH: noteH * 0.85 - titleBottom,
+      fontSize: 17, fontFamily: 'Patrick Hand', fill: 0x444444,
+      obstacles,
+    });
+    renderTextLines(wrapper, bodyLines);
   }
 
   // ── Date (in whitespace, avoid stamp) ──
