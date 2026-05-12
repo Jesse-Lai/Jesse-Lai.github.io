@@ -115,7 +115,8 @@
             <path d="M28 2 L28 20 Q28 24 24 24 L16 24 Q12 24 12 20 L12 6 Q12 2 16 2 L20 2 Q22 2 22 4 L22 16" stroke="#888" stroke-width="2" stroke-linecap="round" fill="none"/>
           </svg>
         </div>
-      <div class="atom-thumb" data-atom="sticky" onclick="switchAtom('sticky')" style="width:48px;height:48px;display:flex;align-items:center;justify-content:center;background:#fff9c4;border-radius:3px;font-size:10px;color:#666;">Note</div>
+      <div class="atom-thumb" data-atom="stamp" onclick="switchAtom('stamp')"><img src="stamp1.webp" style="border-radius:2px;"></div>
+        <div class="atom-thumb" data-atom="sticky" onclick="switchAtom('sticky')" style="width:48px;height:48px;display:flex;align-items:center;justify-content:center;background:#fff9c4;border-radius:3px;font-size:10px;color:#666;">Note</div>
       </div>
     </div>
     <button id="panel-toggle" onclick="togglePanel()">⚙</button>
@@ -128,13 +129,14 @@
 
   <script src="https://cdn.jsdelivr.net/npm/pixi.js@8/dist/pixi.min.js"></script>
   <script type="module">
-    import { loadImagePixels, sampleImage, sampleDominantColor, AtomSticker, renderPhoto, renderClip, renderStickyNote, makeDraggable, PhotoSystem } from "./atoms-renderer.js?v=51";
+    import { loadImagePixels, sampleImage, sampleDominantColor, AtomSticker, renderPhoto, renderClip, renderStamp, renderStickyNote, makeDraggable, PhotoSystem } from "./atoms-renderer.js?v=51";
     let app, currentAtom = 'sticker', sticker = null, atomsConfig = {};
 
     const atomImages = {
       sticker: { images: ['sticker.png', 'sticker2.png'], type: 'sticker' },
       photo: { images: ['photo_fishing.jpg'], type: 'photo', caption: 'Big catch!', date: "'25 06 15" },
       clip: { images: ['photo_flowers.png', 'photo_ski.png', 'photo_avalanche.png'], type: 'clip' },
+      stamp: { images: ['stamp1.webp'], type: 'stamp' },
       sticky: { images: ['stamp1.webp'], type: 'sticky', title: 'Generative UI', body: 'GenUI replaces inefficient text-only AI responses with AI-generated, structured, interactive interfaces.', date: "'26 05 12" },
       
     };
@@ -239,6 +241,13 @@
             }
           }
         }, 500);
+        return;
+      }
+      if(imgCfg.type==='stamp'){
+        const stampImg = await loadImagePixels(imgCfg.images[0]);
+        const {group, hitTest} = await renderStamp(app, stampImg, W/2-100, H/2-82);
+        app.stage.addChild(group);extraContainers.push(group);
+        cleanups.push(makeDraggable(app.canvas, group, hitTest));
         return;
       }
       if(imgCfg.type==='sticky'){

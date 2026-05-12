@@ -484,6 +484,54 @@ export async function renderClip(app, images, x, y, maxW, maxH, cfg) {
 }
 
 
+
+// ─── Render Stamp (standalone atom) ───
+export async function renderStamp(app, stampImgData, x, y, cfg) {
+  const wrapper = new PIXI.Container();
+  wrapper.x = x; wrapper.y = y;
+
+  const stampW = 200, stampH = 165;
+  const stampBorder = 7;
+  const holeR = 2.5, holeSpacing = 11;
+
+  // Shadow
+  const stampShadow = new PIXI.Graphics();
+  stampShadow.roundRect(2, 2, stampW, stampH, 2);
+  stampShadow.fill({color: 0x000000, alpha: 0.08});
+  wrapper.addChild(stampShadow);
+
+  // Stamp image
+  const stampSprite = new PIXI.Sprite(stampImgData.tex);
+  stampSprite.x = stampBorder;
+  stampSprite.y = stampBorder;
+  stampSprite.width = stampW - stampBorder*2;
+  stampSprite.height = stampH - stampBorder*2;
+  wrapper.addChild(stampSprite);
+
+  // Perforated edges
+  const perf = new PIXI.Graphics();
+  perf.rect(0, 0, stampW, stampH);
+  perf.fill(0xffffff);
+  for (let hx = holeSpacing/2; hx < stampW; hx += holeSpacing) {
+    perf.circle(hx, 0, holeR); perf.cut();
+    perf.circle(hx, stampH, holeR); perf.cut();
+  }
+  for (let hy = holeSpacing/2; hy < stampH; hy += holeSpacing) {
+    perf.circle(0, hy, holeR); perf.cut();
+    perf.circle(stampW, hy, holeR); perf.cut();
+  }
+  wrapper.mask = perf;
+  wrapper.addChild(perf);
+
+  // Slight random rotation
+  wrapper.rotation = (Math.random() * 10 - 5) * Math.PI / 180;
+
+  return {
+    group: wrapper,
+    hitTest: (mx, my) => Math.abs(mx - wrapper.x - stampW/2) < stampW*0.6 && Math.abs(my - wrapper.y - stampH/2) < stampH*0.6,
+  };
+}
+
 // ─── Render Sticky Note ───
 export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
   // noteData: { title, body, date, stampSrc }
