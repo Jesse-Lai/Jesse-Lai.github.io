@@ -489,26 +489,18 @@ export async function renderClip(app, images, x, y, maxW, maxH, cfg) {
 // ─── Stamp perforation mask (shared) ───
 function createStampMask(w, h, toothR, toothSpacing) {
   const g = new PIXI.Graphics();
-  // Draw stamp outline with semi-circle teeth on all edges
-  g.moveTo(toothR, 0);
-  // Top edge (left to right)
-  for (let x = toothSpacing/2; x < w; x += toothSpacing) {
-    g.arc(x, 0, toothR, Math.PI, 0, false);
-  }
-  // Right edge (top to bottom)
-  for (let y = toothSpacing/2; y < h; y += toothSpacing) {
-    g.arc(w, y, toothR, -Math.PI/2, Math.PI/2, false);
-  }
-  // Bottom edge (right to left)
-  for (let x = w - toothSpacing/2; x > 0; x -= toothSpacing) {
-    g.arc(x, h, toothR, 0, Math.PI, false);
-  }
-  // Left edge (bottom to top)
-  for (let y = h - toothSpacing/2; y > 0; y -= toothSpacing) {
-    g.arc(0, y, toothR, Math.PI/2, -Math.PI/2, false);
-  }
-  g.closePath();
+  // Base rectangle
+  g.rect(toothR, toothR, w - toothR*2, h - toothR*2);
   g.fill(0xffffff);
+  // Add semi-circle bumps along all 4 edges
+  for (let x = toothSpacing/2; x < w; x += toothSpacing) {
+    g.circle(x, toothR, toothR); g.fill(0xffffff); // top
+    g.circle(x, h - toothR, toothR); g.fill(0xffffff); // bottom
+  }
+  for (let y = toothSpacing/2; y < h; y += toothSpacing) {
+    g.circle(toothR, y, toothR); g.fill(0xffffff); // left
+    g.circle(w - toothR, y, toothR); g.fill(0xffffff); // right
+  }
   return g;
 }
 
