@@ -567,8 +567,9 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
 
   // ── Stamp (lower area, random position) ──
   let stampRect = null;
+  let stampContainer = null;
   if (stampImgData) {
-    const stampContainer = new PIXI.Container();
+    stampContainer = new PIXI.Container();
     const stampW = 200, stampH = 165;
     const stampBorder = 7;
     const holeR = 2.5, holeSpacing = 11;
