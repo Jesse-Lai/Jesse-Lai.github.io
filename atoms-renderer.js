@@ -488,6 +488,7 @@ export async function renderClip(app, images, x, y, maxW, maxH, cfg) {
 
 // ─── Stamp perforation mask (shared) ───
 function createStampMask(w, h, toothR, toothSpacing) {
+  console.log("createStampMask called:", w, h, toothR, toothSpacing);
   const g = new PIXI.Graphics();
   // Draw stamp outline with semi-circle teeth on all edges
   g.moveTo(toothR, 0);
