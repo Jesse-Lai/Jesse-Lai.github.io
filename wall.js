@@ -37,6 +37,7 @@ import { loadImagePixels, PhotoSystem } from "./atoms-renderer.js?v=26";
     { src: 'photo_ski.png', caption: 'Powder day', date: "'25 01 15" },
     { src: 'photo_avalanche.png', caption: 'Avalanche!', date: "'25 02 08" },
     { src: 'photo_fishing.jpg', caption: 'Big catch!', date: "'25 06 15" },
+    { src: 'photo_portrait.jpg', caption: 'Me & cat', date: "'25 03 20" },
   ];
 
   // Layout: mobile portrait = vertical stack, desktop = scattered
