@@ -494,7 +494,7 @@ export class PhotoSystem {
       const dBorder2 = dPw2*0.06;
       await animateTo(droppedPhoto.group, firstLeft + dPw2/2 + dBorder2, firstTop + dPh2/2 + dBorder2);
       // Update clip position
-      existingClip.clipSprite.x = firstLeft;
+      existingClip.clipSprite.x = firstLeft + fPw * 0.15;
       existingClip.clipSprite.y = firstTop;
       return;
     }
@@ -532,7 +532,7 @@ export class PhotoSystem {
       clipSp.scale.set(clipScale);
       clipSp.anchor.set(0.5, 0.5);
       // Top-left corner, protruding above photos
-      clipSp.x = targetLeft;
+      clipSp.x = targetLeft + tPw * 0.15;
       clipSp.y = targetTop;
       clipSp.alpha = 0;
       clipSp.zIndex = 9999;
