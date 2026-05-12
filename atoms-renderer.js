@@ -571,14 +571,15 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
 
   // ── Stamp (lower area, random position) ──
   let stampRect = null;
+  let stampW = 0, stampH = 0;
   let stampContainer = null;
   if (stampImgData) {
     stampContainer = new PIXI.Container();
     // Size adapts to image ratio, capped for note
     const maxNoteStampW = 160;
     const sImgRatio = stampImgData.h / stampImgData.w;
-    const stampW = Math.min(maxNoteStampW, stampImgData.w * 0.25);
-    const stampH = stampW * sImgRatio;
+    stampW = Math.min(maxNoteStampW, stampImgData.w * 0.25);
+    stampH = stampW * sImgRatio;
     const stampBorder = 6;
     const holeR = 2.5, holeSpacing = 11;
 
