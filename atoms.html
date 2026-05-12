@@ -128,7 +128,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/pixi.js@8/dist/pixi.min.js"></script>
   <script type="module">
-    import { loadImagePixels, sampleImage, sampleDominantColor, AtomSticker, renderPhoto, renderClip, renderStickyNote, makeDraggable, PhotoSystem } from "./atoms-renderer.js?v=46";
+    import { loadImagePixels, sampleImage, sampleDominantColor, AtomSticker, renderPhoto, renderClip, renderStickyNote, makeDraggable, PhotoSystem } from "./atoms-renderer.js?v=47";
     let app, currentAtom = 'sticker', sticker = null, atomsConfig = {};
 
     const atomImages = {
@@ -205,9 +205,11 @@
     let extraContainers = [];
     let cleanups = [];
     async function loadAtom(name) {
-      if(sticker){app.stage.removeChild(sticker.container);sticker=null;}
-      extraContainers.forEach(c=>app.stage.removeChild(c));extraContainers=[];
-      cleanups.forEach(c=>c.destroy());cleanups=[];
+      // Clear everything from stage
+      while(app.stage.children.length > 0) app.stage.removeChildAt(0);
+      sticker = null;
+      extraContainers = [];
+      cleanups.forEach(c=>{if(c&&c.destroy)c.destroy();}); cleanups=[];
       const imgCfg = atomImages[name];
       const cfg = atomsConfig[name];
       const W=app.screen.width, H=app.screen.height;
