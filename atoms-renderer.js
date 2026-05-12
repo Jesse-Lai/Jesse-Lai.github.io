@@ -523,7 +523,7 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
   let stampRect = null;
   if (stampImgData) {
     const stampContainer = new PIXI.Container();
-    const stampW = 165, stampH = 135;
+    const stampW = 200, stampH = 165;
     const stampBorder = 7;
     const holeR = 2.5, holeSpacing = 11;
 
@@ -613,7 +613,7 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
     imgData2.data[i] = val;
     imgData2.data[i+1] = val;
     imgData2.data[i+2] = val;
-    imgData2.data[i+3] = 25; // very subtle
+    imgData2.data[i+3] = 35; // very subtle
   }
   wctx.putImageData(imgData2, 0, 0);
   const wrinkleTex = PIXI.Texture.from(wrinkleCanvas);
@@ -622,15 +622,22 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
   wrinkleSprite.blendMode = 'multiply';
   wrapper.addChild(wrinkleSprite);
 
-  // Calculate actual content height
-  let contentBottom = padding;
-  const excludeFromHeight = new Set([bg, shadowLeft, shadowRight, wrinkleSprite]);
+  // Calculate actual content height from known content positions
+  let contentBottom = titleBottom; // at least title height
+  // Check body text lines
   for (const child of wrapper.children) {
-    if (excludeFromHeight.has(child)) continue;
-    const b = child.y + (child.height || 0);
+    if (child === bg || child === shadowLeft || child === shadowRight || child === wrinkleSprite) continue;
+    if (child === stampContainer) {
+      // Use actual stamp position + height (not rotated bounds)
+      const sb = stampContainer.y + stampH;
+      if (sb > contentBottom) contentBottom = sb;
+      continue;
+    }
+    // For text elements, use y + fontSize estimate
+    const b = child.y + (child.style ? child.style.fontSize * 1.3 : (child.height || 0));
     if (b > contentBottom) contentBottom = b;
   }
-  const noteH = contentBottom + padding * 0.8;
+  const noteH = contentBottom + padding * 0.6;
 
   // Draw background with actual height
   bg.clear();
@@ -639,13 +646,13 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
 
   // Lifted corner shadows (bottom-left and bottom-right)
   shadowLeft.clear();
-  shadowLeft.ellipse(25, noteH - 3, 40, 8);
-  shadowLeft.fill({color:0x000000, alpha:0.12});
+  shadowLeft.ellipse(30, noteH + 2, 50, 10);
+  shadowLeft.fill({color:0x000000, alpha:0.18});
   shadowLeft.rotation = 0.06;
 
   shadowRight.clear();
-  shadowRight.ellipse(noteW - 25, noteH - 3, 40, 8);
-  shadowRight.fill({color:0x000000, alpha:0.12});
+  shadowRight.ellipse(noteW - 30, noteH + 2, 50, 10);
+  shadowRight.fill({color:0x000000, alpha:0.18});
   shadowRight.rotation = -0.06;
 
   // Resize wrinkle to match note height
