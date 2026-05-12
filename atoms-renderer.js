@@ -493,11 +493,14 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
   const noteW = 280;
   const padding = 20;
 
-  // Background and shadow will be drawn after content height is known
+  // Background and lifted corner shadows
   const bg = new PIXI.Graphics();
   wrapper.addChild(bg);
-  const shadow = new PIXI.Graphics();
-  wrapper.addChildAt(shadow, 0);
+  // Lifted corner shadows (drawn after noteH is known)
+  const shadowLeft = new PIXI.Graphics();
+  const shadowRight = new PIXI.Graphics();
+  wrapper.addChildAt(shadowRight, 0);
+  wrapper.addChildAt(shadowLeft, 0);
 
   // ── Title (always at top, no wrapping around obstacles) ──
   let titleBottom = padding;
@@ -628,13 +631,21 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
   }
   const noteH = contentBottom + padding;
 
-  // Draw background and shadow with actual height
+  // Draw background with actual height
   bg.clear();
   bg.roundRect(0, 0, noteW, noteH, 4);
   bg.fill(0xfff9c4);
-  shadow.clear();
-  shadow.roundRect(3, 3, noteW, noteH, 4);
-  shadow.fill({color:0x000000, alpha:0.1});
+
+  // Lifted corner shadows (bottom-left and bottom-right)
+  shadowLeft.clear();
+  shadowLeft.ellipse(25, noteH - 3, 40, 8);
+  shadowLeft.fill({color:0x000000, alpha:0.12});
+  shadowLeft.rotation = 0.06;
+
+  shadowRight.clear();
+  shadowRight.ellipse(noteW - 25, noteH - 3, 40, 8);
+  shadowRight.fill({color:0x000000, alpha:0.12});
+  shadowRight.rotation = -0.06;
 
   // Random slight rotation
   wrapper.rotation = (Math.random() * 6 - 3) * Math.PI / 180;
