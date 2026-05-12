@@ -102,7 +102,6 @@
   <div id="layout">
     <div id="left">
       <nav><a href="index.html">← Back</a></nav>
-      <div id="mode-toggle" onclick="toggleMode()" style="position:absolute;top:16px;right:24px;z-index:10;cursor:pointer;font-size:13px;color:#555;font-family:'Red Hat Mono',monospace;transition:color 0.2s;user-select:none;">☀ Light</div>
       <div id="preview"></div>
       <div id="atom-name">Sticker</div>
       <div id="atom-bar">
@@ -130,7 +129,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/pixi.js@8/dist/pixi.min.js"></script>
   <script type="module">
-    import { loadImagePixels, sampleImage, sampleDominantColor, AtomSticker, renderPhoto, renderClip, renderStamp, renderStickyNote, makeDraggable, PhotoSystem } from "./atoms-renderer.js?v=78";
+    import { loadImagePixels, sampleImage, sampleDominantColor, AtomSticker, renderPhoto, renderClip, renderStamp, renderStickyNote, makeDraggable, PhotoSystem } from "./atoms-renderer.js?v=79";
     let app, currentAtom = 'sticker', sticker = null, atomsConfig = {};
 
     const atomImages = {
@@ -326,16 +325,8 @@
     // Expose to global for onclick handlers
     window.switchAtom = switchAtom;
 
-    let isDark = true;
-    function toggleMode() {
-      isDark = !isDark;
-      const bgColor = isDark ? 0x0a0a0a : 0xf0ede6;
       app.renderer.background.color.setValue(bgColor);
-      document.body.style.background = isDark ? "#0a0a0a" : "#f0ede6";
-      document.getElementById("mode-toggle").textContent = isDark ? "☀ Light" : "🌙 Dark";
-      document.getElementById("mode-toggle").style.color = isDark ? "#555" : "#999";
     }
-    window.toggleMode = toggleMode;
     window.updateProp = updateProp;
     window.collapsePanel = collapsePanel;
     window.togglePanel = togglePanel;
