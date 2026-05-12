@@ -415,7 +415,7 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
   bg.fill(0xfff9c4);
   wrapper.addChild(bg);
 
-  // Title text
+  // ── Text area (upper ~50%) ──
   if (noteData.title) {
     const titleText = new PIXI.Text({text: noteData.title, style: {
       fontFamily: 'Patrick Hand', fontSize: 28, fill: 0x222222,
@@ -427,44 +427,31 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
     wrapper.addChild(titleText);
   }
 
-  // Body text
   if (noteData.body) {
     const bodyText = new PIXI.Text({text: noteData.body, style: {
       fontFamily: 'Patrick Hand', fontSize: 17, fill: 0x444444,
-      wordWrap: true, wordWrapWidth: noteW - padding*2 - (stampImgData ? 110 : 0),
+      wordWrap: true, wordWrapWidth: noteW - padding*2,
       lineHeight: 24,
       padding: 6,
     }});
     bodyText.x = padding;
-    bodyText.y = padding + 38;
+    bodyText.y = padding + 40;
     wrapper.addChild(bodyText);
   }
 
-  // Date
-  if (noteData.date) {
-    const dateText = new PIXI.Text({text: noteData.date, style: {
-      fontFamily: 'Schoolbell', fontSize: 18, fill: 0x666666,
-      padding: 6,
-    }});
-    dateText.x = padding;
-    dateText.y = noteH - 35;
-    wrapper.addChild(dateText);
-  }
-
-  // Stamp (with perforated edge)
+  // ── Stamp (lower area, random position) ──
+  let stampRect = null;
   if (stampImgData) {
     const stampContainer = new PIXI.Container();
-    const stampW = 120, stampH = 100;
-    const stampBorder = 8;
-    const holeR = 3, holeSpacing = 12;
+    const stampW = 110, stampH = 90;
+    const stampBorder = 7;
+    const holeR = 2.5, holeSpacing = 11;
 
-    // White background for stamp
     const stampBg = new PIXI.Graphics();
     stampBg.rect(0, 0, stampW, stampH);
     stampBg.fill(0xffffff);
     stampContainer.addChild(stampBg);
 
-    // Stamp image
     const stampSprite = new PIXI.Sprite(stampImgData.tex);
     stampSprite.x = stampBorder;
     stampSprite.y = stampBorder;
@@ -472,11 +459,10 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
     stampSprite.height = stampH - stampBorder*2;
     stampContainer.addChild(stampSprite);
 
-    // Perforated edges using mask with holes
+    // Perforated edges
     const perf = new PIXI.Graphics();
     perf.rect(0, 0, stampW, stampH);
     perf.fill(0xffffff);
-    // Cut holes along all 4 edges
     for (let hx = holeSpacing/2; hx < stampW; hx += holeSpacing) {
       perf.circle(hx, 0, holeR); perf.cut();
       perf.circle(hx, stampH, holeR); perf.cut();
@@ -488,11 +474,36 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
     stampContainer.mask = perf;
     stampContainer.addChild(perf);
 
-    // Position stamp in bottom-right
-    stampContainer.x = noteW - stampW - padding + 10;
-    stampContainer.y = noteH - stampH - padding + 10;
-    stampContainer.rotation = (Math.random() * 6 - 3) * Math.PI / 180;
+    // Random position in lower half
+    const stampMinY = noteH * 0.45;
+    const stampMaxY = noteH - stampH - padding;
+    const stampMinX = padding;
+    const stampMaxX = noteW - stampW - padding;
+    stampContainer.x = stampMinX + Math.random() * (stampMaxX - stampMinX);
+    stampContainer.y = stampMinY + Math.random() * (stampMaxY - stampMinY);
+    stampContainer.rotation = (Math.random() * 10 - 5) * Math.PI / 180;
     wrapper.addChild(stampContainer);
+    stampRect = {x: stampContainer.x, y: stampContainer.y, w: stampW, h: stampH};
+  }
+
+  // ── Date (in whitespace, avoid stamp) ──
+  if (noteData.date) {
+    const dateText = new PIXI.Text({text: noteData.date, style: {
+      fontFamily: 'Schoolbell', fontSize: 18, fill: 0x666666,
+      padding: 6,
+    }});
+    // Try bottom-left, if stamp is there try other spots
+    let dx = padding + Math.random()*20;
+    let dy = noteH - 35;
+    if (stampRect && dx < stampRect.x + stampRect.w && dx + 80 > stampRect.x && dy < stampRect.y + stampRect.h && dy + 20 > stampRect.y) {
+      // Stamp overlaps bottom-left, put date above stamp or top-right area
+      dy = noteH * 0.5 + Math.random() * 30;
+      if (stampRect.x < noteW/2) dx = noteW - padding - 80;
+    }
+    dateText.x = dx;
+    dateText.y = dy;
+    dateText.rotation = (Math.random() * 6 - 3) * Math.PI / 180;
+    wrapper.addChild(dateText);
   }
 
   // Random slight rotation
