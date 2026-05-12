@@ -624,12 +624,13 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
 
   // Calculate actual content height
   let contentBottom = padding;
+  const excludeFromHeight = new Set([bg, shadowLeft, shadowRight, wrinkleSprite]);
   for (const child of wrapper.children) {
-    if (child === bg || child === shadow) continue;
+    if (excludeFromHeight.has(child)) continue;
     const b = child.y + (child.height || 0);
     if (b > contentBottom) contentBottom = b;
   }
-  const noteH = contentBottom + padding;
+  const noteH = contentBottom + padding * 0.8;
 
   // Draw background with actual height
   bg.clear();
@@ -646,6 +647,9 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
   shadowRight.ellipse(noteW - 25, noteH - 3, 40, 8);
   shadowRight.fill({color:0x000000, alpha:0.12});
   shadowRight.rotation = -0.06;
+
+  // Resize wrinkle to match note height
+  wrinkleSprite.height = noteH;
 
   // Random slight rotation
   wrapper.rotation = (Math.random() * 6 - 3) * Math.PI / 180;
