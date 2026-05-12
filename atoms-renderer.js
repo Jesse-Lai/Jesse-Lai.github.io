@@ -726,8 +726,8 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
 
   // Stamp is above wrinkle layer - inside is bright, outside against dark bg looks natural
 
-  // Random slight rotation
-  wrapper.rotation = (Math.random() * 6 - 3) * Math.PI / 180;
+  // Random slight rotation (keep subtle — ±1.5°)
+  wrapper.rotation = (Math.random() * 3 - 1.5) * Math.PI / 180;
 
   return {
     group: wrapper,
@@ -800,6 +800,7 @@ export class PhotoSystem {
       // anchor = offset from group origin (photo center) to bounds top-left
       itemW: pw+border*2, itemH: ph+border+bottomBorder,
       anchorX: pw/2 + border, anchorY: ph/2 + border,
+      baseScale: 1.0, // group.scale base value (may be overridden externally)
     };
     this.photos.push(photo);
     this._makePhotoDraggable(photo);
@@ -813,6 +814,7 @@ export class PhotoSystem {
       group, clipped: false, splitCooldown: 0,
       itemW: w, itemH: h,
       anchorX: 0, anchorY: 0, // group origin is top-left for these atoms
+      baseScale: group.scale.x, // preserve initial scale set externally
     };
     this.photos.push(item);
     this._makePhotoDraggable(item);
@@ -820,11 +822,12 @@ export class PhotoSystem {
   }
 
   _getPhotoBounds(p) {
+    const s = p.group.scale.x;
     return {
-      x: p.group.x - p.anchorX,
-      y: p.group.y - p.anchorY,
-      w: p.itemW,
-      h: p.itemH,
+      x: p.group.x - p.anchorX * s,
+      y: p.group.y - p.anchorY * s,
+      w: p.itemW * s,
+      h: p.itemH * s,
     };
   }
 
@@ -929,7 +932,7 @@ export class PhotoSystem {
         drag = true; offX = photo.group.x-mx; offY = photo.group.y-my;
         downTime = Date.now(); downX = mx; downY = my; moved = false;
         this._activeDrag = photo;
-        photo.group.scale.set(1.05);
+        photo.group.scale.set(photo.baseScale * 1.05);
         this.app.stage.removeChild(photo.group);
         this.app.stage.addChild(photo.group);
       }
@@ -942,7 +945,7 @@ export class PhotoSystem {
       }
       // Hover scale + cursor
       const hovering = !drag && hitTest(e.clientX, e.clientY) && !photo.clipped;
-      const targetScale = hovering || drag ? 1.05 : 1.0;
+      const targetScale = (hovering || drag ? 1.05 : 1.0) * photo.baseScale;
       const cur = photo.group.scale.x;
       photo.group.scale.set(cur + (targetScale - cur) * 0.15);
       if (hovering) this.canvas.style.cursor = 'pointer';
@@ -952,7 +955,7 @@ export class PhotoSystem {
       const wasClick = !moved && (Date.now() - downTime) < 200;
       drag = false;
       this._activeDrag = null;
-      photo.group.scale.set(1.0);
+      photo.group.scale.set(photo.baseScale);
 
       // Click → focus overlay
       if (wasClick && photo.focusData && this.onFocus) {
@@ -1009,7 +1012,7 @@ export class PhotoSystem {
       // Check clip click (split)
       for (const cg of [...this.clipGroups]) {
         const cs = cg.clipSprite;
-        if (Math.abs(mx-cs.x)<60 && Math.abs(my-cs.y)<60) {
+        if (Math.abs(mx-cs.x)<cs.width*0.6 && Math.abs(my-cs.y)<cs.height*0.6) {
           this._splitPhotos(cg);
           return;
         }
@@ -1021,7 +1024,7 @@ export class PhotoSystem {
           if (mx>b.x && mx<b.x+b.w && my>b.y && my<b.y+b.h) {
             groupDrag = cg;
             groupOffX = mx; groupOffY = my;
-            for (const gp of cg.photos) gp.group.scale.set(1.05);
+            for (const gp of cg.photos) gp.group.scale.set(gp.baseScale * 1.05);
             return;
           }
         }
@@ -1046,7 +1049,7 @@ export class PhotoSystem {
       if (!hovering) {
         for (const cg of this.clipGroups) {
           const cs = cg.clipSprite;
-          if (Math.abs(mx-cs.x)<60 && Math.abs(my-cs.y)<60) { hovering = true; break; }
+          if (Math.abs(mx-cs.x)<cs.width*0.6 && Math.abs(my-cs.y)<cs.height*0.6) { hovering = true; break; }
           for (const p of cg.photos) {
             const b = this._getPhotoBounds(p);
             if (mx>b.x && mx<b.x+b.w && my>b.y && my<b.y+b.h) { hovering = true; break; }
@@ -1057,7 +1060,7 @@ export class PhotoSystem {
       this.canvas.style.cursor = hovering ? 'pointer' : 'default';
       for (const cg of this.clipGroups) {
         const cs = cg.clipSprite;
-        const clipHovered = Math.abs(mx-cs.x)<60 && Math.abs(my-cs.y)<60;
+        const clipHovered = Math.abs(mx-cs.x)<cs.width*0.6 && Math.abs(my-cs.y)<cs.height*0.6;
         // Clip lifts up when hovered to hint it's clickable
         if (cs._baseY === undefined) cs._baseY = cs.y;
         const targetY = clipHovered ? cs._baseY - 8 : cs._baseY;
@@ -1070,11 +1073,10 @@ export class PhotoSystem {
             if (mx>b.x && mx<b.x+b.w && my>b.y && my<b.y+b.h) { groupHovered = true; break; }
           }
         }
-        const ts = groupHovered || groupDrag===cg ? 1.05 : 1.0;
-        for (const p of cg.photos) { const c=p.group.scale.x; p.group.scale.set(c+(ts-c)*0.15); }
+        for (const p of cg.photos) { const ts = (groupHovered || groupDrag===cg ? 1.05 : 1.0) * p.baseScale; const c=p.group.scale.x; p.group.scale.set(c+(ts-c)*0.15); }
       }
     });
-    this.canvas.addEventListener('mouseup', () => { if(groupDrag){ for(const gp of groupDrag.photos) gp.group.scale.set(1.0); } groupDrag = null; });
+    this.canvas.addEventListener('mouseup', () => { if(groupDrag){ for(const gp of groupDrag.photos) gp.group.scale.set(gp.baseScale); } groupDrag = null; });
 
     // Touch tap for clip split
     this.canvas.addEventListener('touchend', e => {
@@ -1083,7 +1085,7 @@ export class PhotoSystem {
       const mx = t.clientX, my = t.clientY;
       for (const cg of [...this.clipGroups]) {
         const cs = cg.clipSprite;
-        if (Math.abs(mx-cs.x)<60 && Math.abs(my-cs.y)<60) { this._splitPhotos(cg); return; }
+        if (Math.abs(mx-cs.x)<cs.width*0.6 && Math.abs(my-cs.y)<cs.height*0.6) { this._splitPhotos(cg); return; }
       }
     });
   }
@@ -1107,8 +1109,27 @@ export class FocusOverlay {
     this.dimLayer.visible = false;
     this.blurFilter = new PIXI.BlurFilter({ strength: 0, quality: 4 });
 
-    this.backdrop.addEventListener('click', () => this.close());
-    this.closeBtn.addEventListener('click', () => this.close());
+    this.backdrop.addEventListener('click', () => {
+      if (this._articleMode) this.closeArticle();
+      else this.close();
+    });
+    this.closeBtn.addEventListener('click', () => {
+      if (this._articleMode) this.closeArticle();
+      else this.close();
+    });
+
+    // Article element (lives inside overlay)
+    this.articleEl = document.getElementById('focus-article');
+    this._articleMode = false;
+    this._heroImg = null;
+
+    // Wire focus link to open article instead of navigating
+    this.linkEl.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (this.activeItem?.focusData?.article) {
+        this.openArticle();
+      }
+    });
   }
 
   _animateDim(fromAlpha, toAlpha, fromBlur, toBlur, duration) {
@@ -1117,10 +1138,14 @@ export class FocusOverlay {
     const tick = () => {
       const t = Math.min(1, (performance.now() - start) / duration);
       const ease = 1 - Math.pow(1 - t, 3);
+      const alpha = fromAlpha + (toAlpha - fromAlpha) * ease;
+      const blur = fromBlur + (toBlur - fromBlur) * ease;
       this.dimLayer.clear();
       this.dimLayer.rect(0, 0, W, H);
-      this.dimLayer.fill({ color: 0x000000, alpha: fromAlpha + (toAlpha - fromAlpha) * ease });
-      this.blurFilter.strength = fromBlur + (toBlur - fromBlur) * ease;
+      this.dimLayer.fill({ color: 0x000000, alpha });
+      this.blurFilter.strength = blur;
+      this._currentDimAlpha = alpha;
+      this._currentDimBlur = blur;
       if (t < 1) requestAnimationFrame(tick);
     };
     requestAnimationFrame(tick);
@@ -1165,11 +1190,10 @@ export class FocusOverlay {
     this.origX = item.group.x;
     this.origY = item.group.y;
     this.origScale = item.group.scale.x;
+    this.origRotation = item.group.rotation || 0;
 
-    // Target center position
+    // Target center position (pivot is at mesh center, so target = screen center)
     const targetScale = 1.3;
-    const centerX = W / 2 - item.itemW / 2 + item.anchorX;
-    const centerY = H * 0.38 - item.itemH / 2 + item.anchorY;
 
     // Wrap background into blur container
     this.bgContainer = new PIXI.Container();
@@ -1185,7 +1209,7 @@ export class FocusOverlay {
     this.dimLayer.fill({ color: 0x000000, alpha: 0 });
     this.dimLayer.visible = true;
     this.app.stage.addChild(this.dimLayer);
-    this._animateDim(0, 0.65, 0, 6, 500);
+    this._animateDim(0, 0.8, 0, 10, 500);
 
     // Extract texture from the item group
     const tex = this.app.renderer.extract.texture(item.group);
@@ -1196,12 +1220,20 @@ export class FocusOverlay {
     this.bgContainer.removeChild(item.group);
     item.group.visible = false;
 
-    // Create MeshPlane
+    // Create MeshPlane with pivot at center for clean rotation
     const mesh = new PIXI.MeshPlane({ texture: tex, verticesX: 20, verticesY: 20 });
-    mesh.x = this.origX - item.anchorX * this.origScale;
-    mesh.y = this.origY - item.anchorY * this.origScale;
     mesh.width = meshW;
     mesh.height = meshH;
+    // Pivot must use LOCAL (geometry) coordinates, not display size
+    // MeshPlane native size comes from the texture dimensions
+    const localW = tex.width;
+    const localH = tex.height;
+    mesh.pivot.set(localW / 2, localH / 2);
+    // mesh.x/y is now the visual center of the mesh
+    // top-left = origX - anchorX*scale, so center = top-left + meshW/2
+    mesh.x = this.origX - item.anchorX * this.origScale + meshW / 2;
+    mesh.y = this.origY - item.anchorY * this.origScale + meshH / 2;
+    mesh.rotation = this.origRotation;
     this.app.stage.addChild(mesh);
     this.mesh = mesh;
 
@@ -1215,13 +1247,15 @@ export class FocusOverlay {
     this._baseW = baseW;
     this._baseH = baseH;
 
-    // Animate: paper curl → fly to center → flatten
+    // Animate: paper curl → fly to center → flatten + rotation to 0
     const startX = mesh.x, startY = mesh.y;
-    const targetMeshX = centerX - item.anchorX * targetScale;
-    const targetMeshY = centerY - item.anchorY * targetScale;
-    const startW = meshW, startH = meshH;
+    const startRot = this.origRotation;
     const targetW = item.itemW * targetScale;
     const targetH = item.itemH * targetScale;
+    // With pivot at center, target x/y IS the screen center
+    const targetMeshX = W / 2;
+    const targetMeshY = H * 0.38;
+    const startW = meshW, startH = meshH;
     const duration = 1200;
     const start = performance.now();
 
@@ -1230,11 +1264,12 @@ export class FocusOverlay {
       const t = Math.min(1, elapsed / duration);
       const ease = 1 - Math.pow(1 - t, 3);
 
-      // Position & size interpolation
+      // Position, size & rotation interpolation
       mesh.x = startX + (targetMeshX - startX) * ease;
       mesh.y = startY + (targetMeshY - startY) * ease;
       mesh.width = startW + (targetW - startW) * ease;
       mesh.height = startH + (targetH - startH) * ease;
+      mesh.rotation = startRot * (1 - ease);
 
       // Wave sweeps from bottom-right to top-left over the duration
       this._applyPaperCurl(buffer, origPositions, baseW, baseH, ease);
@@ -1243,10 +1278,9 @@ export class FocusOverlay {
     };
     requestAnimationFrame(tick);
 
-    // Position HTML content
+    // Position HTML content below the focused element
     const scaledH = item.itemH * targetScale;
-    const topEdge = centerY - item.anchorY;
-    const bottomY = topEdge + scaledH;
+    const bottomY = H * 0.38 + scaledH / 2;
     document.getElementById('focus-content').style.top = (bottomY + 20) + 'px';
 
     // Populate HTML
@@ -1262,7 +1296,8 @@ export class FocusOverlay {
     }
 
     this.overlay.style.display = 'block';
-    requestAnimationFrame(() => this.overlay.classList.add('visible'));
+    // Show text/button when fly-in animation is ~70% done
+    setTimeout(() => this.overlay.classList.add('visible'), duration * 0.7);
   }
 
   close() {
@@ -1273,20 +1308,25 @@ export class FocusOverlay {
     this.mesh = null;
 
     this.overlay.classList.remove('visible');
-    this._animateDim(0.65, 0, 6, 0, 400);
+    // dim 可能是 0.8（普通 focus）或 1.0（从文章关闭）
+    const currentDim = this._currentDimAlpha ?? 0.8;
+    const currentBlur = this._currentDimBlur ?? 10;
+    this._animateDim(currentDim, 0, currentBlur, 0, 400);
 
     if (!mesh) return;
     const { buffer } = mesh.geometry.getAttribute('aPosition');
     const origPositions = this._origPositions;
     const baseW = this._baseW, baseH = this._baseH;
 
-    // Animate back: flatten → curl → arrive at original position
+    // Animate back: flatten → curl → arrive at original position + restore rotation
     const startX = mesh.x, startY = mesh.y;
     const startW = mesh.width, startH = mesh.height;
-    const targetX = this.origX - item.anchorX * this.origScale;
-    const targetY = this.origY - item.anchorY * this.origScale;
+    const targetRot = this.origRotation;
     const targetW = item.itemW * this.origScale;
     const targetH = item.itemH * this.origScale;
+    // Target position accounts for pivot at center
+    const targetX = this.origX - item.anchorX * this.origScale + targetW / 2;
+    const targetY = this.origY - item.anchorY * this.origScale + targetH / 2;
     const duration = 1000;
     const start = performance.now();
 
@@ -1299,6 +1339,7 @@ export class FocusOverlay {
       mesh.y = startY + (targetY - startY) * ease;
       mesh.width = startW + (targetW - startW) * ease;
       mesh.height = startH + (targetH - startH) * ease;
+      mesh.rotation = targetRot * ease;
 
       // Reverse wave: progress goes from 1 back to 0
       this._applyPaperCurl(buffer, origPositions, baseW, baseH, 1 - ease);
@@ -1329,5 +1370,126 @@ export class FocusOverlay {
         this.bgChildren = null;
       }
     }, 1050);
+  }
+
+  // ─── Article Mode (lives inside the focus overlay) ───
+
+  openArticle() {
+    if (!this.activeItem || !this.mesh) return;
+    const mesh = this.mesh;
+    const W = this.app.screen.width;
+    this._articleMode = true;
+    this._focusMeshX = mesh.x;
+    this._focusMeshY = mesh.y;
+
+    // 隐藏文案和按钮
+    document.getElementById('focus-content').style.display = 'none';
+
+    // 动画 mesh 上移到顶部
+    const targetX = W / 2;
+    const targetY = 80 + mesh.height / 2;
+    const startX = mesh.x, startY = mesh.y;
+    const duration = 500;
+    const startTime = performance.now();
+    const tick = () => {
+      const t = Math.min(1, (performance.now() - startTime) / duration);
+      const ease = 1 - Math.pow(1 - t, 3);
+      mesh.x = startX + (targetX - startX) * ease;
+      mesh.y = startY + (targetY - startY) * ease;
+      if (t < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+
+    // 上移结束后，蒙层变全黑
+    setTimeout(() => {
+      this._animateDim(0.8, 1.0, 10, 12, 400);
+
+      // 蒙层变黑后，构建文章内容容器
+      setTimeout(() => {
+        const data = this.activeItem.focusData;
+        const article = data.article;
+        const meshBottom = targetY + mesh.height / 2;
+
+        // 文章容器，定位在 mesh 下方
+        const articleWrap = document.createElement('div');
+        articleWrap.style.cssText = `position:absolute;top:${meshBottom + 24}px;left:0;right:0;max-width:640px;margin:0 auto;padding:0 24px 80px;opacity:0;transform:translateY(30px);transition:opacity 0.5s ease,transform 0.5s ease;`;
+
+        // 标题
+        let html = '';
+        const title = article?.title || data.title || '';
+        if (title) {
+          html += `<h1 style="font-family:Special Elite,cursive;font-size:28px;color:#f0f0f0;letter-spacing:0.5px;line-height:1.4;margin:0 0 32px;padding-bottom:24px;border-bottom:1px solid rgba(255,255,255,0.08);">${title}</h1>`;
+        }
+
+        // 文章正文
+        if (article?.sections) {
+          for (const section of article.sections) {
+            if (section.type === 'subtitle') {
+              html += `<h2 style="font-family:Special Elite,cursive;font-size:20px;color:#e0e0e0;margin:48px 0 16px;line-height:1.4;">${section.text}</h2>`;
+            } else if (section.type === 'text') {
+              html += `<p style="font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;font-size:16px;color:#a0a0a0;line-height:1.85;margin-bottom:24px;">${section.text}</p>`;
+            } else if (section.type === 'image') {
+              html += `<img src="${section.src}" alt="${section.alt || ''}" style="width:100%;border-radius:6px;margin:32px 0 8px;">`;
+              if (section.caption) {
+                html += `<p style="font-family:Red Hat Mono,monospace;font-size:11px;color:#555;text-align:center;margin:0 0 32px;">${section.caption}</p>`;
+              }
+            }
+          }
+        }
+
+        articleWrap.innerHTML = html;
+        this.overlay.appendChild(articleWrap);
+        this._articleWrap = articleWrap;
+
+        // 需要让 overlay 可滚动，关闭按钮固定
+        this.overlay.style.overflowY = 'auto';
+        this.closeBtn.style.position = 'fixed';
+
+        // mesh 跟随 overlay 滚动
+        this._articleMeshBaseY = targetY;
+        this._onArticleScroll = () => {
+          mesh.y = this._articleMeshBaseY - this.overlay.scrollTop;
+        };
+        this.overlay.addEventListener('scroll', this._onArticleScroll);
+
+        // 双 rAF 确保浏览器先渲染初始状态再触发 transition
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            articleWrap.style.opacity = '1';
+            articleWrap.style.transform = 'translateY(0)';
+          });
+        });
+      }, 400);
+    }, duration);
+  }
+
+  closeArticle() {
+    if (!this._articleMode) return;
+    this._articleMode = false;
+
+    // 移除 scroll 监听
+    if (this._onArticleScroll) {
+      this.overlay.removeEventListener('scroll', this._onArticleScroll);
+      this._onArticleScroll = null;
+    }
+
+    // 清理文章内容
+    if (this._articleWrap) {
+      this._articleWrap.remove();
+      this._articleWrap = null;
+    }
+    this.overlay.style.overflowY = '';
+    this.overlay.scrollTop = 0;
+    this.closeBtn.style.position = '';
+    document.getElementById('focus-content').style.display = '';
+
+    // 把 mesh 归位到 focus 中心（scroll 可能偏移了）
+    if (this.mesh) {
+      this.mesh.y = this._focusMeshY;
+      this.mesh.x = this._focusMeshX;
+    }
+
+    // 直接调用 close()，从全黑蒙层 → 飞回 wall
+    this.close();
   }
 }
