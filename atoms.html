@@ -203,10 +203,11 @@
 
     // ─── Rendering (same as before) ───
     let extraContainers = [];
-    let cleanups = [];
+    let cleanups = []; let loadGeneration = 0;
     async function loadAtom(name) {
       // Clear everything from stage
-      while(app.stage.children.length > 0) app.stage.removeChildAt(0);
+      loadGeneration++; while(app.stage.children.length > 0) app.stage.removeChildAt(0);
+      if(typeof clipTimer !== "undefined" && clipTimer) clearTimeout(clipTimer);
       sticker = null;
       extraContainers = [];
       cleanups.forEach(c=>{if(c&&c.destroy)c.destroy();}); cleanups=[];
@@ -231,7 +232,7 @@
           await clipPS.addPhoto(imgCfg.images[i], cx + i*8, cy + i*10, null, clipCaptions[i]||{});
         }
         // Auto-merge after render
-        setTimeout(async () => {
+        const gen = loadGeneration; setTimeout(async () => { if(loadGeneration !== gen) return;
           if (clipPS.photos.length >= 2) {
             for (let i=1; i<clipPS.photos.length; i++) {
               await clipPS._mergePhotos(clipPS.photos[i], clipPS.photos[0]);
