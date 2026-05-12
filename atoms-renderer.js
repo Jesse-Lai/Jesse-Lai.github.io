@@ -485,6 +485,33 @@ export async function renderClip(app, images, x, y, maxW, maxH, cfg) {
 
 
 
+
+// ─── Stamp perforation mask (shared) ───
+function createStampMask(w, h, toothR, toothSpacing) {
+  const g = new PIXI.Graphics();
+  // Draw stamp outline with semi-circle teeth on all edges
+  g.moveTo(toothR, 0);
+  // Top edge (left to right)
+  for (let x = toothSpacing/2; x < w; x += toothSpacing) {
+    g.arc(x, 0, toothR, Math.PI, 0, false);
+  }
+  // Right edge (top to bottom)
+  for (let y = toothSpacing/2; y < h; y += toothSpacing) {
+    g.arc(w, y, toothR, -Math.PI/2, Math.PI/2, false);
+  }
+  // Bottom edge (right to left)
+  for (let x = w - toothSpacing/2; x > 0; x -= toothSpacing) {
+    g.arc(x, h, toothR, 0, Math.PI, false);
+  }
+  // Left edge (bottom to top)
+  for (let y = h - toothSpacing/2; y > 0; y -= toothSpacing) {
+    g.arc(0, y, toothR, Math.PI/2, -Math.PI/2, false);
+  }
+  g.closePath();
+  g.fill(0xffffff);
+  return g;
+}
+
 // ─── Render Stamp (standalone atom) ───
 export async function renderStamp(app, stampImgData, x, y, cfg) {
   const wrapper = new PIXI.Container();
@@ -496,7 +523,6 @@ export async function renderStamp(app, stampImgData, x, y, cfg) {
   const stampW = Math.min(maxStampW, stampImgData.w * 0.3);
   const stampH = stampW * imgRatio;
   const stampBorder = 7;
-  const holeR = 2.5, holeSpacing = 11;
 
   // Shadow
   const stampShadow = new PIXI.Graphics();
@@ -512,20 +538,10 @@ export async function renderStamp(app, stampImgData, x, y, cfg) {
   stampSprite.height = stampH - stampBorder*2;
   wrapper.addChild(stampSprite);
 
-  // Perforated edges
-  const perf = new PIXI.Graphics();
-  perf.rect(0, 0, stampW, stampH);
-  perf.fill(0xffffff);
-  for (let hx = holeSpacing/2; hx < stampW; hx += holeSpacing) {
-    perf.circle(hx, 0, holeR); perf.cut();
-    perf.circle(hx, stampH, holeR); perf.cut();
-  }
-  for (let hy = holeSpacing/2; hy < stampH; hy += holeSpacing) {
-    perf.circle(0, hy, holeR); perf.cut();
-    perf.circle(stampW, hy, holeR); perf.cut();
-  }
-  wrapper.mask = perf;
+  // Stamp perforated edge (semi-circle teeth)
+  const perf = createStampMask(stampW, stampH, 4, 14);
   wrapper.addChild(perf);
+  wrapper.mask = perf;
 
   // Slight random rotation
   wrapper.rotation = (Math.random() * 10 - 5) * Math.PI / 180;
@@ -581,8 +597,7 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
     stampW = Math.min(maxNoteStampW, stampImgData.w * 0.25);
     stampH = stampW * sImgRatio;
     const stampBorder = 6;
-    const holeR = 2.5, holeSpacing = 11;
-
+  
 
     // Stamp shadow (subtle, small spread)
     const stampShadow = new PIXI.Graphics();
@@ -597,20 +612,10 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
     stampSprite.height = stampH - stampBorder*2;
     stampContainer.addChild(stampSprite);
 
-    // Perforated edges
-    const perf = new PIXI.Graphics();
-    perf.rect(0, 0, stampW, stampH);
-    perf.fill(0xffffff);
-    for (let hx = holeSpacing/2; hx < stampW; hx += holeSpacing) {
-      perf.circle(hx, 0, holeR); perf.cut();
-      perf.circle(hx, stampH, holeR); perf.cut();
-    }
-    for (let hy = holeSpacing/2; hy < stampH; hy += holeSpacing) {
-      perf.circle(0, hy, holeR); perf.cut();
-      perf.circle(stampW, hy, holeR); perf.cut();
-    }
-    stampContainer.mask = perf;
+    // Stamp perforated edge (semi-circle teeth)
+    const perf = createStampMask(stampW, stampH, 3, 11);
     stampContainer.addChild(perf);
+    stampContainer.mask = perf;
 
     // Random position in lower half
     // Position stamp near an edge (not center)
