@@ -138,5 +138,28 @@
     "combines": [
       "clip"
     ]
+  },
+  "stamp": {
+    "name": "Stamp",
+    "description": "邮票，四周有锯齿边缘",
+    "style": {
+      "toothRadius": 4,
+      "toothSpacing": 14,
+      "border": 7
+    },
+    "behavior": {
+      "draggable": true,
+      "hoverScale": 1.05,
+      "hasParticles": false
+    },
+    "boundary": {
+      "minCount": 0,
+      "maxCount": 10,
+      "canExistAlone": true
+    },
+    "combines": [
+      "photo",
+      "note"
+    ]
   }
 }
