@@ -14,7 +14,29 @@
 
     #layout { display: flex; height: 100vh; }
     #left { flex: 1; display: flex; flex-direction: column; position: relative; }
-    nav { padding: 16px 24px; position: absolute; top: 0; left: 0; z-index: 10; }
+    nav { padding: 16px 24px; position: absolute; top: 0; left: 0; z-index: 10; display: flex; align-items: center; gap: 16px; }
+    #mode-toggle {
+      background: none; border: 1px solid #333; color: #666; cursor: pointer;
+      font-family: 'Red Hat Mono', monospace; font-size: 11px; padding: 4px 10px;
+      border-radius: 3px; transition: all 0.2s; letter-spacing: 1px;
+    }
+    #mode-toggle:hover { border-color: #666; color: #fff; }
+    body.light { background: #f0ece4; color: #666; }
+    body.light #panel { border-left-color: #ddd; }
+    body.light #panel h2 { color: #333; }
+    body.light .desc { color: #999; }
+    body.light .prop-label { color: #888; }
+    body.light .prop-row { border-bottom-color: #e0e0e0; }
+    body.light .prop-value input[type="number"] { background: #fff; border-color: #ddd; color: #333; }
+    body.light .prop-section-title { color: #aaa; }
+    body.light .tag { background: #e8e4dc; color: #888; }
+    body.light a { color: #999; }
+    body.light a:hover { color: #333; }
+    body.light #atom-name { color: #bbb; }
+    body.light #mode-toggle { border-color: #ccc; color: #999; }
+    body.light #mode-toggle:hover { border-color: #999; color: #333; }
+    body.light #panel-collapse { color: #bbb; }
+    body.light #panel-collapse:hover { color: #333; }
     #preview { flex: 1; position: relative; }
     #preview canvas { display: block; }
     #atom-name {
@@ -49,30 +71,17 @@
     #panel.collapsed h2 span, #panel.collapsed .desc, #panel.collapsed #panel-props { display: none; }
     #panel { transition: width 0.2s; }
     #panel .desc { color: #555; margin-bottom: 20px; font-size: 11px; }
-    .prop-section { margin-bottom: 16px; }
-    .prop-section-title {
+    .panel-section { margin-bottom: 20px; }
+    .panel-section-title {
       font-size: 10px; color: #444; letter-spacing: 2px;
       text-transform: uppercase; margin-bottom: 8px;
     }
-    .prop-row {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 4px 0; border-bottom: 1px solid #111;
-    }
-    .prop-label { color: #666; font-size: 11px; }
-    .prop-value input[type="number"] {
-      width: 60px; background: #111; border: 1px solid #222;
-      color: #ccc; padding: 3px 6px; font-family: 'Red Hat Mono', monospace;
-      font-size: 11px; border-radius: 3px; text-align: right;
-    }
-    .prop-value input[type="number"]:focus { border-color: #444; outline: none; }
-    .prop-value input[type="checkbox"] { accent-color: #666; }
-    .prop-value select {
-      background: #111; border: 1px solid #222; color: #ccc;
-      padding: 3px 6px; font-family: 'Red Hat Mono', monospace;
-      font-size: 11px; border-radius: 3px;
-    }
-    .prop-value span { color: #555; font-size: 11px; }
-    .tag { display: inline-block; padding: 1px 6px; background: #1a1a1a; border-radius: 3px; color: #666; font-size: 10px; margin: 1px; }
+    .panel-item { color: #777; font-size: 11px; line-height: 1.7; padding: 3px 0; }
+    .panel-item::before { content: ''; display: inline-block; width: 4px; height: 4px; background: #333; border-radius: 50%; margin-right: 8px; vertical-align: middle; }
+    .tag { display: inline-block; padding: 2px 8px; background: #1a1a1a; border-radius: 3px; color: #666; font-size: 10px; margin: 2px; }
+    body.light .panel-item { color: #888; }
+    body.light .panel-item::before { background: #ccc; }
+    body.light .tag { background: #e8e4dc; color: #888; }
 
     #panel-toggle {
       display: none; position: fixed; bottom: 90px; right: 16px; z-index: 20;
@@ -101,7 +110,7 @@
 <body>
   <div id="layout">
     <div id="left">
-      <nav><a href="index.html">← Back</a></nav>
+      <nav><a href="index.html">← Back</a><button id="mode-toggle" onclick="toggleMode()">Light</button></nav>
       <div id="preview"></div>
       <div id="atom-name">Sticker</div>
       <div id="atom-bar">
@@ -129,15 +138,15 @@
 
   <script src="https://cdn.jsdelivr.net/npm/pixi.js@8/dist/pixi.min.js"></script>
   <script type="module">
-    import { loadImagePixels, sampleImage, sampleDominantColor, AtomSticker, renderPhoto, renderClip, renderStamp, renderStickyNote, makeDraggable, PhotoSystem } from "./atoms-renderer.js?v=79";
+    import { loadImagePixels, sampleImage, sampleDominantColor, AtomSticker, renderPhoto, renderClip, renderStamp, renderStickyNote, makeDraggable, PhotoSystem } from "./atoms-renderer.js?v=105";
     let app, currentAtom = 'sticker', sticker = null, atomsConfig = {};
 
     const atomImages = {
       sticker: { images: ['sticker.png', 'sticker2.png'], type: 'sticker' },
       photo: { images: ['photo_fishing.jpg'], type: 'photo', caption: 'Big catch!', date: "'25 06 15" },
       clip: { images: ['photo_flowers.png', 'photo_ski.png', 'photo_avalanche.png'], type: 'clip' },
-      stamp: { images: ['stamp2.png'], type: 'stamp' },
-      sticky: { images: ['stamp1.webp'], type: 'sticky', title: 'Generative UI', body: 'GenUI replaces inefficient text-only AI responses with AI-generated, structured, interactive interfaces.', date: "'26 05 12" },
+      stamp: { images: ['stamp_genui.png'], type: 'stamp' },
+      sticky: { images: ['stamp_genui.png'], type: 'sticky', title: 'Generative UI', body: 'GenUI replaces inefficient text-only AI responses with AI-generated, structured, interactive interfaces.', date: "'26 05 12" },
       
     };
 
@@ -147,60 +156,52 @@
       atomsConfig = await r.json();
     }
 
+    const atomAbilities = {
+      sticker: {
+        interactions: ['Hover to activate particle mode', 'Drag to move freely', 'During drag, morphs between two forms', 'Spring physics — particles settle naturally'],
+        combines: ['photo', 'note'],
+      },
+      photo: {
+        interactions: ['Drag to move freely', 'Drop onto another photo to clip together', 'Polaroid frame with handwritten caption', 'Caption color sampled from photo'],
+        combines: ['pin', 'sticker', 'stamp'],
+      },
+      clip: {
+        interactions: ['Drag two photos to overlap — clip appears', 'Click paperclip to split apart', 'Drag clipped group to move together', 'Drop more items onto group to add'],
+        combines: ['photo', 'sticky', 'stamp'],
+      },
+      stamp: {
+        interactions: ['Drag to move freely', 'Perforated edges like real postage', 'Can be placed on sticky notes', 'Can be clipped with photos'],
+        combines: ['photo', 'note'],
+      },
+      sticky: {
+        interactions: ['Drag to move freely', 'Contains title, body text, and date', 'Stamp placed randomly, text wraps around it', 'Paper wrinkle texture overlay', 'Can be clipped with photos and stamps'],
+        combines: ['clip', 'stamp'],
+      },
+    };
+
     function renderPanel(name) {
       const cfg = atomsConfig[name];
+      const abilities = atomAbilities[name];
       if (!cfg) return;
       document.getElementById('panel-name').querySelector('span').textContent = cfg.name;
       document.getElementById('panel-desc').textContent = cfg.description;
       const container = document.getElementById('panel-props');
       container.innerHTML = '';
 
-      function addSection(title, obj, path) {
+      if (abilities?.interactions) {
         const sec = document.createElement('div');
-        sec.className = 'prop-section';
-        sec.innerHTML = `<div class="prop-section-title">${title}</div>`;
-        for (const [key, val] of Object.entries(obj)) {
-          const row = document.createElement('div');
-          row.className = 'prop-row';
-          let valHtml = '';
-          if (typeof val === 'boolean') {
-            valHtml = `<input type="checkbox" ${val ? 'checked' : ''} onchange="updateProp('${name}','${path}.${key}',this.checked)">`;
-          } else if (typeof val === 'number') {
-            valHtml = `<input type="number" value="${val}" step="${val < 1 ? 0.01 : val < 10 ? 0.1 : 1}" onchange="updateProp('${name}','${path}.${key}',parseFloat(this.value))">`;
-          } else if (typeof val === 'string') {
-            valHtml = `<span>${val}</span>`;
-          } else if (Array.isArray(val)) {
-            valHtml = val.map(v => `<span class="tag">${v}</span>`).join('');
-          } else if (val === null) {
-            valHtml = `<span>—</span>`;
-          } else if (typeof val === 'object') {
-            valHtml = `<span>${JSON.stringify(val)}</span>`;
-          }
-          row.innerHTML = `<span class="prop-label">${key}</span><span class="prop-value">${valHtml}</span>`;
-          sec.appendChild(row);
-        }
+        sec.className = 'panel-section';
+        sec.innerHTML = `<div class="panel-section-title">Interactions</div>` +
+          abilities.interactions.map(t => `<div class="panel-item">${t}</div>`).join('');
         container.appendChild(sec);
       }
 
-      if (cfg.style) addSection('Style', cfg.style, 'style');
-      if (cfg.behavior) addSection('Behavior', cfg.behavior, 'behavior');
-      if (cfg.boundary) addSection('Boundary', cfg.boundary, 'boundary');
-      if (cfg.combines) {
+      if (abilities?.combines) {
         const sec = document.createElement('div');
-        sec.className = 'prop-section';
-        sec.innerHTML = `<div class="prop-section-title">Combines with</div><div>${cfg.combines.map(c=>`<span class="tag">${c}</span>`).join(' ')}</div>`;
+        sec.className = 'panel-section';
+        sec.innerHTML = `<div class="panel-section-title">Combines with</div><div>${abilities.combines.map(c=>`<span class="tag">${c}</span>`).join(' ')}</div>`;
         container.appendChild(sec);
       }
-    }
-
-    function updateProp(atomName, path, value) {
-      const keys = path.split('.');
-      let obj = atomsConfig[atomName];
-      for (let i = 0; i < keys.length - 1; i++) obj = obj[keys[i]];
-      obj[keys[keys.length - 1]] = value;
-      // Re-render preview with new config
-      loadAtom(currentAtom);
-      console.log(`Updated ${atomName}.${path} = ${value}`);
     }
 
     // ─── Rendering (same as before) ───
@@ -245,7 +246,7 @@
       }
       if(imgCfg.type==='stamp'){
         const stampImg = await loadImagePixels(imgCfg.images[0]);
-        const {group, hitTest} = await renderStamp(app, stampImg, W/2-100, H/2-82);
+        const {group, hitTest} = await renderStamp(app, stampImg, W/2-100, H/2-82, cfg);
         app.stage.addChild(group);extraContainers.push(group);
         cleanups.push(makeDraggable(app.canvas, group, hitTest));
         return;
@@ -321,6 +322,19 @@
       b.classList.toggle("open");
       b.textContent = p.classList.contains("open") ? "✕" : "⚙";
     }
+    let isDark = true;
+    function toggleMode() {
+      isDark = !isDark;
+      document.body.classList.toggle('light', !isDark);
+      document.getElementById('mode-toggle').textContent = isDark ? 'Light' : 'Dark';
+      if (app) {
+        const color = isDark ? 0x0a0a0a : 0xf0ece4;
+        try { app.renderer.background.color = color; } catch(e) {}
+        try { app.renderer.background.color.setValue(color); } catch(e) {}
+      }
+      loadAtom(currentAtom);
+    }
+
     init();
     // Expose to global for onclick handlers
     window.switchAtom = switchAtom;
@@ -330,6 +344,7 @@
     window.updateProp = updateProp;
     window.collapsePanel = collapsePanel;
     window.togglePanel = togglePanel;
+    window.toggleMode = toggleMode;
   </script>
 </body>
 </html>

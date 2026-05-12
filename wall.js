@@ -1,5 +1,5 @@
 // wall.js — Main view, uses atoms-renderer.js
-import { loadImagePixels, PhotoSystem } from "./atoms-renderer.js?v=79";
+import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, makeDraggable, FocusOverlay } from "./atoms-renderer.js?v=105";
 
 (async () => {
   const W = window.innerWidth;
@@ -14,13 +14,15 @@ import { loadImagePixels, PhotoSystem } from "./atoms-renderer.js?v=79";
 
   const configResp = await fetch('atoms-config.json');
   const atomsConfig = await configResp.json();
-  // Preload Schoolbell font before rendering
+  // Preload fonts before rendering
   try {
-    await document.fonts.load('24px Schoolbell');
+    await Promise.all([
+      document.fonts.load('24px Schoolbell'),
+      document.fonts.load('24px Special Elite'),
+    ]);
   } catch(e) {}
-  // Double-check: wait until font is actually available
   let fontRetries = 0;
-  while (fontRetries < 20 && !document.fonts.check('24px Schoolbell')) {
+  while (fontRetries < 20 && (!document.fonts.check('24px Schoolbell') || !document.fonts.check('24px Special Elite'))) {
     await new Promise(r => setTimeout(r, 100));
     fontRetries++;
   }
@@ -32,12 +34,14 @@ import { loadImagePixels, PhotoSystem } from "./atoms-renderer.js?v=79";
   const isPortrait = H > W;
 
   const photoConfigs = [
-    { src: 'photo_flowers.png', caption: 'Wildflowers', date: "'25 05 10" },
-    { src: 'photo2.png', caption: 'Design notes', date: "'25 04 01" },
-    { src: 'photo_ski.png', caption: 'Powder day', date: "'25 01 15" },
-    { src: 'photo_avalanche.png', caption: 'Avalanche!', date: "'25 02 08" },
-    { src: 'photo_fishing.jpg', caption: 'Big catch!', date: "'25 06 15" },
-    { src: 'photo_portrait.jpg', caption: 'Me & cat', date: "'25 03 20" },
+    { src: 'photo_flowers.png', caption: 'Wildflowers', date: "'25 05 10",
+      focus: { title: 'Wildflowers', description: 'Spring wildflowers along the mountain trail. Shot during a weekend hike in Yunnan.', link: '#', linkText: 'View story' }},
+    { src: 'photo_avalanche.png', caption: 'Avalanche!', date: "'25 02 08",
+      focus: { title: 'Avalanche!', description: 'Caught an avalanche on camera while backcountry skiing in Hokkaido.', link: '#', linkText: 'View story' }},
+    { src: 'photo_fishing.jpg', caption: 'Big catch!', date: "'25 06 15",
+      focus: { title: 'Big catch!', description: 'First time catching a yellowtail off the coast. A perfect summer day on the water.', link: '#', linkText: 'View story' }},
+    { src: 'photo_portrait.jpg', caption: 'Me & cat', date: "'25 03 20",
+      focus: { title: 'Me & cat', description: 'Portrait with my studio cat. She insists on supervising every design session.', link: '#', linkText: 'View story' }},
   ];
 
   // Layout: mobile portrait = vertical stack, desktop = scattered
@@ -59,8 +63,8 @@ import { loadImagePixels, PhotoSystem } from "./atoms-renderer.js?v=79";
     }
   } else {
     const positions = [
-      {x: W*0.2, y: H*0.3}, {x: W*0.75, y: H*0.25}, {x: W*0.8, y: H*0.65},
-      {x: W*0.25, y: H*0.7}, {x: W*0.55, y: H*0.75}, {x: W*0.45, y: H*0.35},
+      {x: W*0.15, y: H*0.3}, {x: W*0.8, y: H*0.65},
+      {x: W*0.2, y: H*0.7}, {x: W*0.45, y: H*0.3},
     ];
     for (let i=0; i<photoConfigs.length; i++) {
       photoConfigs[i].x = positions[i].x;
@@ -72,9 +76,31 @@ import { loadImagePixels, PhotoSystem } from "./atoms-renderer.js?v=79";
     const imgData = await loadImagePixels(pc.src);
     const targetW = isPortrait ? W*0.55 : W*0.13;
     const photoScale = targetW / imgData.w;
-    await photoSystem.addPhoto(pc.src, pc.x, pc.y, photoScale, pc);
+    const photoItem = await photoSystem.addPhoto(pc.src, pc.x, pc.y, photoScale, pc);
+    if (pc.focus) photoItem.focusData = pc.focus;
   }
 
+  // ─── Focus Overlay ───
+  const focusOverlay = new FocusOverlay(app);
+  photoSystem.onFocus = (item) => focusOverlay.open(item);
+
+  // ─── Sticky Note (stamp = photo_ski.png) — registered in PhotoSystem for clip ───
+  const stickyStampImg = await loadImagePixels('photo_ski.png');
+  const stickyResult = await renderStickyNote(
+    app, isPortrait ? W*0.2 : W*0.6, isPortrait ? H*0.5 : H*0.55,
+    { title: 'Generative UI', body: 'GenUI replaces inefficient text-only AI responses with AI-generated, structured, interactive interfaces.', date: "'26 05 12" },
+    stickyStampImg, atomsConfig.stamp
+  );
+  const stickyBounds = stickyResult.group.getBounds();
+  const stickyItem = photoSystem.addItem(stickyResult.group, stickyBounds.width, stickyBounds.height);
+  stickyItem.focusData = { title: 'Generative UI', description: 'GenUI replaces inefficient text-only AI responses with AI-generated, structured, interactive interfaces.', link: '#', linkText: 'Read more' };
+
+  // ─── Standalone Stamp (photo2.png) — registered in PhotoSystem for clip ───
+  const stampImg = await loadImagePixels('photo2.png');
+  const stampResult = await renderStamp(
+    app, stampImg, isPortrait ? W*0.6 : W*0.75, isPortrait ? H*0.3 : H*0.35, atomsConfig.stamp
+  );
+  photoSystem.addItem(stampResult.group, stampResult.stampW, stampResult.stampH);
 
   const mouse = { x:-9999, y:-9999 };
 

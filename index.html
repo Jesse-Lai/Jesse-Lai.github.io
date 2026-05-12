@@ -22,10 +22,78 @@
       transition: color 0.2s; user-select: none;
     }
     #atoms-btn:hover { color: #fff; }
+
+    /* Focus overlay */
+    canvas.focus-active {
+      filter: blur(6px) brightness(0.3);
+      transition: filter 0.4s ease;
+    }
+    canvas { transition: filter 0.4s ease; }
+    #focus-overlay {
+      position: fixed; inset: 0; z-index: 10000;
+      display: none;
+      pointer-events: none;
+    }
+    #focus-overlay.visible { pointer-events: auto; }
+    #focus-backdrop {
+      position: absolute; inset: 0;
+      cursor: pointer;
+    }
+    #focus-content {
+      position: absolute; left: 0; right: 0;
+      display: flex; flex-direction: column; align-items: center;
+      padding: 0 24px;
+      pointer-events: none;
+      transform: translateY(20px);
+      opacity: 0;
+      transition: opacity 0.3s ease 0.15s, transform 0.3s ease 0.15s;
+    }
+    #focus-overlay.visible #focus-content {
+      transform: translateY(0); opacity: 1;
+    }
+    #focus-title {
+      font-family: 'Red Hat Mono', monospace;
+      font-size: 15px; color: #fff; letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+    #focus-desc {
+      font-family: 'Red Hat Mono', monospace;
+      font-size: 12px; color: #999; line-height: 1.6;
+      max-width: 400px; text-align: center;
+      margin-bottom: 16px;
+    }
+    #focus-link {
+      pointer-events: auto;
+      font-family: 'Red Hat Mono', monospace;
+      font-size: 12px; color: #0a0a0a; background: #fff;
+      padding: 8px 20px; border-radius: 4px;
+      text-decoration: none; letter-spacing: 1px;
+      transition: background 0.2s, color 0.2s;
+    }
+    #focus-link:hover { background: #ddd; }
+    #focus-close {
+      position: absolute; top: 20px; right: 20px;
+      pointer-events: auto;
+      background: none; border: 1px solid #555;
+      color: #999; width: 36px; height: 36px;
+      border-radius: 50%; cursor: pointer;
+      font-size: 16px; display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+    }
+    #focus-close:hover { border-color: #fff; color: #fff; }
   </style>
 </head>
 <body>
   <div id="atoms-btn" onclick="location.href='atoms.html'">Atoms</div>
+  <div id="focus-overlay">
+    <div id="focus-backdrop"></div>
+    <button id="focus-close">×</button>
+    <div id="focus-content">
+      <div id="focus-title"></div>
+      <div id="focus-desc"></div>
+      <a id="focus-link" href="#" target="_blank">View</a>
+    </div>
+  </div>
   <script src="https://cdn.jsdelivr.net/npm/pixi.js@8/dist/pixi.min.js"></script>
   <script type="module" src="wall.js?v=79"></script>
 </body>

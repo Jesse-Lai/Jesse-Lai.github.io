@@ -487,59 +487,78 @@ export async function renderClip(app, images, x, y, maxW, maxH, cfg) {
 
 
 // ─── Stamp perforation mask (shared) ───
+// Draws rectangle with semi-circles CUT INTO edges (like real postage stamps)
 function createStampMask(w, h, toothR, toothSpacing) {
-  const g = new PIXI.Graphics();
-  // Base rectangle
-  g.rect(toothR, toothR, w - toothR*2, h - toothR*2);
-  g.fill(0xffffff);
-  // Add semi-circle bumps along all 4 edges
-  for (let x = toothSpacing/2; x < w; x += toothSpacing) {
-    g.circle(x, toothR, toothR); g.fill(0xffffff); // top
-    g.circle(x, h - toothR, toothR); g.fill(0xffffff); // bottom
+  const c = document.createElement('canvas');
+  c.width = Math.ceil(w); c.height = Math.ceil(h);
+  const ctx = c.getContext('2d');
+
+  // Full white rectangle
+  ctx.fillStyle = 'white';
+  ctx.fillRect(0, 0, w, h);
+
+  // Cut semi-circles along edges (circles centered ON the edge → half inside, half outside)
+  ctx.globalCompositeOperation = 'destination-out';
+  ctx.fillStyle = 'black';
+  for (let x = toothSpacing / 2; x < w; x += toothSpacing) {
+    ctx.beginPath(); ctx.arc(x, 0, toothR, 0, Math.PI * 2); ctx.fill(); // top
+    ctx.beginPath(); ctx.arc(x, h, toothR, 0, Math.PI * 2); ctx.fill(); // bottom
   }
-  for (let y = toothSpacing/2; y < h; y += toothSpacing) {
-    g.circle(toothR, y, toothR); g.fill(0xffffff); // left
-    g.circle(w - toothR, y, toothR); g.fill(0xffffff); // right
+  for (let y = toothSpacing / 2; y < h; y += toothSpacing) {
+    ctx.beginPath(); ctx.arc(0, y, toothR, 0, Math.PI * 2); ctx.fill(); // left
+    ctx.beginPath(); ctx.arc(w, y, toothR, 0, Math.PI * 2); ctx.fill(); // right
   }
-  return g;
+
+  const sprite = new PIXI.Sprite(PIXI.Texture.from(c));
+  return sprite;
 }
 
 // ─── Render Stamp (standalone atom) ───
-export async function renderStamp(app, stampImgData, x, y, cfg) {
+export async function renderStamp(app, stampImgData, x, y, cfg, options) {
   const wrapper = new PIXI.Container();
   wrapper.x = x; wrapper.y = y;
 
   // Size adapts to image aspect ratio
-  const maxStampW = 250;
+  const maxStampW = options?.maxW ?? 250;
   const imgRatio = stampImgData.h / stampImgData.w;
   const stampW = Math.min(maxStampW, stampImgData.w * 0.3);
   const stampH = stampW * imgRatio;
-  const stampBorder = 7;
 
-  // Shadow
-  const stampShadow = new PIXI.Graphics();
-  stampShadow.roundRect(2, 2, stampW, stampH, 2);
-  stampShadow.fill({color: 0x000000, alpha: 0.08});
-  wrapper.addChild(stampShadow);
+  const toothR = cfg?.style?.toothRadius ?? 4;
+  const toothSp = cfg?.style?.toothSpacing ?? 14;
 
-  // Stamp image
+  // Shadow with same perforated shape, offset
+  const shadowMask = createStampMask(stampW, stampH, toothR, toothSp);
+  const shadowGroup = new PIXI.Container();
+  shadowGroup.x = 1.2; shadowGroup.y = 1.2;
+  const shadowFill = new PIXI.Graphics();
+  shadowFill.rect(0, 0, stampW, stampH);
+  shadowFill.fill({color: 0x000000, alpha: 0.12});
+  shadowGroup.addChild(shadowFill);
+  shadowGroup.addChild(shadowMask);
+  shadowGroup.mask = shadowMask;
+  wrapper.addChild(shadowGroup);
+
+  // Masked content group (image clipped by perforated mask directly)
+  const masked = new PIXI.Container();
+  wrapper.addChild(masked);
+
+  // Stamp image fills entire area, mask punches holes at edges
   const stampSprite = new PIXI.Sprite(stampImgData.tex);
-  stampSprite.x = stampBorder;
-  stampSprite.y = stampBorder;
-  stampSprite.width = stampW - stampBorder*2;
-  stampSprite.height = stampH - stampBorder*2;
-  wrapper.addChild(stampSprite);
+  stampSprite.width = stampW;
+  stampSprite.height = stampH;
+  masked.addChild(stampSprite);
 
-  // Stamp perforated edge (semi-circle teeth)
-  const perf = createStampMask(stampW, stampH, 4, 14);
-  wrapper.addChild(perf);
-  wrapper.mask = perf;
+  // Perforated edge mask
+  const perf = createStampMask(stampW, stampH, toothR, toothSp);
+  masked.addChild(perf);
+  masked.mask = perf;
 
   // Slight random rotation
   wrapper.rotation = (Math.random() * 10 - 5) * Math.PI / 180;
 
   return {
-    group: wrapper,
+    group: wrapper, stampW, stampH,
     hitTest: (mx, my) => Math.abs(mx - wrapper.x - stampW/2) < stampW*0.6 && Math.abs(my - wrapper.y - stampH/2) < stampH*0.6,
   };
 }
@@ -553,15 +572,17 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
   const noteW = 280;
   const padding = 20;
 
+  // Shadow (same style as photo — simple offset roundRect)
+  const shadow = new PIXI.Graphics();
+  wrapper.addChildAt(shadow, 0);
+
   // Background
   const bg = new PIXI.Graphics();
   wrapper.addChild(bg);
-  // Lifted corner shadows will be added after bg is drawn (need to peek below bg)
-  const shadowLeft = new PIXI.Graphics();
-  const shadowRight = new PIXI.Graphics();
 
   // ── Title (always at top, no wrapping around obstacles) ──
   let titleBottom = padding;
+  let bodyBottom = titleBottom;
   if (noteData.title) {
     const titleText = new PIXI.Text({text: noteData.title, style: {
       fontFamily: 'Special Elite', fontSize: 28, fill: 0x222222,
@@ -577,35 +598,17 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
   // ── Body text with obstacle avoidance (wraps around stamp) ──
   // Build obstacles list from stamp position (calculated below)
 
-  // ── Stamp (lower area, random position) ──
+  // ── Stamp (lower area, random position) — reuses renderStamp() ──
   let stampRect = null;
   let stampW = 0, stampH = 0;
   let stampContainer = null;
   if (stampImgData) {
-    stampContainer = new PIXI.Container();
-    // Size adapts to image ratio, capped for note
-    const maxNoteStampW = 160;
-    const sImgRatio = stampImgData.h / stampImgData.w;
-    stampW = Math.min(maxNoteStampW, stampImgData.w * 0.25);
-    stampH = stampW * sImgRatio;
-    const stampBorder = 6;
-  
+    const stampResult = await renderStamp(app, stampImgData, 0, 0, cfg, { maxW: 160 });
+    stampContainer = stampResult.group;
+    stampW = stampResult.stampW;
+    stampH = stampResult.stampH;
 
-
-    const stampSprite = new PIXI.Sprite(stampImgData.tex);
-    stampSprite.x = stampBorder;
-    stampSprite.y = stampBorder;
-    stampSprite.width = stampW - stampBorder*2;
-    stampSprite.height = stampH - stampBorder*2;
-    stampContainer.addChild(stampSprite);
-
-    // Stamp perforated edge (semi-circle teeth)
-    const perf = createStampMask(stampW, stampH, 3, 11);
-    stampContainer.addChild(perf);
-    stampContainer.mask = perf;
-
-    // Random position in lower half
-    // Position stamp near an edge (not center)
+    // Random position near an edge (not center)
     const edge = Math.floor(Math.random() * 4); // 0=right, 1=bottom, 2=left, 3=bottom-right
     let sx, sy;
     if (edge === 0) { // right edge
@@ -623,9 +626,9 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
     }
     stampContainer.x = sx;
     stampContainer.y = sy;
-    stampContainer.rotation = (Math.random() * 10 - 5) * Math.PI / 180;
+    // renderStamp already applies random rotation
     wrapper.addChild(stampContainer);
-    stampRect = {x: stampContainer.x, y: stampContainer.y, w: stampW, h: stampH};
+    stampRect = {x: sx, y: sy, w: stampW, h: stampH};
   }
 
   // ── Now render body text, wrapping around stamp obstacle ──
@@ -639,24 +642,24 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
       obstacles,
     });
     renderTextLines(wrapper, bodyLines);
+    // Track bottom of body text
+    if (bodyLines.length > 0) {
+      const lastLine = bodyLines[bodyLines.length - 1];
+      bodyBottom = lastLine.y + (lastLine.fontSize || 17) * 1.4;
+    }
   }
 
-  // ── Date (in whitespace, avoid stamp) ──
+  // ── Date (always below body text and stamp) ──
   if (noteData.date) {
     const dateText = new PIXI.Text({text: noteData.date, style: {
       fontFamily: 'Schoolbell', fontSize: 18, fill: 0x666666,
       padding: 6,
     }});
-    // Try bottom-left, if stamp is there try other spots
-    let dx = padding + Math.random()*20;
-    let dy = (stampRect ? stampRect.y + stampRect.h + 8 : 200);
-    if (stampRect && dx < stampRect.x + stampRect.w && dx + 80 > stampRect.x && dy < stampRect.y + stampRect.h && dy + 20 > stampRect.y) {
-      // Stamp overlaps bottom-left, put date above stamp or top-right area
-      dy = noteH * 0.5 + Math.random() * 30;
-      if (stampRect.x < noteW/2) dx = noteW - padding - 80;
-    }
-    dateText.x = dx;
-    dateText.y = dy;
+    // Place below the lowest content (body text or stamp)
+    let lowestY = bodyBottom;
+    if (stampRect) lowestY = Math.max(lowestY, stampRect.y + stampRect.h);
+    dateText.x = padding + Math.random() * 20;
+    dateText.y = lowestY + 8;
     dateText.rotation = (Math.random() * 6 - 3) * Math.PI / 180;
     wrapper.addChild(dateText);
   }
@@ -672,15 +675,15 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
     const x = (i/4) % noteW;
     const y = Math.floor((i/4) / noteW);
     // Subtle diagonal creases
-    const crease1 = Math.sin(x * 0.04 + y * 0.025) * Math.sin(x * 0.015 - y * 0.035);
-    const crease2 = Math.sin(x * 0.07 - y * 0.05) * 0.6;
-    const crease3 = Math.sin((x+y) * 0.03) * Math.sin((x-y) * 0.02) * 0.4;
-    const noise = (Math.random() - 0.5) * 12;
-    const val = 128 + crease1 * 35 + crease2 * 18 + crease3 * 12 + noise;
+    // Broad, gentle creases (low frequency, large areas)
+    const crease1 = Math.sin(x * 0.012 + y * 0.008) * Math.sin(x * 0.006 - y * 0.01);
+    const crease2 = Math.sin(x * 0.02 - y * 0.015) * 0.5;
+    const noise = (Math.random() - 0.5) * 4;
+    const val = 128 + crease1 * 25 + crease2 * 15 + noise;
     imgData2.data[i] = val;
     imgData2.data[i+1] = val;
     imgData2.data[i+2] = val;
-    imgData2.data[i+3] = 50; // visible but not overwhelming
+    imgData2.data[i+3] = 30; // subtle
   }
   wctx.putImageData(imgData2, 0, 0);
   const wrinkleTex = PIXI.Texture.from(wrinkleCanvas);
@@ -695,7 +698,7 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
   let contentBottom = titleBottom; // at least title height
   // Check body text lines
   for (const child of wrapper.children) {
-    if (child === bg || child === shadowLeft || child === shadowRight || child === wrinkleSprite) continue;
+    if (child === bg || child === shadow || child === wrinkleSprite) continue;
     if (child === stampContainer) {
       // Use actual stamp position + height (not rotated bounds)
       const sb = stampContainer.y + stampH;
@@ -713,25 +716,10 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
   bg.roundRect(0, 0, noteW, noteH, 4);
   bg.fill(0xfff9c4);
 
-  // Lifted corner shadows - positioned below the note, peeking out
-  // Must be behind bg but visible below it
-  shadowLeft.clear();
-  shadowLeft.ellipse(35, noteH + 4, 45, 8);
-  shadowLeft.fill({color:0x000000, alpha:0.2});
-  shadowLeft.rotation = 0.05;
-  wrapper.addChildAt(shadowLeft, 0); // behind bg
-
-  shadowRight.clear();
-  shadowRight.ellipse(noteW - 35, noteH + 4, 45, 8);
-  shadowRight.fill({color:0x000000, alpha:0.2});
-  shadowRight.rotation = -0.05;
-  wrapper.addChildAt(shadowRight, 0); // behind bg
-  
-  // Also add a subtle bottom-center shadow for depth
-  const shadowCenter = new PIXI.Graphics();
-  shadowCenter.roundRect(15, noteH - 2, noteW - 30, 12, 4);
-  shadowCenter.fill({color:0x000000, alpha:0.1});
-  wrapper.addChildAt(shadowCenter, 0);
+  // Draw shadow (same as photo style)
+  shadow.clear();
+  shadow.roundRect(3, 3, noteW, noteH, 3);
+  shadow.fill({color: 0x000000, alpha: 0.12});
 
   // Resize wrinkle to match note height
   wrinkleSprite.height = noteH;
@@ -805,21 +793,39 @@ export class PhotoSystem {
     const sc = scale || Math.min(200/imgData.w, 300/imgData.h);
     const { group } = await renderPhoto(this.app, imgData, x, y, sc, meta, this.config?.photo);
     this.app.stage.addChild(group);
-    const photo = { group, imgData, scale: sc, config: meta, clipped: false, splitCooldown: 0 };
+    const pw = imgData.w*sc, ph = imgData.h*sc;
+    const border = pw*0.06, bottomBorder = border*3;
+    const photo = {
+      group, imgData, scale: sc, config: meta, clipped: false, splitCooldown: 0,
+      // anchor = offset from group origin (photo center) to bounds top-left
+      itemW: pw+border*2, itemH: ph+border+bottomBorder,
+      anchorX: pw/2 + border, anchorY: ph/2 + border,
+    };
     this.photos.push(photo);
     this._makePhotoDraggable(photo);
     return photo;
   }
 
+  // Add any pre-rendered atom (sticky note, stamp, etc.) into the clip system
+  addItem(group, w, h) {
+    this.app.stage.addChild(group);
+    const item = {
+      group, clipped: false, splitCooldown: 0,
+      itemW: w, itemH: h,
+      anchorX: 0, anchorY: 0, // group origin is top-left for these atoms
+    };
+    this.photos.push(item);
+    this._makePhotoDraggable(item);
+    return item;
+  }
+
   _getPhotoBounds(p) {
-    const pw = p.imgData.w*p.scale, ph = p.imgData.h*p.scale;
-    const border = pw*0.06, bottomBorder = border*3;
-    const totalW = pw+border*2;
-    const totalH = ph+border+bottomBorder;
-    // Frame is NOT vertically centered: top = -ph/2-border, bottom = ph/2+bottomBorder
-    const top = p.group.y - ph/2 - border;
-    const left = p.group.x - pw/2 - border;
-    return { x: left, y: top, w: totalW, h: totalH };
+    return {
+      x: p.group.x - p.anchorX,
+      y: p.group.y - p.anchorY,
+      w: p.itemW,
+      h: p.itemH,
+    };
   }
 
   _overlapRatio(a, b) {
@@ -831,78 +837,57 @@ export class PhotoSystem {
     return smaller>0 ? overlap/smaller : 0;
   }
 
-  async _mergePhotos(droppedPhoto, targetPhoto) {
-    let existingClip = this.clipGroups.find(cg => cg.photos.includes(targetPhoto));
+  async _mergePhotos(droppedItem, targetItem) {
+    let existingClip = this.clipGroups.find(cg => cg.photos.includes(targetItem));
     if (existingClip) {
-      droppedPhoto.clipped = true;
-      existingClip.photos.push(droppedPhoto);
-      // Align top-left to first photo
-      const first = existingClip.photos[0];
-      const fPw = first.imgData.w*first.scale;
-      const fPh = first.imgData.h*first.scale;
-      const fBorder = fPw*0.06;
-      const firstTop = first.group.y - fPh/2 - fBorder;
-      const firstLeft = first.group.x - fPw/2 - fBorder;
-      const dPw2 = droppedPhoto.imgData.w*droppedPhoto.scale;
-      const dPh2 = droppedPhoto.imgData.h*droppedPhoto.scale;
-      const dBorder2 = dPw2*0.06;
-      await animateTo(droppedPhoto.group, firstLeft + dPw2/2 + dBorder2, firstTop + dPh2/2 + dBorder2);
-      // Update clip position
-      existingClip.clipSprite.x = firstLeft + fPw * 0.15;
-      existingClip.clipSprite.y = firstTop;
+      droppedItem.clipped = true;
+      existingClip.photos.push(droppedItem);
+      const firstBounds = this._getPhotoBounds(existingClip.photos[0]);
+      const dBounds = this._getPhotoBounds(droppedItem);
+      await animateTo(droppedItem.group, firstBounds.x + droppedItem.anchorX, firstBounds.y + droppedItem.anchorY);
+      existingClip.clipSprite.x = firstBounds.x + firstBounds.w * 0.15;
+      existingClip.clipSprite.y = firstBounds.y;
       return;
     }
-    if (droppedPhoto.clipped || targetPhoto.clipped) return;
-    droppedPhoto.clipped = true; targetPhoto.clipped = true;
+    if (droppedItem.clipped || targetItem.clipped) return;
+    droppedItem.clipped = true; targetItem.clipped = true;
 
-    // Align top-left: simple calculation from group center coords
-    // Top of a photo = group.y - ph/2 - border
-    // Left of a photo = group.x - pw/2 - border
-    const tPw = targetPhoto.imgData.w*targetPhoto.scale;
-    const tPh = targetPhoto.imgData.h*targetPhoto.scale;
-    const tBorder = tPw*0.06;
-    const dPw = droppedPhoto.imgData.w*droppedPhoto.scale;
-    const dPh = droppedPhoto.imgData.h*droppedPhoto.scale;
-    const dBorder = dPw*0.06;
-    // Target top/left in world coords
-    const targetTop = targetPhoto.group.y - tPh/2 - tBorder;
-    const targetLeft = targetPhoto.group.x - tPw/2 - tBorder;
-    // Dropped needs: group.y such that its top = targetTop
-    const droppedCy = targetTop + dPh/2 + dBorder;
-    const droppedCx = targetLeft + dPw/2 + dBorder;
+    const tBounds = this._getPhotoBounds(targetItem);
+    // Align dropped item's top-left to target's top-left
     await Promise.all([
-      animateTo(targetPhoto.group, targetPhoto.group.x, targetPhoto.group.y), // stays
-      animateTo(droppedPhoto.group, droppedCx, droppedCy),
+      animateTo(targetItem.group, targetItem.group.x, targetItem.group.y),
+      animateTo(droppedItem.group, tBounds.x + droppedItem.anchorX, tBounds.y + droppedItem.anchorY),
     ]);
-
 
     try {
       const clipTex = await PIXI.Assets.load({src:'paperclip.svg', data:{resolution:4}});
       const clipSp = new PIXI.Sprite(clipTex);
-      const pw = droppedPhoto.imgData.w * droppedPhoto.scale;
-      const ph = droppedPhoto.imgData.h * droppedPhoto.scale;
-      const border = pw*0.06;
-      const clipScale = Math.min(pw*0.35/clipSp.texture.width, ph*0.5/clipSp.texture.height);
+      const smaller = Math.min(tBounds.w, tBounds.h);
+      const clipScale = Math.min(smaller*0.35/clipSp.texture.width, smaller*0.5/clipSp.texture.height);
       clipSp.scale.set(clipScale);
       clipSp.anchor.set(0.5, 0.5);
-      // Top-left corner, protruding above photos
-      clipSp.x = targetLeft + tPw * 0.15;
-      clipSp.y = targetTop;
+      clipSp.x = tBounds.x + tBounds.w * 0.15;
+      const clipTargetY = tBounds.y;
+      clipSp.y = clipTargetY - 30;
       clipSp.alpha = 0;
       clipSp.zIndex = 9999;
       this.app.stage.addChild(clipSp);
-      await fadeIn(clipSp);
-      const clipInfo = { clipSprite: clipSp, photos: [targetPhoto, droppedPhoto] };
-      this.clipGroups.push(clipInfo);
+      // Slide in from above + fade in
+      await Promise.all([animateTo(clipSp, clipSp.x, clipTargetY, 300), fadeIn(clipSp, 300)]);
+      this.clipGroups.push({ clipSprite: clipSp, photos: [targetItem, droppedItem] });
     } catch(err) {
       console.error('Failed to load paperclip:', err);
-      droppedPhoto.clipped = false; targetPhoto.clipped = false;
+      droppedItem.clipped = false; targetItem.clipped = false;
     }
   }
 
   async _splitPhotos(clipInfo) {
     const { clipSprite, photos: clipPhotos } = clipInfo;
-    await fadeOut(clipSprite);
+    // Slide up + fade out
+    await Promise.all([
+      animateTo(clipSprite, clipSprite.x, clipSprite.y - 30, 250),
+      fadeOut(clipSprite, 250),
+    ]);
     this.app.stage.removeChild(clipSprite);
     clipSprite.destroy();
 
@@ -920,19 +905,20 @@ export class PhotoSystem {
 
   _makePhotoDraggable(photo) {
     let drag = false, offX = 0, offY = 0;
+    let downTime = 0, downX = 0, downY = 0, moved = false;
     const hitTest = (mx,my) => {
-      const pw = photo.imgData.w*photo.scale, ph = photo.imgData.h*photo.scale;
-      return Math.abs(mx-photo.group.x)<pw*0.6 && Math.abs(my-photo.group.y)<ph*0.6;
+      const b = this._getPhotoBounds(photo);
+      return mx > b.x && mx < b.x+b.w && my > b.y && my < b.y+b.h;
     };
     const onDown = e => {
       if (photo.clipped || this._activeDrag) return;
       const mx = e.clientX, my = e.clientY;
-      // Check this photo is the topmost hit
+      // Check this item is the topmost hit
       let topPhoto = null;
       for (const p of this.photos) {
         if (p.clipped) continue;
-        const pw2 = p.imgData.w*p.scale, ph2 = p.imgData.h*p.scale;
-        if (Math.abs(mx-p.group.x)<pw2*0.6 && Math.abs(my-p.group.y)<ph2*0.6) {
+        const b = this._getPhotoBounds(p);
+        if (mx > b.x && mx < b.x+b.w && my > b.y && my < b.y+b.h) {
           if (!topPhoto || this.app.stage.children.indexOf(p.group) > this.app.stage.children.indexOf(topPhoto.group)) {
             topPhoto = p;
           }
@@ -941,6 +927,7 @@ export class PhotoSystem {
       if (topPhoto !== photo) return;
       if (hitTest(mx,my)) {
         drag = true; offX = photo.group.x-mx; offY = photo.group.y-my;
+        downTime = Date.now(); downX = mx; downY = my; moved = false;
         this._activeDrag = photo;
         photo.group.scale.set(1.05);
         this.app.stage.removeChild(photo.group);
@@ -951,6 +938,7 @@ export class PhotoSystem {
       if (drag) {
         photo.group.x = e.clientX+offX;
         photo.group.y = e.clientY+offY;
+        if (Math.abs(e.clientX-downX)>5 || Math.abs(e.clientY-downY)>5) moved = true;
       }
       // Hover scale + cursor
       const hovering = !drag && hitTest(e.clientX, e.clientY) && !photo.clipped;
@@ -959,15 +947,21 @@ export class PhotoSystem {
       photo.group.scale.set(cur + (targetScale - cur) * 0.15);
       if (hovering) this.canvas.style.cursor = 'pointer';
     };
-    const onUp = () => {
+    const onUp = e => {
       if (!drag) return;
+      const wasClick = !moved && (Date.now() - downTime) < 200;
       drag = false;
       this._activeDrag = null;
-      // Reset scale
       photo.group.scale.set(1.0);
+
+      // Click → focus overlay
+      if (wasClick && photo.focusData && this.onFocus) {
+        this.onFocus(photo);
+        return;
+      }
+
       if (photo.clipped) return;
       const boundsA = this._getPhotoBounds(photo);
-      // Check overlap with unclipped photos (new merge)
       for (const other of this.photos) {
         if (other===photo || photo.clipped) continue;
         if (photo.splitCooldown && Date.now()<photo.splitCooldown) continue;
@@ -1020,14 +1014,13 @@ export class PhotoSystem {
           return;
         }
       }
-      // Check click on clipped photos (drag whole group)
+      // Check click on clipped items (drag whole group)
       for (const cg of this.clipGroups) {
         for (const p of cg.photos) {
-          const pw = p.imgData.w*p.scale, ph = p.imgData.h*p.scale;
-          if (Math.abs(mx-p.group.x)<pw*0.6 && Math.abs(my-p.group.y)<ph*0.6) {
+          const b = this._getPhotoBounds(p);
+          if (mx>b.x && mx<b.x+b.w && my>b.y && my<b.y+b.h) {
             groupDrag = cg;
             groupOffX = mx; groupOffY = my;
-            // Scale up group
             for (const gp of cg.photos) gp.group.scale.set(1.05);
             return;
           }
@@ -1039,35 +1032,43 @@ export class PhotoSystem {
         const dx = e.clientX - groupOffX, dy = e.clientY - groupOffY;
         for (const p of groupDrag.photos) { p.group.x += dx; p.group.y += dy; }
         groupDrag.clipSprite.x += dx; groupDrag.clipSprite.y += dy;
+        if (groupDrag.clipSprite._baseY !== undefined) groupDrag.clipSprite._baseY += dy;
         groupOffX = e.clientX; groupOffY = e.clientY;
         return;
       }
-      // Cursor: check if hovering any interactive element
       let hovering = false;
       const mx = e.clientX, my = e.clientY;
       for (const p of this.photos) {
         if (p.clipped) continue;
-        const pw = p.imgData.w*p.scale, ph = p.imgData.h*p.scale;
-        if (Math.abs(mx-p.group.x)<pw*0.6 && Math.abs(my-p.group.y)<ph*0.6) { hovering = true; break; }
+        const b = this._getPhotoBounds(p);
+        if (mx>b.x && mx<b.x+b.w && my>b.y && my<b.y+b.h) { hovering = true; break; }
       }
       if (!hovering) {
         for (const cg of this.clipGroups) {
           const cs = cg.clipSprite;
           if (Math.abs(mx-cs.x)<60 && Math.abs(my-cs.y)<60) { hovering = true; break; }
           for (const p of cg.photos) {
-            const pw = p.imgData.w*p.scale, ph = p.imgData.h*p.scale;
-            if (Math.abs(mx-p.group.x)<pw*0.6 && Math.abs(my-p.group.y)<ph*0.6) { hovering = true; break; }
+            const b = this._getPhotoBounds(p);
+            if (mx>b.x && mx<b.x+b.w && my>b.y && my<b.y+b.h) { hovering = true; break; }
           }
           if (hovering) break;
         }
       }
       this.canvas.style.cursor = hovering ? 'pointer' : 'default';
-      // Hover scale for clipped groups
       for (const cg of this.clipGroups) {
-        let groupHovered = false;
-        for (const p of cg.photos) {
-          const pw2 = p.imgData.w*p.scale, ph2 = p.imgData.h*p.scale;
-          if (Math.abs(mx-p.group.x)<pw2*0.6 && Math.abs(my-p.group.y)<ph2*0.6) { groupHovered = true; break; }
+        const cs = cg.clipSprite;
+        const clipHovered = Math.abs(mx-cs.x)<60 && Math.abs(my-cs.y)<60;
+        // Clip lifts up when hovered to hint it's clickable
+        if (cs._baseY === undefined) cs._baseY = cs.y;
+        const targetY = clipHovered ? cs._baseY - 8 : cs._baseY;
+        cs.y += (targetY - cs.y) * 0.15;
+
+        let groupHovered = clipHovered;
+        if (!groupHovered) {
+          for (const p of cg.photos) {
+            const b = this._getPhotoBounds(p);
+            if (mx>b.x && mx<b.x+b.w && my>b.y && my<b.y+b.h) { groupHovered = true; break; }
+          }
         }
         const ts = groupHovered || groupDrag===cg ? 1.05 : 1.0;
         for (const p of cg.photos) { const c=p.group.scale.x; p.group.scale.set(c+(ts-c)*0.15); }
@@ -1085,5 +1086,248 @@ export class PhotoSystem {
         if (Math.abs(mx-cs.x)<60 && Math.abs(my-cs.y)<60) { this._splitPhotos(cg); return; }
       }
     });
+  }
+}
+
+// ─── Focus Overlay — click-to-detail with paper curl effect ───
+export class FocusOverlay {
+  constructor(app) {
+    this.app = app;
+    this.overlay = document.getElementById('focus-overlay');
+    this.backdrop = document.getElementById('focus-backdrop');
+    this.titleEl = document.getElementById('focus-title');
+    this.descEl = document.getElementById('focus-desc');
+    this.linkEl = document.getElementById('focus-link');
+    this.closeBtn = document.getElementById('focus-close');
+    this.activeItem = null;
+    this.mesh = null;
+    this.origX = 0; this.origY = 0; this.origScale = 1;
+
+    this.dimLayer = new PIXI.Graphics();
+    this.dimLayer.visible = false;
+    this.blurFilter = new PIXI.BlurFilter({ strength: 0, quality: 4 });
+
+    this.backdrop.addEventListener('click', () => this.close());
+    this.closeBtn.addEventListener('click', () => this.close());
+  }
+
+  _animateDim(fromAlpha, toAlpha, fromBlur, toBlur, duration) {
+    const start = performance.now();
+    const W = this.app.screen.width, H = this.app.screen.height;
+    const tick = () => {
+      const t = Math.min(1, (performance.now() - start) / duration);
+      const ease = 1 - Math.pow(1 - t, 3);
+      this.dimLayer.clear();
+      this.dimLayer.rect(0, 0, W, H);
+      this.dimLayer.fill({ color: 0x000000, alpha: fromAlpha + (toAlpha - fromAlpha) * ease });
+      this.blurFilter.strength = fromBlur + (toBlur - fromBlur) * ease;
+      if (t < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }
+
+  // Paper curl: a single wave sweeping from bottom-right to top-left
+  // progress = 0 (flat) → 1 (wave has fully passed through entire sheet)
+  _applyPaperCurl(buffer, origPositions, baseW, baseH, progress) {
+    const waveWidth = 1.2;  // width of the wave bump (wider = gentler, more gradual)
+    const liftStrength = 0.06; // how high the wave lifts (fraction of baseH)
+    const xPull = 0.04; // horizontal pull strength
+
+    for (let i = 0; i < origPositions.length; i += 2) {
+      const ox = origPositions[i], oy = origPositions[i + 1];
+      const nx = ox / baseW;
+      const ny = oy / baseH;
+
+      // Distance from bottom-right corner, normalized 0-1
+      const dist = Math.sqrt((1 - nx) * (1 - nx) + (1 - ny) * (1 - ny)) / 1.414;
+
+      // Wave front travels from 0 to 1 + waveWidth (so it fully exits the sheet)
+      const waveFront = progress * (1 + waveWidth);
+      const delta = waveFront - dist;
+
+      // Single smooth sine bump
+      let lift = 0;
+      if (delta > 0 && delta < waveWidth) {
+        lift = Math.sin(delta / waveWidth * Math.PI) * liftStrength;
+      }
+
+      buffer.data[i] = ox - lift * baseW * xPull * (1 - nx);
+      buffer.data[i + 1] = oy - lift * baseH;
+    }
+    buffer.update();
+  }
+
+  open(item) {
+    if (this.activeItem) return;
+    this.activeItem = item;
+    const W = this.app.screen.width, H = this.app.screen.height;
+
+    this.origX = item.group.x;
+    this.origY = item.group.y;
+    this.origScale = item.group.scale.x;
+
+    // Target center position
+    const targetScale = 1.3;
+    const centerX = W / 2 - item.itemW / 2 + item.anchorX;
+    const centerY = H * 0.38 - item.itemH / 2 + item.anchorY;
+
+    // Wrap background into blur container
+    this.bgContainer = new PIXI.Container();
+    this.bgChildren = [...this.app.stage.children];
+    for (const child of this.bgChildren) this.bgContainer.addChild(child);
+    this.bgContainer.filters = [this.blurFilter];
+    this.blurFilter.strength = 0;
+    this.app.stage.addChild(this.bgContainer);
+
+    // Dim layer
+    this.dimLayer.clear();
+    this.dimLayer.rect(0, 0, W, H);
+    this.dimLayer.fill({ color: 0x000000, alpha: 0 });
+    this.dimLayer.visible = true;
+    this.app.stage.addChild(this.dimLayer);
+    this._animateDim(0, 0.65, 0, 6, 500);
+
+    // Extract texture from the item group
+    const tex = this.app.renderer.extract.texture(item.group);
+    const meshW = item.itemW * this.origScale;
+    const meshH = item.itemH * this.origScale;
+
+    // Hide original, remove from bg
+    this.bgContainer.removeChild(item.group);
+    item.group.visible = false;
+
+    // Create MeshPlane
+    const mesh = new PIXI.MeshPlane({ texture: tex, verticesX: 20, verticesY: 20 });
+    mesh.x = this.origX - item.anchorX * this.origScale;
+    mesh.y = this.origY - item.anchorY * this.origScale;
+    mesh.width = meshW;
+    mesh.height = meshH;
+    this.app.stage.addChild(mesh);
+    this.mesh = mesh;
+
+    // Store original vertex positions (these use the INITIAL mesh dimensions)
+    const { buffer } = mesh.geometry.getAttribute('aPosition');
+    const origPositions = new Float32Array(buffer.data);
+    this._origPositions = origPositions;
+    // Base dimensions for curl normalization — FIXED, never changes
+    const baseW = origPositions[origPositions.length - 2]; // last vertex x = mesh native width
+    const baseH = origPositions[origPositions.length - 1]; // last vertex y = mesh native height
+    this._baseW = baseW;
+    this._baseH = baseH;
+
+    // Animate: paper curl → fly to center → flatten
+    const startX = mesh.x, startY = mesh.y;
+    const targetMeshX = centerX - item.anchorX * targetScale;
+    const targetMeshY = centerY - item.anchorY * targetScale;
+    const startW = meshW, startH = meshH;
+    const targetW = item.itemW * targetScale;
+    const targetH = item.itemH * targetScale;
+    const duration = 1200;
+    const start = performance.now();
+
+    const tick = () => {
+      const elapsed = performance.now() - start;
+      const t = Math.min(1, elapsed / duration);
+      const ease = 1 - Math.pow(1 - t, 3);
+
+      // Position & size interpolation
+      mesh.x = startX + (targetMeshX - startX) * ease;
+      mesh.y = startY + (targetMeshY - startY) * ease;
+      mesh.width = startW + (targetW - startW) * ease;
+      mesh.height = startH + (targetH - startH) * ease;
+
+      // Wave sweeps from bottom-right to top-left over the duration
+      this._applyPaperCurl(buffer, origPositions, baseW, baseH, ease);
+
+      if (t < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+
+    // Position HTML content
+    const scaledH = item.itemH * targetScale;
+    const topEdge = centerY - item.anchorY;
+    const bottomY = topEdge + scaledH;
+    document.getElementById('focus-content').style.top = (bottomY + 20) + 'px';
+
+    // Populate HTML
+    const data = item.focusData;
+    this.titleEl.textContent = data.title || '';
+    this.descEl.textContent = data.description || '';
+    if (data.link) {
+      this.linkEl.href = data.link;
+      this.linkEl.textContent = data.linkText || 'View';
+      this.linkEl.style.display = '';
+    } else {
+      this.linkEl.style.display = 'none';
+    }
+
+    this.overlay.style.display = 'block';
+    requestAnimationFrame(() => this.overlay.classList.add('visible'));
+  }
+
+  close() {
+    if (!this.activeItem) return;
+    const item = this.activeItem;
+    const mesh = this.mesh;
+    this.activeItem = null;
+    this.mesh = null;
+
+    this.overlay.classList.remove('visible');
+    this._animateDim(0.65, 0, 6, 0, 400);
+
+    if (!mesh) return;
+    const { buffer } = mesh.geometry.getAttribute('aPosition');
+    const origPositions = this._origPositions;
+    const baseW = this._baseW, baseH = this._baseH;
+
+    // Animate back: flatten → curl → arrive at original position
+    const startX = mesh.x, startY = mesh.y;
+    const startW = mesh.width, startH = mesh.height;
+    const targetX = this.origX - item.anchorX * this.origScale;
+    const targetY = this.origY - item.anchorY * this.origScale;
+    const targetW = item.itemW * this.origScale;
+    const targetH = item.itemH * this.origScale;
+    const duration = 1000;
+    const start = performance.now();
+
+    const tick = () => {
+      const elapsed = performance.now() - start;
+      const t = Math.min(1, elapsed / duration);
+      const ease = 1 - Math.pow(1 - t, 3);
+
+      mesh.x = startX + (targetX - startX) * ease;
+      mesh.y = startY + (targetY - startY) * ease;
+      mesh.width = startW + (targetW - startW) * ease;
+      mesh.height = startH + (targetH - startH) * ease;
+
+      // Reverse wave: progress goes from 1 back to 0
+      this._applyPaperCurl(buffer, origPositions, baseW, baseH, 1 - ease);
+
+      if (t < 1) {
+        requestAnimationFrame(tick);
+      }
+    };
+    requestAnimationFrame(tick);
+
+    setTimeout(() => {
+      // Cleanup: remove mesh, restore original
+      if (mesh.parent) mesh.parent.removeChild(mesh);
+      mesh.destroy();
+      item.group.visible = true;
+      item.group.x = this.origX;
+      item.group.y = this.origY;
+      item.group.scale.set(this.origScale);
+
+      this.overlay.style.display = 'none';
+      this.dimLayer.visible = false;
+      if (this.bgContainer) {
+        this.app.stage.removeChild(this.dimLayer);
+        this.app.stage.removeChild(this.bgContainer);
+        this.bgContainer.filters = [];
+        for (const child of this.bgChildren) this.app.stage.addChild(child);
+        this.bgContainer = null;
+        this.bgChildren = null;
+      }
+    }, 1050);
   }
 }
