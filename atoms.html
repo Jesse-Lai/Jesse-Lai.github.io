@@ -128,14 +128,14 @@
 
   <script src="https://cdn.jsdelivr.net/npm/pixi.js@8/dist/pixi.min.js"></script>
   <script type="module">
-    import { loadImagePixels, sampleImage, sampleDominantColor, AtomSticker, renderPhoto, renderClip, renderStickyNote, makeDraggable, PhotoSystem } from "./atoms-renderer.js?v=47";
+    import { loadImagePixels, sampleImage, sampleDominantColor, AtomSticker, renderPhoto, renderClip, renderStickyNote, makeDraggable, PhotoSystem } from "./atoms-renderer.js?v=48";
     let app, currentAtom = 'sticker', sticker = null, atomsConfig = {};
 
     const atomImages = {
       sticker: { images: ['sticker.png', 'sticker2.png'], type: 'sticker' },
       photo: { images: ['photo_fishing.jpg'], type: 'photo', caption: 'Big catch!', date: "'25 06 15" },
       clip: { images: ['photo_flowers.png', 'photo_ski.png', 'photo_avalanche.png'], type: 'clip' },
-      sticky: { images: ['photo_fishing.jpg'], type: 'sticky', title: 'Generative UI', body: 'GenUI replaces inefficient text-only AI responses with AI-generated, structured, interactive interfaces.', date: "'26 05 12" },
+      sticky: { images: ['stamp1.webp'], type: 'sticky', title: 'Generative UI', body: 'GenUI replaces inefficient text-only AI responses with AI-generated, structured, interactive interfaces.', date: "'26 05 12" },
       
     };
 
