@@ -1471,7 +1471,6 @@ export class FocusOverlay {
   closeArticle() {
     if (!this._articleMode) return;
     this._articleMode = false;
-
     // 移除 scroll 监听
     if (this._onArticleScroll) {
       this.overlay.removeEventListener('scroll', this._onArticleScroll);
