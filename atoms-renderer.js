@@ -1185,6 +1185,7 @@ export class FocusOverlay {
   open(item) {
     if (this.activeItem) return;
     this.activeItem = item;
+    this.overlay.scrollTop = 0;
     const W = this.app.screen.width, H = this.app.screen.height;
 
     this.origX = item.group.x;
@@ -1281,7 +1282,7 @@ export class FocusOverlay {
     // Position HTML content below the focused element
     const scaledH = item.itemH * targetScale;
     const bottomY = H * 0.38 + scaledH / 2;
-    document.getElementById('focus-content').style.top = (bottomY + 20) + 'px';
+    document.getElementById('focus-content').style.top = (bottomY + 40) + 'px';
 
     // Populate HTML
     const data = item.focusData;
@@ -1359,6 +1360,9 @@ export class FocusOverlay {
       item.group.y = this.origY;
       item.group.scale.set(this.origScale);
 
+      this.overlay.style.overflowY = 'auto';
+      this.overlay.scrollTop = 0;
+      this.overlay.style.overflowY = '';
       this.overlay.style.display = 'none';
       this.dimLayer.visible = false;
       if (this.bgContainer) {
@@ -1441,8 +1445,9 @@ export class FocusOverlay {
         this.overlay.appendChild(articleWrap);
         this._articleWrap = articleWrap;
 
-        // 需要让 overlay 可滚动，关闭按钮固定
+        // 先让 overlay 可滚动，再重置滚动位置（scrollTop 在非 auto 时无效）
         this.overlay.style.overflowY = 'auto';
+        this.overlay.scrollTop = 0;
         this.closeBtn.style.position = 'fixed';
 
         // mesh 跟随 overlay 滚动
@@ -1478,8 +1483,8 @@ export class FocusOverlay {
       this._articleWrap.remove();
       this._articleWrap = null;
     }
-    this.overlay.style.overflowY = '';
     this.overlay.scrollTop = 0;
+    this.overlay.style.overflowY = '';
     this.closeBtn.style.position = '';
     document.getElementById('focus-content').style.display = '';
 
