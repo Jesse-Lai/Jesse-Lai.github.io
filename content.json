@@ -1,11 +1,11 @@
 [
   {
     "id": "116400ee-0cf5-8029-ba88-e9288932ff8d",
-    "title": "Hello I'm Jesse Lai",
+    "title": "Hello I’m Jesse Lai",
     "category": "who_i_am",
-    "atom": "sticky",
+    "atom": "photo",
     "body": "I’m a product designer at Microsoft AI, exploring how people will naturally interact with AI in the future. I have experience designing AI products fo",
-    "cover_image": "content_images/116400ee_1.png",
+    "cover_image": "photo_portrait.jpg",
     "focus": {
       "title": "Hello I'm Jesse Lai",
       "description": "I’m a product designer at Microsoft AI, exploring how people will naturally interact with AI in the future. I have experience designing AI products fo",
@@ -88,8 +88,8 @@
     "title": "Resume",
     "category": "who_i_am",
     "atom": "sticky",
-    "body": "",
-    "cover_image": "content_images/116400ee_1.png",
+    "body": "Product designer at Microsoft AI with 6+ years of experience in AI product design for B2C and B2B scenarios.",
+    "cover_image": "content_images/146400ee_cover.jpg",
     "focus": {
       "title": "Resume",
       "description": "Resume",
@@ -112,8 +112,8 @@
     "title": "Food Delivery Service",
     "category": "design_projects",
     "atom": "sticky",
-    "body": "💡 Eleme (饿了么) is a renowned food delivery service in China, it means “Are you hungry?”\nThrough the design research, I found that our users tried to de",
-    "cover_image": "content_images/116400ee_1.png",
+    "body": "Eleme (饿了么) is a renowned food delivery service in China. I shortened the onboarding process and improved the task-reward system to help merchants operate and increase survival rate.",
+    "cover_image": "content_images/116400ee_5.png",
     "focus": {
       "title": "Food Delivery Service",
       "description": "💡 Eleme (饿了么) is a renowned food delivery service in China, it means “Are you hungry?”\nThrough the design research, I found that our users tried to de",
@@ -567,8 +567,8 @@
     "title": "AI Merchant Assistant",
     "category": "design_projects",
     "atom": "sticky",
-    "body": "💡 In this project, I analyzed the impact of generative AI on Eleme's merchant online consultation service. I designed suitable interaction models and ",
-    "cover_image": "content_images/116400ee_1.png",
+    "body": "I analyzed the impact of generative AI on Eleme's merchant consultation service and built a conversational assistant to enhance experience and reduce costs.",
+    "cover_image": "content_images/116400ee_19.png",
     "focus": {
       "title": "AI Merchant Assistant",
       "description": "💡 In this project, I analyzed the impact of generative AI on Eleme's merchant online consultation service. I designed suitable interaction models and ",
@@ -773,8 +773,8 @@
     "title": "Review Analysis",
     "category": "design_projects",
     "atom": "sticky",
-    "body": "💡 Overview\n\"Review analysis\" is essential for managing takeout online shops, helping users understand customer feedback to optimize their services and",
-    "cover_image": "content_images/19eecf3c_1.png",
+    "body": "Review analysis is essential for managing online shops. I identified why users rarely access it and designed solutions to increase adoption.",
+    "cover_image": "content_images/19eecf3c_3.png",
     "focus": {
       "title": "Review Analysis",
       "description": "💡 Overview\n\"Review analysis\" is essential for managing takeout online shops, helping users understand customer feedback to optimize their services and",
@@ -1148,7 +1148,7 @@
     "category": "hobby",
     "atom": "photo",
     "body": "清晨的第一竿：安静得只剩水面在呼吸。 今天的战利品：不大，但足够让人开心一整天。",
-    "cover_image": "content_images/35f400ee_1.jpg",
+    "cover_image": "photo_fishing.jpg",
     "focus": {
       "title": "Fishing",
       "description": "清晨的第一竿：安静得只剩水面在呼吸。 今天的战利品：不大，但足够让人开心一整天。",

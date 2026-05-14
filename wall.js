@@ -1,5 +1,6 @@
 // wall.js — Main view, uses atoms-renderer.js
-import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, makeDraggable, FocusOverlay, getOrCreateVideo } from "./atoms-renderer.js?v=144";
+import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, makeDraggable, FocusOverlay, getOrCreateVideo } from "./atoms-renderer.js?v=147";
+import { WallArticle } from "./wall-article.js?v=147";
 
 (async () => {
   const W = window.innerWidth;
@@ -70,7 +71,7 @@ import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, makeDragga
   const gridPad = colW * 0.12;
 
   // ─── Focus Overlay ───
-  const focusOverlay = new FocusOverlay(app);
+  const focusOverlay = new FocusOverlay(app, contentData);
 
   // ─── Step 1: Render all items at (0,0) to get actual bounds ───
   const rendered = []; // { group, bounds, wallItem, focusableItem }
@@ -153,6 +154,10 @@ import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, makeDragga
     }
   }
   photoSystem.onFocus = (item) => focusOverlay.open(item);
+
+  // ─── Wall Article (composer + AI narrative) ───
+  const wallArticle = new WallArticle(focusOverlay, contentData);
+  wallArticle.setupComposer();
 
   const mouse = { x:-9999, y:-9999 };
 

@@ -1,5 +1,6 @@
 // atoms-renderer.js — Shared atom rendering module
 // All atom types are rendered from here. Both atoms.html and wall.js import this.
+import { streamChat, buildSystemPrompt } from './ai-client.js';
 
 
 // ─── Animation utility ───
@@ -616,7 +617,7 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg, o
     titleText.x = padding;
     titleText.y = padding;
     wrapper.addChild(titleText);
-    titleBottom = padding + 40;
+    titleBottom = padding + titleText.height + 4;
   }
 
   // ── Body text with obstacle avoidance (wraps around stamp) ──
@@ -1140,8 +1141,9 @@ export class PhotoSystem {
 
 // ─── Focus Overlay — click-to-detail with paper curl effect ───
 export class FocusOverlay {
-  constructor(app) {
+  constructor(app, contentData) {
     this.app = app;
+    this._contentData = contentData || [];
     this.overlay = document.getElementById('focus-overlay');
     this.backdrop = document.getElementById('focus-backdrop');
     this.titleEl = document.getElementById('focus-title');
@@ -1667,6 +1669,10 @@ export class FocusOverlay {
     }
 
     // 停止正在进行的 streaming
+    if (this._chatAbort) {
+      this._chatAbort.abort();
+      this._chatAbort = null;
+    }
     if (this._streamingTimer) {
       clearTimeout(this._streamingTimer);
       this._streamingTimer = null;
@@ -1706,97 +1712,91 @@ export class FocusOverlay {
     aiMsg.appendChild(aiBubble);
     this._chatContainer.appendChild(aiMsg);
 
-    this._simulateStreaming(aiBubble);
+    this._streamAIResponse(query, aiBubble);
   }
 
-  _simulateStreaming(bubble) {
-    // 当前文章的 src，避免推荐自己
-    const currentSrc = this.activeItem?.focusData?.article?.sections?.find(s => s.type === 'image')?.src;
-    // 从注册的 wall items 中选推荐（排除当前）
-    const registry = this._wallItemRegistry;
-    const allKeys = Object.keys(registry).filter(k => k !== currentSrc);
-    const shuffled = allKeys.sort(() => Math.random() - 0.5);
+  async _streamAIResponse(query, bubble) {
+    const focusData = this.activeItem?.focusData;
+    const articleTitle = focusData?.article?.title || focusData?.title || '';
+    const contextNote = `The visitor is currently reading the article "${articleTitle}". Answer in that context.`;
 
-    const mockResponses = [
-      { title: 'About the Composition', sections: [
-        { type: 'text', text: 'The composition draws your eye from the foreground details to the distant landscape, creating a sense of depth and journey.' },
-        { type: 'recommend', key: shuffled[0] },
-        { type: 'text', text: 'The lighting here is particularly interesting — it was shot during golden hour, which gives everything that warm, painterly quality. Notice how the shadows fall at a low angle, adding dimension to the foreground.' },
-        { type: 'text', text: 'The strongest element is the balance between chaos and order. The wildflowers appear random, but the photographer chose a vantage point that creates natural leading lines toward the mountain ridge.' },
-        { type: 'recommend', key: shuffled[1] },
-      ]},
-      { title: 'Patience & Spontaneity', sections: [
-        { type: 'text', text: 'This work explores the relationship between patience and spontaneity in creative practice. The photographer waited hours for the right conditions, but the final moment was pure instinct.' },
-        { type: 'recommend', key: shuffled[0] },
-        { type: 'subtitle', text: 'The Creative Paradox' },
-        { type: 'text', text: 'Sometimes the best creative moments come from simply being present and ready, rather than forcing a specific outcome. The Japanese call this "mushin" — a mind free of preconception.' },
-        { type: 'recommend', key: shuffled[1] },
-      ]},
-      { title: 'Nature & Wabi-Sabi', sections: [
-        { type: 'text', text: 'The textures and colors in this piece reflect the natural environment where it was captured. Nothing is artificially enhanced — the muted greens, the soft yellows, the gentle blur of distance.' },
-        { type: 'recommend', key: shuffled[0] },
-        { type: 'text', text: 'There\'s a Japanese concept called "wabi-sabi" that applies here — finding beauty in imperfection and transience. The slightly bent stems, the uneven petals, the clouds that aren\'t quite symmetrical.' },
-        { type: 'recommend', key: shuffled[1] },
-      ]},
+    const messages = [
+      { role: 'system', content: buildSystemPrompt(this._contentData, this._wallItemRegistry) },
+      { role: 'system', content: contextNote },
+      { role: 'user', content: query },
     ];
-    const response = mockResponses[Math.floor(Math.random() * mockResponses.length)];
 
-    // 构建 segments
-    const segments = [];
-    segments.push({ type: 'h2', text: response.title });
-    for (const section of response.sections) {
-      if (section.type === 'subtitle') segments.push({ type: 'h2', text: section.text });
-      else if (section.type === 'text') segments.push({ type: 'p', text: section.text });
-      else if (section.type === 'recommend' && section.key) segments.push(section);
-    }
-
-    let segIdx = 0, charIdx = 0;
+    this._chatAbort = new AbortController();
     let currentEl = null;
+    let buffer = '';
 
-    const nextSegment = async () => {
-      if (segIdx >= segments.length) { this._streamingTimer = null; return; }
-      const seg = segments[segIdx];
-      if (seg.type === 'h2') {
-        currentEl = document.createElement('h2');
-        bubble.appendChild(currentEl);
-        charIdx = 0;
-        tickChar();
-      } else if (seg.type === 'p') {
+    const flushText = (text) => {
+      if (!text) return;
+      if (!currentEl || currentEl.tagName === 'H2') {
         currentEl = document.createElement('p');
         bubble.appendChild(currentEl);
-        charIdx = 0;
-        tickChar();
-      } else if (seg.type === 'recommend') {
-        const meta = registry[seg.key];
-        if (meta) {
-          const entry = await this._createAtomEntry(meta);
-          if (entry) {
-            bubble.appendChild(entry.container);
-            this._scrollToBottom();
-          }
-        }
-        segIdx++;
-        this._streamingTimer = setTimeout(nextSegment, 200);
-        return;
       }
-    };
-
-    const tickChar = () => {
-      const seg = segments[segIdx];
-      if (!seg || !seg.text || charIdx >= seg.text.length) {
-        segIdx++;
-        charIdx = 0;
-        this._scrollToBottom();
-        this._streamingTimer = setTimeout(nextSegment, 80);
-        return;
-      }
-      currentEl.textContent += seg.text[charIdx];
-      charIdx++;
+      currentEl.textContent += text;
       this._scrollToBottom();
-      this._streamingTimer = setTimeout(tickChar, 18 + Math.random() * 25);
     };
 
-    this._streamingTimer = setTimeout(nextSegment, 500);
+    await streamChat(
+      messages,
+      (token) => {
+        buffer += token;
+        while (buffer.length > 0) {
+          const headingMatch = buffer.match(/^## (.+?)\n/);
+          if (headingMatch) {
+            currentEl = document.createElement('h2');
+            bubble.appendChild(currentEl);
+            currentEl.textContent = headingMatch[1];
+            buffer = buffer.slice(headingMatch[0].length);
+            currentEl = null;
+            this._scrollToBottom();
+            continue;
+          }
+          const atomMatch = buffer.match(/\[\[atom:(.+?)\]\]/);
+          if (atomMatch) {
+            const before = buffer.slice(0, atomMatch.index).replace(/\n/g, ' ').trim();
+            if (before) flushText(before);
+            this._insertAtomInChat(atomMatch[1], bubble);
+            buffer = buffer.slice(atomMatch.index + atomMatch[0].length);
+            currentEl = null;
+            continue;
+          }
+          if (buffer.includes('[') || buffer.startsWith('#') || buffer.endsWith('#')) break;
+          const nlIdx = buffer.indexOf('\n');
+          if (nlIdx >= 0) {
+            const chunk = buffer.slice(0, nlIdx).trim();
+            if (chunk) flushText(chunk);
+            buffer = buffer.slice(nlIdx + 1);
+            if (chunk) currentEl = null;
+            continue;
+          }
+          flushText(buffer);
+          buffer = '';
+        }
+      },
+      () => {
+        if (buffer.trim()) flushText(buffer.trim());
+        this._chatAbort = null;
+      },
+      this._chatAbort.signal,
+    );
+  }
+
+  async _insertAtomInChat(key, bubble) {
+    const meta = this._wallItemRegistry[key];
+    if (!meta) return;
+    try {
+      const entry = await this._createAtomEntry(meta);
+      if (entry) {
+        bubble.appendChild(entry.container);
+        this._scrollToBottom();
+      }
+    } catch (e) {
+      console.warn('Failed to insert atom:', key, e);
+    }
   }
 
   _scrollToBottom() {
@@ -2145,6 +2145,27 @@ export class FocusOverlay {
 
     // 点击 → 打开嵌套 focus
     app.canvas.addEventListener('click', () => this._openNestedFocus(meta, app, result));
+
+    // Video hover for photo atoms
+    if (meta.atomType === 'photo' && meta.src && result.sprite) {
+      const videoSrc = meta.src.replace(/\.(png|jpg|jpeg|webp)$/i, '.mp4');
+      const vEntry = getOrCreateVideo(videoSrc);
+      let vHover = false, staticTex = null;
+      app.canvas.addEventListener('mouseenter', () => {
+        if (vEntry.ready && vEntry.texture && !vHover) {
+          vHover = true; staticTex = result.sprite.texture;
+          result.sprite.texture = vEntry.texture;
+          vEntry.video.currentTime = 0;
+          vEntry.video.play().catch(() => {});
+        }
+      });
+      app.canvas.addEventListener('mouseleave', () => {
+        if (vHover && staticTex) {
+          vHover = false; vEntry.video.pause(); vEntry.video.currentTime = 0;
+          result.sprite.texture = staticTex; staticTex = null;
+        }
+      });
+    }
 
     // 容器
     const container = document.createElement('div');
