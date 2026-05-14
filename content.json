@@ -1552,7 +1552,7 @@
     "category": "design_thought",
     "atom": "sticky",
     "body": "📌 状态：积累中 | 素材越多文章越充实，Jesse觉得可以发了就进入定稿 • Jakob Nielsen — Intent by Discovery: Designing the AI User Experience (2026-03-26) 链接",
-    "cover_image": null,
+    "cover_image": "content_images/358400ee_cover.png",
     "focus": {
       "title": "AI产品设计原则",
       "description": "📌 状态：积累中 | 素材越多文章越充实，Jesse觉得可以发了就进入定稿 • Jakob Nielsen — Intent by Discovery: Designing the AI User Experience (2026-03-26) 链接",
@@ -1561,6 +1561,11 @@
       "article": {
         "title": "AI产品设计原则",
         "sections": [
+          {
+            "type": "image",
+            "src": "content_images/358400ee_cover.png",
+            "caption": ""
+          },
           {
             "type": "text",
             "text": "📌 状态：积累中 | 素材越多文章越充实，Jesse觉得可以发了就进入定稿"
