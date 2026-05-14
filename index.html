@@ -136,21 +136,149 @@
       font-size: 11px; color: #555; text-align: center;
       margin: 0 0 32px; letter-spacing: 0.5px;
     }
+    /* Article chat */
+    .article-chat { margin-top: 48px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 32px; }
+    .chat-msg { margin-bottom: 32px; }
+    .chat-msg.user { text-align: right; }
+    .chat-msg.user .chat-bubble {
+      font-family: 'Special Elite', cursive;
+      font-size: 28px; color: #f0f0f0; letter-spacing: 0.5px;
+      line-height: 1.4;
+    }
+    .chat-msg.ai .chat-bubble { color: #a0a0a0; }
+    .chat-msg.ai .chat-bubble h2 {
+      font-family: 'Special Elite', cursive;
+      font-size: 20px; color: #e0e0e0; margin: 48px 0 16px; line-height: 1.4;
+    }
+    .chat-msg.ai .chat-bubble h2:first-child { margin-top: 0; }
+    .chat-msg.ai .chat-bubble p {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 16px; color: #a0a0a0; line-height: 1.85; margin-bottom: 24px;
+    }
+    .chat-msg.ai .chat-bubble p:last-child { margin-bottom: 0; }
+    .chat-msg.ai .chat-bubble img {
+      width: 100%; border-radius: 6px; margin: 32px 0 8px;
+    }
+    .chat-msg.ai .chat-bubble .img-caption {
+      font-family: 'Red Hat Mono', monospace;
+      font-size: 11px; color: #555; text-align: center; margin: 0 0 32px;
+    }
+
+    /* Atom entry (rendered via PIXI extract) */
+    .atom-entry {
+      display: flex; justify-content: center;
+      margin: 16px 0; cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .atom-entry:hover { transform: scale(1.05); }
+
+    /* Composer bar */
+    #article-composer {
+      position: fixed; bottom: 24px; left: 0; right: 0; z-index: 10001;
+      display: none; padding: 0 24px;
+      pointer-events: none;
+    }
+    #article-composer .composer-box {
+      pointer-events: auto;
+      max-width: 640px; margin: 0 auto; box-sizing: border-box;
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(30,30,30,0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.12); border-radius: 16px;
+      padding: 10px 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      transition: border-color 0.2s;
+    }
+    #article-composer .composer-box:focus-within { border-color: rgba(255,255,255,0.25); }
+    #article-composer textarea {
+      flex: 1; resize: none; border: none; background: none; outline: none;
+      color: #e0e0e0; font-size: 15px; line-height: 1.5;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      max-height: 120px; min-height: 22px; padding: 0;
+    }
+    #article-composer textarea::placeholder { color: rgba(255,255,255,0.3); }
+    #article-composer .send-btn {
+      flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%;
+      background: #fff; border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: opacity 0.2s;
+    }
+    #article-composer .send-btn:disabled { opacity: 0.2; cursor: default; }
+    #article-composer .send-btn svg { width: 14px; height: 14px; }
+    /* Nested focus overlay (on top of article) */
+    #nested-overlay {
+      position: fixed; inset: 0; z-index: 10003;
+      display: none; pointer-events: none;
+    }
+    #nested-overlay.visible { pointer-events: auto; }
+    #nested-overlay #nested-content {
+      position: absolute; left: 0; right: 0;
+      display: flex; flex-direction: column; align-items: center;
+      padding: 0 24px; pointer-events: none;
+      transform: translateY(20px); opacity: 0;
+      transition: opacity 0.3s ease 0.15s, transform 0.3s ease 0.15s;
+    }
+    #nested-overlay.visible #nested-content {
+      transform: translateY(0); opacity: 1;
+    }
+    #nested-title {
+      font-family: 'Red Hat Mono', monospace;
+      font-size: 15px; color: #fff; letter-spacing: 1px; margin-bottom: 6px;
+    }
+    #nested-desc {
+      font-family: 'Red Hat Mono', monospace;
+      font-size: 12px; color: #999; line-height: 1.6;
+      max-width: 400px; text-align: center; margin-bottom: 16px;
+    }
+    #nested-link {
+      pointer-events: auto;
+      font-family: 'Red Hat Mono', monospace;
+      font-size: 12px; color: #0a0a0a; background: #fff;
+      padding: 8px 20px; border-radius: 4px;
+      text-decoration: none; letter-spacing: 1px;
+      transition: background 0.2s, color 0.2s;
+    }
+    #nested-link:hover { background: #ddd; }
+    #nested-close {
+      position: absolute; top: 20px; right: 20px; z-index: 10004;
+      pointer-events: auto;
+      background: none; border: 1px solid #555;
+      color: #999; width: 36px; height: 36px;
+      border-radius: 50%; cursor: pointer;
+      font-size: 16px; display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+    }
+    #nested-close:hover { border-color: #fff; color: #fff; }
   </style>
 </head>
 <body>
   <div id="atoms-btn" onclick="location.href='atoms.html'">Atoms</div>
   <div id="focus-overlay">
     <div id="focus-backdrop"></div>
-    <button id="focus-close">×</button>
+    <button id="focus-close"><svg width="16" height="16" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m4.397 4.554.073-.084a.75.75 0 0 1 .976-.073l.084.073L12 10.939l6.47-6.47a.75.75 0 1 1 1.06 1.061L13.061 12l6.47 6.47a.75.75 0 0 1 .072.976l-.073.084a.75.75 0 0 1-.976.073l-.084-.073L12 13.061l-6.47 6.47a.75.75 0 0 1-1.06-1.061L10.939 12l-6.47-6.47a.75.75 0 0 1-.072-.976l.073-.084-.073.084Z" fill="currentColor"/></svg></button>
     <div id="focus-content">
       <div id="focus-title"></div>
       <div id="focus-desc"></div>
       <a id="focus-link" href="#" target="_blank">View</a>
     </div>
     <div id="focus-article"></div>
+    <div id="article-composer">
+      <div class="composer-box">
+        <textarea rows="1" placeholder="Ask about this article..."></textarea>
+        <button class="send-btn" disabled>
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4.284 10.296A1 1 0 0 0 5.709 11.7L11 6.33V20a1 1 0 1 0 2 0V6.336l5.285 5.364a1 1 0 0 0 1.425-1.404l-6.823-6.924a1.25 1.25 0 0 0-1.78 0l-6.823 6.924Z" fill="#0a0a0a"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div id="nested-overlay">
+    <button id="nested-close"><svg width="16" height="16" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m4.397 4.554.073-.084a.75.75 0 0 1 .976-.073l.084.073L12 10.939l6.47-6.47a.75.75 0 1 1 1.06 1.061L13.061 12l6.47 6.47a.75.75 0 0 1 .072.976l-.073.084a.75.75 0 0 1-.976.073l-.084-.073L12 13.061l-6.47 6.47a.75.75 0 0 1-1.06-1.061L10.939 12l-6.47-6.47a.75.75 0 0 1-.072-.976l.073-.084-.073.084Z" fill="currentColor"/></svg></button>
+    <div id="nested-content">
+      <div id="nested-title"></div>
+      <div id="nested-desc"></div>
+      <a id="nested-link" href="#">View story</a>
+    </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/pixi.js@8/dist/pixi.min.js"></script>
-  <script type="module" src="wall.js?v=109"></script>
+  <script type="module" src="wall.js?v=143"></script>
 </body>
 </html>

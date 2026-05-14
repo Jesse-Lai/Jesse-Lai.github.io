@@ -1,5 +1,5 @@
 // wall.js — Main view, uses atoms-renderer.js
-import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, makeDraggable, FocusOverlay } from "./atoms-renderer.js?v=109";
+import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, makeDraggable, FocusOverlay, getOrCreateVideo } from "./atoms-renderer.js?v=143";
 
 (async () => {
   const W = window.innerWidth;
@@ -76,8 +76,10 @@ import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, makeDragga
         ]}}},
   ];
 
-  // ─── Scale factor for non-photo atoms ───
-  const atomScale = isPortrait ? W / 600 : W / 1920;
+  // ─── Scale factor for non-photo atoms (基于列宽) ───
+  const cols = W < 600 ? 1 : W < 1024 ? 2 : W < 1600 ? 3 : 4;
+  const colW = W / cols;
+  const atomScale = colW / 480; // 480px 列宽时 scale=1，更窄则缩小，更宽则放大
 
   // ─── Define all wall items in display order ───
   // Each entry: { type, ...params }
@@ -96,78 +98,97 @@ import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, makeDragga
           { type: 'subtitle', text: 'Four Principles' },
           { type: 'text', text: 'Dynamic — the interface changes with every response. Organic — layouts feel natural, not mechanical. Primitive — built from simple, composable atoms. Symbiotic — human and AI collaborate on the final form.' },
         ]}}},
-    { type: 'stamp', src: 'photo2.png' },
+    { type: 'sticky', title: 'Pegasus', body: 'A winged horse from ancient mythology — symbol of inspiration and the boundless creative spirit.', date: "'26 05 14", stampSrc: 'photo_stamp.png', colorScheme: 'cool' },
     { type: 'photo', ...photoConfigs[2] },
     { type: 'photo', ...photoConfigs[3] },
   ];
 
-  // ─── Layout ───
-  if (isPortrait) {
-    // Vertical stack: all items flow top to bottom, centered
-    const padding = W * 0.1;
-    const photoW = W * 0.55;
-    let curY = padding + photoW * 0.6;
-    for (const item of wallItems) {
-      item.x = W * 0.5 + (Math.random()-0.5) * W * 0.08;
-      item.y = curY;
-      if (item.type === 'photo') {
-        curY += photoW * 1.4 + padding * 0.3;
-      } else if (item.type === 'sticky') {
-        curY += 280 * atomScale * 1.4 + padding * 0.3;
-      } else if (item.type === 'stamp') {
-        curY += 250 * atomScale * 1.2 + padding * 0.3;
-      }
-    }
-    const totalH = curY + padding;
-    if (totalH > H) {
-      app.renderer.resize(W, totalH);
-      document.body.style.overflow = 'auto';
-    }
-  } else {
-    // Desktop: scattered positions
-    const positions = [
-      {x: W*0.15, y: H*0.3},  // photo 0
-      {x: W*0.45, y: H*0.3},  // photo 1
-      {x: W*0.6,  y: H*0.55}, // sticky
-      {x: W*0.75, y: H*0.35}, // stamp
-      {x: W*0.2,  y: H*0.7},  // photo 2
-      {x: W*0.8,  y: H*0.65}, // photo 3
-    ];
-    for (let i = 0; i < wallItems.length; i++) {
-      wallItems[i].x = positions[i].x;
-      wallItems[i].y = positions[i].y;
-    }
-  }
-
-  // ─── Render all items ───
-  for (const item of wallItems) {
-    if (item.type === 'photo') {
-      const imgData = await loadImagePixels(item.src);
-      const targetW = isPortrait ? W * 0.55 : W * 0.13;
-      const photoScale = targetW / imgData.w;
-      const photoItem = await photoSystem.addPhoto(item.src, item.x, item.y, photoScale, item);
-      if (item.focus) photoItem.focusData = item.focus;
-    } else if (item.type === 'sticky') {
-      const stickyStampImg = await loadImagePixels(item.stampSrc);
-      const stickyResult = await renderStickyNote(
-        app, item.x, item.y,
-        { title: item.title, body: item.body, date: item.date },
-        stickyStampImg, atomsConfig.stamp
-      );
-      stickyResult.group.scale.set(atomScale);
-      const stickyBounds = stickyResult.group.getBounds();
-      const stickyItem = photoSystem.addItem(stickyResult.group, stickyBounds.width / atomScale, stickyBounds.height / atomScale);
-      if (item.focus) stickyItem.focusData = item.focus;
-    } else if (item.type === 'stamp') {
-      const stampImg = await loadImagePixels(item.src);
-      const stampResult = await renderStamp(app, stampImg, item.x, item.y, atomsConfig.stamp);
-      stampResult.group.scale.set(atomScale);
-      photoSystem.addItem(stampResult.group, stampResult.stampW, stampResult.stampH);
-    }
-  }
+  // ─── Grid config ───
+  const gridPad = colW * 0.12;
 
   // ─── Focus Overlay ───
   const focusOverlay = new FocusOverlay(app);
+
+  // ─── Step 1: Render all items at (0,0) to get actual bounds ───
+  const rendered = []; // { group, bounds, wallItem, focusableItem }
+  for (const item of wallItems) {
+    if (item.type === 'photo') {
+      const imgData = await loadImagePixels(item.src);
+      const targetW = colW * 0.6;
+      const photoScale = targetW / imgData.w;
+      const photoItem = await photoSystem.addPhoto(item.src, 0, 0, photoScale, item);
+      photoItem.videoSrc = item.src.replace(/\.(png|jpg|jpeg|webp)$/i, '.mp4');
+      getOrCreateVideo(photoItem.videoSrc);
+      if (item.focus) photoItem.focusData = item.focus;
+      const b = photoItem.group.getBounds();
+      rendered.push({ group: photoItem.group, bounds: b, wallItem: item, focusableItem: photoItem });
+    } else if (item.type === 'sticky') {
+      const stickyStampImg = await loadImagePixels(item.stampSrc);
+      const stickyResult = await renderStickyNote(app, 0, 0, { title: item.title, body: item.body, date: item.date }, stickyStampImg, atomsConfig.stamp, { colorScheme: item.colorScheme });
+      stickyResult.group.scale.set(atomScale);
+      const b = stickyResult.group.getBounds();
+      const stickyItem = photoSystem.addItem(stickyResult.group, b.width / atomScale, b.height / atomScale);
+      if (item.focus) stickyItem.focusData = item.focus;
+      rendered.push({ group: stickyResult.group, bounds: b, wallItem: item, focusableItem: stickyItem });
+    } else if (item.type === 'stamp') {
+      const stampImg = await loadImagePixels(item.src);
+      const stampResult = await renderStamp(app, stampImg, 0, 0, atomsConfig.stamp);
+      stampResult.group.scale.set(atomScale);
+      const b = stampResult.group.getBounds();
+      photoSystem.addItem(stampResult.group, stampResult.stampW, stampResult.stampH);
+      rendered.push({ group: stampResult.group, bounds: b, wallItem: item, focusableItem: null });
+    }
+  }
+
+  // ─── Step 2: Masonry layout using actual bounds ───
+  const colTops = new Array(cols).fill(gridPad);
+  const renderedItems = [];
+
+  for (const r of rendered) {
+    const col = colTops.indexOf(Math.min(...colTops));
+    const colCenterX = (col + 0.5) * colW;
+    const boundsW = r.bounds.width;
+    const boundsH = r.bounds.height;
+
+    // 元素中心对齐到列中心：
+    // group.x 需要设成什么值，才能让 bounds 水平居中于 colCenterX？
+    // bounds.x = group.x + (bounds.x - oldGroup.x)，即 bounds 左边缘相对于 group 有固定偏移
+    const offsetX = r.bounds.x - r.group.x; // bounds 左边缘相对于 group.x 的偏移
+    const offsetY = r.bounds.y - r.group.y; // bounds 上边缘相对于 group.y 的偏移
+
+    r.group.x = colCenterX - boundsW / 2 - offsetX;
+    r.group.y = colTops[col] - offsetY;
+
+    colTops[col] += boundsH + gridPad;
+
+    if (r.focusableItem) renderedItems.push({ wallItem: r.wallItem, focusableItem: r.focusableItem });
+  }
+
+  // 如果内容超过视口高度，扩展 canvas
+  const totalH = Math.max(...colTops) + gridPad;
+  if (totalH > H) {
+    app.renderer.resize(W, totalH);
+    document.body.style.overflow = 'auto';
+  }
+
+  // 注册所有有文章的 wall items，供 chat 推荐使用
+  for (const { wallItem, focusableItem } of renderedItems) {
+    if (wallItem.focus?.article && focusableItem) {
+      const key = wallItem.src || wallItem.title;
+      focusOverlay.registerWallItem(key, {
+        ...wallItem.focus,
+        caption: wallItem.caption,
+        date: wallItem.date,
+        stampSrc: wallItem.stampSrc,
+        atomType: wallItem.type,
+        src: wallItem.src,
+        title: wallItem.title,
+        body: wallItem.body,
+        colorScheme: wallItem.colorScheme,
+      });
+      focusOverlay.registerFocusItem(focusableItem, key);
+    }
+  }
   photoSystem.onFocus = (item) => focusOverlay.open(item);
 
   const mouse = { x:-9999, y:-9999 };

@@ -150,6 +150,25 @@ export async function loadImagePixels(src) {
   return { data: ctx.getImageData(0,0,c.width,c.height), w: c.width, h: c.height, tex: PIXI.Texture.from(c) };
 }
 
+// ─── Video Texture (lazy, cached) ───
+const _videoCache = new Map();
+export function getOrCreateVideo(videoSrc) {
+  if (_videoCache.has(videoSrc)) return _videoCache.get(videoSrc);
+  const video = document.createElement('video');
+  video.src = videoSrc;
+  video.loop = true;
+  video.muted = true;
+  video.playsInline = true;
+  video.preload = 'auto';
+  const entry = { video, texture: null, ready: false };
+  video.addEventListener('canplay', () => {
+    entry.texture = PIXI.Texture.from(video, { resourceOptions: { autoPlay: false } });
+    entry.ready = true;
+  }, { once: true });
+  _videoCache.set(videoSrc, entry);
+  return entry;
+}
+
 export function sampleDominantColor(imgData) {
   const px = imgData.data.data;
   let rT=0,gT=0,bT=0,count=0;
@@ -370,7 +389,7 @@ export async function renderPhoto(app, imgData, x, y, scale, imgCfg, cfg) {
   // Rotation
   wrapper.rotation = (Math.random()*8-4) * Math.PI/180;
 
-  return { group: wrapper, hitTest: (mx,my) => Math.abs(mx-wrapper.x)<pw*0.6 && Math.abs(my-wrapper.y)<(ph+bottomBorder)*0.6 };
+  return { group: wrapper, sprite: sp, hitTest: (mx,my) => Math.abs(mx-wrapper.x)<pw*0.6 && Math.abs(my-wrapper.y)<(ph+bottomBorder)*0.6 };
 }
 
 // ─── Render Clip ───
@@ -564,8 +583,13 @@ export async function renderStamp(app, stampImgData, x, y, cfg, options) {
 }
 
 // ─── Render Sticky Note ───
-export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
+export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg, opts = {}) {
   // noteData: { title, body, date, stampSrc }
+  // opts.colorScheme: 'warm' (default yellow) | 'cool' (light blue)
+  const colorScheme = opts.colorScheme || 'warm';
+  const palette = colorScheme === 'cool'
+    ? { bg: 0xc4e4ff, title: 0x1a2a3a, body: 0x3a4a5a, date: 0x5a7a8a }
+    : { bg: 0xfff9c4, title: 0x222222, body: 0x444444, date: 0x666666 };
   const wrapper = new PIXI.Container();
   wrapper.x = x; wrapper.y = y;
 
@@ -585,7 +609,7 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
   let bodyBottom = titleBottom;
   if (noteData.title) {
     const titleText = new PIXI.Text({text: noteData.title, style: {
-      fontFamily: 'Special Elite', fontSize: 28, fill: 0x222222,
+      fontFamily: 'Special Elite', fontSize: 28, fill: palette.title,
       wordWrap: true, wordWrapWidth: noteW - padding*2,
       padding: 8,
     }});
@@ -638,7 +662,7 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
       areaX: padding, areaY: titleBottom,
       areaW: noteW - padding*2,
       areaH: 250 - titleBottom, // max text area before stamp
-      fontSize: 17, fontFamily: 'Special Elite', fill: 0x444444,
+      fontSize: 17, fontFamily: 'Special Elite', fill: palette.body,
       obstacles,
     });
     renderTextLines(wrapper, bodyLines);
@@ -652,7 +676,7 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
   // ── Date (always below body text and stamp) ──
   if (noteData.date) {
     const dateText = new PIXI.Text({text: noteData.date, style: {
-      fontFamily: 'Schoolbell', fontSize: 18, fill: 0x666666,
+      fontFamily: 'Schoolbell', fontSize: 18, fill: palette.date,
       padding: 6,
     }});
     // Place below the lowest content (body text or stamp)
@@ -714,7 +738,7 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg) {
   // Draw background with actual height
   bg.clear();
   bg.roundRect(0, 0, noteW, noteH, 4);
-  bg.fill(0xfff9c4);
+  bg.fill(palette.bg);
 
   // Draw shadow (same as photo style)
   shadow.clear();
@@ -791,12 +815,12 @@ export class PhotoSystem {
   async addPhoto(imgSrc, x, y, scale, meta) {
     const imgData = await loadImagePixels(imgSrc);
     const sc = scale || Math.min(200/imgData.w, 300/imgData.h);
-    const { group } = await renderPhoto(this.app, imgData, x, y, sc, meta, this.config?.photo);
+    const { group, sprite } = await renderPhoto(this.app, imgData, x, y, sc, meta, this.config?.photo);
     this.app.stage.addChild(group);
     const pw = imgData.w*sc, ph = imgData.h*sc;
     const border = pw*0.06, bottomBorder = border*3;
     const photo = {
-      group, imgData, scale: sc, config: meta, clipped: false, splitCooldown: 0,
+      group, sprite, imgData, scale: sc, config: meta, clipped: false, splitCooldown: 0,
       // anchor = offset from group origin (photo center) to bounds top-left
       itemW: pw+border*2, itemH: ph+border+bottomBorder,
       anchorX: pw/2 + border, anchorY: ph/2 + border,
@@ -906,9 +930,18 @@ export class PhotoSystem {
     if (idx>=0) this.clipGroups.splice(idx, 1);
   }
 
+  _stopPhotoVideo(photo) {
+    if (!photo._staticTex || !photo.sprite) return;
+    const entry = _videoCache.get(photo.videoSrc);
+    if (entry) { entry.video.pause(); entry.video.currentTime = 0; }
+    photo.sprite.texture = photo._staticTex;
+    photo._staticTex = null;
+  }
+
   _makePhotoDraggable(photo) {
     let drag = false, offX = 0, offY = 0;
     let downTime = 0, downX = 0, downY = 0, moved = false;
+    let wasHovering = false;
     const hitTest = (mx,my) => {
       const b = this._getPhotoBounds(photo);
       return mx > b.x && mx < b.x+b.w && my > b.y && my < b.y+b.h;
@@ -929,6 +962,7 @@ export class PhotoSystem {
       }
       if (topPhoto !== photo) return;
       if (hitTest(mx,my)) {
+        this._stopPhotoVideo(photo); wasHovering = false;
         drag = true; offX = photo.group.x-mx; offY = photo.group.y-my;
         downTime = Date.now(); downX = mx; downY = my; moved = false;
         this._activeDrag = photo;
@@ -949,6 +983,19 @@ export class PhotoSystem {
       const cur = photo.group.scale.x;
       photo.group.scale.set(cur + (targetScale - cur) * 0.15);
       if (hovering) this.canvas.style.cursor = 'pointer';
+      // Video hover
+      if (hovering && !wasHovering && photo.videoSrc && photo.sprite) {
+        const entry = getOrCreateVideo(photo.videoSrc);
+        if (entry.ready && entry.texture) {
+          photo._staticTex = photo.sprite.texture;
+          photo.sprite.texture = entry.texture;
+          entry.video.currentTime = 0;
+          entry.video.play().catch(() => {});
+        }
+      } else if (!hovering && wasHovering) {
+        this._stopPhotoVideo(photo);
+      }
+      wasHovering = hovering;
     };
     const onUp = e => {
       if (!drag) return;
@@ -1123,6 +1170,11 @@ export class FocusOverlay {
     this._articleMode = false;
     this._heroImg = null;
 
+    // 注册的 wall items（按 key 查找 focusData + meta）
+    this._wallItemRegistry = {};
+    // wall 上可 focus 的 item 引用（用于从 chat 跳转回 wall focus）
+    this._wallFocusItems = [];
+
     // Wire focus link to open article instead of navigating
     this.linkEl.addEventListener('click', (e) => {
       e.preventDefault();
@@ -1130,6 +1182,61 @@ export class FocusOverlay {
         this.openArticle();
       }
     });
+  }
+
+  registerWallItem(src, focusData) {
+    this._wallItemRegistry[src] = focusData;
+  }
+
+  registerFocusItem(item, key) {
+    this._wallFocusItems.push({ item, key });
+  }
+
+  // 在文章模式下切换到另一篇文章（保持 overlay + mesh 不动）
+  _swapArticle(focusData) {
+    if (!this._articleMode || !this._articleWrap) return;
+    const article = focusData.article;
+    if (!article) return;
+
+    // 清理旧 chat + composer
+    this._teardownComposer();
+    this._chatContainer = null;
+
+    // 重建文章内容
+    let html = '';
+    const title = article.title || focusData.title || '';
+    if (title) {
+      html += `<h1 style="font-family:Special Elite,cursive;font-size:28px;color:#f0f0f0;letter-spacing:0.5px;line-height:1.4;margin:0 0 32px;padding-bottom:24px;border-bottom:1px solid rgba(255,255,255,0.08);">${title}</h1>`;
+    }
+    if (article.sections) {
+      for (const section of article.sections) {
+        if (section.type === 'subtitle') {
+          html += `<h2 style="font-family:Special Elite,cursive;font-size:20px;color:#e0e0e0;margin:48px 0 16px;line-height:1.4;">${section.text}</h2>`;
+        } else if (section.type === 'text') {
+          html += `<p style="font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;font-size:16px;color:#a0a0a0;line-height:1.85;margin-bottom:24px;">${section.text}</p>`;
+        } else if (section.type === 'image') {
+          html += `<img src="${section.src}" alt="${section.alt || ''}" style="width:100%;border-radius:6px;margin:32px 0 8px;">`;
+          if (section.caption) {
+            html += `<p style="font-family:Red Hat Mono,monospace;font-size:11px;color:#555;text-align:center;margin:0 0 32px;">${section.caption}</p>`;
+          }
+        }
+      }
+    }
+
+    // 更新 DOM
+    this._articleWrap.innerHTML = html;
+    this._articleWrap.style.paddingBottom = '160px';
+
+    // 重建 chat 容器
+    const chatContainer = document.createElement('div');
+    chatContainer.className = 'article-chat';
+    chatContainer.style.display = 'none';
+    this._articleWrap.appendChild(chatContainer);
+    this._chatContainer = chatContainer;
+
+    // 滚动到顶部 + 重新绑定 composer
+    this.overlay.scrollTop = 0;
+    this._setupComposer();
   }
 
   _animateDim(fromAlpha, toAlpha, fromBlur, toBlur, duration) {
@@ -1442,6 +1549,15 @@ export class FocusOverlay {
         }
 
         articleWrap.innerHTML = html;
+        articleWrap.style.paddingBottom = '160px';
+
+        // Chat 容器（在文章内容下方）
+        const chatContainer = document.createElement('div');
+        chatContainer.className = 'article-chat';
+        chatContainer.style.display = 'none';
+        articleWrap.appendChild(chatContainer);
+        this._chatContainer = chatContainer;
+
         this.overlay.appendChild(articleWrap);
         this._articleWrap = articleWrap;
 
@@ -1457,6 +1573,9 @@ export class FocusOverlay {
         };
         this.overlay.addEventListener('scroll', this._onArticleScroll);
 
+        // Composer 事件绑定
+        this._setupComposer();
+
         // 双 rAF 确保浏览器先渲染初始状态再触发 transition
         requestAnimationFrame(() => {
           requestAnimationFrame(() => {
@@ -1471,6 +1590,11 @@ export class FocusOverlay {
   closeArticle() {
     if (!this._articleMode) return;
     this._articleMode = false;
+
+    // 清理 composer
+    this._teardownComposer();
+    this._chatContainer = null;
+
     // 移除 scroll 监听
     if (this._onArticleScroll) {
       this.overlay.removeEventListener('scroll', this._onArticleScroll);
@@ -1495,5 +1619,542 @@ export class FocusOverlay {
 
     // 直接调用 close()，从全黑蒙层 → 飞回 wall
     this.close();
+  }
+
+  // ─── Article Chat ───
+
+  _setupComposer() {
+    const composer = document.getElementById('article-composer');
+    const textarea = composer.querySelector('textarea');
+    const sendBtn = composer.querySelector('.send-btn');
+    composer.style.display = 'block';
+    textarea.value = '';
+    sendBtn.disabled = true;
+
+    this._composerHandlers = {
+      input: () => {
+        textarea.style.height = 'auto';
+        textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+        sendBtn.disabled = !textarea.value.trim();
+      },
+      keydown: (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          if (textarea.value.trim()) this._sendChatMessage(textarea, sendBtn);
+        }
+      },
+      click: () => {
+        if (textarea.value.trim()) this._sendChatMessage(textarea, sendBtn);
+      }
+    };
+
+    textarea.addEventListener('input', this._composerHandlers.input);
+    textarea.addEventListener('keydown', this._composerHandlers.keydown);
+    sendBtn.addEventListener('click', this._composerHandlers.click);
+  }
+
+  _teardownComposer() {
+    const composer = document.getElementById('article-composer');
+    const textarea = composer.querySelector('textarea');
+    const sendBtn = composer.querySelector('.send-btn');
+    composer.style.display = 'none';
+
+    if (this._composerHandlers) {
+      textarea.removeEventListener('input', this._composerHandlers.input);
+      textarea.removeEventListener('keydown', this._composerHandlers.keydown);
+      sendBtn.removeEventListener('click', this._composerHandlers.click);
+      this._composerHandlers = null;
+    }
+
+    // 停止正在进行的 streaming
+    if (this._streamingTimer) {
+      clearTimeout(this._streamingTimer);
+      this._streamingTimer = null;
+    }
+
+    // 清理 mini atom PIXI apps（不传 true，避免破坏 PIXI 全局共享状态）
+    if (this._chatAtomApps) {
+      for (const a of this._chatAtomApps) a.destroy();
+      this._chatAtomApps = null;
+    }
+  }
+
+  _sendChatMessage(textarea, sendBtn) {
+    const query = textarea.value.trim();
+    if (!query) return;
+
+    textarea.value = '';
+    textarea.style.height = 'auto';
+    sendBtn.disabled = true;
+
+    // 显示 chat 容器
+    this._chatContainer.style.display = '';
+
+    // 用户消息（右对齐）
+    const userMsg = document.createElement('div');
+    userMsg.className = 'chat-msg user';
+    userMsg.innerHTML = `<div class="chat-bubble">${this._escapeHtml(query)}</div>`;
+    this._chatContainer.appendChild(userMsg);
+    // 发送时强制滚到底部
+    this.overlay.scrollTop = this.overlay.scrollHeight;
+
+    // AI 回复占位（左对齐）
+    const aiMsg = document.createElement('div');
+    aiMsg.className = 'chat-msg ai';
+    const aiBubble = document.createElement('div');
+    aiBubble.className = 'chat-bubble';
+    aiMsg.appendChild(aiBubble);
+    this._chatContainer.appendChild(aiMsg);
+
+    this._simulateStreaming(aiBubble);
+  }
+
+  _simulateStreaming(bubble) {
+    // 当前文章的 src，避免推荐自己
+    const currentSrc = this.activeItem?.focusData?.article?.sections?.find(s => s.type === 'image')?.src;
+    // 从注册的 wall items 中选推荐（排除当前）
+    const registry = this._wallItemRegistry;
+    const allKeys = Object.keys(registry).filter(k => k !== currentSrc);
+    const shuffled = allKeys.sort(() => Math.random() - 0.5);
+
+    const mockResponses = [
+      { title: 'About the Composition', sections: [
+        { type: 'text', text: 'The composition draws your eye from the foreground details to the distant landscape, creating a sense of depth and journey.' },
+        { type: 'recommend', key: shuffled[0] },
+        { type: 'text', text: 'The lighting here is particularly interesting — it was shot during golden hour, which gives everything that warm, painterly quality. Notice how the shadows fall at a low angle, adding dimension to the foreground.' },
+        { type: 'text', text: 'The strongest element is the balance between chaos and order. The wildflowers appear random, but the photographer chose a vantage point that creates natural leading lines toward the mountain ridge.' },
+        { type: 'recommend', key: shuffled[1] },
+      ]},
+      { title: 'Patience & Spontaneity', sections: [
+        { type: 'text', text: 'This work explores the relationship between patience and spontaneity in creative practice. The photographer waited hours for the right conditions, but the final moment was pure instinct.' },
+        { type: 'recommend', key: shuffled[0] },
+        { type: 'subtitle', text: 'The Creative Paradox' },
+        { type: 'text', text: 'Sometimes the best creative moments come from simply being present and ready, rather than forcing a specific outcome. The Japanese call this "mushin" — a mind free of preconception.' },
+        { type: 'recommend', key: shuffled[1] },
+      ]},
+      { title: 'Nature & Wabi-Sabi', sections: [
+        { type: 'text', text: 'The textures and colors in this piece reflect the natural environment where it was captured. Nothing is artificially enhanced — the muted greens, the soft yellows, the gentle blur of distance.' },
+        { type: 'recommend', key: shuffled[0] },
+        { type: 'text', text: 'There\'s a Japanese concept called "wabi-sabi" that applies here — finding beauty in imperfection and transience. The slightly bent stems, the uneven petals, the clouds that aren\'t quite symmetrical.' },
+        { type: 'recommend', key: shuffled[1] },
+      ]},
+    ];
+    const response = mockResponses[Math.floor(Math.random() * mockResponses.length)];
+
+    // 构建 segments
+    const segments = [];
+    segments.push({ type: 'h2', text: response.title });
+    for (const section of response.sections) {
+      if (section.type === 'subtitle') segments.push({ type: 'h2', text: section.text });
+      else if (section.type === 'text') segments.push({ type: 'p', text: section.text });
+      else if (section.type === 'recommend' && section.key) segments.push(section);
+    }
+
+    let segIdx = 0, charIdx = 0;
+    let currentEl = null;
+
+    const nextSegment = async () => {
+      if (segIdx >= segments.length) { this._streamingTimer = null; return; }
+      const seg = segments[segIdx];
+      if (seg.type === 'h2') {
+        currentEl = document.createElement('h2');
+        bubble.appendChild(currentEl);
+        charIdx = 0;
+        tickChar();
+      } else if (seg.type === 'p') {
+        currentEl = document.createElement('p');
+        bubble.appendChild(currentEl);
+        charIdx = 0;
+        tickChar();
+      } else if (seg.type === 'recommend') {
+        const meta = registry[seg.key];
+        if (meta) {
+          const entry = await this._createAtomEntry(meta);
+          if (entry) {
+            bubble.appendChild(entry.container);
+            this._scrollToBottom();
+          }
+        }
+        segIdx++;
+        this._streamingTimer = setTimeout(nextSegment, 200);
+        return;
+      }
+    };
+
+    const tickChar = () => {
+      const seg = segments[segIdx];
+      if (!seg || !seg.text || charIdx >= seg.text.length) {
+        segIdx++;
+        charIdx = 0;
+        this._scrollToBottom();
+        this._streamingTimer = setTimeout(nextSegment, 80);
+        return;
+      }
+      currentEl.textContent += seg.text[charIdx];
+      charIdx++;
+      this._scrollToBottom();
+      this._streamingTimer = setTimeout(tickChar, 18 + Math.random() * 25);
+    };
+
+    this._streamingTimer = setTimeout(nextSegment, 500);
+  }
+
+  _scrollToBottom() {
+    requestAnimationFrame(() => {
+      const el = this.overlay;
+      // 只在用户已经在底部附近时自动滚动（避免打断手动上滑）
+      const nearBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 150;
+      if (nearBottom) el.scrollTop = el.scrollHeight;
+    });
+  }
+
+  async _openNestedFocus(meta, miniApp, result) {
+    if (this._nestedActive) return;
+    this._nestedActive = true;
+    const focusData = meta;
+    const dpr = window.devicePixelRatio || 1;
+    const VW = window.innerWidth, VH = window.innerHeight;
+
+    // 1. 计算 atom 在屏幕上的位置（CSS 像素）
+    const atomCanvas = miniApp.canvas;
+    const canvasRect = atomCanvas.getBoundingClientRect();
+    const group = result.group;
+    // canvas 中心 = atom 视觉中心（canvas 已裁剪到 atom bounds + padding）
+    const atomScreenX = canvasRect.left + canvasRect.width / 2;
+    const atomScreenY = canvasRect.top + canvasRect.height / 2;
+
+    // 2. 隐藏原 atom（防穿帮）
+    atomCanvas.style.visibility = 'hidden';
+
+    // 3. 新建全屏 PIXI app
+    const fsApp = new PIXI.Application();
+    await fsApp.init({
+      width: VW, height: VH,
+      backgroundAlpha: 0, antialias: true,
+      resolution: dpr, autoDensity: true,
+    });
+    fsApp.canvas.style.position = 'fixed';
+    fsApp.canvas.style.left = '0';
+    fsApp.canvas.style.top = '0';
+    fsApp.canvas.style.zIndex = '10002';
+    fsApp.canvas.style.pointerEvents = 'auto';
+    document.body.appendChild(fsApp.canvas);
+
+    // 4. Dim layer
+    const dimLayer = new PIXI.Graphics();
+    dimLayer.rect(0, 0, VW, VH);
+    dimLayer.fill({ color: 0x000000, alpha: 0 });
+    fsApp.stage.addChild(dimLayer);
+
+    // 动画 dim 0 → 0.8
+    const dimDuration = 500;
+    const dimStart = performance.now();
+    const dimTick = () => {
+      const t = Math.min(1, (performance.now() - dimStart) / dimDuration);
+      dimLayer.clear();
+      dimLayer.rect(0, 0, VW, VH);
+      dimLayer.fill({ color: 0x000000, alpha: t * 0.8 });
+      if (t < 1) requestAnimationFrame(dimTick);
+    };
+    requestAnimationFrame(dimTick);
+
+    // 5. 提取 texture（跨 renderer 需通过 base64 中转）
+    const base64 = await miniApp.renderer.extract.base64(group);
+    const tex = await PIXI.Assets.load(base64 + '#' + Date.now());
+    const bounds = group.getLocalBounds();
+    const meshW = bounds.width / dpr;
+    const meshH = bounds.height / dpr;
+
+    const mesh = new PIXI.MeshPlane({ texture: tex, verticesX: 20, verticesY: 20 });
+    mesh.width = meshW;
+    mesh.height = meshH;
+    mesh.pivot.set(tex.width / 2, tex.height / 2);
+    mesh.x = atomScreenX;
+    mesh.y = atomScreenY;
+    mesh.rotation = group.rotation || 0;
+    fsApp.stage.addChild(mesh);
+
+    const { buffer } = mesh.geometry.getAttribute('aPosition');
+    const origPositions = new Float32Array(buffer.data);
+    const baseW = origPositions[origPositions.length - 2];
+    const baseH = origPositions[origPositions.length - 1];
+
+    // 6. 飞到屏幕中心偏上（CSS 像素）
+    const targetMeshX = VW / 2;
+    const targetMeshY = VH * 0.38;
+    const targetScale = 1.3;
+    const startX = mesh.x, startY = mesh.y;
+    const startW = meshW, startH = meshH;
+    const targetW = meshW * targetScale, targetH = meshH * targetScale;
+    const duration = 1200;
+    const start = performance.now();
+
+    const tick = () => {
+      const elapsed = performance.now() - start;
+      const t = Math.min(1, elapsed / duration);
+      const ease = 1 - Math.pow(1 - t, 3);
+      mesh.x = startX + (targetMeshX - startX) * ease;
+      mesh.y = startY + (targetMeshY - startY) * ease;
+      mesh.width = startW + (targetW - startW) * ease;
+      mesh.height = startH + (targetH - startH) * ease;
+      this._applyPaperCurl(buffer, origPositions, baseW, baseH, ease);
+      if (t < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+
+    // 7. 显示嵌套 overlay HTML
+    const nestedOverlay = document.getElementById('nested-overlay');
+    const nestedContent = document.getElementById('nested-content');
+    document.getElementById('nested-title').textContent = focusData.title || '';
+    document.getElementById('nested-desc').textContent = focusData.description || '';
+
+    const contentTop = VH * 0.38 + (meshH * targetScale) / 2 + 40;
+    nestedContent.style.top = contentTop + 'px';
+
+    nestedOverlay.style.display = 'block';
+    setTimeout(() => nestedOverlay.classList.add('visible'), duration * 0.7);
+
+    // View story handler
+    const nestedLink = document.getElementById('nested-link');
+    const onViewStory = (e) => {
+      e.preventDefault();
+      nestedLink.removeEventListener('click', onViewStory);
+      if (focusData.article) this._openNestedArticle(focusData, fsApp, mesh, dimLayer);
+    };
+    nestedLink.addEventListener('click', onViewStory);
+
+    // Close handler
+    const nestedClose = document.getElementById('nested-close');
+    const onClose = () => {
+      nestedClose.removeEventListener('click', onClose);
+      this._closeNested();
+    };
+    nestedClose.addEventListener('click', onClose);
+
+    this._nestedState = {
+      fsApp, mesh, dimLayer, atomCanvas,
+      atomScreenX, atomScreenY, meshW, meshH,
+      origRotation: group.rotation || 0,
+      buffer, origPositions, baseW, baseH,
+    };
+  }
+
+  _openNestedArticle(focusData, fsApp, mesh, dimLayer) {
+    const article = focusData.article;
+    if (!article) return;
+    const VW = window.innerWidth, VH = window.innerHeight;
+
+    document.getElementById('nested-content').style.display = 'none';
+
+    // mesh 上移到顶部
+    const targetX = VW / 2;
+    const targetY = 80 + mesh.height / 2;
+    const startX = mesh.x, startY = mesh.y;
+    const moveDuration = 500;
+    const moveStart = performance.now();
+    const moveTick = () => {
+      const t = Math.min(1, (performance.now() - moveStart) / moveDuration);
+      const ease = 1 - Math.pow(1 - t, 3);
+      mesh.x = startX + (targetX - startX) * ease;
+      mesh.y = startY + (targetY - startY) * ease;
+      if (t < 1) requestAnimationFrame(moveTick);
+    };
+    requestAnimationFrame(moveTick);
+
+    setTimeout(() => {
+      // 蒙层变全黑
+      const blackDuration = 400;
+      const blackStart = performance.now();
+      const blackTick = () => {
+        const t = Math.min(1, (performance.now() - blackStart) / blackDuration);
+        dimLayer.clear();
+        dimLayer.rect(0, 0, VW, VH);
+        dimLayer.fill({ color: 0x000000, alpha: 0.8 + t * 0.2 });
+        if (t < 1) requestAnimationFrame(blackTick);
+      };
+      requestAnimationFrame(blackTick);
+
+      setTimeout(() => {
+        const nestedOverlay = document.getElementById('nested-overlay');
+        const meshBottom = 80 + mesh.height;
+
+        const articleWrap = document.createElement('div');
+        articleWrap.style.cssText = `position:absolute;top:${meshBottom + 48}px;left:0;right:0;max-width:640px;margin:0 auto;padding:0 24px 160px;opacity:0;transform:translateY(30px);transition:opacity 0.5s ease,transform 0.5s ease;`;
+
+        let html = '';
+        const title = article.title || focusData.title || '';
+        if (title) html += `<h1 style="font-family:Special Elite,cursive;font-size:28px;color:#f0f0f0;letter-spacing:0.5px;line-height:1.4;margin:0 0 32px;padding-bottom:24px;border-bottom:1px solid rgba(255,255,255,0.08);">${title}</h1>`;
+        if (article.sections) {
+          for (const s of article.sections) {
+            if (s.type === 'subtitle') html += `<h2 style="font-family:Special Elite,cursive;font-size:20px;color:#e0e0e0;margin:48px 0 16px;line-height:1.4;">${s.text}</h2>`;
+            else if (s.type === 'text') html += `<p style="font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;font-size:16px;color:#a0a0a0;line-height:1.85;margin-bottom:24px;">${s.text}</p>`;
+            else if (s.type === 'image') {
+              html += `<img src="${s.src}" alt="${s.alt || ''}" style="width:100%;border-radius:6px;margin:32px 0 8px;">`;
+              if (s.caption) html += `<p style="font-family:Red Hat Mono,monospace;font-size:11px;color:#555;text-align:center;margin:0 0 32px;">${s.caption}</p>`;
+            }
+          }
+        }
+        articleWrap.innerHTML = html;
+        nestedOverlay.appendChild(articleWrap);
+        nestedOverlay.style.overflowY = 'auto';
+        nestedOverlay.scrollTop = 0;
+        document.getElementById('nested-close').style.position = 'fixed';
+
+        // mesh 跟随 scroll
+        const meshBaseY = targetY;
+        const onScroll = () => { mesh.y = meshBaseY - nestedOverlay.scrollTop; };
+        nestedOverlay.addEventListener('scroll', onScroll);
+        this._nestedState.onScroll = onScroll;
+        this._nestedState.articleWrap = articleWrap;
+
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          articleWrap.style.opacity = '1';
+          articleWrap.style.transform = 'translateY(0)';
+        }));
+      }, 400);
+    }, moveDuration);
+  }
+
+  _closeNested() {
+    const ns = this._nestedState;
+    if (!ns) return;
+    const { fsApp, mesh, dimLayer, atomCanvas, atomScreenX, atomScreenY, meshW, meshH, buffer, origPositions, baseW, baseH } = ns;
+    const VW = window.innerWidth, VH = window.innerHeight;
+
+    // 1. 隐藏 nested overlay HTML
+    const nestedOverlay = document.getElementById('nested-overlay');
+    nestedOverlay.classList.remove('visible');
+    if (ns.articleWrap) ns.articleWrap.remove();
+    if (ns.onScroll) nestedOverlay.removeEventListener('scroll', ns.onScroll);
+    nestedOverlay.style.overflowY = '';
+    document.getElementById('nested-content').style.display = '';
+    document.getElementById('nested-close').style.position = '';
+
+    // 2. Dim 淡出
+    const currentAlpha = 0.8; // 可能是 1.0 如果在文章模式
+    const dimDuration = 400;
+    const dimStart = performance.now();
+    const dimTick = () => {
+      const t = Math.min(1, (performance.now() - dimStart) / dimDuration);
+      dimLayer.clear();
+      dimLayer.rect(0, 0, VW, VH);
+      dimLayer.fill({ color: 0x000000, alpha: currentAlpha * (1 - t) });
+      if (t < 1) requestAnimationFrame(dimTick);
+    };
+    requestAnimationFrame(dimTick);
+
+    // 3. Mesh 飞回原位 + 反向 paper curl
+    const startX = mesh.x, startY = mesh.y;
+    const startW = mesh.width, startH = mesh.height;
+    const duration = 1000;
+    const start = performance.now();
+
+    const tick = () => {
+      const elapsed = performance.now() - start;
+      const t = Math.min(1, elapsed / duration);
+      const ease = 1 - Math.pow(1 - t, 3);
+
+      mesh.x = startX + (atomScreenX - startX) * ease;
+      mesh.y = startY + (atomScreenY - startY) * ease;
+      mesh.width = startW + (meshW - startW) * ease;
+      mesh.height = startH + (meshH - startH) * ease;
+
+      this._applyPaperCurl(buffer, origPositions, baseW, baseH, 1 - ease);
+
+      if (t < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+
+    // 4. 动画结束后清理
+    setTimeout(() => {
+      nestedOverlay.style.display = 'none';
+      fsApp.canvas.remove();
+      fsApp.destroy();
+
+      if (atomCanvas) atomCanvas.style.visibility = '';
+
+      this._nestedActive = false;
+      this._nestedState = null;
+    }, 1050);
+  }
+
+  _escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  async _createAtomEntry(meta) {
+    // 加载 atoms config（缓存）
+    if (!this._atomsConfig) {
+      const resp = await fetch('atoms-config.json');
+      this._atomsConfig = await resp.json();
+    }
+    const cfg = this._atomsConfig;
+
+    // 创建独立 mini PIXI app
+    const app = new PIXI.Application();
+    await app.init({
+      width: 300, height: 300,
+      backgroundAlpha: 0, antialias: true,
+      resolution: window.devicePixelRatio || 1,
+    });
+
+    // 用和 wall 一样的 scale 渲染 atom
+    const W = window.innerWidth;
+    const isPortrait = window.innerHeight > W;
+    const atomScale = isPortrait ? W / 600 : W / 1920;
+
+    let result;
+    if (meta.atomType === 'photo' && meta.src) {
+      const imgData = await loadImagePixels(meta.src);
+      const targetW = isPortrait ? W * 0.55 : W * 0.13;
+      const scale = targetW / imgData.w;
+      result = await renderPhoto(app, imgData, 0, 0, scale, { caption: meta.caption, date: meta.date }, cfg.photo || {});
+    } else if (meta.atomType === 'sticky' && meta.stampSrc) {
+      const stampImg = await loadImagePixels(meta.stampSrc);
+      result = await renderStickyNote(app, 0, 0, { title: meta.title, body: meta.body, date: meta.date }, stampImg, cfg.stamp, { colorScheme: meta.colorScheme });
+      result.group.scale.set(atomScale);
+    } else if (meta.src) {
+      const imgData = await loadImagePixels(meta.src);
+      result = await renderStamp(app, imgData, 0, 0, cfg.stamp, { maxW: 250 * atomScale });
+    }
+
+    if (!result) { app.destroy(true); return null; }
+
+    app.stage.addChild(result.group);
+
+    // 调整 canvas 尺寸到 atom 实际大小
+    const bounds = result.group.getBounds();
+    const pad = 8;
+    const w = Math.ceil(bounds.width + pad * 2);
+    const h = Math.ceil(bounds.height + pad * 2);
+    result.group.x = -bounds.x + pad;
+    result.group.y = -bounds.y + pad;
+    app.renderer.resize(w, h);
+
+    // 手动设置 CSS 尺寸（autoDensity 在 resize 后不一定正确）
+    const dpr = window.devicePixelRatio || 1;
+    const cssW = Math.ceil(w / dpr);
+    const cssH = Math.ceil(h / dpr);
+    app.canvas.style.width = cssW + 'px';
+    app.canvas.style.height = cssH + 'px';
+    app.canvas.style.display = 'block';
+    app.canvas.style.cursor = 'pointer';
+    app.canvas.style.margin = '0 auto';
+
+    // 点击 → 打开嵌套 focus
+    app.canvas.addEventListener('click', () => this._openNestedFocus(meta, app, result));
+
+    // 容器
+    const container = document.createElement('div');
+    container.className = 'atom-entry';
+    container.appendChild(app.canvas);
+
+    // 保存引用以便清理
+    if (!this._chatAtomApps) this._chatAtomApps = [];
+    this._chatAtomApps.push(app);
+
+    return { container, app };
   }
 }

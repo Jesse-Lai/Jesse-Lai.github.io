@@ -138,7 +138,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/pixi.js@8/dist/pixi.min.js"></script>
   <script type="module">
-    import { loadImagePixels, sampleImage, sampleDominantColor, AtomSticker, renderPhoto, renderClip, renderStamp, renderStickyNote, makeDraggable, PhotoSystem } from "./atoms-renderer.js?v=108";
+    import { loadImagePixels, sampleImage, sampleDominantColor, AtomSticker, renderPhoto, renderClip, renderStamp, renderStickyNote, makeDraggable, PhotoSystem, getOrCreateVideo } from "./atoms-renderer.js?v=143";
     let app, currentAtom = 'sticker', sticker = null, atomsConfig = {};
 
     const atomImages = {
@@ -232,7 +232,9 @@
         // Add photos close together so they auto-overlap
         for (let i=0; i<imgCfg.images.length; i++) {
           const clipCaptions=[{caption:'Powder day',date:"'25 01 15"},{caption:'Wildflowers',date:"'25 05 10"},{caption:'Avalanche!',date:"'25 02 08"}];
-          await clipPS.addPhoto(imgCfg.images[i], cx + i*8, cy + i*10, null, clipCaptions[i]||{});
+          const p = await clipPS.addPhoto(imgCfg.images[i], cx + i*8, cy + i*10, null, clipCaptions[i]||{});
+          p.videoSrc = imgCfg.images[i].replace(/\.(png|jpg|jpeg|webp)$/i, '.mp4');
+          getOrCreateVideo(p.videoSrc);
         }
         // Auto-merge after render
         const gen = loadGeneration; setTimeout(async () => { if(loadGeneration !== gen) return;
@@ -262,9 +264,27 @@
         const imgA=await loadImagePixels(imgCfg.images[0]);
         const maxW2=W*0.4,maxH2=H*0.5;
         const scale=Math.min(maxW2/imgA.w,maxH2/imgA.h);
-        const {group, hitTest} = await renderPhoto(app, imgA, W/2, H/2-20, scale, imgCfg, cfg);
+        const {group, sprite, hitTest} = await renderPhoto(app, imgA, W/2, H/2-20, scale, imgCfg, cfg);
         app.stage.addChild(group);extraContainers.push(group);
         cleanups.push(makeDraggable(app.canvas, group, hitTest));
+        // Video hover
+        const videoSrc = imgCfg.images[0].replace(/\.(png|jpg|jpeg|webp)$/i, '.mp4');
+        const vEntry = getOrCreateVideo(videoSrc);
+        let vHover = false, staticTex = null;
+        const onVMove = e => {
+          const h = hitTest(e.clientX, e.clientY);
+          if (h && !vHover && vEntry.ready && vEntry.texture) {
+            vHover = true; staticTex = sprite.texture;
+            sprite.texture = vEntry.texture;
+            vEntry.video.currentTime = 0;
+            vEntry.video.play().catch(()=>{});
+          } else if (!h && vHover && staticTex) {
+            vHover = false; vEntry.video.pause(); vEntry.video.currentTime = 0;
+            sprite.texture = staticTex; staticTex = null;
+          }
+        };
+        app.canvas.addEventListener('mousemove', onVMove);
+        cleanups.push({ destroy: () => app.canvas.removeEventListener('mousemove', onVMove) });
         return;
       }
 
