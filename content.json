@@ -4,37 +4,80 @@
     "title": "Hello I'm Jesse Lai",
     "category": "who_i_am",
     "atom": "sticky",
-    "body": "About Me Projects Media",
-    "full_text": [
-      "About Me",
-      "Projects",
-      "Media"
-    ],
-    "cover_image": "content_images/116400ee_cover.png",
+    "body": "I’m a product designer at Microsoft AI, exploring how people will naturally interact with AI in the future. I have experience designing AI products fo",
+    "cover_image": "content_images/116400ee_1.png",
     "focus": {
       "title": "Hello I'm Jesse Lai",
-      "description": "About Me Projects Media",
+      "description": "I’m a product designer at Microsoft AI, exploring how people will naturally interact with AI in the future. I have experience designing AI products fo",
       "link": "#",
       "linkText": "Read more",
       "article": {
         "title": "Hello I'm Jesse Lai",
         "sections": [
           {
-            "type": "image",
-            "src": "content_images/116400ee_cover.png",
-            "caption": "Hello I'm Jesse Lai"
+            "type": "text",
+            "text": "I’m a product designer at Microsoft AI, exploring how people will naturally interact with AI in the future. I have experience designing AI products for both B2C and B2B scenarios."
           },
           {
             "type": "text",
+            "text": "Over the past six years, I’ve been recognized multiple times by the company’s official media as an outstanding employee. I also write some design articles here WeChat Blog  Medium. Apart from work, I passionate about performing stand-up comedy"
+          },
+          {
+            "type": "image",
+            "caption": "",
+            "src": "content_images/116400ee_1.png"
+          },
+          {
+            "type": "subtitle",
             "text": "About Me"
           },
           {
-            "type": "text",
+            "type": "subtitle",
             "text": "Projects"
           },
           {
-            "type": "text",
+            "type": "subtitle",
             "text": "Media"
+          },
+          {
+            "type": "text",
+            "text": "Contact"
+          },
+          {
+            "type": "text",
+            "text": "+86 18774829129"
+          },
+          {
+            "type": "text",
+            "text": "Laijianxun123@gmail.com"
+          },
+          {
+            "type": "text",
+            "text": "Personal account"
+          },
+          {
+            "type": "text",
+            "text": "Medium"
+          },
+          {
+            "type": "text",
+            "text": "WeChat Blog"
+          },
+          {
+            "type": "text",
+            "text": "Company’s media that related to me"
+          },
+          {
+            "type": "text",
+            "text": "Red"
+          },
+          {
+            "type": "text",
+            "text": "WeChat Account"
+          },
+          {
+            "type": "text",
+            "text": "Recruiting Website"
           }
         ]
       }
@@ -46,8 +89,7 @@
     "category": "who_i_am",
     "atom": "sticky",
     "body": "",
-    "full_text": [],
-    "cover_image": "content_images/116400ee_cover.png",
+    "cover_image": "content_images/116400ee_1.png",
     "focus": {
       "title": "Resume",
       "description": "Resume",
@@ -58,8 +100,8 @@
         "sections": [
           {
             "type": "image",
-            "src": "content_images/116400ee_cover.png",
-            "caption": "Resume"
+            "caption": "",
+            "src": "content_images/116400ee_1.png"
           }
         ]
       }
@@ -70,47 +112,451 @@
     "title": "Food Delivery Service",
     "category": "design_projects",
     "atom": "sticky",
-    "body": "🍜 Background: the food delivery industry 💡 Discover: operations are concerning 🎯 Define: identify core issues through research",
-    "full_text": [
-      "🍜 Background: the food delivery industry",
-      "💡 Discover: operations are concerning",
-      "🎯 Define: identify core issues through research",
-      "🔧 Develop: come up with solutions",
-      "📦 Delivery: goals achieved"
-    ],
-    "cover_image": "content_images/116400ee_cover.png",
+    "body": "💡 Eleme (饿了么) is a renowned food delivery service in China, it means “Are you hungry?”\nThrough the design research, I found that our users tried to de",
+    "cover_image": "content_images/116400ee_1.png",
     "focus": {
       "title": "Food Delivery Service",
-      "description": "🍜 Background: the food delivery industry 💡 Discover: operations are concerning 🎯 Define: identify co",
+      "description": "💡 Eleme (饿了么) is a renowned food delivery service in China, it means “Are you hungry?”\nThrough the design research, I found that our users tried to de",
       "link": "#",
       "linkText": "Read more",
       "article": {
         "title": "Food Delivery Service",
         "sections": [
           {
-            "type": "image",
-            "src": "content_images/116400ee_cover.png",
-            "caption": "Food Delivery Service"
+            "type": "text",
+            "text": "💡 Eleme (饿了么) is a renowned food delivery service in China, it means “Are you hungry?”\nThrough the design research, I found that our users tried to deal with the complexity before opening, which led to churn. Our users are also not familiar with online restaurant operations, which leads to a low survival rate. I shortened the pre-opening process to higher onboarding efficiency and improved the task-reward system to help our users operate their online restaurants and increase their survival rate."
           },
           {
-            "type": "text",
+            "type": "subtitle",
             "text": "🍜 Background: the food delivery industry"
           },
           {
+            "type": "subtitle",
+            "text": "Trends of the food industry in China"
+          },
+          {
             "type": "text",
+            "text": "Food delivery service essentially uses customers' money to pay for delivery guys' time, which means people who rely on this service usually have a higher income than those delivery guys. In China, this number is 10% of the population."
+          },
+          {
+            "type": "text",
+            "text": "As the consumer market matures (nearly 10%), competition shifts to existing users, delivery platforms are focusing more on restaurant owners. Expanding the number of restaurant owners and improving operational ability will provide customers with more choices. Customers are more likely to stay on the Eleme platform rather than switch to competitors."
+          },
+          {
+            "type": "image",
+            "src": "content_images/116400ee_1.png",
+            "caption": ""
+          },
+          {
+            "type": "subtitle",
+            "text": "Merchant Attrition Trends"
+          },
+          {
+            "type": "text",
+            "text": "Helping restaurant owners success on the platform is key. However, the platform currently adds about 100,000 new merchants each month, with over 30% failing to survive the initial period, resulting in an annual survival rate of only 50%."
+          },
+          {
+            "type": "image",
+            "src": "content_images/116400ee_2.png",
+            "caption": ""
+          },
+          {
+            "type": "subtitle",
             "text": "💡 Discover: operations are concerning"
           },
           {
             "type": "text",
+            "text": " I applied research and data analysis to find out two reasons about users failed their business on our platform: Before opening, the onboarding process is too complex. After opening, our users are challenging to survive"
+          },
+          {
+            "type": "subtitle",
+            "text": "1. Pre-Opening: The onboarding process is too complex, which leads to a high churn rate"
+          },
+          {
+            "type": "text",
+            "text": "In Eleme, new restaurants take an average onboarding duration of about 106 hours. Currently, around 85% of them heavily rely on business developer (BD) managers for assistance in starting their online shop."
+          },
+          {
+            "type": "image",
+            "src": "content_images/116400ee_3.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "Most merchants are responsible for both food preparation in physical restaurants and managing online restaurants operations."
+          },
+          {
+            "type": "image",
+            "src": "content_images/116400ee_4.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "So, we need to help those new restaurant owners onboard online service easier and quicker. But how?"
+          },
+          {
+            "type": "subtitle",
+            "text": "2. Post-Opening: New restaurants struggle to survive"
+          },
+          {
+            "type": "text",
+            "text": "The iteration speed of online food-delivery industry is rapid, with nearly 30% of new restaurants disappearing within three months and an annual retention rate of only 50%."
+          },
+          {
+            "type": "image",
+            "src": "content_images/116400ee_5.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "To dig deeper, I find that new restaurants have significantly lower impressions and order conversion rates compared to experienced ones, but they attract higher in-store conversion rates, which indicates that customers are motivated to try new restaurants, but due to the poor quality, those customers hesitate and leave."
+          },
+          {
+            "type": "image",
+            "src": "content_images/116400ee_6.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "So, we need to help those new restaurant owners increase their impressions and order conversion rate. But how?"
+          },
+          {
+            "type": "subtitle",
             "text": "🎯 Define: identify core issues through research"
           },
           {
             "type": "text",
+            "text": " Data analysis have helped us to locate the issues, but we need to dig deeper, to find out what specific difficulties restaurant owners meet during the process, and figuring out the reasons and the strategies. I applied different research methods to map the onboarding experiences. And then, come up with design goals."
+          },
+          {
+            "type": "image",
+            "src": "content_images/116400ee_7.png",
+            "caption": ""
+          },
+          {
+            "type": "subtitle",
+            "text": "Illustrating the Onboarding Experience"
+          },
+          {
+            "type": "text",
+            "text": "Identified numerous issues through various research methods👆, summarizing and categorizing to 3 key challenges that restaurant owners face to👇"
+          },
+          {
+            "type": "text",
+            "text": "• Pre-Opening: Complex Processes lead to drop out"
+          },
+          {
+            "type": "text",
+            "text": "• Post-Opening: Low impressions and poor shop quality cause to struggling of survive"
+          },
+          {
+            "type": "text",
+            "text": "• Throughout the Process: Lack of operation knowledge, need access to help"
+          },
+          {
+            "type": "image",
+            "src": "content_images/116400ee_8.png",
+            "caption": ""
+          },
+          {
+            "type": "subtitle",
+            "text": "Design Proposal"
+          },
+          {
+            "type": "image",
+            "src": "content_images/116400ee_9.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "Proposal Process："
+          },
+          {
+            "type": "text",
+            "text": "• Align with the directly connected PMs and operations to form a proposal team for collaborative efforts."
+          },
+          {
+            "type": "text",
+            "text": "• Present the proposal to the key decision-maker who in charge everything related to our proposal."
+          },
+          {
+            "type": "text",
+            "text": "• Once the decision-maker acknowledge the value of it, ask for resource and collaboration support."
+          },
+          {
+            "type": "text",
+            "text": "• Organizing a Kick-Off meeting, and provide regular progress updates to key decision-makers"
+          },
+          {
+            "type": "text",
+            "text": "Design Vision: Open faster, operate easier"
+          },
+          {
+            "type": "text",
+            "text": "• Pre-Opening: Simplify steps in the opening process."
+          },
+          {
+            "type": "text",
+            "text": "• Post-Opening: Reward for tasks that improve shop quality."
+          },
+          {
+            "type": "text",
+            "text": "• Throughout the Process: Improve online support for better user help"
+          },
+          {
+            "type": "text",
+            "text": "Process of Iterations"
+          },
+          {
+            "type": "image",
+            "src": "content_images/116400ee_10.png",
+            "caption": ""
+          },
+          {
+            "type": "subtitle",
             "text": "🔧 Develop: come up with solutions"
           },
           {
             "type": "text",
+            "text": " In this phase, the design goals and  details are presented:\n1. Pre-opening: Simplify steps in the opening process\n2. Post-Opening: Reward for tasks to improve shop quality\n3. Throughout the Process: Improve online support for better user help"
+          },
+          {
+            "type": "subtitle",
+            "text": "1. Pre-opening: Simplify steps in the opening process"
+          },
+          {
+            "type": "text",
+            "text": "By analysing the process flow and data, I identified two steps that can be improved:"
+          },
+          {
+            "type": "text",
+            "text": "• During the store registration and approval phase, the experience on the H5 page is poor: slow loading, difficult address saving, and hard-to-track progress."
+          },
+          {
+            "type": "text",
+            "text": "• The platform's audit process takes a long time, leaving merchants waiting idly. The BD (Business Developer) havs to visit the off-line restaurant at least twice to set up the online one."
+          },
+          {
+            "type": "image",
+            "src": "content_images/116400ee_11.png",
+            "caption": ""
+          },
+          {
+            "type": "subtitle",
+            "text": "2. Post-Opening: Reward for tasks to improve shop quality"
+          },
+          {
+            "type": "text",
+            "text": "After opening, some task lines that are supposed to increase the online shop quality (higher quality, higher order conversion rate) are prepared for owners, and the platform will reward them for completing tasks with more impressions."
+          },
+          {
+            "type": "text",
+            "text": "3 kinds of task lines (before redesign)"
+          },
+          {
+            "type": "text",
+            "text": "• Task line 1:"
+          },
+          {
+            "type": "text",
+            "text": "To help restaurant owners ensure the basic quality of their stores, such as food images and ingredients. As a reward, a \"7-day traffic card\" will bring more impressions."
+          },
+          {
+            "type": "text",
+            "text": "• Task line 2:"
+          },
+          {
+            "type": "text",
+            "text": "To improve service quality, such as message reply and food preparation. After finishing those tasks, the owner will get a \"Traffic Boost\" reward, which bring more impressions."
+          },
+          {
+            "type": "text",
+            "text": "• Other tasks:"
+          },
+          {
+            "type": "text",
+            "text": "Improving shop owners' capabilities through mini-tasks presented in various notification formats"
+          },
+          {
+            "type": "text",
+            "text": "Before Redesign: Separated pages for different task lines"
+          },
+          {
+            "type": "image",
+            "src": "content_images/116400ee_12.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "However, the data shows that the completing rate of task lines are significant lower than expectation. And only 38% of the owners use the Traffic Card (Once activated, provides the shop with increased traffic for 7 days) after finish those tasks, rest of them just wasted."
+          },
+          {
+            "type": "image",
+            "src": "content_images/116400ee_13.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "After data analysis and user research, we find that a various of task lines are confusing to users, and a majority of users even ignoring tasks and rewards, which leads to the low completion rate."
+          },
+          {
+            "type": "text",
+            "text": "After Redesign: Multiple task lines integrated to one page"
+          },
+          {
+            "type": "image",
+            "src": "content_images/116400ee_14.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "Task Line 1: Basic task line"
+          },
+          {
+            "type": "text",
+            "text": "users have to complete tasks to advance"
+          },
+          {
+            "type": "image",
+            "src": "content_images/116400ee_15.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "Task Line 2: Advanced task line"
+          },
+          {
+            "type": "text",
+            "text": "Branch Tasks: The task line connects to the three stages of basic tasks. Users can advance without completing these tasks"
+          },
+          {
+            "type": "image",
+            "src": "content_images/116400ee_16.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "Task Line 3: Other Tasks"
+          },
+          {
+            "type": "text",
+            "text": "Dynamic Single point suggestions, guided by merchants' needs to help complete tasks and use benefits"
+          },
+          {
+            "type": "image",
+            "src": "content_images/116400ee_17.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "Traffic Calendar"
+          },
+          {
+            "type": "text",
+            "text": "Rewards were displayed in separate task lines, as a result, users have no idea how many rewards they have and what they bring to the shop."
+          },
+          {
+            "type": "text",
+            "text": "From field research, I found that restaurant owners always check on their basic data, such as orders and traffics. Base on this insight, Traffic Calendar for onboarding users was created. It clearly shows the number of natural impressions and extra impressions from rewards, so that users more likely stick on our task-reward experience, increasing their shop quality and getting more impressions by completing tasks."
+          },
+          {
+            "type": "image",
+            "src": "content_images/116400ee_18.png",
+            "caption": ""
+          },
+          {
+            "type": "subtitle",
+            "text": "3. Throughout the Process: Improve online support for better user help"
+          },
+          {
+            "type": "text",
+            "text": "Before the redesign, users had difficult access to help"
+          },
+          {
+            "type": "text",
+            "text": "• Users are uninterested in the learning centre: New user’s course completion is only 38.4%, with an average progress of 45%"
+          },
+          {
+            "type": "text",
+            "text": "• Tasks are difficult to complete: The pre-opening task completion rate is 91%, indicating that 9% of users give up on opening a shop on Eleme"
+          },
+          {
+            "type": "text",
+            "text": "• Attention is distracted: The tasks for pre-opening are on the operations page, but merchants often get distracted by other tabs, making it hard for them to focus on completing them."
+          },
+          {
+            "type": "image",
+            "src": "content_images/116400ee_19.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "Through field research, it was found that during the store opening process:"
+          },
+          {
+            "type": "text",
+            "text": "• The BD typically guides users to quickly complete necessary pre-opening tasks, while most app features are not taught at this stage"
+          },
+          {
+            "type": "text",
+            "text": "• When facing difficulties, merchants ask BD for help, who guides them through pre-opening tasks"
+          },
+          {
+            "type": "text",
+            "text": "• Offline restaurant operations are busy, so users usually learn delivery skills while completing tasks"
+          },
+          {
+            "type": "image",
+            "src": "content_images/116400ee_20.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "After the redesign, tasks are separated from other pages, users can focus on the tasks before they get in touch with other functions"
+          },
+          {
+            "type": "image",
+            "src": "content_images/116400ee_21.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "After the redesign, users can easily find their BD online when they meet any troubles"
+          },
+          {
+            "type": "image",
+            "src": "content_images/116400ee_22.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "After the redesign, users can access help for completing tasks easier"
+          },
+          {
+            "type": "image",
+            "src": "content_images/116400ee_23.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "After the redesign, the benefits and reasons for every task are well-explained by virtual BD"
+          },
+          {
+            "type": "subtitle",
             "text": "📦 Delivery: goals achieved"
+          },
+          {
+            "type": "text",
+            "text": "Pre-Opening: Duration reduced by 15.8 hours, Task completion rate improved by 1.6%."
+          },
+          {
+            "type": "text",
+            "text": "Post-Opening: Task completion rate increased by around 2-23%, and restaurants’ survival rate improved by 10.4%"
+          },
+          {
+            "type": "image",
+            "src": "content_images/116400ee_24.png",
+            "caption": ""
           }
         ]
       }
@@ -121,97 +567,202 @@
     "title": "AI Merchant Assistant",
     "category": "design_projects",
     "atom": "sticky",
-    "body": "Background The Rise of Large Language Models and Their Impact on B2B Products Comparison of NUI and GUI",
-    "full_text": [
-      "Background",
-      "The Rise of Large Language Models and Their Impact on B2B Products",
-      "Comparison of NUI and GUI",
-      "Applicable scenarios for NUI in the Eleme merchant platform",
-      "Merchant inquiries experience on Eleme is limited",
-      "Product goal",
-      "Design Focus at Different Stages",
-      "Design product forms based on intent ambiguity and task types",
-      "Product Framework",
-      "Design invocation patterns based on task flow",
-      "Stage 2 : Dialogue script",
-      "Design scripts: Improve input-output stability",
-      "Design scripts: High-fidelity prototype",
-      "Stage 3 : Response experience",
-      "Response Experience: Replies are hard to understand and generation time is too long"
-    ],
-    "cover_image": "content_images/116400ee_cover.png",
+    "body": "💡 In this project, I analyzed the impact of generative AI on Eleme's merchant online consultation service. I designed suitable interaction models and ",
+    "cover_image": "content_images/116400ee_1.png",
     "focus": {
       "title": "AI Merchant Assistant",
-      "description": "Background The Rise of Large Language Models and Their Impact on B2B Products Comparison of NUI and ",
+      "description": "💡 In this project, I analyzed the impact of generative AI on Eleme's merchant online consultation service. I designed suitable interaction models and ",
       "link": "#",
       "linkText": "Read more",
       "article": {
         "title": "AI Merchant Assistant",
         "sections": [
           {
-            "type": "image",
-            "src": "content_images/116400ee_cover.png",
-            "caption": "AI Merchant Assistant"
+            "type": "text",
+            "text": "💡 In this project, I analyzed the impact of generative AI on Eleme's merchant online consultation service. I designed suitable interaction models and built a conversational assistant for the app and PC from scratch, aiming to enhance merchants' consultation experience and reduce labour costs."
           },
           {
-            "type": "text",
+            "type": "subtitle",
             "text": "Background"
           },
           {
-            "type": "text",
+            "type": "subtitle",
             "text": "The Rise of Large Language Models and Their Impact on B2B Products"
+          },
+          {
+            "type": "image",
+            "caption": "",
+            "src": "content_images/116400ee_1.png"
           },
           {
             "type": "text",
             "text": "Comparison of NUI and GUI"
           },
           {
+            "type": "image",
+            "caption": "",
+            "src": "content_images/116400ee_2.png"
+          },
+          {
             "type": "text",
             "text": "Applicable scenarios for NUI in the Eleme merchant platform"
+          },
+          {
+            "type": "image",
+            "caption": "",
+            "src": "content_images/116400ee_3.png"
           },
           {
             "type": "text",
             "text": "Merchant inquiries experience on Eleme is limited"
           },
           {
+            "type": "image",
+            "caption": "",
+            "src": "content_images/116400ee_4.png"
+          },
+          {
             "type": "text",
             "text": "Product goal"
+          },
+          {
+            "type": "image",
+            "caption": "",
+            "src": "content_images/116400ee_5.png"
           },
           {
             "type": "text",
             "text": "Design Focus at Different Stages"
           },
           {
+            "type": "image",
+            "caption": "",
+            "src": "content_images/116400ee_6.png"
+          },
+          {
             "type": "text",
             "text": "Design product forms based on intent ambiguity and task types"
+          },
+          {
+            "type": "image",
+            "caption": "",
+            "src": "content_images/116400ee_7.png"
           },
           {
             "type": "text",
             "text": "Product Framework"
           },
           {
+            "type": "image",
+            "caption": "",
+            "src": "content_images/116400ee_8.png"
+          },
+          {
             "type": "text",
             "text": "Design invocation patterns based on task flow"
+          },
+          {
+            "type": "image",
+            "caption": "",
+            "src": "content_images/116400ee_9.png"
           },
           {
             "type": "text",
             "text": "Stage 2 : Dialogue script"
           },
           {
+            "type": "image",
+            "caption": "",
+            "src": "content_images/116400ee_10.png"
+          },
+          {
             "type": "text",
             "text": "Design scripts: Improve input-output stability"
+          },
+          {
+            "type": "image",
+            "caption": "",
+            "src": "content_images/116400ee_11.png"
           },
           {
             "type": "text",
             "text": "Design scripts: High-fidelity prototype"
           },
           {
+            "type": "image",
+            "caption": "",
+            "src": "content_images/116400ee_12.png"
+          },
+          {
             "type": "text",
             "text": "Stage 3 : Response experience"
           },
           {
+            "type": "image",
+            "caption": "",
+            "src": "content_images/116400ee_13.png"
+          },
+          {
             "type": "text",
             "text": "Response Experience: Replies are hard to understand and generation time is too long"
+          },
+          {
+            "type": "text",
+            "text": "The bounce rate during responses is 48.4%, with an average dialogue count of only 2.2"
+          },
+          {
+            "type": "image",
+            "caption": "",
+            "src": "content_images/116400ee_14.png"
+          },
+          {
+            "type": "text",
+            "text": "1. Improve response text display"
+          },
+          {
+            "type": "image",
+            "caption": "",
+            "src": "content_images/116400ee_15.png"
+          },
+          {
+            "type": "text",
+            "text": "Impacts"
+          },
+          {
+            "type": "image",
+            "caption": "",
+            "src": "content_images/116400ee_16.png"
+          },
+          {
+            "type": "text",
+            "text": "2. Optimize waiting experience（Psychological wait time）"
+          },
+          {
+            "type": "text",
+            "text": "The assistant's response time is 6.85 to 24.82 seconds, with nearly 48.4% of merchants leaving due to impatience. The average dialogue turns is just 2.2."
+          },
+          {
+            "type": "image",
+            "caption": "",
+            "src": "content_images/116400ee_17.png"
+          },
+          {
+            "type": "text",
+            "text": "2. Optimize waiting experience（Actual wait time）"
+          },
+          {
+            "type": "image",
+            "caption": "",
+            "src": "content_images/116400ee_18.png"
+          },
+          {
+            "type": "text",
+            "text": "Impacts"
+          },
+          {
+            "type": "image",
+            "caption": "",
+            "src": "content_images/116400ee_19.png"
           }
         ]
       }
@@ -222,41 +773,41 @@
     "title": "Review Analysis",
     "category": "design_projects",
     "atom": "sticky",
-    "body": "Discover: Review analysis are barely used by users Design Goals: Identify the key reasons why users do not analyze reviews",
-    "full_text": [
-      "Discover: Review analysis are barely used by users",
-      "Design Goals:",
-      "Identify the key reasons why users do not analyze reviews",
-      "Encourage more users start to analysis review by design solutions",
-      "Define: Small restaurants and chain restaurants have different analysis process",
-      "👪 Small restaurant",
-      "Role of review Analysis: Restaurant Owners",
-      "Process of review Analysis: New Feedback Alerts → View Feedback",
-      "🧐 Chain restaurant",
-      "Role of review Analysis: Customer Service Team",
-      "Process of review Analysis: Download Recent Reviews → Classify Reviews → Keyword Analysis → Generate Report → Improve Food Quality and Services",
-      "🌟 Research conclusion:",
-      "Small restaurants: They are unsure how to analyze reviews, which leads to underutilization of the review analysis page.",
-      "Chain restaurants: They have dedicated analysis teams, but the data provided by the page does not meet their analytical needs.",
-      "🎯 Goals:"
-    ],
-    "cover_image": "content_images/19eecf3c_cover.png",
+    "body": "💡 Overview\n\"Review analysis\" is essential for managing takeout online shops, helping users understand customer feedback to optimize their services and",
+    "cover_image": "content_images/19eecf3c_1.png",
     "focus": {
       "title": "Review Analysis",
-      "description": "Discover: Review analysis are barely used by users Design Goals: Identify the key reasons why users ",
+      "description": "💡 Overview\n\"Review analysis\" is essential for managing takeout online shops, helping users understand customer feedback to optimize their services and",
       "link": "#",
       "linkText": "Read more",
       "article": {
         "title": "Review Analysis",
         "sections": [
           {
+            "type": "text",
+            "text": "💡 Overview\n\"Review analysis\" is essential for managing takeout online shops, helping users understand customer feedback to optimize their services and food. However, through research, I found that most users rarely access the review analysis page. This project identifies the reasons through design and user research, and offers innovative design solutions to meet diverse user needs, thereby increasing the number of users using the evaluation analysis feature."
+          },
+          {
             "type": "image",
-            "src": "content_images/19eecf3c_cover.png",
-            "caption": "Review Analysis"
+            "caption": "",
+            "src": "content_images/19eecf3c_1.png"
+          },
+          {
+            "type": "subtitle",
+            "text": "Discover: Review analysis are barely used by users"
+          },
+          {
+            "type": "subtitle",
+            "text": "Details: project background"
           },
           {
             "type": "text",
-            "text": "Discover: Review analysis are barely used by users"
+            "text": "The “review analysis” page, essential for takeout operations, has only 200 monthly visits, showing that merchants aren't optimizing dishes based on feedback. This could lead to a decline in product and service quality on the Eleme platform over time."
+          },
+          {
+            "type": "image",
+            "caption": "Operation Process: Management Tools → Review → Review Analysis",
+            "src": "content_images/19eecf3c_2.png"
           },
           {
             "type": "text",
@@ -264,15 +815,23 @@
           },
           {
             "type": "text",
-            "text": "Identify the key reasons why users do not analyze reviews"
+            "text": "• Identify the key reasons why users do not analyze reviews"
           },
           {
             "type": "text",
-            "text": "Encourage more users start to analysis review by design solutions"
+            "text": "• Encourage more users start to analysis review by design solutions"
           },
           {
-            "type": "text",
+            "type": "subtitle",
             "text": "Define: Small restaurants and chain restaurants have different analysis process"
+          },
+          {
+            "type": "subtitle",
+            "text": "Details: research background"
+          },
+          {
+            "type": "text",
+            "text": "To understand the reasons, I visited different types of restaurant owners. I found that both chain restaurant and small restaurant owners pay close attention to reviews, but they use distinctly different methods for review analysis."
           },
           {
             "type": "text",
@@ -287,6 +846,11 @@
             "text": "Process of review Analysis: New Feedback Alerts → View Feedback"
           },
           {
+            "type": "image",
+            "caption": "",
+            "src": "content_images/19eecf3c_3.png"
+          },
+          {
             "type": "text",
             "text": "🧐 Chain restaurant"
           },
@@ -299,60 +863,219 @@
             "text": "Process of review Analysis: Download Recent Reviews → Classify Reviews → Keyword Analysis → Generate Report → Improve Food Quality and Services"
           },
           {
+            "type": "image",
+            "caption": "",
+            "src": "content_images/19eecf3c_4.png"
+          },
+          {
+            "type": "image",
+            "caption": "Review analysis process for chain restaurants",
+            "src": "content_images/19eecf3c_5.png"
+          },
+          {
             "type": "text",
             "text": "🌟 Research conclusion:"
           },
           {
             "type": "text",
-            "text": "Small restaurants: They are unsure how to analyze reviews, which leads to underutilization of the review analysis page."
+            "text": "• Small restaurants: They are unsure how to analyze reviews, which leads to underutilization of the review analysis page."
           },
           {
             "type": "text",
-            "text": "Chain restaurants: They have dedicated analysis teams, but the data provided by the page does not meet their analytical needs."
+            "text": "• Chain restaurants: They have dedicated analysis teams, but the data provided by the page does not meet their analytical needs."
           },
           {
             "type": "text",
             "text": "🎯 Goals:"
+          },
+          {
+            "type": "text",
+            "text": "• For small restaurants: Design a simple and user-friendly review analysis tool to enable users to analyze review easier and more effective."
+          },
+          {
+            "type": "text",
+            "text": "• For chain restaurants: Provide analysis of feedback keywords to meet the data needs of chain restaurants."
+          },
+          {
+            "type": "subtitle",
+            "text": "Develop: Building keywords library and visualization"
+          },
+          {
+            "type": "text",
+            "text": "💡 Strategy:"
+          },
+          {
+            "type": "text",
+            "text": "Productize the analysis process for chain restaurants to enhance their efficiency while lowering the threshold for small restaurants."
+          },
+          {
+            "type": "subtitle",
+            "text": "Details: why and how to building a keywords library"
+          },
+          {
+            "type": "text",
+            "text": "How to \"Classify reviews\" and \"Keyword analysis\" is crucial in the entire process. Chain restaurants classify reviews based on satisfaction levels (positive/negative reviews) and then cluster keywords from reviews of different satisfaction levels (such as taste, delivery, packaging, etc.). The more frequently used words indicate the restaurant’s main issues or strengths."
+          },
+          {
+            "type": "text",
+            "text": "So, I collaborated with the PM to build a keyword library composed of high-frequency keywords. The library contains eight main categories of keywords (taste, packaging, cost-effectiveness, food safety, variety, presentation, service, and delivery), along with dozens of secondary keywords."
+          },
+          {
+            "type": "image",
+            "caption": "The initial version of the keyword library",
+            "src": "content_images/19eecf3c_6.png"
+          },
+          {
+            "type": "text",
+            "text": "Then, data visualization charts were designed to present the conclusions, allowing users to analysis recent reviews even without a professional analysis team."
+          },
+          {
+            "type": "image",
+            "caption": "",
+            "src": "content_images/19eecf3c_7.png"
+          },
+          {
+            "type": "subtitle",
+            "text": "Details: The improvement of keyword recognition accuracy"
+          },
+          {
+            "type": "text",
+            "text": "初版上线后关键词识别率在40%左右，很多词无法被统计，数据准确性较低"
+          },
+          {
+            "type": "image",
+            "caption": "",
+            "src": "content_images/19eecf3c_8.png"
+          },
+          {
+            "type": "text",
+            "text": "优化词库，增加更多关键词、易错字和基础的反话组合词规则，提升算法识别率"
+          },
+          {
+            "type": "image",
+            "caption": "",
+            "src": "content_images/19eecf3c_9.png"
+          },
+          {
+            "type": "text",
+            "text": "优化词库后关键词识别率提升20%+"
+          },
+          {
+            "type": "text",
+            "text": "🌟 反思：站在2024年看这个项目，评价分析是一个很适合用大语言模型进行分析的场景，不仅是识别率更准，而且可以挖掘出很多用户体验的细节，帮助商户提升服务和菜品"
+          },
+          {
+            "type": "text",
+            "text": "🧪 Usability test："
+          },
+          {
+            "type": "text",
+            "text": "After creating the design prototype, I conducted usability testing with both chain restaurant owners and small restaurant owners. The results were not as promising as I expected:"
+          },
+          {
+            "type": "text",
+            "text": "• Small restaurant owners 😵: \"I don't understand these charts; what do they mean?\""
+          },
+          {
+            "type": "text",
+            "text": "• Chain restaurant owners 😊: \"This feature is great; it can level up our analysis efficiency!\""
+          },
+          {
+            "type": "image",
+            "caption": "Testing solutions with different users",
+            "src": "content_images/19eecf3c_10.png"
+          },
+          {
+            "type": "text",
+            "text": "👍 Iteration："
+          },
+          {
+            "type": "text",
+            "text": "Using the DIKW model for visualization."
+          },
+          {
+            "type": "subtitle",
+            "text": "Details"
+          },
+          {
+            "type": "text",
+            "text": "Small restaurant owners may not understand raw data and information, so it needs to be distilled into useful knowledge or insights that they can comprehend and implement. In contrast, chain restaurants have a large volume of raw data and have strong analytical capabilities, so more details should be presented, allowing them to analyze it deeply."
+          },
+          {
+            "type": "image",
+            "caption": "Restaurant owners with strong analytical capabilities tend to prefer the raw data on the left side, while those with weaker capabilities lean towards directly obtaining the analyzed knowledge and insights on the right side.",
+            "src": "content_images/19eecf3c_11.png"
+          },
+          {
+            "type": "text",
+            "text": "Exploring different design conceptions based on Data/Information/Knowledge/Wisdom:"
+          },
+          {
+            "type": "image",
+            "caption": "",
+            "src": "content_images/19eecf3c_12.png"
+          },
+          {
+            "type": "subtitle",
+            "text": "Details: which one is the best?"
+          },
+          {
+            "type": "text",
+            "text": "The best solution is to provide users with direct conclusions and recommendations, which refer to Wisdom. However, the \"Wisdom\" heavily relies on operational experience and recommendation accuracy, which we currently lack. Therefore, presenting the \"Knowledge\" solution is the most appropriate."
+          },
+          {
+            "type": "subtitle",
+            "text": "Details: tradeoff design conceptions"
+          },
+          {
+            "type": "text",
+            "text": "In the process of visualization, based on the Google AI + design principles, providing users with the reasoning behind algorithm results can enhance their confidence in the answers. Additionally, most of keywords are concentrated on the top."
+          },
+          {
+            "type": "text",
+            "text": "And most of keyword frequency distributed in the top 1-2 keywords, solution 2 was chosen as the final design👇"
+          },
+          {
+            "type": "text",
+            "text": "Solution 2 was chosen as the final design👇"
+          },
+          {
+            "type": "image",
+            "caption": "",
+            "src": "content_images/19eecf3c_13.png"
+          },
+          {
+            "type": "text",
+            "text": "At the same time, based on the habit of small restaurant owners, the \"Review analysis knowledge\" part has been prioritized on the Review page (one page before review analysis). Users can filter different types of reviews through keywords to view the “Review knowledge”."
+          },
+          {
+            "type": "image",
+            "caption": "",
+            "src": "content_images/19eecf3c_14.png"
+          },
+          {
+            "type": "subtitle",
+            "text": "Delivery: Becoming the most popular function"
+          },
+          {
+            "type": "text",
+            "text": "After the launch, the number of users using the Review page and the analysis tool saw a significant increase! (↑320,000). And the usage rate also increased  (↑11,000)"
+          },
+          {
+            "type": "image",
+            "caption": "",
+            "src": "content_images/19eecf3c_15.png"
+          },
+          {
+            "type": "text",
+            "text": "The new tool \"Keyword Analysis\" has become the most frequently used functionality on the Review page!"
+          },
+          {
+            "type": "image",
+            "caption": "",
+            "src": "content_images/19eecf3c_16.png"
           }
         ]
-      }
-    }
-  },
-  {
-    "id": "30d400ee-0cf5-805a-ab9d-cf4d576901da",
-    "title": "GenUI",
-    "category": "design_thought",
-    "atom": "sticky",
-    "body": "",
-    "full_text": [],
-    "cover_image": null,
-    "focus": {
-      "title": "GenUI",
-      "description": "GenUI",
-      "link": "#",
-      "linkText": "Read more",
-      "article": {
-        "title": "GenUI",
-        "sections": []
-      }
-    }
-  },
-  {
-    "id": "358400ee-0cf5-81e1-aff1-ee6de5859ccd",
-    "title": "AI Product Design Principles",
-    "category": "design_thought",
-    "atom": "sticky",
-    "body": "",
-    "full_text": [],
-    "cover_image": null,
-    "focus": {
-      "title": "AI Product Design Principles",
-      "description": "AI Product Design Principles",
-      "link": "#",
-      "linkText": "Read more",
-      "article": {
-        "title": "AI Product Design Principles",
-        "sections": []
       }
     }
   },
@@ -362,28 +1085,15 @@
     "category": "hobby",
     "atom": "photo",
     "body": "Stand-up comedy is a lifelong passion of mine. The process of turning life's highs and lows into jokes and performing them on stage has become an inte",
-    "full_text": [
-      "Stand-up comedy is a lifelong passion of mine. The process of turning life's highs and lows into jokes and performing them on stage has become an integral part of my life.",
-      "Comedy not only enhances my sense of humor but also improves my public speaking and communication skills. It’s a great way to channel negative emotions into something positive, helping me stay optimistic. Bad day? Great-time to write a new joke!",
-      "Just like my professional aspiration, I aim to perform in more international settings. Since 2023, I’ve been doing stand-up in English, learning from well-known comedians like Norah and Davy, popular faces on Rock & Roast.",
-      "Although the English stand-up scene in China is relatively niche, you can catch my performances at some international comedy clubs.",
-      "I hope to bring some laughs to you, my future colleagues!",
-      "If you're curious about my jokes, I’ve included a clip of my English open-mic performance recorded at SpicyComedy 👇（Youtube, VPN needed）"
-    ],
-    "cover_image": "content_images/146400ee_cover.jpg",
+    "cover_image": "content_images/146400ee_1.jpg",
     "focus": {
       "title": "Stand-up Comedian",
-      "description": "Stand-up comedy is a lifelong passion of mine. The process of turning life's highs and lows into jok",
+      "description": "Stand-up comedy is a lifelong passion of mine. The process of turning life's highs and lows into jokes and performing them on stage has become an inte",
       "link": "#",
       "linkText": "Read more",
       "article": {
         "title": "Stand-up Comedian",
         "sections": [
-          {
-            "type": "image",
-            "src": "content_images/146400ee_cover.jpg",
-            "caption": "Stand-up Comedian"
-          },
           {
             "type": "text",
             "text": "Stand-up comedy is a lifelong passion of mine. The process of turning life's highs and lows into jokes and performing them on stage has become an integral part of my life."
@@ -393,8 +1103,23 @@
             "text": "Comedy not only enhances my sense of humor but also improves my public speaking and communication skills. It’s a great way to channel negative emotions into something positive, helping me stay optimistic. Bad day? Great-time to write a new joke!"
           },
           {
+            "type": "image",
+            "caption": "Performing at the Microsoft Kickoff in front of over 2,000 people",
+            "src": "content_images/146400ee_1.jpg"
+          },
+          {
+            "type": "image",
+            "caption": "Performing in the finals of Alibaba's stand-up competition",
+            "src": "content_images/146400ee_2.jpg"
+          },
+          {
             "type": "text",
             "text": "Just like my professional aspiration, I aim to perform in more international settings. Since 2023, I’ve been doing stand-up in English, learning from well-known comedians like Norah and Davy, popular faces on Rock & Roast."
+          },
+          {
+            "type": "image",
+            "caption": "",
+            "src": "content_images/146400ee_3.jpg"
           },
           {
             "type": "text",
@@ -403,6 +1128,11 @@
           {
             "type": "text",
             "text": "I hope to bring some laughs to you, my future colleagues!"
+          },
+          {
+            "type": "image",
+            "caption": "Open mic at Comedy Remedy",
+            "src": "content_images/146400ee_4.png"
           },
           {
             "type": "text",
@@ -417,16 +1147,11 @@
     "title": "Fishing",
     "category": "hobby",
     "atom": "photo",
-    "body": "清晨的第一竿：安静得只剩水面在呼吸。 今天的战利品：不大，但足够让人开心一整天。 收竿回家：把风景和耐心一起带走。",
-    "full_text": [
-      "清晨的第一竿：安静得只剩水面在呼吸。",
-      "今天的战利品：不大，但足够让人开心一整天。",
-      "收竿回家：把风景和耐心一起带走。"
-    ],
-    "cover_image": "content_images/35f400ee_cover.jpg",
+    "body": "清晨的第一竿：安静得只剩水面在呼吸。 今天的战利品：不大，但足够让人开心一整天。",
+    "cover_image": "content_images/35f400ee_1.jpg",
     "focus": {
       "title": "Fishing",
-      "description": "清晨的第一竿：安静得只剩水面在呼吸。 今天的战利品：不大，但足够让人开心一整天。 收竿回家：把风景和耐心一起带走。",
+      "description": "清晨的第一竿：安静得只剩水面在呼吸。 今天的战利品：不大，但足够让人开心一整天。",
       "link": "#",
       "linkText": "Read more",
       "article": {
@@ -434,16 +1159,26 @@
         "sections": [
           {
             "type": "image",
-            "src": "content_images/35f400ee_cover.jpg",
-            "caption": "Fishing"
+            "caption": "",
+            "src": "content_images/35f400ee_1.jpg"
           },
           {
             "type": "text",
             "text": "清晨的第一竿：安静得只剩水面在呼吸。"
           },
           {
+            "type": "image",
+            "caption": "",
+            "src": "content_images/35f400ee_2.jpg"
+          },
+          {
             "type": "text",
             "text": "今天的战利品：不大，但足够让人开心一整天。"
+          },
+          {
+            "type": "image",
+            "caption": "",
+            "src": "content_images/35f400ee_3.jpg"
           },
           {
             "type": "text",
@@ -454,31 +1189,11 @@
     }
   },
   {
-    "id": "358400ee-0cf5-8140-af89-c7fb3658db0b",
-    "title": "Podcast",
-    "category": "hobby",
-    "atom": "photo",
-    "body": "",
-    "full_text": [],
-    "cover_image": null,
-    "focus": {
-      "title": "Podcast",
-      "description": "Podcast",
-      "link": "#",
-      "linkText": "Read more",
-      "article": {
-        "title": "Podcast",
-        "sections": []
-      }
-    }
-  },
-  {
     "id": "360400ee-0cf5-80e4-ae1c-ccb2760bb841",
     "title": "Drawing",
     "category": "hobby",
     "atom": "photo",
     "body": "",
-    "full_text": [],
     "cover_image": null,
     "focus": {
       "title": "Drawing",
