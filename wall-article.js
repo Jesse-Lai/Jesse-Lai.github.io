@@ -2,9 +2,10 @@
 import { streamChat, buildSystemPrompt } from './ai-client.js';
 
 export class WallArticle {
-  constructor(focusOverlay, contentData) {
+  constructor(focusOverlay, contentData, lang) {
     this.focusOverlay = focusOverlay;
     this.contentData = contentData;
+    this.lang = lang || 'en';
     this.canvas = document.querySelector('canvas');
     this.overlay = document.getElementById('wall-article');
     this.content = document.getElementById('wall-article-content');
@@ -97,10 +98,36 @@ export class WallArticle {
 
     this._abortController = new AbortController();
     let currentEl = null;
-    let buffer = ''; // buffer for detecting [[atom:...]]
+    let buffer = '';
+    let atomBuffer = [];
+    const insertedAtoms = new Set();
+
+    const flushAtomBuffer = () => {
+      if (atomBuffer.length === 0) return;
+      const keys = [...atomBuffer];
+      atomBuffer = [];
+      const placeholder = document.createElement('div');
+      placeholder.className = 'atom-entry';
+      bubble.appendChild(placeholder);
+      if (keys.length === 1) {
+        const meta = this.focusOverlay._wallItemRegistry[keys[0]];
+        if (meta) {
+          this.focusOverlay._createAtomEntry(meta).then(entry => {
+            if (entry) { placeholder.replaceWith(entry.container); this._atomApps.push(entry.app); this._scrollToBottom(); }
+            else placeholder.remove();
+          });
+        } else placeholder.remove();
+      } else {
+        this.focusOverlay._createClipEntry(keys).then(entry => {
+          if (entry) { placeholder.replaceWith(entry.container); this._atomApps.push(entry.app); this._scrollToBottom(); }
+          else placeholder.remove();
+        });
+      }
+    };
 
     const flushText = (text) => {
       if (!text) return;
+      flushAtomBuffer();
       if (!currentEl || currentEl.tagName === 'H2') {
         currentEl = document.createElement('p');
         bubble.appendChild(currentEl);
@@ -110,7 +137,7 @@ export class WallArticle {
     };
 
     const messages = [
-      { role: 'system', content: buildSystemPrompt(this.contentData, this.focusOverlay._wallItemRegistry) },
+      { role: 'system', content: buildSystemPrompt(this.contentData, this.focusOverlay._wallItemRegistry, this.lang) },
       { role: 'user', content: query },
     ];
 
@@ -118,76 +145,57 @@ export class WallArticle {
       messages,
       (token) => {
         buffer += token;
-        // Process buffer
         while (buffer.length > 0) {
-          // Check for heading: ## at start of line (only match when \n confirms end)
           const headingMatch = buffer.match(/^## (.+?)\n/);
           if (headingMatch) {
+            flushAtomBuffer();
             currentEl = document.createElement('h2');
             bubble.appendChild(currentEl);
             currentEl.textContent = headingMatch[1];
             buffer = buffer.slice(headingMatch[0].length);
-            currentEl = null; // next text goes to new p
+            currentEl = null;
             this._scrollToBottom();
             continue;
           }
 
-          // Check for atom marker
           const atomMatch = buffer.match(/\[\[atom:(.+?)\]\]/);
           if (atomMatch) {
-            // Flush text before the marker
             const before = buffer.slice(0, atomMatch.index);
             if (before.replace(/\n/g, '').trim()) flushText(before.replace(/\n/g, ' ').trim());
-            // Queue atom insertion
             const key = atomMatch[1];
-            this._insertAtom(key, bubble);
+            if (!insertedAtoms.has(key)) {
+              insertedAtoms.add(key);
+              atomBuffer.push(key);
+            }
             buffer = buffer.slice(atomMatch.index + atomMatch[0].length);
             currentEl = null;
             continue;
           }
 
-          // If buffer might contain partial [[ or ##, wait for more
           if (buffer.includes('[') || buffer.startsWith('#') || buffer.endsWith('#')) break;
 
-          // Handle newlines as paragraph breaks
           const nlIdx = buffer.indexOf('\n');
           if (nlIdx >= 0) {
             const chunk = buffer.slice(0, nlIdx).trim();
             if (chunk) flushText(chunk);
             buffer = buffer.slice(nlIdx + 1);
-            if (chunk) currentEl = null; // new paragraph after non-empty line
+            if (chunk) currentEl = null;
             continue;
           }
 
-          // No special chars — flush entire buffer
           flushText(buffer);
           buffer = '';
         }
       },
       () => {
-        // Done — flush remaining buffer
         if (buffer.trim()) flushText(buffer.trim());
+        flushAtomBuffer();
         this._abortController = null;
       },
       this._abortController.signal,
     );
   }
 
-  async _insertAtom(key, bubble) {
-    const registry = this.focusOverlay._wallItemRegistry;
-    const meta = registry[key];
-    if (!meta) return;
-    try {
-      const entry = await this.focusOverlay._createAtomEntry(meta);
-      if (entry) {
-        bubble.appendChild(entry.container);
-        this._atomApps.push(entry.app);
-        this._scrollToBottom();
-      }
-    } catch (e) {
-      console.warn('Failed to create atom entry:', key, e);
-    }
-  }
 
   _scrollToBottom() {
     requestAnimationFrame(() => {

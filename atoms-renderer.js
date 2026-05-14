@@ -59,12 +59,14 @@ export function layoutTextWithObstacles(text, options) {
   const mctx = measureCanvas.getContext('2d');
   mctx.font = `${fontSize}px ${fontFamily}`;
 
-  const words = text.split(/\s+/);
+  // Split into tokens: CJK chars individually, non-CJK words by whitespace
+  const isCJK = ch => /[\u4e00-\u9fff\u3000-\u303f\uff00-\uffef\u3400-\u4dbf]/.test(ch);
+  const tokens = text.match(/[\u4e00-\u9fff\u3000-\u303f\uff00-\uffef\u3400-\u4dbf]|[^\s\u4e00-\u9fff\u3000-\u303f\uff00-\uffef\u3400-\u4dbf]+/g) || [];
   const lines = [];
   let curY = areaY;
 
   let wordIdx = 0;
-  while (wordIdx < words.length && curY + lh <= areaY + areaH) {
+  while (wordIdx < tokens.length && curY + lh <= areaY + areaH) {
     // Determine available width at this Y, considering obstacles
     let lineX = areaX;
     let lineW = areaW;
@@ -94,10 +96,13 @@ export function layoutTextWithObstacles(text, options) {
       continue;
     }
 
-    // Fill words into this line
+    // Fill tokens into this line
     let lineText = '';
-    while (wordIdx < words.length) {
-      const testLine = lineText ? lineText + ' ' + words[wordIdx] : words[wordIdx];
+    while (wordIdx < tokens.length) {
+      const tok = tokens[wordIdx];
+      // CJK tokens join without space; others use space
+      const needsSpace = lineText && !isCJK(tok[0]) && !isCJK(lineText[lineText.length - 1]);
+      const testLine = lineText + (needsSpace ? ' ' : '') + tok;
       const measured = mctx.measureText(testLine);
       if (measured.width > lineW && lineText) break;
       lineText = testLine;
@@ -944,12 +949,13 @@ export class PhotoSystem {
     let downTime = 0, downX = 0, downY = 0, moved = false;
     let wasHovering = false;
     const hitTest = (mx,my) => {
+      // mx, my should already be canvas coords (callers use _canvasY)
       const b = this._getPhotoBounds(photo);
       return mx > b.x && mx < b.x+b.w && my > b.y && my < b.y+b.h;
     };
     const onDown = e => {
       if (photo.clipped || this._activeDrag) return;
-      const mx = e.clientX, my = e.clientY;
+      const mx = e.clientX, my = this._canvasY(e.clientY);
       // Check this item is the topmost hit
       let topPhoto = null;
       for (const p of this.photos) {
@@ -973,13 +979,14 @@ export class PhotoSystem {
       }
     };
     const onMove = e => {
+      const cmx = e.clientX, cmy = this._canvasY(e.clientY);
       if (drag) {
-        photo.group.x = e.clientX+offX;
-        photo.group.y = e.clientY+offY;
-        if (Math.abs(e.clientX-downX)>5 || Math.abs(e.clientY-downY)>5) moved = true;
+        photo.group.x = cmx+offX;
+        photo.group.y = cmy+offY;
+        if (Math.abs(cmx-downX)>5 || Math.abs(cmy-downY)>5) moved = true;
       }
       // Hover scale + cursor
-      const hovering = !drag && hitTest(e.clientX, e.clientY) && !photo.clipped;
+      const hovering = !drag && hitTest(cmx, cmy) && !photo.clipped;
       const targetScale = (hovering || drag ? 1.05 : 1.0) * photo.baseScale;
       const cur = photo.group.scale.x;
       photo.group.scale.set(cur + (targetScale - cur) * 0.15);
@@ -1052,11 +1059,14 @@ export class PhotoSystem {
     });
   }
 
+  // Convert viewport Y to canvas Y (accounts for page scroll)
+  _canvasY(clientY) { return clientY + (window.scrollY || 0); }
+
   _setupClickHandler() {
     let groupDrag = null, groupOffX = 0, groupOffY = 0;
 
     this.canvas.addEventListener('mousedown', e => {
-      const mx = e.clientX, my = e.clientY;
+      const mx = e.clientX, my = this._canvasY(e.clientY);
       // Check clip click (split)
       for (const cg of [...this.clipGroups]) {
         const cs = cg.clipSprite;
@@ -1088,7 +1098,7 @@ export class PhotoSystem {
         return;
       }
       let hovering = false;
-      const mx = e.clientX, my = e.clientY;
+      const mx = e.clientX, my = this._canvasY(e.clientY);
       for (const p of this.photos) {
         if (p.clipped) continue;
         const b = this._getPhotoBounds(p);
@@ -1141,9 +1151,10 @@ export class PhotoSystem {
 
 // ─── Focus Overlay — click-to-detail with paper curl effect ───
 export class FocusOverlay {
-  constructor(app, contentData) {
+  constructor(app, contentData, lang) {
     this.app = app;
     this._contentData = contentData || [];
+    this._lang = lang || 'en';
     this.overlay = document.getElementById('focus-overlay');
     this.backdrop = document.getElementById('focus-backdrop');
     this.titleEl = document.getElementById('focus-title');
@@ -1295,6 +1306,9 @@ export class FocusOverlay {
     if (this.activeItem) return;
     this.activeItem = item;
     this.overlay.scrollTop = 0;
+    // Hide wall composer when focus overlay is open
+    const wallComposer = document.getElementById('wall-composer');
+    if (wallComposer) wallComposer.style.display = 'none';
     const W = this.app.screen.width, H = this.app.screen.height;
 
     this.origX = item.group.x;
@@ -1362,9 +1376,10 @@ export class FocusOverlay {
     const startRot = this.origRotation;
     const targetW = item.itemW * targetScale;
     const targetH = item.itemH * targetScale;
-    // With pivot at center, target x/y IS the screen center
+    // With pivot at center, target x/y accounts for scroll position
+    const scrollY = window.scrollY || 0;
     const targetMeshX = W / 2;
-    const targetMeshY = H * 0.38;
+    const targetMeshY = scrollY + H * 0.28;
     const startW = meshW, startH = meshH;
     const duration = 1200;
     const start = performance.now();
@@ -1390,8 +1405,10 @@ export class FocusOverlay {
 
     // Position HTML content below the focused element
     const scaledH = item.itemH * targetScale;
-    const bottomY = H * 0.38 + scaledH / 2;
-    document.getElementById('focus-content').style.top = (bottomY + 40) + 'px';
+    // focus-content is inside position:fixed overlay, so use viewport coords (no scrollY)
+    const viewportMeshY = H * 0.28;
+    const bottomY = viewportMeshY + scaledH / 2;
+    document.getElementById('focus-content').style.top = (bottomY + 28) + 'px';
 
     // Populate HTML
     const data = item.focusData;
@@ -1482,6 +1499,9 @@ export class FocusOverlay {
         this.bgContainer = null;
         this.bgChildren = null;
       }
+      // Restore wall composer
+      const wallComposer = document.getElementById('wall-composer');
+      if (wallComposer) wallComposer.style.display = '';
     }, 1050);
   }
 
@@ -1498,9 +1518,10 @@ export class FocusOverlay {
     // 隐藏文案和按钮
     document.getElementById('focus-content').style.display = 'none';
 
-    // 动画 mesh 上移到顶部
+    // 动画 mesh 上移到顶部（考虑页面滚动）
+    const scrollY = window.scrollY || 0;
     const targetX = W / 2;
-    const targetY = 80 + mesh.height / 2;
+    const targetY = scrollY + 80 + mesh.height / 2;
     const startX = mesh.x, startY = mesh.y;
     const duration = 500;
     const startTime = performance.now();
@@ -1521,7 +1542,8 @@ export class FocusOverlay {
       setTimeout(() => {
         const data = this.activeItem.focusData;
         const article = data.article;
-        const meshBottom = targetY + mesh.height / 2;
+        // articleWrap is inside fixed overlay, use viewport coords
+        const meshBottom = 80 + mesh.height;
 
         // 文章容器，定位在 mesh 下方
         const articleWrap = document.createElement('div');
@@ -1721,7 +1743,7 @@ export class FocusOverlay {
     const contextNote = `The visitor is currently reading the article "${articleTitle}". Answer in that context.`;
 
     const messages = [
-      { role: 'system', content: buildSystemPrompt(this._contentData, this._wallItemRegistry) },
+      { role: 'system', content: buildSystemPrompt(this._contentData, this._wallItemRegistry, this._lang) },
       { role: 'system', content: contextNote },
       { role: 'user', content: query },
     ];
@@ -1729,9 +1751,36 @@ export class FocusOverlay {
     this._chatAbort = new AbortController();
     let currentEl = null;
     let buffer = '';
+    let atomBuffer = []; // consecutive atom keys
+    const insertedAtoms = new Set();
+
+    const flushAtomBuffer = () => {
+      if (atomBuffer.length === 0) return;
+      const keys = [...atomBuffer];
+      atomBuffer = [];
+      // Insert placeholder synchronously, render async
+      const placeholder = document.createElement('div');
+      placeholder.className = 'atom-entry';
+      bubble.appendChild(placeholder);
+      if (keys.length === 1) {
+        const meta = this._wallItemRegistry[keys[0]];
+        if (meta) {
+          this._createAtomEntry(meta).then(entry => {
+            if (entry) { placeholder.replaceWith(entry.container); this._scrollToBottom(); }
+            else placeholder.remove();
+          });
+        } else placeholder.remove();
+      } else {
+        this._createClipEntry(keys).then(entry => {
+          if (entry) { placeholder.replaceWith(entry.container); this._scrollToBottom(); }
+          else placeholder.remove();
+        });
+      }
+    };
 
     const flushText = (text) => {
       if (!text) return;
+      flushAtomBuffer();
       if (!currentEl || currentEl.tagName === 'H2') {
         currentEl = document.createElement('p');
         bubble.appendChild(currentEl);
@@ -1747,6 +1796,7 @@ export class FocusOverlay {
         while (buffer.length > 0) {
           const headingMatch = buffer.match(/^## (.+?)\n/);
           if (headingMatch) {
+            flushAtomBuffer();
             currentEl = document.createElement('h2');
             bubble.appendChild(currentEl);
             currentEl.textContent = headingMatch[1];
@@ -1759,7 +1809,10 @@ export class FocusOverlay {
           if (atomMatch) {
             const before = buffer.slice(0, atomMatch.index).replace(/\n/g, ' ').trim();
             if (before) flushText(before);
-            this._insertAtomInChat(atomMatch[1], bubble);
+            if (!insertedAtoms.has(atomMatch[1])) {
+              insertedAtoms.add(atomMatch[1]);
+              atomBuffer.push(atomMatch[1]);
+            }
             buffer = buffer.slice(atomMatch.index + atomMatch[0].length);
             currentEl = null;
             continue;
@@ -1779,6 +1832,7 @@ export class FocusOverlay {
       },
       () => {
         if (buffer.trim()) flushText(buffer.trim());
+        flushAtomBuffer();
         this._chatAbort = null;
       },
       this._chatAbort.signal,
@@ -2173,6 +2227,70 @@ export class FocusOverlay {
     container.appendChild(app.canvas);
 
     // 保存引用以便清理
+    if (!this._chatAtomApps) this._chatAtomApps = [];
+    this._chatAtomApps.push(app);
+
+    return { container, app };
+  }
+
+  async _createClipEntry(keys) {
+    if (!this._atomsConfig) {
+      const resp = await fetch('atoms-config.json');
+      this._atomsConfig = await resp.json();
+    }
+    const cfg = this._atomsConfig;
+    const registry = this._wallItemRegistry;
+
+    // Load images for all keys
+    const metas = keys.map(k => registry[k]).filter(Boolean);
+    if (metas.length < 2) return null;
+
+    const imgDataArray = [];
+    for (const meta of metas) {
+      const src = (meta.atomType === 'photo' && meta.src) ? meta.src : meta.stampSrc || meta.src;
+      if (!src) continue;
+      imgDataArray.push(await loadImagePixels(src));
+    }
+    if (imgDataArray.length < 2) return null;
+
+    const W = window.innerWidth;
+    const isPortrait = window.innerHeight > W;
+    const maxW = isPortrait ? W * 0.4 : W * 0.12;
+    const maxH = maxW * 1.2;
+
+    const app = new PIXI.Application();
+    await app.init({
+      width: 500, height: 500,
+      backgroundAlpha: 0, antialias: true,
+      resolution: window.devicePixelRatio || 1,
+    });
+
+    const result = await renderClip(app, imgDataArray, 0, 0, maxW, maxH, cfg.photo || {});
+    app.stage.addChild(result.group);
+
+    const bounds = result.group.getBounds();
+    const pad = 12;
+    const w = Math.ceil(bounds.width + pad * 2);
+    const h = Math.ceil(bounds.height + pad * 2);
+    result.group.x = -bounds.x + pad;
+    result.group.y = -bounds.y + pad;
+    app.renderer.resize(w, h);
+
+    const dpr = window.devicePixelRatio || 1;
+    app.canvas.style.width = Math.ceil(w / dpr) + 'px';
+    app.canvas.style.height = Math.ceil(h / dpr) + 'px';
+    app.canvas.style.display = 'block';
+    app.canvas.style.cursor = 'pointer';
+    app.canvas.style.margin = '0 auto';
+
+    // Click opens first item's nested focus
+    const firstMeta = metas[0];
+    app.canvas.addEventListener('click', () => this._openNestedFocus(firstMeta, app, result));
+
+    const container = document.createElement('div');
+    container.className = 'atom-entry';
+    container.appendChild(app.canvas);
+
     if (!this._chatAtomApps) this._chatAtomApps = [];
     this._chatAtomApps.push(app);
 

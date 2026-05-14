@@ -171,7 +171,6 @@
       transition: transform 0.2s;
     }
     .atom-entry:hover { transform: scale(1.05); }
-
     /* Shared composer bar */
     .composer-bar {
       position: fixed; bottom: 24px; left: 0; right: 0;
@@ -251,6 +250,16 @@
     }
     #nested-close:hover { border-color: #fff; color: #fff; }
 
+    /* ─── Language Toggle ─── */
+    #lang-toggle {
+      position: fixed; top: 16px; right: 70px; z-index: 9999;
+      background: none; border: 1px solid rgba(255,255,255,0.25);
+      color: rgba(255,255,255,0.6); font-family: 'Red Hat Mono', monospace;
+      font-size: 12px; letter-spacing: 1px; padding: 6px 14px;
+      border-radius: 4px; cursor: pointer; transition: all 0.2s;
+    }
+    #lang-toggle:hover { border-color: #fff; color: #fff; }
+
     /* ─── Wall Article ─── */
     #wall-article {
       position: fixed; inset: 0; z-index: 9999;
@@ -279,6 +288,13 @@
   </style>
 </head>
 <body>
+  <button id="lang-toggle"></button>
+  <script>
+    const lang = localStorage.getItem('wall-lang') || 'en';
+    const btn = document.getElementById('lang-toggle');
+    btn.textContent = lang === 'en' ? '中文' : 'EN';
+    btn.onclick = () => { localStorage.setItem('wall-lang', lang === 'en' ? 'zh' : 'en'); location.reload(); };
+  </script>
   <div id="atoms-btn" onclick="location.href='atoms.html'">Atoms</div>
   <div id="focus-overlay">
     <div id="focus-backdrop"></div>
@@ -319,6 +335,6 @@
     <div id="wall-article-content"></div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/pixi.js@8/dist/pixi.min.js"></script>
-  <script type="module" src="wall.js?v=147"></script>
+  <script type="module" src="wall.js?v=151"></script>
 </body>
 </html>

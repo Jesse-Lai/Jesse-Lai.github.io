@@ -13,7 +13,7 @@ const URL = `${AZURE_ENDPOINT}/openai/deployments/${DEPLOYMENT}/chat/completions
  * @param {Array} contentData - full content.json array
  * @param {Object} registry - focusOverlay._wallItemRegistry (key → meta)
  */
-export function buildSystemPrompt(contentData, registry) {
+export function buildSystemPrompt(contentData, registry, lang) {
   const items = contentData.map(e => {
     const sections = (e.focus?.article?.sections || [])
       .filter(s => s.type === 'text' || s.type === 'subtitle')
@@ -37,13 +37,14 @@ BEHAVIOR:
 - Keep your own text MINIMAL — 1-2 short sentences per item, then immediately show the atom
 - Let the portfolio items speak for themselves — your job is to connect them with brief context
 - Every item you mention MUST be followed by its [[atom:KEY]] so the visitor can explore it
+- NEVER reference the same atom more than once — each [[atom:KEY]] should appear only once in your response
 - Aim for at least 3-4 atom references per response
 
 FORMAT:
 - Use ## for section headings — make them expressive and warm, like conversation starters (e.g. "Here's what I've been working on", "When I'm not designing...", "This one's close to my heart")
 - After briefly mentioning a project/topic, write [[atom:KEY]] on its own line
 - Do NOT write long paragraphs — be punchy and concise
-- Write in the same language the user uses
+- You MUST write in ${lang === 'zh' ? 'Chinese (简体中文)' : 'English'} regardless of the user\'s language
 - Total text (excluding atom markers) should be under 150 words`;
 }
 
