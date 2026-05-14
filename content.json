@@ -1193,16 +1193,26 @@
     "title": "Drawing",
     "category": "hobby",
     "atom": "photo",
-    "body": "",
-    "cover_image": null,
+    "body": "Coming soon",
+    "cover_image": "content_images/360400ee_1.jpg",
     "focus": {
       "title": "Drawing",
-      "description": "Drawing",
+      "description": "Coming soon",
       "link": "#",
       "linkText": "Read more",
       "article": {
         "title": "Drawing",
-        "sections": []
+        "sections": [
+          {
+            "type": "text",
+            "text": "Coming soon"
+          },
+          {
+            "type": "image",
+            "src": "content_images/360400ee_1.jpg",
+            "caption": ""
+          }
+        ]
       }
     }
   },
