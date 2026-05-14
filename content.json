@@ -1,0 +1,154 @@
+[
+  {
+    "id": "116400ee-0cf5-8029-ba88-e9288932ff8d",
+    "title": "Hello I'm Jesse Lai",
+    "category": "who_i_am",
+    "atom": "sticky",
+    "body": "About Me Projects Media",
+    "full_text": [
+      "About Me",
+      "Projects",
+      "Media"
+    ],
+    "cover_image": "content_images/116400ee_cover.png"
+  },
+  {
+    "id": "116400ee-0cf5-8141-a777-d6750e0c0005",
+    "title": "Resume",
+    "category": "who_i_am",
+    "atom": "sticky",
+    "body": "",
+    "full_text": [],
+    "cover_image": "content_images/116400ee_cover.png"
+  },
+  {
+    "id": "116400ee-0cf5-8156-9ca8-fbc4ded84bda",
+    "title": "Food Delivery Service",
+    "category": "design_projects",
+    "atom": "sticky",
+    "body": "🍜 Background: the food delivery industry 💡 Discover: operations are concerning 🎯 Define: identify core issues through research",
+    "full_text": [
+      "🍜 Background: the food delivery industry",
+      "💡 Discover: operations are concerning",
+      "🎯 Define: identify core issues through research",
+      "🔧 Develop: come up with solutions",
+      "📦 Delivery: goals achieved"
+    ],
+    "cover_image": "content_images/116400ee_cover.png"
+  },
+  {
+    "id": "116400ee-0cf5-8140-8042-c2e67a33abc4",
+    "title": "AI Merchant Assistant",
+    "category": "design_projects",
+    "atom": "sticky",
+    "body": "Background The Rise of Large Language Models and Their Impact on B2B Products Comparison of NUI and GUI",
+    "full_text": [
+      "Background",
+      "The Rise of Large Language Models and Their Impact on B2B Products",
+      "Comparison of NUI and GUI",
+      "Applicable scenarios for NUI in the Eleme merchant platform",
+      "Merchant inquiries experience on Eleme is limited",
+      "Product goal",
+      "Design Focus at Different Stages",
+      "Design product forms based on intent ambiguity and task types",
+      "Product Framework",
+      "Design invocation patterns based on task flow",
+      "Stage 2 : Dialogue script",
+      "Design scripts: Improve input-output stability",
+      "Design scripts: High-fidelity prototype",
+      "Stage 3 : Response experience",
+      "Response Experience: Replies are hard to understand and generation time is too long"
+    ],
+    "cover_image": "content_images/116400ee_cover.png"
+  },
+  {
+    "id": "19eecf3c-361c-4d2b-b39d-94e02b39dbd3",
+    "title": "Review Analysis",
+    "category": "design_projects",
+    "atom": "sticky",
+    "body": "Discover: Review analysis are barely used by users Design Goals: Identify the key reasons why users do not analyze reviews",
+    "full_text": [
+      "Discover: Review analysis are barely used by users",
+      "Design Goals:",
+      "Identify the key reasons why users do not analyze reviews",
+      "Encourage more users start to analysis review by design solutions",
+      "Define: Small restaurants and chain restaurants have different analysis process",
+      "👪 Small restaurant",
+      "Role of review Analysis: Restaurant Owners",
+      "Process of review Analysis: New Feedback Alerts → View Feedback",
+      "🧐 Chain restaurant",
+      "Role of review Analysis: Customer Service Team",
+      "Process of review Analysis: Download Recent Reviews → Classify Reviews → Keyword Analysis → Generate Report → Improve Food Quality and Services",
+      "🌟 Research conclusion:",
+      "Small restaurants: They are unsure how to analyze reviews, which leads to underutilization of the review analysis page.",
+      "Chain restaurants: They have dedicated analysis teams, but the data provided by the page does not meet their analytical needs.",
+      "🎯 Goals:"
+    ],
+    "cover_image": "content_images/19eecf3c_cover.png"
+  },
+  {
+    "id": "30d400ee-0cf5-805a-ab9d-cf4d576901da",
+    "title": "GenUI",
+    "category": "design_thought",
+    "atom": "sticky",
+    "body": "",
+    "full_text": [],
+    "cover_image": null
+  },
+  {
+    "id": "358400ee-0cf5-81e1-aff1-ee6de5859ccd",
+    "title": "AI Product Design Principles",
+    "category": "design_thought",
+    "atom": "sticky",
+    "body": "",
+    "full_text": [],
+    "cover_image": null
+  },
+  {
+    "id": "146400ee-0cf5-808f-87e8-d536e92e21ee",
+    "title": "Stand-up Comedian",
+    "category": "hobby",
+    "atom": "photo",
+    "body": "Stand-up comedy is a lifelong passion of mine. The process of turning life's highs and lows into jokes and performing them on stage has become an inte",
+    "full_text": [
+      "Stand-up comedy is a lifelong passion of mine. The process of turning life's highs and lows into jokes and performing them on stage has become an integral part of my life.",
+      "Comedy not only enhances my sense of humor but also improves my public speaking and communication skills. It’s a great way to channel negative emotions into something positive, helping me stay optimistic. Bad day? Great-time to write a new joke!",
+      "Just like my professional aspiration, I aim to perform in more international settings. Since 2023, I’ve been doing stand-up in English, learning from well-known comedians like Norah and Davy, popular faces on Rock & Roast.",
+      "Although the English stand-up scene in China is relatively niche, you can catch my performances at some international comedy clubs.",
+      "I hope to bring some laughs to you, my future colleagues!",
+      "If you're curious about my jokes, I’ve included a clip of my English open-mic performance recorded at SpicyComedy 👇（Youtube, VPN needed）"
+    ],
+    "cover_image": "content_images/146400ee_cover.jpg"
+  },
+  {
+    "id": "35f400ee-0cf5-8030-83f0-cd4673a225c1",
+    "title": "Fishing",
+    "category": "hobby",
+    "atom": "photo",
+    "body": "清晨的第一竿：安静得只剩水面在呼吸。 今天的战利品：不大，但足够让人开心一整天。 收竿回家：把风景和耐心一起带走。",
+    "full_text": [
+      "清晨的第一竿：安静得只剩水面在呼吸。",
+      "今天的战利品：不大，但足够让人开心一整天。",
+      "收竿回家：把风景和耐心一起带走。"
+    ],
+    "cover_image": "content_images/35f400ee_cover.jpg"
+  },
+  {
+    "id": "358400ee-0cf5-8140-af89-c7fb3658db0b",
+    "title": "Podcast",
+    "category": "hobby",
+    "atom": "photo",
+    "body": "",
+    "full_text": [],
+    "cover_image": null
+  },
+  {
+    "id": "360400ee-0cf5-80e4-ae1c-ccb2760bb841",
+    "title": "Drawing",
+    "category": "hobby",
+    "atom": "photo",
+    "body": "",
+    "full_text": [],
+    "cover_image": null
+  }
+]
