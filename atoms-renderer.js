@@ -1317,12 +1317,14 @@ export class FocusOverlay {
     this.origScale = item.group.scale.x;
     this.origRotation = item.group.rotation || 0;
 
-    // Responsive scale: fit atom + text in viewport
+    // Responsive scale: fit atom + text block centered in viewport
+    const topPad = 40;
+    const textBlockH = 150;
+    const focusGap = 28;
     const maxW = W * 0.75;
-    const textSpace = 200;
-    const availH = (vH * 0.72 - textSpace) * 2;
+    const maxAtomH = vH - topPad * 2 - focusGap - textBlockH;
     const maxScaleW = maxW / item.itemW;
-    const maxScaleH = availH / item.itemH;
+    const maxScaleH = maxAtomH / item.itemH;
     const targetScale = Math.min(1.3, maxScaleW, maxScaleH);
 
     // Wrap background into blur container
@@ -1383,10 +1385,13 @@ export class FocusOverlay {
     const startRot = this.origRotation;
     const targetW = item.itemW * targetScale;
     const targetH = item.itemH * targetScale;
-    // With pivot at center, target x/y accounts for scroll position
+    // Center atom + text block as a unit in viewport
+    const totalContentH = targetH + focusGap + textBlockH;
+    const blockTopY = Math.max(topPad, (vH - totalContentH) / 2);
+    const atomCenterY = blockTopY + targetH / 2; // viewport coords
     const scrollY = window.scrollY || 0;
     const targetMeshX = W / 2;
-    const targetMeshY = scrollY + vH * 0.28;
+    const targetMeshY = scrollY + atomCenterY;
     const startW = meshW, startH = meshH;
     const duration = 1200;
     const start = performance.now();
@@ -1410,12 +1415,8 @@ export class FocusOverlay {
     };
     requestAnimationFrame(tick);
 
-    // Position HTML content below the focused element
-    const scaledH = item.itemH * targetScale;
-    // focus-content is inside position:fixed overlay, so use viewport coords (no scrollY)
-    const viewportMeshY = vH * 0.28;
-    const bottomY = viewportMeshY + scaledH / 2;
-    document.getElementById('focus-content').style.top = (bottomY + 28) + 'px';
+    // Position HTML content below the focused element (viewport coords)
+    document.getElementById('focus-content').style.top = (blockTopY + targetH + focusGap) + 'px';
 
     // Populate HTML
     const data = item.focusData;

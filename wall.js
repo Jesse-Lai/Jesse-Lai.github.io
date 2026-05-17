@@ -1,5 +1,5 @@
 // wall.js — Main view, uses atoms-renderer.js
-import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, makeDraggable, FocusOverlay, getOrCreateVideo, animateTo, fadeIn } from "./atoms-renderer.js?v=160";
+import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, makeDraggable, FocusOverlay, getOrCreateVideo, animateTo, fadeIn } from "./atoms-renderer.js?v=163";
 import { WallArticle } from "./wall-article.js?v=151";
 
 (async () => {
@@ -206,7 +206,7 @@ import { WallArticle } from "./wall-article.js?v=151";
   wallArticle.setupComposer();
   // Update composer placeholder for language
   const wcTextarea = document.querySelector('#wall-composer textarea');
-  if (wcTextarea) wcTextarea.placeholder = LANG === 'zh' ? '问我任何关于Jesse的问题...' : 'Ask me anything about Jesse...';
+  if (wcTextarea) wcTextarea.placeholder = LANG === 'zh' ? '问Jesse任何问题...' : 'Ask Jesse anything...';
 
   const mouse = { x:-9999, y:-9999 };
 
