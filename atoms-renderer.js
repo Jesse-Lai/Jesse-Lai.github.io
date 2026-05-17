@@ -395,7 +395,7 @@ export async function renderPhoto(app, imgData, x, y, scale, imgCfg, cfg) {
   // Rotation
   wrapper.rotation = (Math.random()*8-4) * Math.PI/180;
 
-  return { group: wrapper, sprite: sp, hitTest: (mx,my) => Math.abs(mx-wrapper.x)<pw*0.6 && Math.abs(my-wrapper.y)<(ph+bottomBorder)*0.6 };
+  return { group: wrapper, sprite: sp, shadow, frame, hitTest: (mx,my) => Math.abs(mx-wrapper.x)<pw*0.6 && Math.abs(my-wrapper.y)<(ph+bottomBorder)*0.6 };
 }
 
 // ─── Render Clip ───
@@ -1309,15 +1309,21 @@ export class FocusOverlay {
     // Hide wall composer when focus overlay is open
     const wallComposer = document.getElementById('wall-composer');
     if (wallComposer) wallComposer.style.display = 'none';
-    const W = this.app.screen.width, H = this.app.screen.height;
+    const W = this.app.screen.width;
+    const vH = window.innerHeight; // viewport height, NOT canvas height
 
     this.origX = item.group.x;
     this.origY = item.group.y;
     this.origScale = item.group.scale.x;
     this.origRotation = item.group.rotation || 0;
 
-    // Target center position (pivot is at mesh center, so target = screen center)
-    const targetScale = 1.3;
+    // Responsive scale: fit atom + text in viewport
+    const maxW = W * 0.75;
+    const textSpace = 200;
+    const availH = (vH * 0.72 - textSpace) * 2;
+    const maxScaleW = maxW / item.itemW;
+    const maxScaleH = availH / item.itemH;
+    const targetScale = Math.min(1.3, maxScaleW, maxScaleH);
 
     // Wrap background into blur container
     this.bgContainer = new PIXI.Container();
@@ -1327,9 +1333,10 @@ export class FocusOverlay {
     this.blurFilter.strength = 0;
     this.app.stage.addChild(this.bgContainer);
 
-    // Dim layer
+    // Dim layer (covers full canvas, not just viewport)
+    const canvasH = this.app.screen.height;
     this.dimLayer.clear();
-    this.dimLayer.rect(0, 0, W, H);
+    this.dimLayer.rect(0, 0, W, canvasH);
     this.dimLayer.fill({ color: 0x000000, alpha: 0 });
     this.dimLayer.visible = true;
     this.app.stage.addChild(this.dimLayer);
@@ -1379,7 +1386,7 @@ export class FocusOverlay {
     // With pivot at center, target x/y accounts for scroll position
     const scrollY = window.scrollY || 0;
     const targetMeshX = W / 2;
-    const targetMeshY = scrollY + H * 0.28;
+    const targetMeshY = scrollY + vH * 0.28;
     const startW = meshW, startH = meshH;
     const duration = 1200;
     const start = performance.now();
@@ -1406,7 +1413,7 @@ export class FocusOverlay {
     // Position HTML content below the focused element
     const scaledH = item.itemH * targetScale;
     // focus-content is inside position:fixed overlay, so use viewport coords (no scrollY)
-    const viewportMeshY = H * 0.28;
+    const viewportMeshY = vH * 0.28;
     const bottomY = viewportMeshY + scaledH / 2;
     document.getElementById('focus-content').style.top = (bottomY + 28) + 'px';
 
@@ -1425,10 +1432,76 @@ export class FocusOverlay {
     this.overlay.style.display = 'block';
     // Show text/button when fly-in animation is ~70% done
     setTimeout(() => this.overlay.classList.add('visible'), duration * 0.7);
+
+    // Play video once after fly-in — overlay live group sprite (like wall hover)
+    if (item.videoSrc) {
+      setTimeout(() => {
+        if (!this.mesh) return;
+        const entry = getOrCreateVideo(item.videoSrc);
+        if (!entry.ready || !entry.texture) return;
+
+        // Position group at mesh's focus location (mesh stays visible underneath)
+        const focusScale = this.mesh.width / item.itemW;
+        item.group.scale.set(focusScale);
+        item.group.x = this.mesh.x - this.mesh.width / 2 + item.anchorX * focusScale;
+        item.group.y = this.mesh.y - this.mesh.height / 2 + item.anchorY * focusScale;
+        item.group.rotation = this.mesh.rotation;
+        item.group.visible = true;
+        this.app.stage.addChild(item.group);
+
+        // Hide only shadow + frame — keep sprite and handwritten text visible
+        if (item.shadow) item.shadow.visible = false;
+        if (item.frame) item.frame.visible = false;
+
+        // Swap sprite texture — same as wall hover
+        item._staticTex = item.sprite.texture;
+        item.sprite.texture = entry.texture;
+        entry.video.loop = false;
+        entry.video.currentTime = 0;
+        entry.video.play().catch(() => {});
+        this._videoPlaying = true;
+
+        const onEnded = () => {
+          entry.video.loop = true;
+          if (!this._videoPlaying) return;
+          this._cleanupFocusVideo();
+        };
+        entry.video.addEventListener('ended', onEnded, { once: true });
+        this._videoEndedCleanup = () => {
+          entry.video.removeEventListener('ended', onEnded);
+          entry.video.pause();
+          entry.video.currentTime = 0;
+          entry.video.loop = true;
+        };
+      }, duration);
+    }
+  }
+
+  _cleanupFocusVideo() {
+    if (!this._videoPlaying) return;
+    const item = this.activeItem;
+    if (item) {
+      // Restore sprite texture
+      if (item._staticTex) {
+        item.sprite.texture = item._staticTex;
+        item._staticTex = null;
+      }
+      // Restore hidden shadow + frame
+      if (item.shadow) item.shadow.visible = true;
+      if (item.frame) item.frame.visible = true;
+      item.group.visible = false;
+      this.app.stage.removeChild(item.group);
+    }
+    if (this._videoEndedCleanup) {
+      this._videoEndedCleanup();
+      this._videoEndedCleanup = null;
+    }
+    this._videoPlaying = false;
   }
 
   close() {
     if (!this.activeItem) return;
+    this._cleanupFocusVideo();
     const item = this.activeItem;
     const mesh = this.mesh;
     this.activeItem = null;
@@ -1509,6 +1582,8 @@ export class FocusOverlay {
 
   openArticle() {
     if (!this.activeItem || !this.mesh) return;
+    // Stop focus video if still playing
+    this._cleanupFocusVideo();
     const mesh = this.mesh;
     const W = this.app.screen.width;
     this._articleMode = true;
@@ -1916,8 +1991,8 @@ export class FocusOverlay {
     const base64 = await miniApp.renderer.extract.base64(group);
     const tex = await PIXI.Assets.load(base64 + '#' + Date.now());
     const bounds = group.getLocalBounds();
-    const meshW = bounds.width / dpr;
-    const meshH = bounds.height / dpr;
+    const meshW = bounds.width;
+    const meshH = bounds.height;
 
     const mesh = new PIXI.MeshPlane({ texture: tex, verticesX: 20, verticesY: 20 });
     mesh.width = meshW;
@@ -2154,15 +2229,16 @@ export class FocusOverlay {
       resolution: window.devicePixelRatio || 1,
     });
 
-    // 用和 wall 一样的 scale 渲染 atom
+    // Match wall.js sizing
     const W = window.innerWidth;
-    const isPortrait = window.innerHeight > W;
-    const atomScale = isPortrait ? W / 600 : W / 1920;
+    const cols = W < 600 ? 1 : W < 1024 ? 2 : W < 1600 ? 3 : 4;
+    const colW = W / cols;
+    const atomScale = colW / 480;
 
     let result;
     if (meta.atomType === 'photo' && meta.src) {
       const imgData = await loadImagePixels(meta.src);
-      const targetW = isPortrait ? W * 0.55 : W * 0.13;
+      const targetW = colW * 0.6;
       const scale = targetW / imgData.w;
       result = await renderPhoto(app, imgData, 0, 0, scale, { caption: meta.caption, date: meta.date }, cfg.photo || {});
     } else if (meta.atomType === 'sticky' && meta.stampSrc) {
@@ -2187,12 +2263,9 @@ export class FocusOverlay {
     result.group.y = -bounds.y + pad;
     app.renderer.resize(w, h);
 
-    // 手动设置 CSS 尺寸（autoDensity 在 resize 后不一定正确）
-    const dpr = window.devicePixelRatio || 1;
-    const cssW = Math.ceil(w / dpr);
-    const cssH = Math.ceil(h / dpr);
-    app.canvas.style.width = cssW + 'px';
-    app.canvas.style.height = cssH + 'px';
+    // CSS 尺寸 = 逻辑尺寸（getBounds 和 resize 都用逻辑像素）
+    app.canvas.style.width = w + 'px';
+    app.canvas.style.height = h + 'px';
     app.canvas.style.display = 'block';
     app.canvas.style.cursor = 'pointer';
     app.canvas.style.margin = '0 auto';
@@ -2276,9 +2349,8 @@ export class FocusOverlay {
     result.group.y = -bounds.y + pad;
     app.renderer.resize(w, h);
 
-    const dpr = window.devicePixelRatio || 1;
-    app.canvas.style.width = Math.ceil(w / dpr) + 'px';
-    app.canvas.style.height = Math.ceil(h / dpr) + 'px';
+    app.canvas.style.width = w + 'px';
+    app.canvas.style.height = h + 'px';
     app.canvas.style.display = 'block';
     app.canvas.style.cursor = 'pointer';
     app.canvas.style.margin = '0 auto';

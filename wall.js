@@ -1,5 +1,5 @@
 // wall.js — Main view, uses atoms-renderer.js
-import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, makeDraggable, FocusOverlay, getOrCreateVideo } from "./atoms-renderer.js?v=151";
+import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, makeDraggable, FocusOverlay, getOrCreateVideo, animateTo, fadeIn } from "./atoms-renderer.js?v=160";
 import { WallArticle } from "./wall-article.js?v=151";
 
 (async () => {
@@ -88,6 +88,7 @@ import { WallArticle } from "./wall-article.js?v=151";
       const pc = photoCaptions[entry.title] || { caption: entry.title, date: '' };
       wallItems.push({
         type: 'photo',
+        category: entry.category,
         src: entry.cover_image,
         caption: pc.caption,
         date: pc.date,
@@ -96,6 +97,7 @@ import { WallArticle } from "./wall-article.js?v=151";
     } else if (entry.atom === 'sticky') {
       wallItems.push({
         type: 'sticky',
+        category: entry.category,
         title: t(entry, 'title') || entry.title,
         body: t(entry, 'body') || entry.body || '',
         date: entry.title === 'GenUI' ? "'26 04 20" : entry.title === 'AI产品设计原则' ? "'26 03 15" : "'26 05 01",
@@ -112,7 +114,7 @@ import { WallArticle } from "./wall-article.js?v=151";
   const atomScale = colW / 480;
 
   // ─── Grid config ───
-  const gridPad = colW * 0.12;
+  const gridPad = colW * 0.216;
 
   // ─── Focus Overlay ───
   const focusOverlay = new FocusOverlay(app, contentData, LANG);
@@ -237,6 +239,88 @@ import { WallArticle } from "./wall-article.js?v=151";
     const newW = window.innerWidth;
     const newH = window.innerHeight;
     app.renderer.resize(newW, newH);
+  });
+
+  // ─── Organize by Category ───
+  async function organizeByCategory() {
+    // Split existing user-created clips first
+    for (const cg of [...photoSystem.clipGroups]) {
+      await photoSystem._splitPhotos(cg);
+    }
+    await new Promise(r => setTimeout(r, 300));
+
+    // Group items by category
+    const categories = ['who_i_am', 'design_projects', 'design_thought', 'hobby'];
+    const groups = {};
+    for (const cat of categories) groups[cat] = [];
+    for (const r of rendered) {
+      const cat = r.wallItem.category;
+      if (groups[cat]) groups[cat].push(r);
+    }
+
+    // Refresh bounds (items may have been moved by masonry or dragged)
+    for (const r of rendered) r.bounds = r.group.getBounds();
+
+    // Pre-compute final masonry positions for each category group / single
+    const colTopsNew = new Array(cols).fill(gridPad);
+    const catLayout = {}; // cat -> { targetX, targetY } for the first item's top-left
+
+    // First pass: compute each group's bounding size and assign masonry slot
+    for (const cat of categories) {
+      const items = groups[cat];
+      if (!items.length) continue;
+      // Use first item's bounds as representative size
+      const b0 = items[0].group.getBounds();
+      const col = colTopsNew.indexOf(Math.min(...colTopsNew));
+      const colCenterX = (col + 0.5) * colW;
+      catLayout[cat] = {
+        targetX: colCenterX - b0.width / 2,
+        targetY: colTopsNew[col],
+        boundsOffX: b0.x - items[0].group.x,
+        boundsOffY: b0.y - items[0].group.y,
+      };
+      colTopsNew[col] += b0.height + gridPad;
+    }
+
+    // Fly ALL items directly to final position (first item to masonry slot, others stacked on it)
+    const allFlyAnims = [];
+    for (const cat of categories) {
+      const items = groups[cat];
+      if (!items.length || !catLayout[cat]) continue;
+      const layout = catLayout[cat];
+      // First item flies to the masonry slot
+      const target0 = items[0];
+      const tx0 = layout.targetX - layout.boundsOffX;
+      const ty0 = layout.targetY - layout.boundsOffY;
+      allFlyAnims.push(animateTo(target0.group, tx0, ty0, 600));
+      // Other items fly to same position (they'll be merged/stacked)
+      for (let i = 1; i < items.length; i++) {
+        const r = items[i];
+        const tx = layout.targetX - (r.bounds.x - r.group.x);
+        const ty = layout.targetY - (r.bounds.y - r.group.y);
+        allFlyAnims.push(animateTo(r.group, tx, ty, 600));
+      }
+    }
+    await Promise.all(allFlyAnims);
+
+    // Merge groups using existing clip system
+    await Promise.all(categories.map(async cat => {
+      const items = groups[cat];
+      if (items.length < 2) return;
+      const target = items[0];
+      for (let i = 1; i < items.length; i++) {
+        await photoSystem._mergePhotos(items[i].focusableItem, target.focusableItem);
+      }
+    }));
+
+    // Resize canvas if needed
+    const newH = Math.max(...colTopsNew) + gridPad;
+    app.renderer.resize(W, Math.max(newH, window.innerHeight));
+  }
+
+  // Wire organize button
+  document.getElementById('organize-btn')?.addEventListener('click', () => {
+    organizeByCategory();
   });
 
   // ─── Ticker ───
