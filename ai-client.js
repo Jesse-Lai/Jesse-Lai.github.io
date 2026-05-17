@@ -1,5 +1,11 @@
 // ai-client.js — Azure OpenAI streaming client + shared system prompt
-import { AZURE_API_KEY } from './.env.js';
+let AZURE_API_KEY = '';
+try {
+  const env = await import('./.env.js');
+  AZURE_API_KEY = env.AZURE_API_KEY || '';
+} catch(e) {
+  console.warn('ai-client: .env.js not found, AI chat disabled');
+}
 
 const AZURE_ENDPOINT = 'https://jesseai.openai.azure.com';
 const DEPLOYMENT = 'gpt-5.4-mini';
