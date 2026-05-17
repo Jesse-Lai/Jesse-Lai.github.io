@@ -1,15 +1,15 @@
-// ai-client.js — Azure OpenAI streaming client + shared system prompt
-let AZURE_API_KEY = '';
+// ai-client.js — AI chat via Cloudflare Worker proxy + shared system prompt
 
-// Lazy-load API key (non-blocking)
-const _envReady = import('./.env.js').then(m => { AZURE_API_KEY = m.AZURE_API_KEY || ''; }).catch(() => {});
+// Cloudflare Worker proxy (hides API key server-side)
+const WORKER_URL = 'https://crimson-waterfall-c16b.laijianxun123.workers.dev';
 
-const AZURE_ENDPOINT = 'https://jesseai.openai.azure.com';
-const DEPLOYMENT = 'gpt-5.4-mini';
-const API_VERSION = '2025-04-01-preview';
-const API_KEY = AZURE_API_KEY;
-
-const URL = `${AZURE_ENDPOINT}/openai/deployments/${DEPLOYMENT}/chat/completions?api-version=${API_VERSION}`;
+// Optional: local .env.js for local dev (direct Azure access)
+let LOCAL_API_KEY = '';
+let USE_LOCAL = false;
+const _envReady = import('./.env.js').then(m => {
+  LOCAL_API_KEY = m.AZURE_API_KEY || '';
+  if (LOCAL_API_KEY) USE_LOCAL = true;
+}).catch(() => {});
 
 /**
  * Build the shared system prompt for all AI responses.
@@ -56,15 +56,20 @@ FORMAT:
  */
 export async function streamChat(messages, onToken, onDone, signal) {
   await _envReady;
-  if (!AZURE_API_KEY) { onDone?.('AI chat unavailable (no API key)'); return; }
+
+  // Choose endpoint: local dev (direct Azure) or production (Cloudflare Worker)
+  const url = USE_LOCAL
+    ? 'https://jesseai.openai.azure.com/openai/deployments/gpt-5.4-mini/chat/completions?api-version=2025-04-01-preview'
+    : WORKER_URL;
+
+  const headers = { 'Content-Type': 'application/json' };
+  if (USE_LOCAL) headers['api-key'] = LOCAL_API_KEY;
+
   let resp;
   try {
-    resp = await fetch(URL, {
+    resp = await fetch(url, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'api-key': API_KEY,
-    },
+    headers,
     body: JSON.stringify({
       messages,
       stream: true,
