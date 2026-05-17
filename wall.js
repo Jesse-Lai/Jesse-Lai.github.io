@@ -12,9 +12,22 @@ import { WallArticle } from "./wall-article.js?v=151";
   document.body.appendChild(app.canvas);
   app.canvas.style.touchAction = "pan-y";
   app.stage.sortableChildren = true;
+  app.stage.visible = false; // Hide until fully loaded
+
+  // Loading progress helpers
+  const loadingBar = document.getElementById('loading-bar');
+  const loadingPct = document.getElementById('loading-percent');
+  const loadingScreen = document.getElementById('loading-screen');
+  function setProgress(pct) {
+    const p = Math.round(Math.min(100, Math.max(0, pct)));
+    if (loadingBar) loadingBar.style.width = p + '%';
+    if (loadingPct) loadingPct.textContent = p + '%';
+  }
+  setProgress(5);
 
   const configResp = await fetch('atoms-config.json');
   const atomsConfig = await configResp.json();
+  setProgress(8);
   // Preload fonts before rendering
   try {
     await Promise.all([
@@ -37,6 +50,7 @@ import { WallArticle } from "./wall-article.js?v=151";
   // ─── Load content from Notion-synced content.json ───
   const contentResp = await fetch('content.json');
   const contentData = await contentResp.json();
+  setProgress(12);
 
   // ─── Language ───
   const LANG = localStorage.getItem('wall-lang') || 'en';
@@ -119,8 +133,12 @@ import { WallArticle } from "./wall-article.js?v=151";
   // ─── Focus Overlay ───
   const focusOverlay = new FocusOverlay(app, contentData, LANG);
 
+  setProgress(15);
+
   // ─── Step 1: Render all items at (0,0) to get actual bounds ───
   const rendered = []; // { group, bounds, wallItem, focusableItem }
+  const totalItems = wallItems.length;
+  let loadedCount = 0;
   for (const item of wallItems) {
     if (item.type === 'photo') {
       const imgData = await loadImagePixels(item.src);
@@ -132,6 +150,7 @@ import { WallArticle } from "./wall-article.js?v=151";
       if (item.focus) photoItem.focusData = item.focus;
       const b = photoItem.group.getBounds();
       rendered.push({ group: photoItem.group, bounds: b, wallItem: item, focusableItem: photoItem });
+      loadedCount++; setProgress(15 + (loadedCount / totalItems) * 70);
     } else if (item.type === 'sticky') {
       const stickyStampImg = item.stampSrc ? await loadImagePixels(item.stampSrc) : null;
       const stickyResult = await renderStickyNote(app, 0, 0, { title: item.title, body: item.body, date: item.date }, stickyStampImg, atomsConfig.stamp, { colorScheme: item.colorScheme });
@@ -140,6 +159,7 @@ import { WallArticle } from "./wall-article.js?v=151";
       const stickyItem = photoSystem.addItem(stickyResult.group, b.width / atomScale, b.height / atomScale);
       if (item.focus) stickyItem.focusData = item.focus;
       rendered.push({ group: stickyResult.group, bounds: b, wallItem: item, focusableItem: stickyItem });
+      loadedCount++; setProgress(15 + (loadedCount / totalItems) * 70);
     } else if (item.type === 'stamp') {
       const stampImg = await loadImagePixels(item.src);
       const stampResult = await renderStamp(app, stampImg, 0, 0, atomsConfig.stamp);
@@ -147,6 +167,7 @@ import { WallArticle } from "./wall-article.js?v=151";
       const b = stampResult.group.getBounds();
       photoSystem.addItem(stampResult.group, stampResult.stampW, stampResult.stampH);
       rendered.push({ group: stampResult.group, bounds: b, wallItem: item, focusableItem: null });
+      loadedCount++; setProgress(15 + (loadedCount / totalItems) * 70);
     }
   }
 
@@ -201,6 +222,16 @@ import { WallArticle } from "./wall-article.js?v=151";
     }
   }
   photoSystem.onFocus = (item) => focusOverlay.open(item);
+
+  // ─── Reveal: hide loading, show canvas ───
+  setProgress(100);
+  app.stage.visible = true;
+  if (loadingScreen) {
+    setTimeout(() => {
+      loadingScreen.classList.add('hidden');
+      setTimeout(() => loadingScreen.remove(), 600);
+    }, 300);
+  }
 
   // ─── Wall Article (composer + AI narrative) ───
   const wallArticle = new WallArticle(focusOverlay, contentData, LANG);

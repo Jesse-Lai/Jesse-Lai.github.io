@@ -15,6 +15,34 @@
     html, body { background: #0a0a0a; overflow-x: hidden; }
     body { min-height: 100vh; }
     canvas { display: block; }
+    /* Loading screen */
+    #loading-screen {
+      position: fixed; inset: 0; z-index: 99999;
+      background: #0a0a0a;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      transition: opacity 0.6s ease;
+    }
+    #loading-screen.hidden { opacity: 0; pointer-events: none; }
+    #loading-text {
+      font-family: 'Red Hat Mono', 'Courier New', monospace;
+      color: #666; font-size: 13px; letter-spacing: 2px;
+      margin-bottom: 20px;
+    }
+    #loading-bar-bg {
+      width: 200px; height: 2px;
+      background: rgba(255,255,255,0.08); border-radius: 1px;
+      overflow: hidden;
+    }
+    #loading-bar {
+      height: 100%; width: 0%; border-radius: 1px;
+      background: rgba(255,255,255,0.5);
+      transition: width 0.3s ease;
+    }
+    #loading-percent {
+      font-family: 'Red Hat Mono', 'Courier New', monospace;
+      color: #444; font-size: 11px; margin-top: 10px;
+    }
     #atoms-btn {
       position: fixed; top: 20px; right: 20px; z-index: 9999;
       padding: 8px 0; background: none; border: none;
@@ -367,6 +395,12 @@
   <div id="wall-article">
     <button id="wall-article-close"><svg width="16" height="16" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m4.397 4.554.073-.084a.75.75 0 0 1 .976-.073l.084.073L12 10.939l6.47-6.47a.75.75 0 1 1 1.06 1.061L13.061 12l6.47 6.47a.75.75 0 0 1 .072.976l-.073.084a.75.75 0 0 1-.976.073l-.084-.073L12 13.061l-6.47 6.47a.75.75 0 0 1-1.06-1.061L10.939 12l-6.47-6.47a.75.75 0 0 1-.072-.976l.073-.084-.073.084Z" fill="currentColor"/></svg></button>
     <div id="wall-article-content"></div>
+  </div>
+  <!-- Loading screen -->
+  <div id="loading-screen">
+    <div id="loading-text">THE WALL</div>
+    <div id="loading-bar-bg"><div id="loading-bar"></div></div>
+    <div id="loading-percent">0%</div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/pixi.js@8/dist/pixi.min.js"></script>
   <script type="module" src="wall.js?v=163"></script>
