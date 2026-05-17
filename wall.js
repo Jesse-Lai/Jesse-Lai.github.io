@@ -1,5 +1,5 @@
 // wall.js — Main view, uses atoms-renderer.js
-import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, makeDraggable, FocusOverlay, getOrCreateVideo, animateTo, fadeIn } from "./atoms-renderer.js?v=163";
+import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, makeDraggable, FocusOverlay, getOrCreateVideo, animateTo, fadeIn } from "./atoms-renderer.js?v=166";
 import { WallArticle } from "./wall-article.js?v=151";
 
 (async () => {
@@ -198,6 +198,12 @@ import { WallArticle } from "./wall-article.js?v=151";
     if (r.focusableItem) renderedItems.push({ wallItem: r.wallItem, focusableItem: r.focusableItem });
   }
 
+  // Save initial positions for shuffle reset
+  for (const r of rendered) {
+    r.initX = r.group.x;
+    r.initY = r.group.y;
+  }
+
   // 如果内容超过视口高度，扩展 canvas
   const totalH = Math.max(...colTops) + gridPad + 80; // +80 for chat bar
   app.renderer.resize(W, Math.max(totalH, H));
@@ -235,6 +241,9 @@ import { WallArticle } from "./wall-article.js?v=151";
       setTimeout(() => loadingScreen.remove(), 600);
     }, 300);
   }
+
+  // ─── Mobile scroll hover for clip labels ───
+  if ('ontouchstart' in window) photoSystem.setupMobileScrollHover();
 
   // ─── Wall Article (composer + AI narrative) ───
   const wallArticle = new WallArticle(focusOverlay, contentData, LANG);
@@ -278,10 +287,8 @@ import { WallArticle } from "./wall-article.js?v=151";
 
   // ─── Organize by Category ───
   async function organizeByCategory() {
-    // Split existing user-created clips first
-    for (const cg of [...photoSystem.clipGroups]) {
-      await photoSystem._splitPhotos(cg);
-    }
+    // Split all existing clips in parallel
+    await Promise.all([...photoSystem.clipGroups].map(cg => photoSystem._splitPhotos(cg)));
     await new Promise(r => setTimeout(r, 300));
 
     // Group items by category
@@ -338,7 +345,13 @@ import { WallArticle } from "./wall-article.js?v=151";
     }
     await Promise.all(allFlyAnims);
 
-    // Merge groups using existing clip system
+    // Merge groups and assign predefined labels
+    const categoryLabels = {
+      who_i_am: 'About Me',
+      design_projects: 'Design Work',
+      design_thought: 'Design Thinking',
+      hobby: 'Life & Hobbies',
+    };
     await Promise.all(categories.map(async cat => {
       const items = groups[cat];
       if (items.length < 2) return;
@@ -346,6 +359,9 @@ import { WallArticle } from "./wall-article.js?v=151";
       for (let i = 1; i < items.length; i++) {
         await photoSystem._mergePhotos(items[i].focusableItem, target.focusableItem);
       }
+      // Set predefined label on the newly created clip group
+      const cg = photoSystem.clipGroups.find(c => c.photos.includes(target.focusableItem));
+      if (cg) cg.label = categoryLabels[cat] || cat;
     }));
 
     // Resize canvas if needed
@@ -353,9 +369,30 @@ import { WallArticle } from "./wall-article.js?v=151";
     app.renderer.resize(W, Math.max(newH, window.innerHeight));
   }
 
-  // Wire organize button
+  // ─── Shuffle: reset to initial wall layout ───
+  async function shuffleToInitial() {
+    // Split all existing clips in parallel
+    await Promise.all([...photoSystem.clipGroups].map(cg => photoSystem._splitPhotos(cg)));
+    await new Promise(r => setTimeout(r, 300));
+
+    // Animate all items back to initial positions
+    const anims = [];
+    for (const r of rendered) {
+      anims.push(animateTo(r.group, r.initX, r.initY, 600));
+    }
+    await Promise.all(anims);
+
+    // Resize canvas
+    const totalH = Math.max(...colTops) + gridPad + 80;
+    app.renderer.resize(W, Math.max(totalH, window.innerHeight));
+  }
+
+  // Wire buttons
   document.getElementById('organize-btn')?.addEventListener('click', () => {
     organizeByCategory();
+  });
+  document.getElementById('shuffle-btn')?.addEventListener('click', () => {
+    shuffleToInitial();
   });
 
   // ─── Ticker ───

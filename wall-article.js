@@ -1,5 +1,5 @@
 // wall-article.js — Wall-level composer + AI-generated portfolio article
-import { streamChat, buildSystemPrompt } from './ai-client.js';
+import { streamChat, buildSystemPrompt } from './ai-client.js?v=166';
 
 export class WallArticle {
   constructor(focusOverlay, contentData, lang) {

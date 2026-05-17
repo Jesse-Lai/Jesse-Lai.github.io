@@ -1,6 +1,6 @@
 // atoms-renderer.js — Shared atom rendering module
 // All atom types are rendered from here. Both atoms.html and wall.js import this.
-import { streamChat, buildSystemPrompt } from './ai-client.js';
+import { streamChat, chatSync, buildSystemPrompt } from './ai-client.js?v=166';
 
 
 // ─── Animation utility ───
@@ -880,6 +880,8 @@ export class PhotoSystem {
       await animateTo(droppedItem.group, firstBounds.x + droppedItem.anchorX, firstBounds.y + droppedItem.anchorY);
       existingClip.clipSprite.x = firstBounds.x + firstBounds.w * 0.15;
       existingClip.clipSprite.y = firstBounds.y;
+      // Regenerate label if not predefined
+      if (!existingClip._presetLabel) { existingClip.label = null; this.generateClipLabel(existingClip); }
       return;
     }
     if (droppedItem.clipped || targetItem.clipped) return;
@@ -907,7 +909,10 @@ export class PhotoSystem {
       this.app.stage.addChild(clipSp);
       // Slide in from above + fade in
       await Promise.all([animateTo(clipSp, clipSp.x, clipTargetY, 300), fadeIn(clipSp, 300)]);
-      this.clipGroups.push({ clipSprite: clipSp, photos: [targetItem, droppedItem] });
+      const newClip = { clipSprite: clipSp, photos: [targetItem, droppedItem] };
+      this.clipGroups.push(newClip);
+      // Pre-generate AI label for hover (async, non-blocking)
+      this.generateClipLabel(newClip);
     } catch(err) {
       console.error('Failed to load paperclip:', err);
       droppedItem.clipped = false; targetItem.clipped = false;
@@ -915,6 +920,7 @@ export class PhotoSystem {
   }
 
   async _splitPhotos(clipInfo) {
+    this._hideClipHoverLabel(clipInfo);
     const { clipSprite, photos: clipPhotos } = clipInfo;
     // Slide up + fade out
     await Promise.all([
@@ -1062,6 +1068,162 @@ export class PhotoSystem {
   // Convert viewport Y to canvas Y (accounts for page scroll)
   _canvasY(clientY) { return clientY + (window.scrollY || 0); }
 
+  // ─── Clip Group Hover Label System ───
+
+  _getClipGroupBounds(cg) {
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    for (const p of cg.photos) {
+      const b = this._getPhotoBounds(p);
+      minX = Math.min(minX, b.x);
+      minY = Math.min(minY, b.y);
+      maxX = Math.max(maxX, b.x + b.w);
+      maxY = Math.max(maxY, b.y + b.h);
+    }
+    return { x: minX, y: minY, w: maxX - minX, h: maxY - minY };
+  }
+
+  _getClipLabelColor(cg) {
+    const photo = cg.photos.find(p => p.imgData);
+    return photo ? sampleDominantColor(photo.imgData) : 0x666666;
+  }
+
+  async generateClipLabel(cg) {
+    if (cg.label) return;
+    const titles = cg.photos.map(p => p.config?.caption || p.focusData?.title || '').filter(Boolean);
+    if (!titles.length) { cg.label = 'Collection'; return; }
+    try {
+      const resp = await chatSync([
+        { role: 'user', content: `Describe the theme of these items in 2-3 English words (no quotes, no period): ${titles.join(', ')}` }
+      ]);
+      cg.label = resp || 'Collection';
+    } catch {
+      cg.label = 'Collection';
+    }
+  }
+
+  _showClipHoverLabel(cg) {
+    if (cg._hoverAnimating) return;
+    if (!cg.label) return;
+    cg._hoverAnimating = true;
+    const bounds = this._getClipGroupBounds(cg);
+    const color = this._getClipLabelColor(cg);
+
+    // Arrow starts at bottom-left of group, curves right
+    const startX = bounds.x + bounds.w * 0.15;
+    const startY = bounds.y + bounds.h + 8;
+    const endX = startX + 50;
+    const endY = startY + 25;
+    const cpX = startX + 10;
+    const cpY = startY + 30;
+
+    const arrow = new PIXI.Graphics();
+    arrow.alpha = 0;
+    this.app.stage.addChild(arrow);
+    cg._hoverArrow = arrow;
+
+    // Text with reveal mask (left-to-right wipe)
+    const text = new PIXI.Text({
+      text: cg.label,
+      style: { fontFamily: 'Schoolbell', fontSize: 20, fill: color, padding: 6 }
+    });
+    text.anchor.set(0, 0.5);
+    text.x = endX + 10;
+    text.y = endY;
+    this.app.stage.addChild(text);
+    cg._hoverText = text;
+
+    // Mask for text reveal
+    const textMask = new PIXI.Graphics();
+    text.mask = textMask;
+    this.app.stage.addChild(textMask);
+    cg._hoverTextMask = textMask;
+
+    const arrowDuration = 250;  // 2x faster
+    const textRevealDuration = 150;  // 2x faster
+    const start = performance.now();
+
+    const tick = () => {
+      const elapsed = performance.now() - start;
+
+      // Phase 1: Arrow stroke (0 → arrowDuration)
+      const tArrow = Math.min(1, elapsed / arrowDuration);
+      arrow.clear();
+      arrow.setStrokeStyle({ width: 2, color });
+      arrow.moveTo(startX, startY);
+      const steps = Math.max(2, Math.floor(tArrow * 20));
+      for (let i = 1; i <= steps; i++) {
+        const u = i / steps * tArrow;
+        const px = (1-u)*(1-u)*startX + 2*(1-u)*u*cpX + u*u*endX;
+        const py = (1-u)*(1-u)*startY + 2*(1-u)*u*cpY + u*u*endY;
+        arrow.lineTo(px, py);
+      }
+      arrow.stroke();
+      arrow.alpha = 1;
+
+      if (tArrow >= 1) {
+        // Draw arrowhead once
+        if (!arrow._headDrawn) {
+          const tipAngle = Math.atan2(endY - cpY, endX - cpX);
+          arrow.moveTo(endX - 8 * Math.cos(tipAngle - 0.5), endY - 8 * Math.sin(tipAngle - 0.5));
+          arrow.lineTo(endX, endY);
+          arrow.lineTo(endX - 8 * Math.cos(tipAngle + 0.5), endY - 8 * Math.sin(tipAngle + 0.5));
+          arrow.stroke();
+          arrow._headDrawn = true;
+        }
+
+        // Phase 2: Text reveal wipe (arrowDuration → arrowDuration + textRevealDuration)
+        const tText = Math.min(1, (elapsed - arrowDuration) / textRevealDuration);
+        const tw = text.width + 12;
+        const th = text.height + 12;
+        textMask.clear();
+        textMask.rect(text.x - 6, text.y - th / 2, tw * tText, th);
+        textMask.fill(0xffffff);
+      }
+
+      if (elapsed < arrowDuration + textRevealDuration) {
+        requestAnimationFrame(tick);
+      }
+    };
+    requestAnimationFrame(tick);
+  }
+
+  _hideClipHoverLabel(cg) {
+    if (!cg._hoverArrow && !cg._hoverText) return;
+    const arrow = cg._hoverArrow;
+    const text = cg._hoverText;
+    const mask = cg._hoverTextMask;
+    cg._hoverArrow = null;
+    cg._hoverText = null;
+    cg._hoverTextMask = null;
+    cg._hoverAnimating = false;
+    const dur = 150;
+    if (arrow) fadeOut(arrow, dur).then(() => { this.app.stage.removeChild(arrow); arrow.destroy(); });
+    if (text) { text.mask = null; fadeOut(text, dur).then(() => { this.app.stage.removeChild(text); text.destroy(); }); }
+    if (mask) { this.app.stage.removeChild(mask); mask.destroy(); }
+  }
+
+  setupMobileScrollHover() {
+    let lastCheck = 0;
+    const check = () => {
+      if (performance.now() - lastCheck < 200) return;
+      lastCheck = performance.now();
+      const scrollY = window.scrollY || 0;
+      const vH = window.innerHeight;
+      for (const cg of this.clipGroups) {
+        const bounds = this._getClipGroupBounds(cg);
+        const visibleTop = Math.max(bounds.y, scrollY);
+        const visibleBottom = Math.min(bounds.y + bounds.h, scrollY + vH);
+        const visibleRatio = Math.max(0, visibleBottom - visibleTop) / bounds.h;
+        if (visibleRatio > 0.5 && !cg._hoverArrow) {
+          this._showClipHoverLabel(cg);
+        } else if (visibleRatio < 0.1 && cg._hoverArrow) {
+          this._hideClipHoverLabel(cg);
+        }
+      }
+    };
+    window.addEventListener('scroll', check, { passive: true });
+  }
+
   _setupClickHandler() {
     let groupDrag = null, groupOffX = 0, groupOffY = 0;
 
@@ -1094,6 +1256,10 @@ export class PhotoSystem {
         for (const p of groupDrag.photos) { p.group.x += dx; p.group.y += dy; }
         groupDrag.clipSprite.x += dx; groupDrag.clipSprite.y += dy;
         if (groupDrag.clipSprite._baseY !== undefined) groupDrag.clipSprite._baseY += dy;
+        // Move hover label with group
+        if (groupDrag._hoverArrow) groupDrag._hoverArrow.position.set(groupDrag._hoverArrow.x + dx, groupDrag._hoverArrow.y + dy);
+        if (groupDrag._hoverText) groupDrag._hoverText.position.set(groupDrag._hoverText.x + dx, groupDrag._hoverText.y + dy);
+        if (groupDrag._hoverTextMask) groupDrag._hoverTextMask.position.set(groupDrag._hoverTextMask.x + dx, groupDrag._hoverTextMask.y + dy);
         groupOffX = e.clientX; groupOffY = e.clientY;
         return;
       }
@@ -1132,6 +1298,13 @@ export class PhotoSystem {
           }
         }
         for (const p of cg.photos) { const ts = (groupHovered || groupDrag===cg ? 1.05 : 1.0) * p.baseScale; const c=p.group.scale.x; p.group.scale.set(c+(ts-c)*0.15); }
+
+        // Hover label: show on enter, hide on leave
+        if (groupHovered && !cg._hoverArrow) {
+          this._showClipHoverLabel(cg);
+        } else if (!groupHovered && cg._hoverArrow) {
+          this._hideClipHoverLabel(cg);
+        }
       }
     });
     this.canvas.addEventListener('mouseup', () => { if(groupDrag){ for(const gp of groupDrag.photos) gp.group.scale.set(gp.baseScale); } groupDrag = null; });

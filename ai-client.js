@@ -122,3 +122,12 @@ export async function streamChat(messages, onToken, onDone, signal) {
   }
   onDone();
 }
+
+/**
+ * Non-streaming chat: returns full response as a string.
+ */
+export async function chatSync(messages) {
+  let text = '';
+  await streamChat(messages, t => { text += t; }, () => {});
+  return text.trim();
+}
