@@ -3,12 +3,14 @@
 // Cloudflare Worker proxy (hides API key server-side)
 const WORKER_URL = 'https://crimson-waterfall-c16b.laijianxun123.workers.dev';
 
-// Optional: local .env.js for local dev (direct Azure access)
+// Local dev: check if .env.js exists via fetch (no dynamic import — avoids iOS Safari crash)
 let LOCAL_API_KEY = '';
 let USE_LOCAL = false;
-const _envReady = import('./.env.js').then(m => {
-  LOCAL_API_KEY = m.AZURE_API_KEY || '';
-  if (LOCAL_API_KEY) USE_LOCAL = true;
+const _envReady = fetch('./.env.js', { method: 'HEAD' }).then(r => {
+  if (r.ok) return fetch('./.env.js').then(r => r.text()).then(txt => {
+    const m = txt.match(/['"]([^'"]{10,})['"]/);
+    if (m) { LOCAL_API_KEY = m[1]; USE_LOCAL = true; }
+  });
 }).catch(() => {});
 
 /**
