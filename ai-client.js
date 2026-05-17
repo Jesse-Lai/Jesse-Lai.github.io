@@ -1,11 +1,8 @@
 // ai-client.js — Azure OpenAI streaming client + shared system prompt
 let AZURE_API_KEY = '';
-try {
-  const env = await import('./.env.js');
-  AZURE_API_KEY = env.AZURE_API_KEY || '';
-} catch(e) {
-  console.warn('ai-client: .env.js not found, AI chat disabled');
-}
+
+// Lazy-load API key (non-blocking)
+const _envReady = import('./.env.js').then(m => { AZURE_API_KEY = m.AZURE_API_KEY || ''; }).catch(() => {});
 
 const AZURE_ENDPOINT = 'https://jesseai.openai.azure.com';
 const DEPLOYMENT = 'gpt-5.4-mini';
@@ -58,6 +55,8 @@ FORMAT:
  * Stream a chat completion from Azure OpenAI.
  */
 export async function streamChat(messages, onToken, onDone, signal) {
+  await _envReady;
+  if (!AZURE_API_KEY) { onDone?.('AI chat unavailable (no API key)'); return; }
   let resp;
   try {
     resp = await fetch(URL, {

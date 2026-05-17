@@ -11,6 +11,9 @@ import { WallArticle } from "./wall-article.js?v=151";
   await app.init({ width: W, height: H, antialias: true, resolution: dpr, autoDensity: true, backgroundColor: 0x0a0a0a });
   document.body.appendChild(app.canvas);
   app.canvas.style.touchAction = "pan-y";
+  // PixiJS v8 sets touchAction="none" in its event system init.
+  // Override it after a microtask to ensure it sticks.
+  queueMicrotask(() => { app.canvas.style.touchAction = 'pan-y'; });
   app.stage.sortableChildren = true;
   app.stage.visible = false; // Hide until fully loaded
 
