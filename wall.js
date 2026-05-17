@@ -175,10 +175,11 @@ import { WallArticle } from "./wall-article.js?v=151";
   }
 
   // 如果内容超过视口高度，扩展 canvas
-  const totalH = Math.max(...colTops) + gridPad;
+  const totalH = Math.max(...colTops) + gridPad + 80; // +80 for chat bar
+  app.renderer.resize(W, Math.max(totalH, H));
   if (totalH > H) {
-    app.renderer.resize(W, totalH);
-    document.body.style.overflow = 'auto';
+    document.body.style.overflowY = 'auto';
+    app.canvas.style.touchAction = 'pan-y';
   }
 
   // 注册所有有文章的 wall items，供 chat 推荐使用
