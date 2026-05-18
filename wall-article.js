@@ -1,4 +1,4 @@
-// wall-article.js — Wall-level composer + AI-generated portfolio article
+// wall-article.js — Wall-level composer + AI-generated JesseOS article
 import { streamChat, buildSystemPrompt } from './ai-client.js?v=166';
 
 export class WallArticle {

@@ -1,6 +1,6 @@
 # The Wall — Product Spec v0.1
 
-> An AI-native portfolio that **is** the design philosophy it demonstrates.
+> An AI-native JesseOS that **is** the design philosophy it demonstrates.
 > The product itself is the understanding. — Jesse Lai
 
 ---
@@ -9,7 +9,7 @@
 
 一个书桌隐喻的个人作品展示网站。所有视觉元素由"基本粒子"组成——贴纸、照片、别针、纸片、笔、文件夹、邮票——它们可以互相组合，像真实书桌上的物件一样存在。
 
-**这不是传统 portfolio。** 它是 GenUI 的实体化表达：
+**这不是传统 JesseOS。** 它是 GenUI 的实体化表达：
 - 布局由 AI 根据访客身份动态生成（不是固定排版）
 - 内容从 Notion 数据库实时获取（不是硬编码）
 - 访客可以提问，AI 基于 Jesse 的资料库即时生成新页面
@@ -79,7 +79,7 @@
 
 - 用户主动切换
 - 元素按类别整齐排列（项目类、个人类、设计思考类...）
-- 类似传统 portfolio 的 grid 布局，但保留粒子质感
+- 类似传统 JesseOS 的 grid 布局，但保留粒子质感
 - 每个分类可以是一个文件夹
 
 ### 4.3 Detail View — "展开查看"
@@ -96,7 +96,7 @@
 ### 5.1 Notion 作为 CMS
 
 ```
-Notion Database: "Portfolio"
+Notion Database: "JesseOS"
 ├── 项目名称 (Title)
 ├── 封面图片 (Files)  
 ├── 描述 (Rich Text)
