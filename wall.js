@@ -15,6 +15,8 @@ import { WallArticle } from "./wall-article.js?v=151";
   const isTouchDevice = 'ontouchstart' in window;
   if (isTouchDevice && app.renderer.events) {
     app.renderer.events.setTargetElement(null);
+    // Also remove global listeners PixiJS registered on window/document
+    app.renderer.events.destroy();
   }
   app.stage.sortableChildren = true;
   app.stage.visible = false; // Hide until fully loaded
