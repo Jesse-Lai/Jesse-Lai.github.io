@@ -57,6 +57,16 @@ import { WallArticle } from "./wall-article.js?v=151";
   const contentData = await contentResp.json();
   setProgress(12);
 
+  // ─── Mobile: use compressed thumbnails for cover images ───
+  if (isMobile) {
+    for (const entry of contentData) {
+      if (entry.cover_image) {
+        const base = entry.cover_image.replace(/^.*\//, '').replace(/\.[^.]*$/, '');
+        entry.cover_image = `content_images/thumb/${base}.jpg`;
+      }
+    }
+  }
+
   // ─── Language ───
   const LANG = localStorage.getItem('wall-lang') || 'en';
 
