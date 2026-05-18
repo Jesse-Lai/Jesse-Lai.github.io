@@ -57,15 +57,6 @@ import { WallArticle } from "./wall-article.js?v=151";
   const contentData = await contentResp.json();
   setProgress(12);
 
-  // ─── Mobile: use compressed thumbnails for cover images ───
-  if (isMobile) {
-    for (const entry of contentData) {
-      if (entry.cover_image) {
-        const base = entry.cover_image.replace(/^.*\//, '').replace(/\.[^.]*$/, '');
-        entry.cover_image = `content_images/thumb/${base}.jpg`;
-      }
-    }
-  }
 
   // ─── Language ───
   const LANG = localStorage.getItem('wall-lang') || 'en';
@@ -219,6 +210,7 @@ import { WallArticle } from "./wall-article.js?v=151";
   // 如果内容超过视口高度，扩展 canvas
   const totalH = Math.max(...colTops) + gridPad + 80; // +80 for chat bar
   app.renderer.resize(W, Math.max(totalH, H));
+  app.canvas.style.height = Math.max(totalH, H) + 'px';
   if (totalH > H) {
     document.body.style.overflowY = 'auto';
     app.canvas.style.touchAction = 'pan-y';
@@ -297,6 +289,7 @@ import { WallArticle } from "./wall-article.js?v=151";
     const currentH = app.renderer.height / (app.renderer.resolution || 1);
     const newH = Math.max(window.innerHeight, currentH);
     app.renderer.resize(newW, newH);
+    app.canvas.style.height = newH + 'px';
   });
 
   // ─── Organize by Category ───
@@ -380,7 +373,7 @@ import { WallArticle } from "./wall-article.js?v=151";
 
     // Resize canvas if needed
     const newH = Math.max(...colTopsNew) + gridPad;
-    app.renderer.resize(W, Math.max(newH, window.innerHeight));
+    app.renderer.resize(W, Math.max(newH, window.innerHeight)); app.canvas.style.height = Math.max(newH, window.innerHeight) + "px";
   }
 
   // ─── Shuffle: reset to initial wall layout ───
@@ -398,7 +391,7 @@ import { WallArticle } from "./wall-article.js?v=151";
 
     // Resize canvas
     const totalH = Math.max(...colTops) + gridPad + 80;
-    app.renderer.resize(W, Math.max(totalH, window.innerHeight));
+    app.renderer.resize(W, Math.max(totalH, window.innerHeight)); app.canvas.style.height = Math.max(totalH, window.innerHeight) + "px";
   }
 
   // Wire buttons
