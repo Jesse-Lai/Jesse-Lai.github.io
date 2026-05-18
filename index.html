@@ -425,6 +425,22 @@
     <div id="loading-bar-bg"><div id="loading-bar"></div></div>
     <div id="loading-percent">0%</div>
   </div>
+  <script>
+  window.onerror = function(msg, src, line, col, err) {
+    document.getElementById('loading-text').textContent = 'ERROR';
+    document.getElementById('loading-percent').textContent = msg + ' @ ' + src + ':' + line;
+    document.getElementById('loading-percent').style.fontSize = '9px';
+    document.getElementById('loading-percent').style.maxWidth = '90vw';
+    document.getElementById('loading-percent').style.wordBreak = 'break-all';
+  };
+  window.addEventListener('unhandledrejection', function(e) {
+    document.getElementById('loading-text').textContent = 'ERROR';
+    document.getElementById('loading-percent').textContent = String(e.reason);
+    document.getElementById('loading-percent').style.fontSize = '9px';
+    document.getElementById('loading-percent').style.maxWidth = '90vw';
+    document.getElementById('loading-percent').style.wordBreak = 'break-all';
+  });
+  </script>
   <script src="lib/pixi.min.js"></script>
   <script type="module" src="wall.js?v=166"></script>
 </body>
