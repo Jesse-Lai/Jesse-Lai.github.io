@@ -1041,28 +1041,30 @@ export class PhotoSystem {
     this.canvas.addEventListener('mousemove', onMove);
     this.canvas.addEventListener('mouseup', onUp);
 
-    // Touch support
-    let longPress = null, touchMoved = false;
-    this.canvas.addEventListener('touchstart', e => {
-      const t = e.touches[0];
-      touchMoved = false;
-      longPress = setTimeout(() => {
-        if (!touchMoved) onDown({clientX:t.clientX, clientY:t.clientY});
-      }, 300);
-    });
-    this.canvas.addEventListener('touchmove', e => {
-      touchMoved = true;
-      if (longPress) { clearTimeout(longPress); longPress = null; }
-      if (drag) {
-        e.preventDefault();
+    // Touch support — mobile: tap only (no drag), desktop: full drag
+    if (!('ontouchstart' in window)) {
+      // Desktop only: no touch needed
+    } else {
+      // Mobile: only detect taps (no drag, no passive:false)
+      let touchStartX, touchStartY, touchStartTime;
+      this.canvas.addEventListener('touchstart', e => {
         const t = e.touches[0];
-        onMove({clientX:t.clientX, clientY:t.clientY});
-      }
-    }, {passive:false});
-    this.canvas.addEventListener('touchend', () => {
-      if (longPress) { clearTimeout(longPress); longPress = null; }
-      onUp();
-    });
+        touchStartX = t.clientX;
+        touchStartY = t.clientY;
+        touchStartTime = Date.now();
+      }, {passive: true});
+      this.canvas.addEventListener('touchend', e => {
+        const t = e.changedTouches[0];
+        const dx = t.clientX - touchStartX;
+        const dy = t.clientY - touchStartY;
+        const dt = Date.now() - touchStartTime;
+        // Tap: small movement + short duration
+        if (Math.abs(dx) < 15 && Math.abs(dy) < 15 && dt < 400) {
+          onDown({clientX: t.clientX, clientY: t.clientY});
+          setTimeout(() => onUp(), 50);
+        }
+      }, {passive: true});
+    }
   }
 
   // Convert viewport Y to canvas Y (accounts for page scroll)

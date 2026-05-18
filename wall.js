@@ -8,16 +8,12 @@ import { WallArticle } from "./wall-article.js?v=151";
   const dpr = window.devicePixelRatio || 1;
 
   const app = new PIXI.Application();
-  await app.init({ width: W, height: H, antialias: true, resolution: dpr, autoDensity: true, backgroundColor: 0x0a0a0a });
+  const isTouchDevice = 'ontouchstart' in window;
+  await app.init({ width: W, height: H, antialias: true, resolution: dpr, autoDensity: true, backgroundColor: 0x0a0a0a, eventFeatures: isTouchDevice ? { move: false, globalMove: false, click: false, wheel: false } : undefined });
   document.body.appendChild(app.canvas);
   app.canvas.style.touchAction = "pan-y";
-  // PixiJS v8 sets touchAction="none" in its event system init.
-  // Use MutationObserver to immediately revert any change.
-  new MutationObserver(() => {
-    if (app.canvas.style.touchAction !== 'pan-y') {
-      app.canvas.style.touchAction = 'pan-y';
-    }
-  }).observe(app.canvas, { attributes: true, attributeFilter: ['style'] });
+  // PixiJS v8 may override touchAction; re-set after stage init
+  setTimeout(() => { app.canvas.style.touchAction = 'pan-y'; }, 0);
   app.stage.sortableChildren = true;
   app.stage.visible = false; // Hide until fully loaded
 
