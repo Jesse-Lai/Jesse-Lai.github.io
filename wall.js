@@ -12,8 +12,12 @@ import { WallArticle } from "./wall-article.js?v=151";
   document.body.appendChild(app.canvas);
   app.canvas.style.touchAction = "pan-y";
   // PixiJS v8 sets touchAction="none" in its event system init.
-  // Override it after a microtask to ensure it sticks.
-  queueMicrotask(() => { app.canvas.style.touchAction = 'pan-y'; });
+  // Use MutationObserver to immediately revert any change.
+  new MutationObserver(() => {
+    if (app.canvas.style.touchAction !== 'pan-y') {
+      app.canvas.style.touchAction = 'pan-y';
+    }
+  }).observe(app.canvas, { attributes: true, attributeFilter: ['style'] });
   app.stage.sortableChildren = true;
   app.stage.visible = false; // Hide until fully loaded
 
