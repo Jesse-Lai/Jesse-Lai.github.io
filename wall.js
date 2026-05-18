@@ -224,6 +224,7 @@ import { WallArticle } from "./wall-article.js?v=151";
 
   // 如果内容超过视口高度，扩展 canvas
   const totalH = Math.max(...colTops) + gridPad + 80; // +80 for chat bar
+  const contentH = Math.max(totalH, H); // Save for resize handler
   app.renderer.resize(W, Math.max(totalH, H));
   app.canvas.style.height = Math.max(totalH, H) + 'px';
   if (totalH > H) {
@@ -336,9 +337,8 @@ import { WallArticle } from "./wall-article.js?v=151";
   // ─── Resize handler ───
   window.addEventListener('resize', () => {
     const newW = window.innerWidth;
-    // Keep canvas at least as tall as content (don't shrink back to viewport)
-    const currentH = app.renderer.height / (app.renderer.resolution || 1);
-    const newH = Math.max(window.innerHeight, currentH);
+    // Never shrink below original content height
+    const newH = Math.max(window.innerHeight, contentH);
     app.renderer.resize(newW, newH);
     app.canvas.style.height = newH + 'px';
   });
