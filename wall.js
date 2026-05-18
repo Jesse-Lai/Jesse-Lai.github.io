@@ -8,12 +8,14 @@ import { WallArticle } from "./wall-article.js?v=151";
   const dpr = window.devicePixelRatio || 1;
 
   const app = new PIXI.Application();
-  const isTouchDevice = 'ontouchstart' in window;
-  await app.init({ width: W, height: H, antialias: true, resolution: dpr, autoDensity: true, backgroundColor: 0x0a0a0a, eventFeatures: isTouchDevice ? { move: false, globalMove: false, click: false, wheel: false } : undefined });
+  await app.init({ width: W, height: H, antialias: true, resolution: dpr, autoDensity: true, backgroundColor: 0x0a0a0a });
   document.body.appendChild(app.canvas);
   app.canvas.style.touchAction = "pan-y";
-  // PixiJS v8 may override touchAction; re-set after stage init
-  setTimeout(() => { app.canvas.style.touchAction = 'pan-y'; }, 0);
+  // On mobile: completely remove PixiJS event system listeners to allow native scroll
+  const isTouchDevice = 'ontouchstart' in window;
+  if (isTouchDevice && app.renderer.events) {
+    app.renderer.events.setTargetElement(null);
+  }
   app.stage.sortableChildren = true;
   app.stage.visible = false; // Hide until fully loaded
 
