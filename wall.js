@@ -59,20 +59,6 @@ import { WallArticle } from "./wall-article.js?v=151";
   const contentData = await contentResp.json();
   setProgress(12);
 
-  // ─── Mobile: use thumbnails initially, swap to HD when scrolled near ───
-  const thumbMap = new Map(); // original path → thumb path
-  if (isMobile) {
-    for (const entry of contentData) {
-      if (entry.cover_image) {
-        const orig = entry.cover_image;
-        const base = orig.replace(/^.*\//, '').replace(/\.[^.]*$/, '');
-        const thumb = `content_images/thumb/${base}.jpg`;
-        thumbMap.set(thumb, orig);
-        entry.cover_image = thumb;
-      }
-    }
-  }
-
   // ─── Language ───
   const LANG = localStorage.getItem('wall-lang') || 'en';
 
@@ -264,42 +250,6 @@ import { WallArticle } from "./wall-article.js?v=151";
 
   // ─── Mobile scroll hover for clip labels ───
   if ('ontouchstart' in window) photoSystem.setupMobileScrollHover();
-
-  // ─── Mobile: swap thumbnails to HD when scrolled near ───
-  if (isMobile && thumbMap.size > 0) {
-    const swapped = new Set();
-    const checkSwap = () => {
-      const scrollY = window.scrollY || 0;
-      const vH = window.innerHeight;
-      for (const r of rendered) {
-        if (swapped.has(r)) continue;
-        const y = r.group.y;
-        // If within 1.5 screens of viewport
-        if (y < scrollY + vH * 2.5 && y > scrollY - vH) {
-          const item = r.wallItem;
-          const origSrc = thumbMap.get(item.src);
-          if (origSrc && item.type === 'photo') {
-            swapped.add(r);
-            // Load HD image and replace texture
-            loadImagePixels(origSrc).then(hdData => {
-              const photoItem = r.focusableItem;
-              if (photoItem && photoItem.group) {
-                const sprite = photoItem.group.children.find(c => c instanceof PIXI.Sprite);
-                if (sprite) {
-                  const tex = PIXI.Texture.from(origSrc);
-                  sprite.texture = tex;
-                }
-              }
-            }).catch(() => {});
-          } else {
-            swapped.add(r);
-          }
-        }
-      }
-    };
-    window.addEventListener('scroll', checkSwap, { passive: true });
-    checkSwap(); // Check initial viewport
-  }
 
   // ─── Wall Article (composer + AI narrative) ───
   const wallArticle = new WallArticle(focusOverlay, contentData, LANG);
