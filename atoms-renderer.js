@@ -1078,7 +1078,7 @@ export class PhotoSystem {
   async generateClipLabel(cg) {
     if (cg.label) return;
     const titles = cg.photos.map(p => p.config?.caption || p.focusData?.title || '').filter(Boolean);
-    if (!titles.length) { cg.label = 'Collection'; return; }
+    if (!titles.length) { cg.label = 'Collection'; cg.summary = ''; return; }
     try {
       const resp = await chatSync([
         { role: 'user', content: `Describe the theme of these items in 2-3 English words (no quotes, no period): ${titles.join(', ')}` }
@@ -1086,6 +1086,14 @@ export class PhotoSystem {
       cg.label = resp || 'Collection';
     } catch {
       cg.label = 'Collection';
+    }
+    // Also generate a short summary for the focus overlay
+    if (!cg.summary) {
+      try {
+        cg.summary = await chatSync([
+          { role: 'user', content: `In 2 short English sentences, summarize what these items are about: ${titles.join(', ')}. Write as Jesse (first person, warm tone). No quotes, under 30 words total.` }
+        ]);
+      } catch { cg.summary = titles.join(', '); }
     }
   }
 
@@ -1131,6 +1139,7 @@ export class PhotoSystem {
     const start = performance.now();
 
     const tick = () => {
+      if (arrow.destroyed || !cg._hoverAnimating) return; // bail if cleaned up
       const elapsed = performance.now() - start;
 
       // Phase 1: Arrow stroke (0 → arrowDuration)
@@ -1212,8 +1221,20 @@ export class PhotoSystem {
     window.addEventListener('scroll', check, { passive: true });
   }
 
+  _buildClipFocusData(cg) {
+    const titles = cg.photos.map(p => p.focusData?.title || p.config?.caption || '').filter(Boolean);
+    return {
+      title: cg.label || 'Collection',
+      description: cg.summary || titles.join(', '),
+      link: '#',
+      linkText: 'Ask AI to summarize',
+      article: null,
+      _clipPhotos: cg.photos,
+    };
+  }
+
   _setupClickHandler() {
-    let groupDrag = null, groupOffX = 0, groupOffY = 0;
+    let groupDrag = null, groupOffX = 0, groupOffY = 0, groupDownTime = 0, groupMoved = false;
 
     this.canvas.addEventListener('mousedown', e => {
       const mx = e.clientX, my = this._canvasY(e.clientY);
@@ -1232,6 +1253,7 @@ export class PhotoSystem {
           if (mx>b.x && mx<b.x+b.w && my>b.y && my<b.y+b.h) {
             groupDrag = cg;
             groupOffX = mx; groupOffY = my;
+            groupDownTime = Date.now(); groupMoved = false;
             for (const gp of cg.photos) gp.group.scale.set(gp.baseScale * 1.05);
             return;
           }
@@ -1240,6 +1262,7 @@ export class PhotoSystem {
     });
     this.canvas.addEventListener('mousemove', e => {
       if (groupDrag) {
+        groupMoved = true;
         const dx = e.clientX - groupOffX, dy = e.clientY - groupOffY;
         for (const p of groupDrag.photos) { p.group.x += dx; p.group.y += dy; }
         groupDrag.clipSprite.x += dx; groupDrag.clipSprite.y += dy;
@@ -1295,7 +1318,21 @@ export class PhotoSystem {
         }
       }
     });
-    this.canvas.addEventListener('mouseup', () => { if(groupDrag){ for(const gp of groupDrag.photos) gp.group.scale.set(gp.baseScale); } groupDrag = null; });
+    this.canvas.addEventListener('mouseup', () => {
+      if (groupDrag) {
+        for (const gp of groupDrag.photos) gp.group.scale.set(gp.baseScale);
+        // Click (not drag) on clip group → open focus overlay
+        if (!groupMoved && (Date.now() - groupDownTime) < 200 && this.onFocus) {
+          const firstPhoto = groupDrag.photos[0];
+          firstPhoto._savedFocusData = firstPhoto.focusData;
+          firstPhoto.focusData = this._buildClipFocusData(groupDrag);
+          firstPhoto._isClipGroupFocus = true;
+          firstPhoto._clipGroupRef = groupDrag;
+          this.onFocus(firstPhoto);
+        }
+      }
+      groupDrag = null;
+    });
 
     // Click for clip split (works on both desktop and mobile without blocking scroll)
     this.canvas.addEventListener('click', e => {
@@ -1350,7 +1387,7 @@ export class FocusOverlay {
     // Wire focus link to open article instead of navigating
     this.linkEl.addEventListener('click', (e) => {
       e.preventDefault();
-      if (this.activeItem?.focusData?.article) {
+      if (this.activeItem?.focusData?.article || this.activeItem?.focusData?._clipPhotos) {
         this.openArticle();
       }
     });
@@ -1486,6 +1523,15 @@ export class FocusOverlay {
     const maxScaleH = maxAtomH / item.itemH;
     const targetScale = Math.min(1.3, maxScaleW, maxScaleH);
 
+    // Clean up hover labels BEFORE snapshotting stage children (they'd be destroyed but still in bgChildren)
+    if (item._isClipGroupFocus && item._clipGroupRef) {
+      const cg = item._clipGroupRef;
+      if (cg._hoverArrow) { if (cg._hoverArrow.parent) cg._hoverArrow.parent.removeChild(cg._hoverArrow); cg._hoverArrow.destroy(); cg._hoverArrow = null; }
+      if (cg._hoverText) { cg._hoverText.mask = null; if (cg._hoverText.parent) cg._hoverText.parent.removeChild(cg._hoverText); cg._hoverText.destroy(); cg._hoverText = null; }
+      if (cg._hoverTextMask) { if (cg._hoverTextMask.parent) cg._hoverTextMask.parent.removeChild(cg._hoverTextMask); cg._hoverTextMask.destroy(); cg._hoverTextMask = null; }
+      cg._hoverAnimating = false;
+    }
+
     // Wrap background into blur container
     this.bgContainer = new PIXI.Container();
     this.bgChildren = [...this.app.stage.children];
@@ -1503,11 +1549,88 @@ export class FocusOverlay {
     this.app.stage.addChild(this.dimLayer);
     this._animateDim(0, 0.8, 0, 10, 500);
 
-    // Extract texture from the item group
+    // ─── Clip group focus: animate all elements together (no mesh/texture) ───
+    if (item._isClipGroupFocus && item.focusData?._clipPhotos) {
+      const photos = item.focusData._clipPhotos;
+      const cg = item._clipGroupRef;
+      const allEls = photos.map(p => p.group);
+      if (cg?.clipSprite) allEls.push(cg.clipSprite);
+
+      // Compute current group bounds
+      let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+      for (const p of photos) {
+        const s = p.group.scale.x;
+        const bx = p.group.x - p.anchorX * s, by = p.group.y - p.anchorY * s;
+        minX = Math.min(minX, bx); minY = Math.min(minY, by);
+        maxX = Math.max(maxX, bx + p.itemW * s); maxY = Math.max(maxY, by + p.itemH * s);
+      }
+      if (cg?.clipSprite) {
+        const csb = cg.clipSprite.getBounds();
+        minX = Math.min(minX, csb.x); minY = Math.min(minY, csb.y);
+        maxX = Math.max(maxX, csb.x + csb.width); maxY = Math.max(maxY, csb.y + csb.height);
+      }
+      const groupW = maxX - minX, groupH = maxY - minY;
+      const groupCenterX = minX + groupW / 2, groupCenterY = minY + groupH / 2;
+
+      // Target position: centered in viewport
+      const scrollY = window.scrollY || 0;
+      const totalContentH = groupH + focusGap + textBlockH;
+      const blockTopY = Math.max(topPad, (vH - totalContentH) / 2);
+      const targetCenterX = W / 2;
+      const targetCenterY = scrollY + blockTopY + groupH / 2;
+      const dx = targetCenterX - groupCenterX;
+      const dy = targetCenterY - groupCenterY;
+
+      // Save original positions for close
+      this._clipOrigPositions = allEls.map(el => ({ el, x: el.x, y: el.y }));
+      this._clipGroupRef = cg;
+      this.mesh = null; // no mesh for clip groups
+
+      // Move all elements above blur layer
+      for (const el of allEls) {
+        if (el.parent) el.parent.removeChild(el);
+        this.app.stage.addChild(el);
+      }
+
+      // Animate all elements together
+      const duration = 600;
+      const startPositions = allEls.map(el => ({ x: el.x, y: el.y }));
+      const startTime = performance.now();
+      const tick = () => {
+        const t = Math.min(1, (performance.now() - startTime) / duration);
+        const ease = 1 - Math.pow(1 - t, 3);
+        for (let i = 0; i < allEls.length; i++) {
+          allEls[i].x = startPositions[i].x + dx * ease;
+          allEls[i].y = startPositions[i].y + dy * ease;
+        }
+        if (t < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+
+      // Position HTML content below
+      document.getElementById('focus-content').style.top = (blockTopY + groupH + focusGap) + 'px';
+
+      // Populate HTML
+      const data = item.focusData;
+      this.titleEl.textContent = data.title || '';
+      this.descEl.textContent = data.description || '';
+      if (data.link) {
+        this.linkEl.href = data.link;
+        this.linkEl.textContent = data.linkText || 'View';
+        this.linkEl.style.display = '';
+      } else {
+        this.linkEl.style.display = 'none';
+      }
+
+      this.overlay.style.display = 'block';
+      setTimeout(() => this.overlay.classList.add('visible'), duration * 0.7);
+      return; // skip normal single-atom mesh flow
+    }
+
+    // ─── Single atom focus: extract texture → MeshPlane ───
     const tex = this.app.renderer.extract.texture(item.group);
     const meshW = item.itemW * this.origScale;
     const meshH = item.itemH * this.origScale;
-
     // Hide original, remove from bg
     this.bgContainer.removeChild(item.group);
     item.group.visible = false;
@@ -1516,38 +1639,31 @@ export class FocusOverlay {
     const mesh = new PIXI.MeshPlane({ texture: tex, verticesX: 20, verticesY: 20 });
     mesh.width = meshW;
     mesh.height = meshH;
-    // Pivot must use LOCAL (geometry) coordinates, not display size
-    // MeshPlane native size comes from the texture dimensions
     const localW = tex.width;
     const localH = tex.height;
     mesh.pivot.set(localW / 2, localH / 2);
-    // mesh.x/y is now the visual center of the mesh
-    // top-left = origX - anchorX*scale, so center = top-left + meshW/2
     mesh.x = this.origX - item.anchorX * this.origScale + meshW / 2;
     mesh.y = this.origY - item.anchorY * this.origScale + meshH / 2;
     mesh.rotation = this.origRotation;
     this.app.stage.addChild(mesh);
     this.mesh = mesh;
 
-    // Store original vertex positions (these use the INITIAL mesh dimensions)
+    // Store original vertex positions
     const { buffer } = mesh.geometry.getAttribute('aPosition');
     const origPositions = new Float32Array(buffer.data);
     this._origPositions = origPositions;
-    // Base dimensions for curl normalization — FIXED, never changes
-    const baseW = origPositions[origPositions.length - 2]; // last vertex x = mesh native width
-    const baseH = origPositions[origPositions.length - 1]; // last vertex y = mesh native height
+    const baseW = origPositions[origPositions.length - 2];
+    const baseH = origPositions[origPositions.length - 1];
     this._baseW = baseW;
     this._baseH = baseH;
 
-    // Animate: paper curl → fly to center → flatten + rotation to 0
+    // Animate: paper curl → fly to center
     const startX = mesh.x, startY = mesh.y;
-    const startRot = this.origRotation;
     const targetW = item.itemW * targetScale;
     const targetH = item.itemH * targetScale;
-    // Center atom + text block as a unit in viewport
     const totalContentH = targetH + focusGap + textBlockH;
     const blockTopY = Math.max(topPad, (vH - totalContentH) / 2);
-    const atomCenterY = blockTopY + targetH / 2; // viewport coords
+    const atomCenterY = blockTopY + targetH / 2;
     const scrollY = window.scrollY || 0;
     const targetMeshX = W / 2;
     const targetMeshY = scrollY + atomCenterY;
@@ -1560,14 +1676,11 @@ export class FocusOverlay {
       const t = Math.min(1, elapsed / duration);
       const ease = 1 - Math.pow(1 - t, 3);
 
-      // Position, size & rotation interpolation
       mesh.x = startX + (targetMeshX - startX) * ease;
       mesh.y = startY + (targetMeshY - startY) * ease;
       mesh.width = startW + (targetW - startW) * ease;
       mesh.height = startH + (targetH - startH) * ease;
-      // 保持原始角度，不归零
 
-      // Wave sweeps from bottom-right to top-left over the duration
       this._applyPaperCurl(buffer, origPositions, baseW, baseH, ease);
 
       if (t < 1) requestAnimationFrame(tick);
@@ -1593,8 +1706,8 @@ export class FocusOverlay {
     // Show text/button when fly-in animation is ~70% done
     setTimeout(() => this.overlay.classList.add('visible'), duration * 0.7);
 
-    // Play video once after fly-in — overlay live group sprite (like wall hover)
-    if (item.videoSrc) {
+    // Play video once after fly-in — only for single photo atoms (not clip groups)
+    if (item.videoSrc && !item._isClipGroupFocus) {
       setTimeout(() => {
         if (!this.mesh) return;
         const entry = getOrCreateVideo(item.videoSrc);
@@ -1663,15 +1776,64 @@ export class FocusOverlay {
     if (!this.activeItem) return;
     this._cleanupFocusVideo();
     const item = this.activeItem;
+    // Restore original focusData if this was a clip group focus
+    if (item._isClipGroupFocus) {
+      if (item._savedFocusData) { item.focusData = item._savedFocusData; delete item._savedFocusData; }
+      delete item._isClipGroupFocus;
+      delete item._clipGroupRef;
+    }
     const mesh = this.mesh;
     this.activeItem = null;
     this.mesh = null;
 
     this.overlay.classList.remove('visible');
-    // dim 可能是 0.8（普通 focus）或 1.0（从文章关闭）
     const currentDim = this._currentDimAlpha ?? 0.8;
     const currentBlur = this._currentDimBlur ?? 10;
     this._animateDim(currentDim, 0, currentBlur, 0, 400);
+
+    // ─── Clip group close: animate elements back to original positions ───
+    if (!mesh && this._clipOrigPositions) {
+      const origPos = this._clipOrigPositions;
+      this._clipOrigPositions = null;
+      const duration = 600;
+      const startPositions = origPos.map(o => ({ x: o.el.x, y: o.el.y }));
+      const startTime = performance.now();
+      const tick = () => {
+        const t = Math.min(1, (performance.now() - startTime) / duration);
+        const ease = 1 - Math.pow(1 - t, 3);
+        for (let i = 0; i < origPos.length; i++) {
+          origPos[i].el.x = startPositions[i].x + (origPos[i].x - startPositions[i].x) * ease;
+          origPos[i].el.y = startPositions[i].y + (origPos[i].y - startPositions[i].y) * ease;
+        }
+        if (t < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+
+      setTimeout(() => {
+        // Move elements back into bgContainer's children (stage teardown)
+        this.overlay.style.overflowY = 'auto';
+        this.overlay.scrollTop = 0;
+        this.overlay.style.overflowY = '';
+        this.overlay.style.display = 'none';
+        this.dimLayer.visible = false;
+        if (this.bgContainer) {
+          this.app.stage.removeChild(this.dimLayer);
+          // Move clip elements back before teardown
+          for (const o of origPos) {
+            if (o.el.parent) o.el.parent.removeChild(o.el);
+            this.bgContainer.addChild(o.el);
+          }
+          this.app.stage.removeChild(this.bgContainer);
+          this.bgContainer.filters = [];
+          for (const child of this.bgChildren) this.app.stage.addChild(child);
+          this.bgContainer = null;
+          this.bgChildren = null;
+        }
+        const wallComposer = document.getElementById('wall-composer');
+        if (wallComposer) wallComposer.style.display = '';
+      }, 650);
+      return;
+    }
 
     if (!mesh) return;
     const { buffer } = mesh.geometry.getAttribute('aPosition');
@@ -1711,9 +1873,9 @@ export class FocusOverlay {
     requestAnimationFrame(tick);
 
     setTimeout(() => {
-      // Cleanup: remove mesh, restore original
+      // Cleanup: remove mesh, restore original (don't destroy texture — may be shared with clip photos)
       if (mesh.parent) mesh.parent.removeChild(mesh);
-      mesh.destroy();
+      mesh.destroy({ texture: false });
       item.group.visible = true;
       item.group.x = this.origX;
       item.group.y = this.origY;
@@ -1741,9 +1903,18 @@ export class FocusOverlay {
   // ─── Article Mode (lives inside the focus overlay) ───
 
   openArticle() {
-    if (!this.activeItem || !this.mesh) return;
+    if (!this.activeItem) return;
+
+    // Clip group → AI-generated summary article (no mesh)
+    if (this.activeItem.focusData?._clipPhotos) {
+      this._openClipSummaryArticle();
+      return;
+    }
+
+    if (!this.mesh) return;
     // Stop focus video if still playing
     this._cleanupFocusVideo();
+
     const mesh = this.mesh;
     const W = this.app.screen.width;
     this._articleMode = true;
@@ -1844,6 +2015,182 @@ export class FocusOverlay {
         });
       }, 400);
     }, duration);
+  }
+
+  async _openClipSummaryArticle() {
+    const W = this.app.screen.width;
+    this._articleMode = true;
+
+    // Get all clip elements and compute their current bounds
+    const allEls = this._clipOrigPositions ? this._clipOrigPositions.map(o => o.el) : [];
+    let minY = Infinity, maxY = -Infinity;
+    for (const el of allEls) {
+      const b = el.getBounds ? el.getBounds() : { y: el.y, height: 0 };
+      minY = Math.min(minY, b.y);
+      maxY = Math.max(maxY, b.y + b.height);
+    }
+    const groupH = maxY - minY;
+    const groupCenterY = (minY + maxY) / 2;
+
+    // Save current positions for returning from article
+    this._clipArticlePositions = allEls.map(el => ({ el, x: el.x, y: el.y }));
+
+    document.getElementById('focus-content').style.display = 'none';
+
+    // Animate all clip elements up to near top
+    const scrollY = window.scrollY || 0;
+    const targetCenterY = scrollY + 80 + groupH / 2;
+    const dy = targetCenterY - groupCenterY;
+    const duration = 500;
+    const startPositions = allEls.map(el => ({ x: el.x, y: el.y }));
+    const startTime = performance.now();
+    const tick = () => {
+      const t = Math.min(1, (performance.now() - startTime) / duration);
+      const ease = 1 - Math.pow(1 - t, 3);
+      for (let i = 0; i < allEls.length; i++) {
+        allEls[i].y = startPositions[i].y + dy * ease;
+      }
+      if (t < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+
+    await new Promise(r => setTimeout(r, duration));
+    this._animateDim(0.8, 1.0, 10, 12, 400);
+
+    await new Promise(r => setTimeout(r, 300));
+    const data = this.activeItem.focusData;
+    const photos = data._clipPhotos || [];
+    const meshBottom = 80 + groupH;
+
+    // Article container
+    const articleWrap = document.createElement('div');
+    articleWrap.style.cssText = `position:absolute;top:${meshBottom + 48}px;left:0;right:0;max-width:640px;margin:0 auto;padding:0 24px 160px;opacity:0;transform:translateY(30px);transition:opacity 0.5s ease,transform 0.5s ease;`;
+
+    // Title
+    const title = data.title || 'Collection';
+    articleWrap.innerHTML = `<h1 style="font-family:Special Elite,cursive;font-size:28px;color:#f0f0f0;letter-spacing:0.5px;line-height:1.4;margin:0 0 32px;padding-bottom:24px;border-bottom:1px solid rgba(255,255,255,0.08);">${title}</h1>`;
+
+    // AI streaming target
+    const aiContent = document.createElement('div');
+    articleWrap.appendChild(aiContent);
+
+    this.overlay.appendChild(articleWrap);
+    this._articleWrap = articleWrap;
+    this.overlay.style.overflowY = 'auto';
+    requestAnimationFrame(() => { articleWrap.style.opacity = '1'; articleWrap.style.transform = 'translateY(0)'; });
+
+    // Scroll tracking: move clip elements with article scroll
+    const baseYs = allEls.map(el => el.y);
+    this._onArticleScroll = () => {
+      const scrollOff = this.overlay.scrollTop;
+      for (let i = 0; i < allEls.length; i++) allEls[i].y = baseYs[i] - scrollOff;
+    };
+    this.overlay.addEventListener('scroll', this._onArticleScroll);
+
+    // Build AI prompt — find registry keys for each photo in the clip
+    const photoKeys = photos.map(p => {
+      const title = p.focusData?.title || p.config?.caption || '';
+      for (const [k, v] of Object.entries(this._wallItemRegistry)) {
+        if (v.title === title || v.caption === title) return k;
+      }
+      return null;
+    }).filter(Boolean);
+
+    const keyList = photoKeys.map(k => `[[atom:${k}]]`).join(', ');
+    const messages = [
+      { role: 'system', content: buildSystemPrompt(this._contentData, this._wallItemRegistry, this._lang) },
+      { role: 'user', content: `Write a summary article about "${data.title}". You MUST reference ALL of these items using [[atom:KEY]] — do not skip any: ${keyList}. Introduce each one briefly then show it.` },
+    ];
+
+    // Stream AI response — reuse same parsing as _streamAIResponse (headings, [[atom:key]] refs)
+    let currentEl = null;
+    let buffer = '';
+    let atomBuffer = [];
+    const insertedAtoms = new Set();
+
+    const flushAtomBuffer = () => {
+      if (atomBuffer.length === 0) return;
+      const keys = [...atomBuffer];
+      atomBuffer = [];
+      const placeholder = document.createElement('div');
+      placeholder.className = 'atom-entry';
+      aiContent.appendChild(placeholder);
+      if (keys.length === 1) {
+        const meta = this._wallItemRegistry[keys[0]];
+        if (meta) {
+          this._createAtomEntry(meta).then(entry => {
+            if (entry) { placeholder.replaceWith(entry.container); }
+            else placeholder.remove();
+          });
+        } else placeholder.remove();
+      } else {
+        this._createClipEntry(keys).then(entry => {
+          if (entry) { placeholder.replaceWith(entry.container); }
+          else placeholder.remove();
+        });
+      }
+    };
+
+    const flushText = (text) => {
+      if (!text) return;
+      flushAtomBuffer();
+      if (!currentEl || currentEl.tagName === 'H2') {
+        currentEl = document.createElement('p');
+        currentEl.style.cssText = 'font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;font-size:16px;color:#a0a0a0;line-height:1.85;margin-bottom:24px;';
+        aiContent.appendChild(currentEl);
+      }
+      currentEl.textContent += text;
+    };
+
+    await streamChat(
+      messages,
+      (token) => {
+        buffer += token;
+        while (buffer.length > 0) {
+          const headingMatch = buffer.match(/^## (.+?)\n/);
+          if (headingMatch) {
+            flushAtomBuffer();
+            currentEl = document.createElement('h2');
+            currentEl.style.cssText = 'font-family:Special Elite,cursive;font-size:20px;color:#e0e0e0;margin:48px 0 16px;line-height:1.4;';
+            aiContent.appendChild(currentEl);
+            currentEl.textContent = headingMatch[1];
+            buffer = buffer.slice(headingMatch[0].length);
+            currentEl = null;
+            continue;
+          }
+          const atomMatch = buffer.match(/\[\[atom:(.+?)\]\]/);
+          if (atomMatch) {
+            const before = buffer.slice(0, atomMatch.index).replace(/\n/g, ' ').trim();
+            if (before) flushText(before);
+            if (!insertedAtoms.has(atomMatch[1])) {
+              insertedAtoms.add(atomMatch[1]);
+              atomBuffer.push(atomMatch[1]);
+            }
+            buffer = buffer.slice(atomMatch.index + atomMatch[0].length);
+            currentEl = null;
+            continue;
+          }
+          // No special pattern found — check for partial matches
+          if (buffer.includes('[') || buffer.includes('#')) {
+            const safeEnd = Math.min(
+              buffer.indexOf('[') >= 0 ? buffer.indexOf('[') : buffer.length,
+              buffer.indexOf('#') >= 0 ? buffer.indexOf('#') : buffer.length
+            );
+            if (safeEnd > 0) {
+              flushText(buffer.slice(0, safeEnd).replace(/\n/g, ' '));
+              buffer = buffer.slice(safeEnd);
+            } else break;
+          } else {
+            flushText(buffer.replace(/\n/g, ' '));
+            buffer = '';
+          }
+        }
+      },
+      () => {
+        if (buffer) flushText(buffer.replace(/\n/g, ' '));
+        flushAtomBuffer();
+      }
+    );
   }
 
   closeArticle() {

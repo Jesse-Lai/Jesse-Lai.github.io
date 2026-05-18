@@ -1,5 +1,5 @@
 // wall.js — Main view, uses atoms-renderer.js
-import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, makeDraggable, FocusOverlay, getOrCreateVideo, animateTo, fadeIn } from "./atoms-renderer.js?v=166";
+import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, makeDraggable, FocusOverlay, getOrCreateVideo, animateTo, fadeIn } from "./atoms-renderer.js?v=167";
 import { WallArticle } from "./wall-article.js?v=151";
 
 (async () => {
@@ -332,18 +332,37 @@ import { WallArticle } from "./wall-article.js?v=151";
       colTopsNew[col] += b0.height + gridPad;
     }
 
-    // Fly ALL items directly to final position (first item to masonry slot, others stacked on it)
+    // Sort each category: largest item area first (bottom of stack), smallest on top
+    // Use itemW * itemH (photo = frame size, sticky = note body) not getBounds (includes shadow/stamp overflow)
+    for (const cat of categories) {
+      groups[cat].sort((a, b) => {
+        const areaA = (a.focusableItem?.itemW || 0) * (a.focusableItem?.itemH || 0);
+        const areaB = (b.focusableItem?.itemW || 0) * (b.focusableItem?.itemH || 0);
+        return areaB - areaA;
+      });
+    }
+
+    // Set z-order: largest (index 0) at bottom, smallest on top
+    for (const cat of categories) {
+      const items = groups[cat];
+      for (const r of items) {
+        app.stage.removeChild(r.group);
+        app.stage.addChild(r.group);
+      }
+    }
+
+    // Fly ALL items directly to final position
     const allFlyAnims = [];
     for (const cat of categories) {
       const items = groups[cat];
       if (!items.length || !catLayout[cat]) continue;
       const layout = catLayout[cat];
-      // First item flies to the masonry slot
+      // First item (largest) flies to the masonry slot
       const target0 = items[0];
       const tx0 = layout.targetX - layout.boundsOffX;
       const ty0 = layout.targetY - layout.boundsOffY;
       allFlyAnims.push(animateTo(target0.group, tx0, ty0, 600));
-      // Other items fly to same position (they'll be merged/stacked)
+      // Other items (progressively smaller) fly to same position
       for (let i = 1; i < items.length; i++) {
         const r = items[i];
         const tx = layout.targetX - (r.bounds.x - r.group.x);

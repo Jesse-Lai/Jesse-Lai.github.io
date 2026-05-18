@@ -316,16 +316,6 @@
       box-shadow: 0 4px 20px rgba(0,0,0,0.5);
     }
 
-    /* ─── Language Toggle ─── */
-    #lang-toggle {
-      position: fixed; top: 16px; right: 70px; z-index: 9999;
-      background: none; border: 1px solid rgba(255,255,255,0.25);
-      color: rgba(255,255,255,0.6); font-family: 'Red Hat Mono', monospace;
-      font-size: 12px; letter-spacing: 1px; padding: 6px 14px;
-      border-radius: 4px; cursor: pointer; transition: all 0.2s;
-    }
-    #lang-toggle:hover { border-color: #fff; color: #fff; }
-
     /* ─── Wall Article ─── */
     #wall-article {
       position: fixed; inset: 0; z-index: 9999;
@@ -354,13 +344,6 @@
   </style>
 </head>
 <body>
-  <button id="lang-toggle"></button>
-  <script>
-    const lang = localStorage.getItem('wall-lang') || 'en';
-    const btn = document.getElementById('lang-toggle');
-    btn.textContent = lang === 'en' ? '中文' : 'EN';
-    btn.onclick = () => { localStorage.setItem('wall-lang', lang === 'en' ? 'zh' : 'en'); location.reload(); };
-  </script>
   <div id="atoms-btn" style="display:none" onclick="location.href='atoms.html'">Atoms</div>
   <script>if(location.hostname==='localhost'||location.hostname==='127.0.0.1'||location.search.includes('dev'))document.getElementById('atoms-btn').style.display='';</script>
   <div id="focus-overlay">
@@ -425,7 +408,7 @@
     <div id="loading-bar-bg"><div id="loading-bar"></div></div>
     <div id="loading-percent">0%</div>
   </div>
-    <script src="lib/pixi.min.js"></script>
-  <script type="module" src="wall.js?v=166"></script>
+  <script src="lib/pixi.min.js"></script>
+  <script type="module" src="wall.js?v=167"></script>
 </body>
 </html>
