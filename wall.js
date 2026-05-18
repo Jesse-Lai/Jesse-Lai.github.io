@@ -142,7 +142,6 @@ import { WallArticle } from "./wall-article.js?v=151";
   const rendered = []; // { group, bounds, wallItem, focusableItem }
   const totalItems = wallItems.length;
   let loadedCount = 0;
-  const isMobile = W < 768;
   const itemsToRender = isMobile ? wallItems.slice(0, 6) : wallItems;
   for (const item of itemsToRender) {
     if (item.type === 'photo') {
