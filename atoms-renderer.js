@@ -1045,25 +1045,11 @@ export class PhotoSystem {
     if (!('ontouchstart' in window)) {
       // Desktop only: no touch needed
     } else {
-      // Mobile: only detect taps (no drag, no passive:false)
-      let touchStartX, touchStartY, touchStartTime;
-      this.canvas.addEventListener('touchstart', e => {
-        const t = e.touches[0];
-        touchStartX = t.clientX;
-        touchStartY = t.clientY;
-        touchStartTime = Date.now();
-      }, {passive: true});
-      this.canvas.addEventListener('touchend', e => {
-        const t = e.changedTouches[0];
-        const dx = t.clientX - touchStartX;
-        const dy = t.clientY - touchStartY;
-        const dt = Date.now() - touchStartTime;
-        // Tap: small movement + short duration
-        if (Math.abs(dx) < 15 && Math.abs(dy) < 15 && dt < 400) {
-          onDown({clientX: t.clientX, clientY: t.clientY});
-          setTimeout(() => onUp(), 50);
-        }
-      }, {passive: true});
+      // Mobile: use click event only (touch listeners block iOS scroll)
+      this.canvas.addEventListener('click', e => {
+        onDown({clientX: e.clientX, clientY: e.clientY});
+        setTimeout(() => onUp(), 50);
+      });
     }
   }
 
@@ -1311,11 +1297,9 @@ export class PhotoSystem {
     });
     this.canvas.addEventListener('mouseup', () => { if(groupDrag){ for(const gp of groupDrag.photos) gp.group.scale.set(gp.baseScale); } groupDrag = null; });
 
-    // Touch tap for clip split
-    this.canvas.addEventListener('touchend', e => {
-      const t = e.changedTouches[0];
-      if (!t) return;
-      const mx = t.clientX, my = t.clientY;
+    // Click for clip split (works on both desktop and mobile without blocking scroll)
+    this.canvas.addEventListener('click', e => {
+      const mx = e.clientX, my = e.clientY;
       for (const cg of [...this.clipGroups]) {
         const cs = cg.clipSprite;
         if (Math.abs(mx-cs.x)<cs.width*0.6 && Math.abs(my-cs.y)<cs.height*0.6) { this._splitPhotos(cg); return; }
