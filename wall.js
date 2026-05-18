@@ -284,7 +284,9 @@ import { WallArticle } from "./wall-article.js?v=151";
   // ─── Resize handler ───
   window.addEventListener('resize', () => {
     const newW = window.innerWidth;
-    const newH = window.innerHeight;
+    // Keep canvas at least as tall as content (don't shrink back to viewport)
+    const currentH = app.renderer.height / (app.renderer.resolution || 1);
+    const newH = Math.max(window.innerHeight, currentH);
     app.renderer.resize(newW, newH);
   });
 
