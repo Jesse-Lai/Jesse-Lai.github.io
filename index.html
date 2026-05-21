@@ -12,13 +12,90 @@
       font-weight: 400;
     }
     * { margin: 0; padding: 0; }
-    html, body { background: #0a0a0a; overflow-x: hidden; }
+    html, body {
+      background: #FFFBF3; overflow-x: hidden;
+      --day: #FFFBF3; --evening: #fccc83; --dusk: #db7a2a;
+      --night: #0f131c; --dawn: #16132b; --morning: #9fb3bf;
+      --shadow: #1a1917; --bounce-light: #f5d7a6;
+      --timing-fn: cubic-bezier(0.455, 0.190, 0.000, 0.985);
+    }
     body { min-height: 100vh; }
     canvas { display: block; }
+
+    /* ── Dappled light: background layers (behind canvas) ── */
+    #dappled-light {
+      pointer-events: none;
+      position: fixed; inset: 0;
+      z-index: -1;
+      transform: scaleX(-1);
+    }
+    /* ── Dappled light: sunlight layer (above canvas) ── */
+    #sunlight-overlay {
+      pointer-events: none;
+      position: fixed; inset: 0;
+      z-index: 1;
+      transform: scaleX(-1);
+    }
+    #dappled-light #glow {
+      position: absolute; height: 100%; width: 100%;
+      background: linear-gradient(309deg, var(--bounce-light), var(--bounce-light) 20%, transparent);
+      opacity: 0.5;
+      transition: background 0.3s;
+    }
+    #dappled-light #glow-bounce {
+      position: absolute; height: 100%; width: 100%; bottom: 0;
+      background: linear-gradient(355deg, var(--bounce-light) 0%, transparent 30%, transparent 100%);
+      opacity: 0.5;
+      transition: background 0.3s;
+    }
+    #sunlight-overlay .perspective {
+      position: absolute;
+      top: -30vh; right: 0;
+      width: 65vw; height: 130vh;
+      opacity: 0.12;
+      mix-blend-mode: soft-light;
+      transform-origin: top right;
+      transform-style: preserve-3d;
+      transform: matrix3d(0.75,-0.0625,0,0.0008, 0,1,0,0, 0,0,1,0, 0,0,0,1);
+      transition: opacity 0.3s, transform 0.3s;
+      -webkit-mask-image: linear-gradient(to left, black 30vw, transparent 55vw);
+      mask-image: linear-gradient(to left, black 30vw, transparent 55vw);
+      filter: blur(3px);
+    }
+    #sunlight-overlay #leaves {
+      position: absolute;
+      background-size: cover; background-repeat: no-repeat;
+      bottom: 124px; right: -335px;
+      width: 880px; height: 768px;
+      background-image: url('docs/leaves.png');
+      filter: url(#wind);
+      animation: billow 8s ease-in-out infinite;
+    }
+    @keyframes billow {
+      0%   { transform: perspective(400px) rotateX(0deg)  rotateY(0deg)  scale(1); }
+      25%  { transform: perspective(400px) rotateX(1deg)  rotateY(2deg)  scale(1.02); }
+      50%  { transform: perspective(400px) rotateX(-4deg) rotateY(-2deg) scale(0.97); }
+      75%  { transform: perspective(400px) rotateX(1deg)  rotateY(-1deg) scale(1.04); }
+      100% { transform: perspective(400px) rotateX(0deg)  rotateY(0deg)  scale(1); }
+    }
+    #sunlight-overlay #blinds { position: relative; width: 100%; }
+    #sunlight-overlay #blinds .shutter,
+    #sunlight-overlay #blinds .bar { background-color: var(--shadow); transition: height 0.3s, background-color 0.3s; }
+    #sunlight-overlay #blinds > .shutters {
+      display: flex; flex-direction: column; align-items: end;
+      gap: 42px; transition: gap 0.3s;
+    }
+    #sunlight-overlay #blinds > .vertical {
+      top: 0; position: absolute;
+      height: 100%; width: 100%;
+      display: flex; justify-content: space-around;
+    }
+    #sunlight-overlay .vertical > .bar { width: 5px; height: 100%; }
+    #sunlight-overlay .shutter { width: 100%; height: 28px; }
     /* Loading screen */
     #loading-screen {
       position: fixed; inset: 0; z-index: 99999;
-      background: #0a0a0a;
+      background: #FFFBF3;
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
       transition: opacity 0.6s ease;
@@ -26,31 +103,31 @@
     #loading-screen.hidden { opacity: 0; pointer-events: none; }
     #loading-text {
       font-family: 'Red Hat Mono', 'Courier New', monospace;
-      color: #666; font-size: 13px; letter-spacing: 2px;
+      color: #999; font-size: 13px; letter-spacing: 2px;
       margin-bottom: 20px;
     }
     #loading-bar-bg {
       width: 200px; height: 2px;
-      background: rgba(255,255,255,0.08); border-radius: 1px;
+      background: rgba(0,0,0,0.08); border-radius: 1px;
       overflow: hidden;
     }
     #loading-bar {
       height: 100%; width: 0%; border-radius: 1px;
-      background: rgba(255,255,255,0.5);
+      background: rgba(0,0,0,0.3);
       transition: width 0.3s ease;
     }
     #loading-percent {
       font-family: 'Red Hat Mono', 'Courier New', monospace;
-      color: #444; font-size: 11px; margin-top: 10px;
+      color: #aaa; font-size: 11px; margin-top: 10px;
     }
     #atoms-btn {
       position: fixed; top: 20px; right: 20px; z-index: 9999;
       padding: 8px 0; background: none; border: none;
-      color: #666; cursor: pointer; font-size: 13px;
+      color: #999; cursor: pointer; font-size: 13px;
       font-family: 'Red Hat Mono', monospace; letter-spacing: 1px;
       transition: color 0.2s; user-select: none;
     }
-    #atoms-btn:hover { color: #fff; }
+    #atoms-btn:hover { color: #333; }
 
     /* Focus overlay */
     canvas.focus-active {
@@ -168,7 +245,7 @@
     /* Article chat */
     .article-chat { margin-top: 48px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 32px; }
     .chat-msg { margin-bottom: 32px; }
-    .chat-msg.user { text-align: right; }
+    .chat-msg.user { text-align: left; }
     .chat-msg.user .chat-bubble {
       font-family: 'Special Elite', cursive;
       font-size: 28px; color: #f0f0f0; letter-spacing: 0.5px;
@@ -191,6 +268,63 @@
     .chat-msg.ai .chat-bubble .img-caption {
       font-family: 'Red Hat Mono', monospace;
       font-size: 11px; color: #555; text-align: center; margin: 0 0 32px;
+    }
+
+    /* Article TOC */
+    .article-toc {
+      position: fixed;
+      right: calc(50% + 360px);
+      width: 196px;
+      font-family: 'Red Hat Mono', monospace;
+      font-size: 11px;
+      line-height: 1.6;
+      z-index: 10001;
+    }
+    .article-toc-item {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 12px;
+      cursor: pointer;
+    }
+    .article-toc-item .toc-bar {
+      flex-shrink: 0;
+      width: 2px;
+      border-radius: 1px;
+      background: transparent;
+      transition: background 0.2s;
+    }
+    .article-toc-item .toc-text {
+      color: #555;
+      transition: color 0.2s;
+    }
+    .article-toc-item:hover .toc-text { color: #aaa; }
+    .article-toc-item.active .toc-text { color: #e0e0e0; }
+    .article-toc-item.active .toc-bar { background: #e0e0e0; }
+    @media (max-width: 1100px) { .article-toc { display: none; } }
+
+    /* Image lightbox */
+    .img-lightbox {
+      position: fixed; inset: 0; z-index: 10005;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      cursor: zoom-out;
+      opacity: 0; transition: opacity 0.25s ease;
+    }
+    .img-lightbox.visible { opacity: 1; }
+    .img-lightbox img {
+      max-width: 90vw; max-height: 90vh;
+      object-fit: contain;
+      border-radius: 6px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+      transform: scale(0.92); transition: transform 0.3s ease;
+    }
+    .img-lightbox.visible img { transform: scale(1); }
+    .img-lightbox .lightbox-caption {
+      position: fixed; bottom: 24px; left: 0; right: 0;
+      text-align: center;
+      font-family: 'Red Hat Mono', monospace;
+      font-size: 11px; color: #666;
     }
 
     /* Atom entry (rendered via PIXI extract) */
@@ -344,6 +478,50 @@
   </style>
 </head>
 <body>
+  <!-- Dappled light: background glow (behind canvas) -->
+  <div id="dappled-light">
+    <div id="glow"></div>
+    <div id="glow-bounce"></div>
+  </div>
+
+  <!-- Dappled light: sunlight + shadow (above canvas) -->
+  <div id="sunlight-overlay">
+    <div class="perspective">
+      <div id="leaves">
+        <svg style="width:0;height:0;position:absolute">
+          <defs>
+            <filter id="wind" x="-20%" y="-20%" width="140%" height="140%">
+              <feTurbulence type="fractalNoise" numOctaves="2" seed="1">
+                <animate attributeName="baseFrequency" dur="16s" keyTimes="0;0.33;0.66;1"
+                  values="0.005 0.003;0.01 0.009;0.008 0.004;0.005 0.003" repeatCount="indefinite"/>
+              </feTurbulence>
+              <feDisplacementMap in="SourceGraphic">
+                <animate attributeName="scale" dur="20s" keyTimes="0;0.25;0.5;0.75;1"
+                  values="45;55;75;55;45" repeatCount="indefinite"/>
+              </feDisplacementMap>
+            </filter>
+          </defs>
+        </svg>
+      </div>
+      <div id="blinds">
+        <div class="shutters">
+          <div class="shutter"></div><div class="shutter"></div><div class="shutter"></div>
+          <div class="shutter"></div><div class="shutter"></div><div class="shutter"></div>
+          <div class="shutter"></div><div class="shutter"></div><div class="shutter"></div>
+          <div class="shutter"></div><div class="shutter"></div><div class="shutter"></div>
+          <div class="shutter"></div><div class="shutter"></div><div class="shutter"></div>
+          <div class="shutter"></div><div class="shutter"></div><div class="shutter"></div>
+          <div class="shutter"></div><div class="shutter"></div><div class="shutter"></div>
+          <div class="shutter"></div><div class="shutter"></div>
+        </div>
+        <div class="vertical">
+          <div class="bar"></div>
+          <div class="bar"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="atoms-btn" style="display:none" onclick="location.href='atoms.html'">Atoms</div>
   <script>if(location.hostname==='localhost'||location.hostname==='127.0.0.1'||location.search.includes('dev'))document.getElementById('atoms-btn').style.display='';</script>
   <div id="focus-overlay">
@@ -409,6 +587,6 @@
     <div id="loading-percent">0%</div>
   </div>
   <script src="lib/pixi.min.js"></script>
-  <script type="module" src="wall.js?v=167"></script>
+  <script type="module" src="wall.js?v=169"></script>
 </body>
 </html>

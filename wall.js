@@ -1,5 +1,5 @@
 // wall.js — Main view, uses atoms-renderer.js
-import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, makeDraggable, FocusOverlay, getOrCreateVideo, animateTo, fadeIn } from "./atoms-renderer.js?v=167";
+import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, makeDraggable, FocusOverlay, getOrCreateVideo, animateTo, fadeIn } from "./atoms-renderer.js?v=168";
 import { WallArticle } from "./wall-article.js?v=151";
 
 (async () => {
@@ -8,7 +8,7 @@ import { WallArticle } from "./wall-article.js?v=151";
   const dpr = window.devicePixelRatio || 1;
 
   const app = new PIXI.Application();
-  await app.init({ width: W, height: H, antialias: true, resolution: dpr, autoDensity: true, backgroundColor: 0x0a0a0a });
+  await app.init({ width: W, height: H, antialias: true, resolution: dpr, autoDensity: true, backgroundAlpha: 0 });
   document.body.appendChild(app.canvas);
   app.canvas.style.touchAction = "pan-y";
   // On mobile: completely remove PixiJS event system listeners to allow native scroll
@@ -163,7 +163,8 @@ import { WallArticle } from "./wall-article.js?v=151";
       const stickyResult = await renderStickyNote(app, 0, 0, { title: item.title, body: item.body, date: item.date }, stickyStampImg, atomsConfig.stamp, { colorScheme: item.colorScheme });
       stickyResult.group.scale.set(atomScale);
       const b = stickyResult.group.getBounds();
-      const stickyItem = photoSystem.addItem(stickyResult.group, b.width / atomScale, b.height / atomScale);
+      const stickyItem = photoSystem.addItem(stickyResult.group, stickyResult.noteW, stickyResult.noteH);
+      stickyItem.config = item;
       if (item.focus) stickyItem.focusData = item.focus;
       rendered.push({ group: stickyResult.group, bounds: b, wallItem: item, focusableItem: stickyItem });
       loadedCount++; setProgress(15 + (loadedCount / totalItems) * 70);
@@ -426,4 +427,63 @@ import { WallArticle } from "./wall-article.js?v=151";
   app.ticker.add(ticker => {
     const dt=Math.min(ticker.deltaMS/1000,0.05);
   });
+
+  // ─── Sunlit dappled light: scroll-driven day/night ───
+  {
+    const hexToRgb = h => [parseInt(h.slice(1,3),16), parseInt(h.slice(3,5),16), parseInt(h.slice(5,7),16)];
+    const rgbToHex = (r,g,b) => '#' + [r,g,b].map(v => Math.round(v).toString(16).padStart(2,'0')).join('');
+    const lerp = (a,b,t) => a + (b - a) * t;
+    const lerpColor = (t, c1, c2) => {
+      const a = hexToRgb(c1), b = hexToRgb(c2);
+      return rgbToHex(lerp(a[0],b[0],t), lerp(a[1],b[1],t), lerp(a[2],b[2],t));
+    };
+    const lerpColorStops = (t, stops) => {
+      if (t <= stops[0][0]) return stops[0][1];
+      if (t >= stops[stops.length-1][0]) return stops[stops.length-1][1];
+      for (let i = 0; i < stops.length - 1; i++) {
+        if (t >= stops[i][0] && t <= stops[i+1][0]) {
+          const local = (t - stops[i][0]) / (stops[i+1][0] - stops[i][0]);
+          return lerpColor(local, stops[i][1], stops[i+1][1]);
+        }
+      }
+      return stops[stops.length-1][1];
+    };
+
+    const bgStops = [
+      [0, '#FFFBF3'], [0.5, '#fccc83'], [1.0, '#db7a2a']
+    ];
+    const perspective = document.querySelector('#sunlight-overlay .perspective');
+    const shuttersEl = document.querySelector('#sunlight-overlay .shutters');
+    const shutterEls = document.querySelectorAll('#sunlight-overlay .shutter');
+    const root = document.documentElement;
+
+    const updateSunProgress = () => {
+      const scrollY = window.scrollY || 0;
+      const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      const p = Math.min(1, Math.max(0, scrollY / maxScroll));
+
+      // Background color
+      document.body.style.backgroundColor = lerpColorStops(p, bgStops);
+
+      // Light overlay — opacity + angle
+      if (perspective) {
+        perspective.style.opacity = lerp(0.12, 0.3, p);
+        const m00 = lerp(0.75, 0.8333, p);
+        const m01 = lerp(-0.0625, 0.0833, p);
+        const m03 = lerp(0.0008, 0.0003, p);
+        perspective.style.transform = `matrix3d(${m00},${m01},0,${m03}, 0,1,0,0, 0,0,1,0, 0,0,0,1)`;
+      }
+
+      // Blinds
+      if (shuttersEl) shuttersEl.style.gap = lerp(42, 14, p) + 'px';
+      shutterEls.forEach(s => s.style.height = lerp(28, 60, p) + 'px');
+
+      // Shadow & bounce light colors
+      root.style.setProperty('--shadow', lerpColor(p, '#1a1917', '#030307'));
+      root.style.setProperty('--bounce-light', lerpColor(p, '#f5d7a6', '#1b293f'));
+    };
+
+    window.addEventListener('scroll', updateSunProgress, { passive: true });
+    updateSunProgress();
+  }
 })();

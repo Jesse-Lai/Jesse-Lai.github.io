@@ -3,6 +3,141 @@
 import { streamChat, chatSync, buildSystemPrompt } from './ai-client.js?v=166';
 
 
+// ─── Scribble loading animation (Canvas, for AI waiting state) ───
+// Continuous hand-drawn loopy scribble with organic feel
+// Ref style: https://codepen.io/arvi/pen/RgYZqB
+function createScribbleLoader(container) {
+  const W = 640, ROW_H = 32, ROWS = 5, PAD = 14;
+  const H = ROWS * ROW_H + PAD * 2;
+  const STROKE_COLOR = '#fff';
+
+  const canvas = document.createElement('canvas');
+  canvas.width = W;
+  canvas.height = H;
+  canvas.style.cssText = 'display:block;max-width:640px;width:100%;margin:0 auto;';
+  container.appendChild(canvas);
+  const ctx = canvas.getContext('2d');
+
+  // Pre-generate path with organic loops
+  const points = [];
+  for (let row = 0; row < ROWS; row++) {
+    const baseY = PAD + row * ROW_H + 8;
+    const leftX = Math.random() * 5;
+    const rightX = W - 20 - Math.random() * 20;
+    const rowW = rightX - leftX;
+    const goRight = row % 2 === 0;
+
+    // 3-5 loops per row, with varied sizes
+    const loopCount = 10 + Math.floor(Math.random() * 5);
+    const loops = [];
+    for (let i = 0; i < loopCount; i++) {
+      const t = (i + 0.3 + Math.random() * 0.4) / loopCount;
+      const r = 8 + Math.random() * 10; // bigger loops (8-18px)
+      const squash = 0.5 + Math.random() * 0.6; // x-squash for teardrop shape
+      const tilt = (Math.random() - 0.5) * 0.4; // random tilt
+      loops.push({ t, r, squash, tilt });
+    }
+    loops.sort((a, b) => a.t - b.t);
+
+    let curX = goRight ? leftX : rightX;
+    const dir = goRight ? 1 : -1;
+
+    for (let li = 0; li < loops.length; li++) {
+      const lp = loops[li];
+      const loopCX = goRight ? leftX + lp.t * rowW : rightX - lp.t * rowW;
+
+      // --- Baseline segment: gentle curve to loop start ---
+      const segSteps = 30;
+      const drift = (Math.random() - 0.5) * 6; // baseline isn't perfectly straight
+      for (let s = 0; s <= segSteps; s++) {
+        const frac = s / segSteps;
+        const x = curX + (loopCX - curX) * frac;
+        // Organic curve: ease into loop with slight arc
+        const arch = Math.sin(frac * Math.PI) * drift;
+        points.push({ x: x , y: baseY + arch  });
+      }
+
+      // --- Loop: teardrop/organic circle ---
+      // The pen enters from the travel direction, swings down into a full loop
+      const loopSteps = 48; // more steps = smoother
+      const { r, squash, tilt } = lp;
+      for (let s = 0; s <= loopSteps; s++) {
+        const theta = (s / loopSteps) * Math.PI * 2;
+        // Teardrop: x-radius varies with theta (narrower at top, wider at bottom)
+        const teardropX = Math.sin(theta) * (r * squash) * (1 + 0.3 * Math.sin(theta));
+        const teardropY = r * (1 - Math.cos(theta));
+        // Apply tilt rotation
+        const rx = teardropX * Math.cos(tilt) - teardropY * Math.sin(tilt);
+        const ry = teardropX * Math.sin(tilt) + teardropY * Math.cos(tilt);
+        points.push({
+          x: loopCX + rx * dir ,
+          y: baseY + ry        });
+      }
+
+      curX = loopCX;
+    }
+
+    // Final baseline to row end
+    const endX = goRight ? rightX : leftX;
+    const finalSteps = 25;
+    const finalDrift = (Math.random() - 0.5) * 4;
+    for (let s = 0; s <= finalSteps; s++) {
+      const frac = s / finalSteps;
+      const x = curX + (endX - curX) * frac;
+      const arch = Math.sin(frac * Math.PI) * finalDrift;
+      points.push({ x: x , y: baseY + arch  });
+    }
+  }
+
+  const totalPoints = points.length;
+  let drawIdx = 0;
+  // Slow: ~2-3 points per frame (was 5)
+  const POINTS_PER_FRAME = 2;
+  let animId = null;
+  let destroyed = false;
+  let frameCount = 0;
+
+  ctx.strokeStyle = STROKE_COLOR;
+  ctx.lineWidth = 1.3;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  function loop() {
+    if (destroyed) return;
+    frameCount++;
+    // Draw every other frame for 50% slowdown
+    if (frameCount % 2 === 0) {
+      animId = requestAnimationFrame(loop);
+      return;
+    }
+
+    const end = Math.min(drawIdx + POINTS_PER_FRAME, totalPoints);
+    for (let i = drawIdx; i < end; i++) {
+      if (i === 0) continue;
+      ctx.beginPath();
+      ctx.moveTo(points[i - 1].x, points[i - 1].y);
+      ctx.lineTo(points[i].x, points[i].y);
+      ctx.stroke();
+    }
+    drawIdx = end;
+
+    if (drawIdx >= totalPoints) {
+      drawIdx = 0;
+      ctx.clearRect(0, 0, W, H);
+    }
+
+    animId = requestAnimationFrame(loop);
+  }
+
+  animId = requestAnimationFrame(loop);
+
+  return () => {
+    destroyed = true;
+    if (animId) cancelAnimationFrame(animId);
+    if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
+  };
+}
+
 // ─── Animation utility ───
 export function animateTo(obj, tx, ty, duration=300) {
   const sx=obj.x, sy=obj.y;
@@ -729,12 +864,7 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg, o
   // Check body text lines
   for (const child of wrapper.children) {
     if (child === bg || child === shadow || child === wrinkleSprite) continue;
-    if (child === stampContainer) {
-      // Use actual stamp position + height (not rotated bounds)
-      const sb = stampContainer.y + stampH;
-      if (sb > contentBottom) contentBottom = sb;
-      continue;
-    }
+    if (child === stampContainer) continue; // stamp is decorative, doesn't affect note rect
     // For text elements, use y + fontSize estimate
     const b = child.y + (child.style ? child.style.fontSize * 1.3 : (child.height || 0));
     if (b > contentBottom) contentBottom = b;
@@ -754,13 +884,19 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg, o
   // Resize wrinkle to match note height
   wrinkleSprite.height = noteH;
 
-  // Stamp is above wrinkle layer - inside is bright, outside against dark bg looks natural
+  // Clamp stamp: don't exceed note bottom, only left/right edges can overflow
+  if (stampContainer) {
+    const maxStampY = noteH - stampH * 0.85; // keep most of stamp inside
+    if (stampContainer.y > maxStampY) stampContainer.y = maxStampY;
+    if (stampContainer.y < 0) stampContainer.y = 10; // don't go above top either
+  }
 
   // Random slight rotation (keep subtle — ±1.5°)
   wrapper.rotation = (Math.random() * 3 - 1.5) * Math.PI / 180;
 
   return {
     group: wrapper,
+    noteW, noteH,
     hitTest: (mx, my) => { const h = wrapper.height; return Math.abs(mx - wrapper.x - noteW/2) < noteW*0.6 && Math.abs(my - wrapper.y - h/2) < h*0.6; },
   };
 }
@@ -950,6 +1086,67 @@ export class PhotoSystem {
     photo._staticTex = null;
   }
 
+  // ─── Hover label: category + title below atom ───
+  _showHoverLabel(photo) {
+    if (photo._hoverLabel) return;
+    const cfg = photo.config || {};
+    const categoryMap = {
+      who_i_am: 'About Me',
+      design_projects: 'Design Project',
+      design_thought: 'Design Thought',
+      hobby: 'Hobby',
+      vibe_coding: 'Vibe Coding',
+    };
+    const catText = categoryMap[cfg.category] || '';
+    const titleText = (photo.focusData?.title || cfg.caption || cfg.title || '').slice(0, 24);
+    if (!catText && !titleText) return;
+
+    const displayText = catText ? `${catText} · ${titleText}` : titleText;
+    const s = photo.group.scale.x;
+    const label = new PIXI.Text({
+      text: displayText,
+      style: new PIXI.TextStyle({
+        fontFamily: 'Red Hat Mono, monospace',
+        fontSize: 11,
+        fill: '#999',
+        letterSpacing: 0.5,
+      }),
+    });
+
+    // Position in LOCAL coords — child of photo.group inherits rotation/scale
+    label.x = -photo.anchorX;
+    label.y = photo.itemH - photo.anchorY + 12 / s;
+    label.scale.set(1 / s); // keep text size constant regardless of atom scale
+
+    label.alpha = 0;
+    photo.group.addChild(label);
+    photo._hoverLabel = label;
+
+    // Fade in
+    const fadeIn = () => {
+      if (!photo._hoverLabel) return;
+      photo._hoverLabel.alpha = Math.min(1, photo._hoverLabel.alpha + 0.1);
+      if (photo._hoverLabel.alpha < 1) requestAnimationFrame(fadeIn);
+    };
+    requestAnimationFrame(fadeIn);
+  }
+
+  _hideHoverLabel(photo) {
+    if (!photo._hoverLabel) return;
+    const label = photo._hoverLabel;
+    photo._hoverLabel = null;
+    const fadeOut = () => {
+      label.alpha -= 0.15;
+      if (label.alpha <= 0) {
+        if (label.parent) label.parent.removeChild(label);
+        label.destroy({ children: true });
+        return;
+      }
+      requestAnimationFrame(fadeOut);
+    };
+    requestAnimationFrame(fadeOut);
+  }
+
   _makePhotoDraggable(photo) {
     let drag = false, offX = 0, offY = 0;
     let downTime = 0, downX = 0, downY = 0, moved = false;
@@ -975,7 +1172,7 @@ export class PhotoSystem {
       }
       if (topPhoto !== photo) return;
       if (hitTest(mx,my)) {
-        this._stopPhotoVideo(photo); wasHovering = false;
+        this._stopPhotoVideo(photo); this._hideHoverLabel(photo); wasHovering = false;
         drag = true; offX = photo.group.x-mx; offY = photo.group.y-my;
         downTime = Date.now(); downX = mx; downY = my; moved = false;
         this._activeDrag = photo;
@@ -1009,6 +1206,9 @@ export class PhotoSystem {
       } else if (!hovering && wasHovering) {
         this._stopPhotoVideo(photo);
       }
+      // Hover label
+      if (hovering && !wasHovering) this._showHoverLabel(photo);
+      else if (!hovering && wasHovering) this._hideHoverLabel(photo);
       wasHovering = hovering;
     };
     const onUp = e => {
@@ -1098,105 +1298,80 @@ export class PhotoSystem {
   }
 
   _showClipHoverLabel(cg) {
-    if (cg._hoverAnimating) return;
+    if (cg._hoverArrow || cg._hoverFading) return;
     if (!cg.label) return;
-    cg._hoverAnimating = true;
-    const bounds = this._getClipGroupBounds(cg);
-    const color = this._getClipLabelColor(cg);
 
-    // Arrow starts at bottom-left of group, curves right
-    const startX = bounds.x + bounds.w * 0.15;
-    const startY = bounds.y + bounds.h + 8;
-    const endX = startX + 50;
-    const endY = startY + 25;
-    const cpX = startX + 10;
-    const cpY = startY + 30;
+    const count = cg.photos.length;
+    const displayText = `${cg.label} · ${count} articles`;
 
-    const arrow = new PIXI.Graphics();
-    arrow.alpha = 0;
-    this.app.stage.addChild(arrow);
-    cg._hoverArrow = arrow;
-
-    // Text with reveal mask (left-to-right wipe)
-    const text = new PIXI.Text({
-      text: cg.label,
-      style: { fontFamily: 'Schoolbell', fontSize: 20, fill: color, padding: 6 }
+    const label = new PIXI.Text({
+      text: displayText,
+      style: new PIXI.TextStyle({
+        fontFamily: 'Red Hat Mono, monospace',
+        fontSize: 11,
+        fill: '#999',
+        letterSpacing: 0.5,
+      }),
     });
-    text.anchor.set(0, 0.5);
-    text.x = endX + 10;
-    text.y = endY;
-    this.app.stage.addChild(text);
-    cg._hoverText = text;
 
-    // Mask for text reveal
-    const textMask = new PIXI.Graphics();
-    text.mask = textMask;
-    this.app.stage.addChild(textMask);
-    cg._hoverTextMask = textMask;
+    // Anchor to largest-area item (inherits its rotation/scale)
+    let largest = cg.photos[0];
+    let maxArea = 0;
+    for (const p of cg.photos) {
+      const area = p.itemW * p.itemH;
+      if (area > maxArea) { maxArea = area; largest = p; }
+    }
 
-    const arrowDuration = 250;  // 2x faster
-    const textRevealDuration = 150;  // 2x faster
-    const start = performance.now();
+    // Find the lowest world-Y bottom across ALL items in the clip
+    let maxWorldBottom = -Infinity;
+    for (const p of cg.photos) {
+      const b = this._getPhotoBounds(p);
+      maxWorldBottom = Math.max(maxWorldBottom, b.y + b.h);
+    }
 
-    const tick = () => {
-      if (arrow.destroyed || !cg._hoverAnimating) return; // bail if cleaned up
-      const elapsed = performance.now() - start;
+    // Convert that world-Y bottom to largest item's local coords
+    // largest.group world position: (largest.group.x, largest.group.y)
+    // In local coords, world Y maps via: localY = (worldY - group.y) / scale
+    // (ignoring rotation for the offset — rotation is small ±4°)
+    const s = largest.group.scale.x;
+    const localBottomY = (maxWorldBottom - largest.group.y) / s;
 
-      // Phase 1: Arrow stroke (0 → arrowDuration)
-      const tArrow = Math.min(1, elapsed / arrowDuration);
-      arrow.clear();
-      arrow.setStrokeStyle({ width: 2, color });
-      arrow.moveTo(startX, startY);
-      const steps = Math.max(2, Math.floor(tArrow * 20));
-      for (let i = 1; i <= steps; i++) {
-        const u = i / steps * tArrow;
-        const px = (1-u)*(1-u)*startX + 2*(1-u)*u*cpX + u*u*endX;
-        const py = (1-u)*(1-u)*startY + 2*(1-u)*u*cpY + u*u*endY;
-        arrow.lineTo(px, py);
-      }
-      arrow.stroke();
-      arrow.alpha = 1;
+    label.x = -largest.anchorX;
+    label.y = localBottomY + 12 / s;
+    label.scale.set(1 / s);
 
-      if (tArrow >= 1) {
-        // Draw arrowhead once
-        if (!arrow._headDrawn) {
-          const tipAngle = Math.atan2(endY - cpY, endX - cpX);
-          arrow.moveTo(endX - 8 * Math.cos(tipAngle - 0.5), endY - 8 * Math.sin(tipAngle - 0.5));
-          arrow.lineTo(endX, endY);
-          arrow.lineTo(endX - 8 * Math.cos(tipAngle + 0.5), endY - 8 * Math.sin(tipAngle + 0.5));
-          arrow.stroke();
-          arrow._headDrawn = true;
-        }
+    label.alpha = 0;
+    largest.group.addChild(label);
+    cg._hoverArrow = label;
 
-        // Phase 2: Text reveal wipe (arrowDuration → arrowDuration + textRevealDuration)
-        const tText = Math.min(1, (elapsed - arrowDuration) / textRevealDuration);
-        const tw = text.width + 12;
-        const th = text.height + 12;
-        textMask.clear();
-        textMask.rect(text.x - 6, text.y - th / 2, tw * tText, th);
-        textMask.fill(0xffffff);
-      }
-
-      if (elapsed < arrowDuration + textRevealDuration) {
-        requestAnimationFrame(tick);
-      }
+    // Fade in
+    const fadeIn = () => {
+      if (!cg._hoverArrow || cg._hoverArrow !== label) return;
+      label.alpha = Math.min(1, label.alpha + 0.1);
+      if (label.alpha < 1) requestAnimationFrame(fadeIn);
     };
-    requestAnimationFrame(tick);
+    requestAnimationFrame(fadeIn);
   }
 
   _hideClipHoverLabel(cg) {
-    if (!cg._hoverArrow && !cg._hoverText) return;
-    const arrow = cg._hoverArrow;
-    const text = cg._hoverText;
-    const mask = cg._hoverTextMask;
+    if (!cg._hoverArrow) return;
+    const label = cg._hoverArrow;
     cg._hoverArrow = null;
-    cg._hoverText = null;
-    cg._hoverTextMask = null;
-    cg._hoverAnimating = false;
-    const dur = 150;
-    if (arrow) fadeOut(arrow, dur).then(() => { this.app.stage.removeChild(arrow); arrow.destroy(); });
-    if (text) { text.mask = null; fadeOut(text, dur).then(() => { this.app.stage.removeChild(text); text.destroy(); }); }
-    if (mask) { this.app.stage.removeChild(mask); mask.destroy(); }
+    cg._hoverFading = true;
+    const fadeOut = () => {
+      label.alpha -= 0.15;
+      if (label.alpha <= 0) {
+        if (label.parent) label.parent.removeChild(label);
+        label.destroy({ children: true });
+        cg._hoverFading = false;
+        return;
+      }
+      requestAnimationFrame(fadeOut);
+    };
+    requestAnimationFrame(fadeOut);
+    // Clean up legacy fields
+    if (cg._hoverText) { if (cg._hoverText.parent) cg._hoverText.parent.removeChild(cg._hoverText); cg._hoverText.destroy(); cg._hoverText = null; }
+    if (cg._hoverTextMask) { if (cg._hoverTextMask.parent) cg._hoverTextMask.parent.removeChild(cg._hoverTextMask); cg._hoverTextMask.destroy(); cg._hoverTextMask = null; }
   }
 
   setupMobileScrollHover() {
@@ -1435,6 +1610,7 @@ export class FocusOverlay {
     // 更新 DOM
     this._articleWrap.innerHTML = html;
     this._articleWrap.style.paddingBottom = '160px';
+    this._bindImageLightbox();
 
     // 重建 chat 容器
     const chatContainer = document.createElement('div');
@@ -2000,6 +2176,7 @@ export class FocusOverlay {
         this._articleMeshBaseY = targetY;
         this._onArticleScroll = () => {
           mesh.y = this._articleMeshBaseY - this.overlay.scrollTop;
+          this._updateTOCPosition();
         };
         this.overlay.addEventListener('scroll', this._onArticleScroll);
 
@@ -2011,6 +2188,16 @@ export class FocusOverlay {
           requestAnimationFrame(() => {
             articleWrap.style.opacity = '1';
             articleWrap.style.transform = 'translateY(0)';
+
+            // Build TOC + bind image lightbox after transition settles
+            setTimeout(() => {
+              const h2s = articleWrap.querySelectorAll('h2');
+              if (h2s.length) {
+                const headings = Array.from(h2s).map(el => ({ text: el.textContent, el }));
+                this._buildTOC(headings);
+              }
+              this._bindImageLightbox();
+            }, 550);
           });
         });
       }, 400);
@@ -2084,6 +2271,7 @@ export class FocusOverlay {
     this._onArticleScroll = () => {
       const scrollOff = this.overlay.scrollTop;
       for (let i = 0; i < allEls.length; i++) allEls[i].y = baseYs[i] - scrollOff;
+      this._updateTOCPosition();
     };
     this.overlay.addEventListener('scroll', this._onArticleScroll);
 
@@ -2102,11 +2290,15 @@ export class FocusOverlay {
       { role: 'user', content: `Write a summary article about "${data.title}". You MUST reference ALL of these items using [[atom:KEY]] — do not skip any: ${keyList}. Introduce each one briefly then show it.` },
     ];
 
+    // Show scribble loading animation
+    const removeLoader = createScribbleLoader(aiContent);
+
     // Stream AI response — reuse same parsing as _streamAIResponse (headings, [[atom:key]] refs)
     let currentEl = null;
     let buffer = '';
     let atomBuffer = [];
     const insertedAtoms = new Set();
+    let loaderRemoved = false;
 
     const flushAtomBuffer = () => {
       if (atomBuffer.length === 0) return;
@@ -2145,6 +2337,7 @@ export class FocusOverlay {
     await streamChat(
       messages,
       (token) => {
+        if (!loaderRemoved) { removeLoader(); loaderRemoved = true; }
         buffer += token;
         while (buffer.length > 0) {
           const headingMatch = buffer.match(/^## (.+?)\n/);
@@ -2154,6 +2347,7 @@ export class FocusOverlay {
             currentEl.style.cssText = 'font-family:Special Elite,cursive;font-size:20px;color:#e0e0e0;margin:48px 0 16px;line-height:1.4;';
             aiContent.appendChild(currentEl);
             currentEl.textContent = headingMatch[1];
+            this._addTOCEntry(headingMatch[1], currentEl);
             buffer = buffer.slice(headingMatch[0].length);
             currentEl = null;
             continue;
@@ -2193,9 +2387,164 @@ export class FocusOverlay {
     );
   }
 
+  // ─── Article TOC ───
+
+  // Refine heading text for TOC: strip noise, fit within ~36 chars (2 lines at 196px/11px mono)
+  _tocText(raw) {
+    let t = raw
+      .replace(/[\u{1F000}-\u{1FFFF}]|[\u2600-\u27BF]|[\u{FE00}-\u{FEFF}]/gu, '') // emoji
+      .replace(/^[\d]+\.\s*/, '')  // "1. ", "2. "
+      .replace(/^(Discover|Details|Define|Develop|Delivery|Background|Overview)\s*[:：]\s*/i, '')
+      .replace(/\s*[✅👷🎯💡🔧📦🎙️]+\s*/g, '')  // status emoji
+      .trim();
+    // Fit in ~36 chars (2 lines). Trim at last word boundary.
+    if (t.length > 36) {
+      t = t.slice(0, 36).replace(/\s+\S*$/, '');
+    }
+    return t;
+  }
+
+  _buildTOC(headings) {
+    this._destroyTOC();
+    if (!headings.length) return;
+
+    const toc = document.createElement('div');
+    toc.className = 'article-toc';
+    this._tocHeadings = headings;
+
+    for (const h of headings) {
+      const item = document.createElement('div');
+      item.className = 'article-toc-item';
+      const bar = document.createElement('div');
+      bar.className = 'toc-bar';
+      const txt = document.createElement('div');
+      txt.className = 'toc-text';
+      txt.textContent = this._tocText(h.text);
+      item.appendChild(bar);
+      item.appendChild(txt);
+      item.addEventListener('click', () => {
+        const elTop = h.el.getBoundingClientRect().top;
+        const overlayTop = this.overlay.getBoundingClientRect().top;
+        this.overlay.scrollTo({ top: this.overlay.scrollTop + (elTop - overlayTop) - 80, behavior: 'smooth' });
+      });
+      toc.appendChild(item);
+    }
+
+    document.body.appendChild(toc);
+    this._tocEl = toc;
+
+    // Initial position: align with first heading
+    this._updateTOCPosition();
+  }
+
+  _addTOCEntry(text, el) {
+    if (!this._tocEl) {
+      this._tocHeadings = [];
+      const toc = document.createElement('div');
+      toc.className = 'article-toc';
+      document.body.appendChild(toc);
+      this._tocEl = toc;
+    }
+
+    this._tocHeadings.push({ text, el });
+    const item = document.createElement('div');
+    item.className = 'article-toc-item';
+    const bar = document.createElement('div');
+    bar.className = 'toc-bar';
+    const txt = document.createElement('div');
+    txt.className = 'toc-text';
+    txt.textContent = this._tocText(text);
+    item.appendChild(bar);
+    item.appendChild(txt);
+    item.addEventListener('click', () => {
+      const elTop = el.getBoundingClientRect().top;
+      const overlayTop = this.overlay.getBoundingClientRect().top;
+      this.overlay.scrollTo({ top: this.overlay.scrollTop + (elTop - overlayTop) - 80, behavior: 'smooth' });
+    });
+    this._tocEl.appendChild(item);
+
+    // Update position on first entry
+    if (this._tocHeadings.length === 1) this._updateTOCPosition();
+  }
+
+  _updateTOCPosition() {
+    if (!this._tocEl || !this._tocHeadings?.length) return;
+    // Align with first <p> paragraph in article, fallback to first heading
+    const firstP = this._articleWrap?.querySelector('p');
+    const alignEl = firstP || this._tocHeadings[0].el;
+    const rect = alignEl.getBoundingClientRect();
+    // Clamp: don't go above 80px (below mesh area)
+    const top = Math.max(80, rect.top);
+    this._tocEl.style.top = top + 'px';
+
+    // Update active state
+    const items = this._tocEl.querySelectorAll('.article-toc-item');
+    let activeIdx = 0;
+    for (let i = this._tocHeadings.length - 1; i >= 0; i--) {
+      const hRect = this._tocHeadings[i].el.getBoundingClientRect();
+      if (hRect.top <= 120) { activeIdx = i; break; }
+    }
+    items.forEach((el, i) => el.classList.toggle('active', i === activeIdx));
+  }
+
+  _destroyTOC() {
+    if (this._tocEl) { this._tocEl.remove(); this._tocEl = null; }
+    this._tocHeadings = null;
+  }
+
+  // ─── Image Lightbox ───
+
+  _bindImageLightbox() {
+    if (!this._articleWrap) return;
+    const imgs = this._articleWrap.querySelectorAll('img');
+    imgs.forEach(img => {
+      img.style.cursor = 'zoom-in';
+      img.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this._openLightbox(img.src);
+      });
+    });
+  }
+
+  _openLightbox(src) {
+    const lb = document.createElement('div');
+    lb.className = 'img-lightbox';
+    const img = document.createElement('img');
+    img.src = src;
+    lb.appendChild(img);
+    document.body.appendChild(lb);
+    this._lightboxEl = lb;
+
+    // Fade in
+    requestAnimationFrame(() => requestAnimationFrame(() => lb.classList.add('visible')));
+
+    // Close on click
+    lb.addEventListener('click', () => this._closeLightbox());
+
+    // Close on Escape
+    this._lightboxKeyHandler = (e) => { if (e.key === 'Escape') this._closeLightbox(); };
+    document.addEventListener('keydown', this._lightboxKeyHandler);
+  }
+
+  _closeLightbox() {
+    if (!this._lightboxEl) return;
+    this._lightboxEl.classList.remove('visible');
+    const el = this._lightboxEl;
+    setTimeout(() => el.remove(), 250);
+    this._lightboxEl = null;
+    if (this._lightboxKeyHandler) {
+      document.removeEventListener('keydown', this._lightboxKeyHandler);
+      this._lightboxKeyHandler = null;
+    }
+  }
+
   closeArticle() {
     if (!this._articleMode) return;
     this._articleMode = false;
+
+    // 清理 TOC + lightbox
+    this._destroyTOC();
+    this._closeLightbox();
 
     // 清理 composer
     this._teardownComposer();
@@ -2371,9 +2720,13 @@ export class FocusOverlay {
       this._scrollToBottom();
     };
 
+    const removeLoader = createScribbleLoader(bubble);
+    let loaderRemoved = false;
+
     await streamChat(
       messages,
       (token) => {
+        if (!loaderRemoved) { removeLoader(); loaderRemoved = true; }
         buffer += token;
         while (buffer.length > 0) {
           const headingMatch = buffer.match(/^## (.+?)\n/);
