@@ -5,7 +5,7 @@
     "category": "who_i_am",
     "atom": "photo",
     "body": "I’m a product designer at Microsoft AI, exploring how people will naturally interact with AI in the future. I have experience designing AI products fo",
-    "cover_image": "photo_portrait.jpg",
+    "cover_image": "photo_portrait.webp",
     "focus": {
       "title": "Hello I'm Jesse Lai",
       "description": "I’m a product designer at Microsoft AI, exploring how people will naturally interact with AI in the future. I have experience designing AI products fo",
@@ -89,7 +89,7 @@
     "category": "who_i_am",
     "atom": "sticky",
     "body": "Product designer at Microsoft AI with 6+ years of experience in AI product design for B2C and B2B scenarios.",
-    "cover_image": "content_images/146400ee_cover.jpg",
+    "cover_image": "content_images/146400ee_cover.webp",
     "focus": {
       "title": "Resume",
       "description": "Resume",
@@ -113,7 +113,7 @@
     "category": "design_projects",
     "atom": "sticky",
     "body": "Eleme (饿了么) is a renowned food delivery service in China. I shortened the onboarding process and improved the task-reward system to help merchants operate and increase survival rate.",
-    "cover_image": "content_images/116400ee_5.png",
+    "cover_image": "content_images/116400ee_5.webp",
     "focus": {
       "title": "Food Delivery Service",
       "description": "💡 Eleme (饿了么) is a renowned food delivery service in China, it means “Are you hungry?”\nThrough the design research, I found that our users tried to de",
@@ -568,7 +568,7 @@
     "category": "design_projects",
     "atom": "sticky",
     "body": "I analyzed the impact of generative AI on Eleme's merchant consultation service and built a conversational assistant to enhance experience and reduce costs.",
-    "cover_image": "content_images/116400ee_19.png",
+    "cover_image": "content_images/116400ee_19.webp",
     "focus": {
       "title": "AI Merchant Assistant",
       "description": "💡 In this project, I analyzed the impact of generative AI on Eleme's merchant online consultation service. I designed suitable interaction models and ",
@@ -774,7 +774,7 @@
     "category": "design_projects",
     "atom": "sticky",
     "body": "Review analysis is essential for managing online shops. I identified why users rarely access it and designed solutions to increase adoption.",
-    "cover_image": "content_images/19eecf3c_3.png",
+    "cover_image": "content_images/19eecf3c_3.webp",
     "focus": {
       "title": "Review Analysis",
       "description": "💡 Overview\n\"Review analysis\" is essential for managing takeout online shops, helping users understand customer feedback to optimize their services and",
@@ -1085,7 +1085,7 @@
     "category": "hobby",
     "atom": "photo",
     "body": "Stand-up comedy is a lifelong passion of mine. The process of turning life's highs and lows into jokes and performing them on stage has become an inte",
-    "cover_image": "content_images/146400ee_3.jpg",
+    "cover_image": "content_images/146400ee_3.webp",
     "focus": {
       "title": "Stand-up Comedian",
       "description": "Stand-up comedy is a lifelong passion of mine. The process of turning life's highs and lows into jokes and performing them on stage has become an inte",
@@ -1148,7 +1148,7 @@
     "category": "hobby",
     "atom": "photo",
     "body": "清晨的第一竿：安静得只剩水面在呼吸。 今天的战利品：不大，但足够让人开心一整天。",
-    "cover_image": "photo_fishing.jpg",
+    "cover_image": "photo_fishing.webp",
     "focus": {
       "title": "Fishing",
       "description": "清晨的第一竿：安静得只剩水面在呼吸。 今天的战利品：不大，但足够让人开心一整天。",
@@ -1194,7 +1194,7 @@
     "category": "hobby",
     "atom": "photo",
     "body": "Coming soon",
-    "cover_image": "content_images/360400ee_1.jpg",
+    "cover_image": "content_images/360400ee_1.webp",
     "focus": {
       "title": "Drawing",
       "description": "Coming soon",
@@ -1222,7 +1222,7 @@
     "category": "design_thought",
     "atom": "sticky",
     "body": "在AI这个时代，我们拥有了足够智能且持续进化的AI系统。讽刺的是，我们的人机交互体验在很多场景反而倒退了——从丰富的图形化界面体验退回到基于文本的对话聊天，能力强大，但表达原始，很多时候信息可读性很低，阅读效率也不高。（这里暂不考虑CLI带来的底层架构变化带来的体验变化） 尽管AI能理解复杂的用户意",
-    "cover_image": "content_images/30d400ee_1.png",
+    "cover_image": "content_images/30d400ee_1.webp",
     "focus": {
       "title": "GenUI",
       "description": "在AI这个时代，我们拥有了足够智能且持续进化的AI系统。讽刺的是，我们的人机交互体验在很多场景反而倒退了——从丰富的图形化界面体验退回到基于文本的对话聊天，能力强大，但表达原始，很多时候信息可读性很低，阅读效率也不高。（这里暂不考虑CLI带来的底层架构变化带来的体验变化） 尽管AI能理解复杂的用户意",
@@ -1562,7 +1562,7 @@
     "category": "design_thought",
     "atom": "sticky",
     "body": "📌 状态：积累中 | 素材越多文章越充实，Jesse觉得可以发了就进入定稿 • Jakob Nielsen — Intent by Discovery: Designing the AI User Experience (2026-03-26) 链接",
-    "cover_image": "content_images/358400ee_cover.png",
+    "cover_image": "content_images/358400ee_cover.webp",
     "focus": {
       "title": "AI产品设计原则",
       "description": "📌 状态：积累中 | 素材越多文章越充实，Jesse觉得可以发了就进入定稿 • Jakob Nielsen — Intent by Discovery: Designing the AI User Experience (2026-03-26) 链接",
@@ -1702,7 +1702,7 @@
     "category": "hobby",
     "atom": "photo",
     "body": "🎙️ Jesse的播客推荐 | 每期记录：哪集好、为什么好、值得分享的观点 状态：积累中 — 攒够几期好内容就可以整理成一篇发布",
-    "cover_image": "content_images/358400ee_1.jpg",
+    "cover_image": "content_images/358400ee_1.webp",
     "focus": {
       "title": "播客分享",
       "description": "🎙️ Jesse的播客推荐 | 每期记录：哪集好、为什么好、值得分享的观点 状态：积累中 — 攒够几期好内容就可以整理成一篇发布",
