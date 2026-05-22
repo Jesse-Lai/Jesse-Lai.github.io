@@ -301,6 +301,10 @@
     .article-toc-item.active .toc-text { color: #e0e0e0; }
     .article-toc-item.active .toc-bar { background: #e0e0e0; }
     @media (max-width: 1100px) { .article-toc { display: none; } }
+    @media (max-width: 768px) {
+      #sunlight-overlay #leaves { width: 360px; height: 314px; right: -120px; bottom: 60px; }
+      #sunlight-overlay .perspective { width: 80vw; }
+    }
 
     /* Image lightbox */
     .img-lightbox {
@@ -522,6 +526,15 @@
     </div>
   </div>
 
+  <script>
+    // Mobile: remove SVG feTurbulence filter (CPU-heavy, causes Safari crash)
+    if (window.innerWidth <= 768) {
+      const leaves = document.getElementById('leaves');
+      if (leaves) leaves.style.filter = 'none';
+      const windFilter = document.getElementById('wind');
+      if (windFilter) windFilter.remove();
+    }
+  </script>
   <div id="atoms-btn" style="display:none" onclick="location.href='atoms.html'">Atoms</div>
   <script>if(location.hostname==='localhost'||location.hostname==='127.0.0.1'||location.search.includes('dev'))document.getElementById('atoms-btn').style.display='';</script>
   <div id="focus-overlay">
