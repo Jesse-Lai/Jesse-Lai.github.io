@@ -149,6 +149,7 @@ import { WallArticle } from "./wall-article.js?v=151";
   for (const item of wallItems) {
     if (item.type === 'photo') {
       const imgData = await loadImagePixels(item.src, isMobile ? 800 : undefined);
+      console.log(`[img] ${item.src} → ${imgData.w}x${imgData.h} (mobile=${isMobile})`);
       const targetW = colW * 0.6;
       const photoScale = targetW / imgData.w;
       const photoItem = await photoSystem.addPhoto(item.src, 0, 0, photoScale, item);
