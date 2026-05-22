@@ -148,7 +148,7 @@ import { WallArticle } from "./wall-article.js?v=151";
   let loadedCount = 0;
   for (const item of wallItems) {
     if (item.type === 'photo') {
-      const imgData = await loadImagePixels(item.src);
+      const imgData = await loadImagePixels(item.src, isMobile ? 800 : undefined);
       const targetW = colW * 0.6;
       const photoScale = targetW / imgData.w;
       const photoItem = await photoSystem.addPhoto(item.src, 0, 0, photoScale, item);
@@ -159,7 +159,7 @@ import { WallArticle } from "./wall-article.js?v=151";
       rendered.push({ group: photoItem.group, bounds: b, wallItem: item, focusableItem: photoItem });
       loadedCount++; setProgress(15 + (loadedCount / totalItems) * 70);
     } else if (item.type === 'sticky') {
-      const stickyStampImg = item.stampSrc ? await loadImagePixels(item.stampSrc) : null;
+      const stickyStampImg = item.stampSrc ? await loadImagePixels(item.stampSrc, isMobile ? 400 : undefined) : null;
       const stickyResult = await renderStickyNote(app, 0, 0, { title: item.title, body: item.body, date: item.date }, stickyStampImg, atomsConfig.stamp, { colorScheme: item.colorScheme });
       stickyResult.group.scale.set(atomScale);
       const b = stickyResult.group.getBounds();
@@ -169,7 +169,7 @@ import { WallArticle } from "./wall-article.js?v=151";
       rendered.push({ group: stickyResult.group, bounds: b, wallItem: item, focusableItem: stickyItem });
       loadedCount++; setProgress(15 + (loadedCount / totalItems) * 70);
     } else if (item.type === 'stamp') {
-      const stampImg = await loadImagePixels(item.src);
+      const stampImg = await loadImagePixels(item.src, isMobile ? 400 : undefined);
       const stampResult = await renderStamp(app, stampImg, 0, 0, atomsConfig.stamp);
       stampResult.group.scale.set(atomScale);
       const b = stampResult.group.getBounds();
