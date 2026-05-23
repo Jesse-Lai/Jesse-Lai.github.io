@@ -1,5 +1,5 @@
 // wall.js — Main view, uses atoms-renderer.js
-import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, makeDraggable, FocusOverlay, getOrCreateVideo, animateTo, fadeIn } from "./atoms-renderer.js?v=169";
+import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, makeDraggable, FocusOverlay, getOrCreateVideo, animateTo, fadeIn } from "./atoms-renderer.js?v=170";
 import { WallArticle } from "./wall-article.js?v=151";
 
 (async () => {
@@ -147,8 +147,10 @@ import { WallArticle } from "./wall-article.js?v=151";
   const totalItems = wallItems.length;
 
   // Phase 1: Preload all images in parallel
+  // Note: photos don't use maxWidth here — addPhoto loads its own texture internally,
+  // we only need the original dimensions to calculate photoScale correctly.
   const preloads = wallItems.map(item => {
-    if (item.type === 'photo') return loadImagePixels(item.src, isMobile ? 800 : undefined);
+    if (item.type === 'photo') return loadImagePixels(item.src);
     if (item.type === 'sticky' && item.stampSrc) return loadImagePixels(item.stampSrc, isMobile ? 400 : undefined);
     if (item.type === 'stamp') return loadImagePixels(item.src, isMobile ? 400 : undefined);
     return null;
