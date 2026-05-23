@@ -282,28 +282,28 @@
       pointer-events: auto;
       flex: 1; max-width: 640px; margin: 0 auto; box-sizing: border-box;
       display: flex; align-items: center; gap: 8px;
-      background: rgba(30,30,30,0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255,255,255,0.12); border-radius: 16px;
+      background: rgba(255,255,255,0.6); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(0,0,0,0.06); border-radius: 16px;
       padding: 10px 12px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
       transition: border-color 0.2s;
     }
-    .composer-bar .composer-box:focus-within { border-color: rgba(255,255,255,0.25); }
+    .composer-bar .composer-box:focus-within { border-color: rgba(0,0,0,0.12); }
     .composer-bar textarea {
       flex: 1; resize: none; border: none; background: none; outline: none;
-      color: #e0e0e0; font-size: 15px; line-height: 1.5;
+      color: #333; font-size: 15px; line-height: 1.5;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       max-height: 120px; min-height: 22px; padding: 0;
     }
-    .composer-bar textarea::placeholder { color: rgba(255,255,255,0.3); }
+    .composer-bar textarea::placeholder { color: rgba(0,0,0,0.3); }
     .composer-bar .send-btn {
       flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%;
-      background: #fff; border: none; cursor: pointer;
+      background: rgba(0,0,0,0.08); border: none; cursor: pointer;
       display: flex; align-items: center; justify-content: center;
       transition: opacity 0.2s;
     }
     .composer-bar .send-btn:disabled { opacity: 0.2; cursor: default; }
-    .composer-bar .send-btn svg { width: 14px; height: 14px; }
+    .composer-bar .send-btn svg { width: 14px; height: 14px; fill: rgba(0,0,0,0.4); }
     /* Per-composer overrides */
     #article-composer { z-index: 10001; display: none; }
     #wall-composer { z-index: 9998; }
@@ -361,32 +361,32 @@
     #organize-btn {
       pointer-events: auto; flex-shrink: 0;
       width: 48px; height: 48px;
-      background: rgba(30,30,30,0.7);
-      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.6);
+      backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(0,0,0,0.06);
       border-radius: 16px;
-      color: rgba(255,255,255,0.4);
+      color: rgba(0,0,0,0.3);
       cursor: pointer;
       display: flex; align-items: center; justify-content: center;
       transition: all 0.2s;
       padding: 0;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
     }
-    #organize-btn:hover, #shuffle-btn:hover { color: #fff; border-color: rgba(255,255,255,0.25); }
+    #organize-btn:hover, #shuffle-btn:hover { color: rgba(0,0,0,0.6); border-color: rgba(0,0,0,0.12); }
     #organize-btn svg, #shuffle-btn svg { width: 18px; height: 18px; }
     #shuffle-btn {
       pointer-events: auto; flex-shrink: 0;
       width: 48px; height: 48px;
-      background: rgba(30,30,30,0.7);
-      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.6);
+      backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(0,0,0,0.06);
       border-radius: 16px;
-      color: rgba(255,255,255,0.4);
+      color: rgba(0,0,0,0.3);
       cursor: pointer;
       display: flex; align-items: center; justify-content: center;
       transition: all 0.2s;
       padding: 0;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
     }
 
     /* ─── Wall Article ─── */
@@ -530,6 +530,6 @@
     <div id="loading-percent">0%</div>
   </div>
   <script src="lib/pixi.min.js"></script>
-  <script type="module" src="wall.js?v=172"></script>
+  <script type="module" src="wall.js?v=173"></script>
 </body>
 </html>

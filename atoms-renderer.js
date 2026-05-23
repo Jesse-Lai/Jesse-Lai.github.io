@@ -356,7 +356,7 @@ export async function renderPhoto(app, imgData, x, y, scale, imgCfg, cfg) {
   // White frame
   const frame = new PIXI.Graphics();
   frame.roundRect(-pw/2-border, -ph/2-border, pw+border*2, ph+border+bottomBorder, 3);
-  frame.fill(0xf5f5f0);
+  frame.fill(0xffffff);
   group.addChild(frame);
 
   // No mask — text positioned precisely within bounds
