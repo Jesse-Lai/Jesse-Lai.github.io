@@ -5,7 +5,7 @@ import { WallArticle } from "./wall-article.js?v=151";
 (async () => {
   const W = window.innerWidth;
   const H = window.innerHeight;
-  const dpr = window.devicePixelRatio || 1;
+  const dpr = Math.min(window.devicePixelRatio || 1, W < 768 ? 2 : Infinity);
 
   const app = new PIXI.Application();
   await app.init({ width: W, height: H, antialias: true, resolution: dpr, autoDensity: true, backgroundColor: 0x0a0a0a });
