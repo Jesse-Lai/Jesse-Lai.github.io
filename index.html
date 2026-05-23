@@ -12,9 +12,56 @@
       font-weight: 400;
     }
     * { margin: 0; padding: 0; }
-    html, body { background: #FFFDFA; overflow-x: hidden; }
+    html, body { background: #FFFDFA; overflow-x: hidden; --shadow: #1a1917; }
     body { min-height: 100vh; }
     canvas { display: block; }
+
+    /* ── Sunlight overlay ── */
+    #sunlight-overlay {
+      pointer-events: none;
+      position: fixed; inset: 0;
+      z-index: 1;
+      transform: scaleX(-1);
+    }
+    #sunlight-overlay .perspective {
+      position: absolute;
+      top: -30vh; right: 0;
+      width: 65vw; height: 130vh;
+      opacity: 0.12;
+      mix-blend-mode: soft-light;
+      transform-origin: top right;
+      transform-style: preserve-3d;
+      transform: matrix3d(0.75,-0.0625,0,0.0008, 0,1,0,0, 0,0,1,0, 0,0,0,1);
+      transition: opacity 0.3s, transform 0.3s;
+      -webkit-mask-image: linear-gradient(to left, black 30vw, transparent 55vw);
+      mask-image: linear-gradient(to left, black 30vw, transparent 55vw);
+      filter: blur(3px);
+    }
+    @media (max-width: 768px) {
+      #sunlight-overlay .perspective {
+        width: 120vw; height: 150vh;
+        top: -20vh; right: -20vw;
+        -webkit-mask-image: linear-gradient(to left, black 60vw, transparent 110vw);
+        mask-image: linear-gradient(to left, black 60vw, transparent 110vw);
+      }
+    }
+    #sunlight-overlay #blinds { position: relative; width: 100%; }
+    #sunlight-overlay #blinds .shutter,
+    #sunlight-overlay #blinds .bar { background-color: var(--shadow); transition: height 0.3s, background-color 0.3s; }
+    #sunlight-overlay #blinds > .shutters {
+      display: flex; flex-direction: column; align-items: end;
+      gap: 42px; transition: gap 0.3s;
+    }
+    #sunlight-overlay #blinds > .vertical {
+      top: 0; position: absolute;
+      height: 100%; width: 100%;
+      display: flex; justify-content: space-around;
+    }
+    #sunlight-overlay .vertical > .bar { width: 5px; height: 100%; }
+    #sunlight-overlay .shutter { width: 100%; height: 28px; }
+    @media (max-width: 768px) {
+      #sunlight-overlay .shutter.desktop-only { display: none; }
+    }
     /* Loading screen */
     #loading-screen {
       position: fixed; inset: 0; z-index: 99999;
@@ -344,6 +391,29 @@
   </style>
 </head>
 <body>
+  <!-- Sunlight overlay: perspective + blinds -->
+  <div id="sunlight-overlay">
+    <div class="perspective">
+      <div id="blinds">
+        <div class="shutters">
+          <div class="shutter"></div><div class="shutter"></div><div class="shutter"></div>
+          <div class="shutter"></div><div class="shutter"></div><div class="shutter"></div>
+          <div class="shutter"></div><div class="shutter"></div><div class="shutter"></div>
+          <div class="shutter"></div><div class="shutter"></div><div class="shutter"></div>
+          <div class="shutter"></div>
+          <div class="shutter desktop-only"></div><div class="shutter desktop-only"></div>
+          <div class="shutter desktop-only"></div><div class="shutter desktop-only"></div>
+          <div class="shutter desktop-only"></div><div class="shutter desktop-only"></div>
+          <div class="shutter desktop-only"></div>
+        </div>
+        <div class="vertical">
+          <div class="bar"></div>
+          <div class="bar"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="atoms-btn" style="display:none" onclick="location.href='atoms.html'">Atoms</div>
   <script>if(location.hostname==='localhost'||location.hostname==='127.0.0.1'||location.search.includes('dev'))document.getElementById('atoms-btn').style.display='';</script>
   <div id="focus-overlay">
@@ -409,6 +479,6 @@
     <div id="loading-percent">0%</div>
   </div>
   <script src="lib/pixi.min.js"></script>
-  <script type="module" src="wall.js?v=171"></script>
+  <script type="module" src="wall.js?v=172"></script>
 </body>
 </html>

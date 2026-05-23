@@ -460,14 +460,38 @@ import { WallArticle } from "./wall-article.js?v=151";
       [0, '#FFFDFA'], [0.5, '#FCCC83'], [1.0, '#DB7A2A']
     ];
 
-    const updateBgColor = () => {
+    // Sunlight overlay elements (null on mobile — removed from DOM)
+    const perspective = document.querySelector('#sunlight-overlay .perspective');
+    const shuttersEl = document.querySelector('#sunlight-overlay .shutters');
+    const shutterEls = document.querySelectorAll('#sunlight-overlay .shutter');
+    const root = document.documentElement;
+
+    const updateSunProgress = () => {
       const scrollY = window.scrollY || 0;
       const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
       const p = Math.min(1, Math.max(0, scrollY / maxScroll));
+
+      // Background color
       app.renderer.background.color = lerpColorStops(p, bgStops);
+
+      // Perspective: opacity + angle shift with scroll
+      if (perspective) {
+        perspective.style.opacity = lerp(0.12, 0.3, p);
+        const m00 = lerp(0.75, 0.8333, p);
+        const m01 = lerp(-0.0625, 0.0833, p);
+        const m03 = lerp(0.0008, 0.0003, p);
+        perspective.style.transform = `matrix3d(${m00},${m01},0,${m03}, 0,1,0,0, 0,0,1,0, 0,0,0,1)`;
+      }
+
+      // Blinds: gap shrinks, shutters grow as you scroll down
+      if (shuttersEl) shuttersEl.style.gap = lerp(42, 14, p) + 'px';
+      shutterEls.forEach(s => s.style.height = lerp(28, 60, p) + 'px');
+
+      // Shadow & bounce light colors
+      root.style.setProperty('--shadow', lerpColorStops(p, [[0, '#1a1917'], [1, '#030307']]));
     };
 
-    window.addEventListener('scroll', updateBgColor, { passive: true });
-    updateBgColor();
+    window.addEventListener('scroll', updateSunProgress, { passive: true });
+    updateSunProgress();
   }
 })();
