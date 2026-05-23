@@ -65,7 +65,7 @@ import { WallArticle } from "./wall-article.js?v=151";
   // Bilingual overrides: keyed by original title
   const i18n = {
     'Hello I\'m Jesse Lai':  { zh: { title: '你好，我是Jesse Lai', body: '微软AI产品设计师，探索人与AI自然交互的未来。' } },
-    'Resume':                { zh: { title: '简历', body: '微软AI产品设计师，6年以上AI产品设计经验，涵盖B2C和B2B。' } },
+    'My Story':              { zh: { title: '我的故事', body: '微软AI产品设计师，6年以上AI产品设计经验，涵盖B2C和B2B。' } },
     'Food Delivery Service': { zh: { title: '外卖配送服务', body: '饿了么是中国知名外卖平台。我缩短了商家入驻流程，改进了任务奖励系统，帮助商家运营并提高存活率。' } },
     'AI Merchant Assistant': { zh: { title: 'AI商家助手', body: '我分析了生成式AI对饿了么商家在线咨询服务的影响，设计并构建了对话式助手，提升商家咨询体验。' } },
     'Review Analysis':       { zh: { title: '评价分析', body: '评价分析对外卖商家运营至关重要。我发现用户很少使用该功能，通过设计研究找到原因并提出创新方案。' } },
@@ -95,7 +95,7 @@ import { WallArticle } from "./wall-article.js?v=151";
   // Stamp image overrides
   const stampOverrides = {
     'GenUI': 'photo_stamp.webp',
-    'Resume': 'resume.webp',
+    'My Story': 'stamp_mystory.png',
     'Food Delivery Service': 'photo_ski.webp',
     'AI Merchant Assistant': 'AI-Merchant-Assistant.webp',
     'Review Analysis': 'review.webp',
@@ -457,7 +457,7 @@ import { WallArticle } from "./wall-article.js?v=151";
     };
 
     const bgStops = [
-      [0, '#FFFDFA'], [0.5, '#FCCC83'], [1.0, '#DB7A2A']
+      [0, '#F6F3EE'], [0.5, '#FCCC83'], [1.0, '#DB7A2A']
     ];
 
     // Sunlight overlay elements (null on mobile — removed from DOM)

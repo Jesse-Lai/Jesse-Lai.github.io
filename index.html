@@ -104,12 +104,12 @@
     }
     #loading-bar-bg {
       width: 200px; height: 2px;
-      background: rgba(255,255,255,0.08); border-radius: 1px;
+      background: rgba(0,0,0,0.06); border-radius: 1px;
       overflow: hidden;
     }
     #loading-bar {
       height: 100%; width: 0%; border-radius: 1px;
-      background: rgba(255,255,255,0.5);
+      background: rgba(0,0,0,0.2);
       transition: width 0.3s ease;
     }
     #loading-percent {
@@ -282,13 +282,15 @@
       pointer-events: auto;
       flex: 1; max-width: 640px; margin: 0 auto; box-sizing: border-box;
       display: flex; align-items: center; gap: 8px;
-      background: rgba(255,255,255,0.6); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-      border: 1px solid rgba(0,0,0,0.06); border-radius: 16px;
+      background: rgba(255,255,255,0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.6); border-radius: 16px;
       padding: 10px 12px;
       box-shadow: 0 2px 12px rgba(0,0,0,0.06);
       transition: border-color 0.2s;
     }
-    .composer-bar .composer-box:focus-within { border-color: rgba(0,0,0,0.12); }
+    .composer-bar .composer-box:focus-within { border-color: rgba(255,255,255,0.8); }
+    .composer-bar .composer-box:hover { background: rgba(255,255,255,0.55); transform: scale(1.02); }
+    .composer-bar .composer-box { transition: border-color 0.2s, background 0.2s, transform 0.2s; }
     .composer-bar textarea {
       flex: 1; resize: none; border: none; background: none; outline: none;
       color: #333; font-size: 15px; line-height: 1.5;
@@ -298,12 +300,14 @@
     .composer-bar textarea::placeholder { color: rgba(0,0,0,0.3); }
     .composer-bar .send-btn {
       flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%;
-      background: rgba(0,0,0,0.08); border: none; cursor: pointer;
+      background: rgba(0,0,0,0.8); border: none; cursor: pointer;
       display: flex; align-items: center; justify-content: center;
-      transition: opacity 0.2s;
+      transition: background 0.2s;
     }
-    .composer-bar .send-btn:disabled { opacity: 0.2; cursor: default; }
-    .composer-bar .send-btn svg { width: 14px; height: 14px; fill: rgba(0,0,0,0.4); }
+    .composer-bar .send-btn:disabled { background: rgba(0,0,0,0.08); cursor: default; }
+    .composer-bar .send-btn { color: rgba(255,255,255,0.9); }
+    .composer-bar .send-btn svg { width: 14px; height: 14px; }
+    .composer-bar .send-btn:disabled { color: rgba(0,0,0,0.15); }
     /* Per-composer overrides */
     #article-composer { z-index: 10001; display: none; }
     #wall-composer { z-index: 9998; }
@@ -361,9 +365,9 @@
     #organize-btn {
       pointer-events: auto; flex-shrink: 0;
       width: 48px; height: 48px;
-      background: rgba(255,255,255,0.6);
-      backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-      border: 1px solid rgba(0,0,0,0.06);
+      background: rgba(255,255,255,0.4);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.6);
       border-radius: 16px;
       color: rgba(0,0,0,0.3);
       cursor: pointer;
@@ -372,14 +376,14 @@
       padding: 0;
       box-shadow: 0 2px 12px rgba(0,0,0,0.06);
     }
-    #organize-btn:hover, #shuffle-btn:hover { color: rgba(0,0,0,0.6); border-color: rgba(0,0,0,0.12); }
+    #organize-btn:hover, #shuffle-btn:hover { color: rgba(0,0,0,0.6); background: rgba(255,255,255,0.55); transform: scale(1.1); }
     #organize-btn svg, #shuffle-btn svg { width: 18px; height: 18px; }
     #shuffle-btn {
       pointer-events: auto; flex-shrink: 0;
       width: 48px; height: 48px;
-      background: rgba(255,255,255,0.6);
-      backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-      border: 1px solid rgba(0,0,0,0.06);
+      background: rgba(255,255,255,0.4);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.6);
       border-radius: 16px;
       color: rgba(0,0,0,0.3);
       cursor: pointer;
@@ -478,9 +482,9 @@
     <div id="focus-article"></div>
     <div id="article-composer" class="composer-bar">
       <div class="composer-box">
-        <textarea rows="1" placeholder="Ask Jesse anything..."></textarea>
+        <textarea rows="1" placeholder="Ask about Jesse..."></textarea>
         <button class="send-btn" disabled>
-          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4.284 10.296A1 1 0 0 0 5.709 11.7L11 6.33V20a1 1 0 1 0 2 0V6.336l5.285 5.364a1 1 0 0 0 1.425-1.404l-6.823-6.924a1.25 1.25 0 0 0-1.78 0l-6.823 6.924Z" fill="#0a0a0a"/></svg>
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4.284 10.296A1 1 0 0 0 5.709 11.7L11 6.33V20a1 1 0 1 0 2 0V6.336l5.285 5.364a1 1 0 0 0 1.425-1.404l-6.823-6.924a1.25 1.25 0 0 0-1.78 0l-6.823 6.924Z" fill="currentColor"/></svg>
         </button>
       </div>
     </div>
@@ -512,9 +516,9 @@
         </svg>
       </button>
       <div class="composer-box">
-        <textarea rows="1" placeholder="Ask Jesse anything..."></textarea>
+        <textarea rows="1" placeholder="Ask about Jesse..."></textarea>
       <button class="send-btn" disabled>
-        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4.284 10.296A1 1 0 0 0 5.709 11.7L11 6.33V20a1 1 0 1 0 2 0V6.336l5.285 5.364a1 1 0 0 0 1.425-1.404l-6.823-6.924a1.25 1.25 0 0 0-1.78 0l-6.823 6.924Z" fill="#0a0a0a"/></svg>
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4.284 10.296A1 1 0 0 0 5.709 11.7L11 6.33V20a1 1 0 1 0 2 0V6.336l5.285 5.364a1 1 0 0 0 1.425-1.404l-6.823-6.924a1.25 1.25 0 0 0-1.78 0l-6.823 6.924Z" fill="currentColor"/></svg>
       </button>
     </div>
     </div>
@@ -525,7 +529,7 @@
   </div>
   <!-- Loading screen -->
   <div id="loading-screen">
-    <div id="loading-text">THE WALL</div>
+    <div id="loading-text">JESSE OS</div>
     <div id="loading-bar-bg"><div id="loading-bar"></div></div>
     <div id="loading-percent">0%</div>
   </div>

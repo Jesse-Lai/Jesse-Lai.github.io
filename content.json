@@ -85,18 +85,18 @@
   },
   {
     "id": "116400ee-0cf5-8141-a777-d6750e0c0005",
-    "title": "Resume",
+    "title": "My Story",
     "category": "who_i_am",
     "atom": "sticky",
     "body": "Product designer at Microsoft AI with 6+ years of experience in AI product design for B2C and B2B scenarios.",
     "cover_image": "content_images/146400ee_cover.webp",
     "focus": {
-      "title": "Resume",
-      "description": "Resume",
+      "title": "My Story",
+      "description": "My Story",
       "link": "#",
       "linkText": "Read more",
       "article": {
-        "title": "Resume",
+        "title": "My Story",
         "sections": [
           {
             "type": "image",
@@ -112,11 +112,11 @@
     "title": "Food Delivery Service",
     "category": "design_projects",
     "atom": "sticky",
-    "body": "Eleme (饿了么) is a renowned food delivery service in China. I shortened the onboarding process and improved the task-reward system to help merchants operate and increase survival rate.",
+    "body": "Eleme is a renowned food delivery service in China. I shortened the onboarding process and improved the task-reward system to help merchants operate and increase survival rate.",
     "cover_image": "content_images/116400ee_5.webp",
     "focus": {
       "title": "Food Delivery Service",
-      "description": "💡 Eleme (饿了么) is a renowned food delivery service in China, it means “Are you hungry?”\nThrough the design research, I found that our users tried to de",
+      "description": "💡 Eleme is a renowned food delivery service in China, it means “Are you hungry?”\nThrough the design research, I found that our users tried to de",
       "link": "#",
       "linkText": "Read more",
       "article": {
@@ -124,7 +124,7 @@
         "sections": [
           {
             "type": "text",
-            "text": "💡 Eleme (饿了么) is a renowned food delivery service in China, it means “Are you hungry?”\nThrough the design research, I found that our users tried to deal with the complexity before opening, which led to churn. Our users are also not familiar with online restaurant operations, which leads to a low survival rate. I shortened the pre-opening process to higher onboarding efficiency and improved the task-reward system to help our users operate their online restaurants and increase their survival rate."
+            "text": "💡 Eleme is a renowned food delivery service in China, it means “Are you hungry?”\nThrough the design research, I found that our users tried to deal with the complexity before opening, which led to churn. Our users are also not familiar with online restaurant operations, which leads to a low survival rate. I shortened the pre-opening process to higher onboarding efficiency and improved the task-reward system to help our users operate their online restaurants and increase their survival rate."
           },
           {
             "type": "subtitle",
