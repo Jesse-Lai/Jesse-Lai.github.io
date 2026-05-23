@@ -148,12 +148,17 @@ export function sampleImage(imageData, w, h, gap) {
   return points;
 }
 
-export async function loadImagePixels(src) {
+export async function loadImagePixels(src, maxWidth) {
   const img = new Image(); img.crossOrigin = "anonymous"; img.src = src;
   await new Promise(r => img.onload = r);
-  const c = document.createElement("canvas"); c.width = img.naturalWidth; c.height = img.naturalHeight;
-  const ctx = c.getContext("2d"); ctx.drawImage(img, 0, 0);
-  return { data: ctx.getImageData(0,0,c.width,c.height), w: c.width, h: c.height, tex: PIXI.Texture.from(c) };
+  let w = img.naturalWidth, h = img.naturalHeight;
+  if (maxWidth && w > maxWidth) {
+    h = Math.round(h * (maxWidth / w));
+    w = maxWidth;
+  }
+  const c = document.createElement("canvas"); c.width = w; c.height = h;
+  const ctx = c.getContext("2d"); ctx.drawImage(img, 0, 0, w, h);
+  return { data: ctx.getImageData(0,0,w,h), w, h, tex: PIXI.Texture.from(c) };
 }
 
 // ─── Video Texture (lazy, cached) ───

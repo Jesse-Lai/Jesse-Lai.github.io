@@ -1,5 +1,5 @@
 // wall.js — Main view, uses atoms-renderer.js
-import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, makeDraggable, FocusOverlay, getOrCreateVideo, animateTo, fadeIn } from "./atoms-renderer.js?v=167";
+import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, makeDraggable, FocusOverlay, getOrCreateVideo, animateTo, fadeIn } from "./atoms-renderer.js?v=169";
 import { WallArticle } from "./wall-article.js?v=151";
 
 (async () => {
@@ -94,11 +94,11 @@ import { WallArticle } from "./wall-article.js?v=151";
 
   // Stamp image overrides
   const stampOverrides = {
-    'GenUI': 'photo_stamp.png',
-    'Resume': 'resume.png',
-    'Food Delivery Service': 'photo_ski.png',
-    'AI Merchant Assistant': 'AI-Merchant-Assistant.png',
-    'Review Analysis': 'review.png',
+    'GenUI': 'photo_stamp.webp',
+    'Resume': 'resume.webp',
+    'Food Delivery Service': 'photo_ski.webp',
+    'AI Merchant Assistant': 'AI-Merchant-Assistant.webp',
+    'Review Analysis': 'review.webp',
   };
 
   const coolStickies = ['AI Merchant Assistant', 'Review Analysis', 'GenUI', 'AI产品设计原则'];
@@ -142,13 +142,26 @@ import { WallArticle } from "./wall-article.js?v=151";
 
   setProgress(15);
 
-  // ─── Step 1: Render all items at (0,0) to get actual bounds ───
+  // ─── Step 1: Parallel preload all images, then render sequentially ───
   const rendered = []; // { group, bounds, wallItem, focusableItem }
   const totalItems = wallItems.length;
-  let loadedCount = 0;
-  for (const item of wallItems) {
+
+  // Phase 1: Preload all images in parallel
+  const preloads = wallItems.map(item => {
+    if (item.type === 'photo') return loadImagePixels(item.src, isMobile ? 800 : undefined);
+    if (item.type === 'sticky' && item.stampSrc) return loadImagePixels(item.stampSrc, isMobile ? 400 : undefined);
+    if (item.type === 'stamp') return loadImagePixels(item.src, isMobile ? 400 : undefined);
+    return null;
+  });
+  setProgress(20);
+  const preloaded = await Promise.all(preloads);
+  setProgress(50);
+
+  // Phase 2: Render sequentially (PIXI requires ordered operations)
+  for (let i = 0; i < wallItems.length; i++) {
+    const item = wallItems[i];
+    const imgData = preloaded[i];
     if (item.type === 'photo') {
-      const imgData = await loadImagePixels(item.src);
       const targetW = colW * 0.6;
       const photoScale = targetW / imgData.w;
       const photoItem = await photoSystem.addPhoto(item.src, 0, 0, photoScale, item);
@@ -157,25 +170,21 @@ import { WallArticle } from "./wall-article.js?v=151";
       if (item.focus) photoItem.focusData = item.focus;
       const b = photoItem.group.getBounds();
       rendered.push({ group: photoItem.group, bounds: b, wallItem: item, focusableItem: photoItem });
-      loadedCount++; setProgress(15 + (loadedCount / totalItems) * 70);
     } else if (item.type === 'sticky') {
-      const stickyStampImg = item.stampSrc ? await loadImagePixels(item.stampSrc) : null;
-      const stickyResult = await renderStickyNote(app, 0, 0, { title: item.title, body: item.body, date: item.date }, stickyStampImg, atomsConfig.stamp, { colorScheme: item.colorScheme });
+      const stickyResult = await renderStickyNote(app, 0, 0, { title: item.title, body: item.body, date: item.date }, imgData, atomsConfig.stamp, { colorScheme: item.colorScheme });
       stickyResult.group.scale.set(atomScale);
       const b = stickyResult.group.getBounds();
       const stickyItem = photoSystem.addItem(stickyResult.group, b.width / atomScale, b.height / atomScale);
       if (item.focus) stickyItem.focusData = item.focus;
       rendered.push({ group: stickyResult.group, bounds: b, wallItem: item, focusableItem: stickyItem });
-      loadedCount++; setProgress(15 + (loadedCount / totalItems) * 70);
     } else if (item.type === 'stamp') {
-      const stampImg = await loadImagePixels(item.src);
-      const stampResult = await renderStamp(app, stampImg, 0, 0, atomsConfig.stamp);
+      const stampResult = await renderStamp(app, imgData, 0, 0, atomsConfig.stamp);
       stampResult.group.scale.set(atomScale);
       const b = stampResult.group.getBounds();
       photoSystem.addItem(stampResult.group, stampResult.stampW, stampResult.stampH);
       rendered.push({ group: stampResult.group, bounds: b, wallItem: item, focusableItem: null });
-      loadedCount++; setProgress(15 + (loadedCount / totalItems) * 70);
     }
+    setProgress(50 + ((i + 1) / totalItems) * 40);
   }
 
   // ─── Step 2: Masonry layout using actual bounds ───
