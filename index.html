@@ -12,13 +12,13 @@
       font-weight: 400;
     }
     * { margin: 0; padding: 0; }
-    html, body { background: #0a0a0a; overflow-x: hidden; }
+    html, body { background: #FFFDFA; overflow-x: hidden; }
     body { min-height: 100vh; }
     canvas { display: block; }
     /* Loading screen */
     #loading-screen {
       position: fixed; inset: 0; z-index: 99999;
-      background: #0a0a0a;
+      background: #FFFDFA;
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
       transition: opacity 0.6s ease;
@@ -319,7 +319,7 @@
     /* ─── Wall Article ─── */
     #wall-article {
       position: fixed; inset: 0; z-index: 9999;
-      overflow-y: auto; background: #0a0a0a;
+      overflow-y: auto; background: #FFFDFA;
       display: none; opacity: 0;
       transition: opacity 0.4s ease;
     }
@@ -409,6 +409,6 @@
     <div id="loading-percent">0%</div>
   </div>
   <script src="lib/pixi.min.js"></script>
-  <script type="module" src="wall.js?v=170"></script>
+  <script type="module" src="wall.js?v=171"></script>
 </body>
 </html>

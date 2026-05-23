@@ -8,7 +8,7 @@ import { WallArticle } from "./wall-article.js?v=151";
   const dpr = Math.min(window.devicePixelRatio || 1, W < 768 ? 2 : Infinity);
 
   const app = new PIXI.Application();
-  await app.init({ width: W, height: H, antialias: true, resolution: dpr, autoDensity: true, backgroundColor: 0x0a0a0a });
+  await app.init({ width: W, height: H, antialias: true, resolution: dpr, autoDensity: true, backgroundColor: 0xFFFDFA });
   document.body.appendChild(app.canvas);
   app.canvas.style.touchAction = "pan-y";
   // On mobile: completely remove PixiJS event system listeners to allow native scroll
@@ -437,4 +437,37 @@ import { WallArticle } from "./wall-article.js?v=151";
   app.ticker.add(ticker => {
     const dt=Math.min(ticker.deltaMS/1000,0.05);
   });
+
+  // ─── Scroll-driven background color gradient ───
+  {
+    const hexToRgb = h => [parseInt(h.slice(1,3),16), parseInt(h.slice(3,5),16), parseInt(h.slice(5,7),16)];
+    const rgbToHex = (r,g,b) => '#' + [r,g,b].map(v => Math.round(v).toString(16).padStart(2,'0')).join('');
+    const lerp = (a,b,t) => a + (b - a) * t;
+    const lerpColorStops = (t, stops) => {
+      if (t <= stops[0][0]) return stops[0][1];
+      if (t >= stops[stops.length-1][0]) return stops[stops.length-1][1];
+      for (let i = 0; i < stops.length - 1; i++) {
+        if (t >= stops[i][0] && t <= stops[i+1][0]) {
+          const local = (t - stops[i][0]) / (stops[i+1][0] - stops[i][0]);
+          const a = hexToRgb(stops[i][1]), b = hexToRgb(stops[i+1][1]);
+          return rgbToHex(lerp(a[0],b[0],local), lerp(a[1],b[1],local), lerp(a[2],b[2],local));
+        }
+      }
+      return stops[stops.length-1][1];
+    };
+
+    const bgStops = [
+      [0, '#FFFDFA'], [0.5, '#FCCC83'], [1.0, '#DB7A2A']
+    ];
+
+    const updateBgColor = () => {
+      const scrollY = window.scrollY || 0;
+      const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      const p = Math.min(1, Math.max(0, scrollY / maxScroll));
+      app.renderer.background.color = lerpColorStops(p, bgStops);
+    };
+
+    window.addEventListener('scroll', updateBgColor, { passive: true });
+    updateBgColor();
+  }
 })();
