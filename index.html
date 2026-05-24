@@ -286,26 +286,30 @@
       border-radius: 16px;
       padding: 10px 12px;
       overflow: hidden;
-      transition: transform 0.2s;
+      box-shadow: 0 6px 6px rgba(0, 0, 0, 0.2), 0 0 20px rgba(0, 0, 0, 0.1);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 2.2);
     }
-    .composer-bar .composer-box:hover { transform: scale(1.02); }
+    .composer-bar .composer-box:hover { transform: scale(1.05); }
     .composer-bar .composer-box .glass-effect {
       position: absolute; inset: 0; z-index: 0;
-      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
       filter: url(#glass-distortion);
       overflow: hidden; isolation: isolate;
     }
     .composer-bar .composer-box .glass-tint {
       position: absolute; inset: 0; z-index: 1;
-      background: rgba(255,255,255,0.2);
+      background: rgba(255, 255, 255, 0.25);
     }
     .composer-bar .composer-box .glass-shine {
       position: absolute; inset: 0; z-index: 2;
-      box-shadow: inset 1px 1px 1px 0 rgba(255,255,255,0.4),
-        inset -1px -1px 1px 0 rgba(255,255,255,0.2);
+      box-shadow: inset 2px 2px 1px 0 rgba(255, 255, 255, 0.5),
+        inset -1px -1px 1px 1px rgba(255, 255, 255, 0.5);
       border-radius: 16px;
     }
-    .composer-bar .composer-box:focus-within .glass-shine { box-shadow: inset 1px 1px 1px 0 rgba(255,255,255,0.6), inset -1px -1px 1px 0 rgba(255,255,255,0.3); }
+    .composer-bar .composer-box:focus-within .glass-shine {
+      box-shadow: inset 2px 2px 1px 0 rgba(255, 255, 255, 0.7),
+        inset -1px -1px 1px 1px rgba(255, 255, 255, 0.6);
+    }
     .composer-bar textarea {
       position: relative; z-index: 3;
       flex: 1; resize: none; border: none; background: none; outline: none;
@@ -558,7 +562,7 @@
         <fePointLight x="-200" y="-200" z="300"/>
       </feSpecularLighting>
       <feComposite in="specLight" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" result="litImage"/>
-      <feDisplacementMap in="SourceGraphic" in2="softMap" scale="30" xChannelSelector="R" yChannelSelector="G"/>
+      <feDisplacementMap in="SourceGraphic" in2="softMap" scale="150" xChannelSelector="R" yChannelSelector="G"/>
     </filter>
   </svg>
   <!-- Loading screen -->
