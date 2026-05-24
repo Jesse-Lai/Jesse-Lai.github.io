@@ -314,18 +314,38 @@
     }
     .composer-bar .composer-box {
       pointer-events: auto;
+      position: relative;
       flex: 1; max-width: 640px; margin: 0 auto; box-sizing: border-box;
       display: flex; align-items: center; gap: 8px;
-      background: rgba(255,255,255,0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,0.6); border-radius: 16px;
+      border-radius: 999px;
       padding: 10px 12px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-      transition: border-color 0.2s;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06), 0 0 40px rgba(0, 0, 0, 0.03);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 2.2);
     }
-    .composer-bar .composer-box:focus-within { border-color: rgba(255,255,255,0.8); }
-    .composer-bar .composer-box:hover { background: rgba(255,255,255,0.55); transform: scale(1.02); }
-    .composer-bar .composer-box { transition: border-color 0.2s, background 0.2s, transform 0.2s; }
+    .composer-bar .composer-box:hover { padding: 14px 18px; }
+    .composer-bar .composer-box .glass-effect {
+      position: absolute; inset: 0; z-index: 0;
+      backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
+      filter: url(#glass-distortion);
+      overflow: hidden; isolation: isolate;
+    }
+    .composer-bar .composer-box .glass-tint {
+      position: absolute; inset: 0; z-index: 1;
+      background: rgba(255, 255, 255, 0.3);
+    }
+    .composer-bar .composer-box .glass-shine {
+      position: absolute; inset: 0; z-index: 2;
+      box-shadow: inset 2px 2px 1px 0 rgba(255, 255, 255, 0.25),
+        inset -1px -1px 1px 1px rgba(255, 255, 255, 0.25);
+      border-radius: 999px;
+    }
+    .composer-bar .composer-box:focus-within .glass-shine {
+      box-shadow: inset 2px 2px 1px 0 rgba(255, 255, 255, 0.7),
+        inset -1px -1px 1px 1px rgba(255, 255, 255, 0.6);
+    }
     .composer-bar textarea {
+      position: relative; z-index: 3;
       flex: 1; resize: none; border: none; background: none; outline: none;
       color: #333; font-size: 15px; line-height: 1.5;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -333,6 +353,7 @@
     }
     .composer-bar textarea::placeholder { color: rgba(0,0,0,0.3); }
     .composer-bar .send-btn {
+      position: relative; z-index: 3;
       flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%;
       background: rgba(0,0,0,0.8); border: none; cursor: pointer;
       display: flex; align-items: center; justify-content: center;
@@ -395,36 +416,57 @@
       pointer-events: auto;
       max-width: 700px; margin: 0 auto;
       display: flex; align-items: center; gap: 12px;
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 2.2);
     }
+    .composer-row:hover { }
     #organize-btn {
       pointer-events: auto; flex-shrink: 0;
+      position: relative;
       width: 48px; height: 48px;
-      background: rgba(255,255,255,0.4);
-      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,0.6);
-      border-radius: 16px;
+      background: none;
+      border: none;
+      border-radius: 999px;
       color: rgba(0,0,0,0.3);
       cursor: pointer;
       display: flex; align-items: center; justify-content: center;
-      transition: all 0.2s;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 2.2);
       padding: 0;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06), 0 0 40px rgba(0, 0, 0, 0.03);
     }
-    #organize-btn:hover, #shuffle-btn:hover { color: rgba(0,0,0,0.6); background: rgba(255,255,255,0.55); transform: scale(1.1); }
-    #organize-btn svg, #shuffle-btn svg { width: 18px; height: 18px; }
+    #organize-btn:hover, #shuffle-btn:hover { color: rgba(0,0,0,0.6); transform: scale(1.1); }
+    #organize-btn svg, #shuffle-btn svg { position: relative; z-index: 3; width: 18px; height: 18px; }
     #shuffle-btn {
       pointer-events: auto; flex-shrink: 0;
+      position: relative;
       width: 48px; height: 48px;
-      background: rgba(255,255,255,0.4);
-      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,0.6);
-      border-radius: 16px;
+      background: none;
+      border: none;
+      border-radius: 999px;
       color: rgba(0,0,0,0.3);
       cursor: pointer;
       display: flex; align-items: center; justify-content: center;
-      transition: all 0.2s;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 2.2);
       padding: 0;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06), 0 0 40px rgba(0, 0, 0, 0.03);
+    }
+
+    #organize-btn .glass-effect, #shuffle-btn .glass-effect {
+      position: absolute; inset: 0; z-index: 0;
+      backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
+      filter: url(#glass-distortion);
+      overflow: hidden; isolation: isolate;
+    }
+    #organize-btn .glass-tint, #shuffle-btn .glass-tint {
+      position: absolute; inset: 0; z-index: 1;
+      background: rgba(255, 255, 255, 0.3);
+    }
+    #organize-btn .glass-shine, #shuffle-btn .glass-shine {
+      position: absolute; inset: 0; z-index: 2;
+      box-shadow: inset 2px 2px 1px 0 rgba(255, 255, 255, 0.25),
+        inset -1px -1px 1px 1px rgba(255, 255, 255, 0.25);
+      border-radius: 999px;
     }
 
     /* ─── Wall Article ─── */
@@ -515,8 +557,8 @@
     </div>
     <div id="focus-article"></div>
     <div id="article-composer" class="composer-bar">
-      <div class="composer-box">
-        <textarea rows="1" placeholder="Ask about Jesse..."></textarea>
+      <div class="composer-box"><div class="glass-effect"></div><div class="glass-tint"></div><div class="glass-shine"></div>
+        <textarea rows="1" placeholder="Ask anything about Jesse..."></textarea>
         <button class="send-btn" disabled>
           <svg width="14" height="14" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4.284 10.296A1 1 0 0 0 5.709 11.7L11 6.33V20a1 1 0 1 0 2 0V6.336l5.285 5.364a1 1 0 0 0 1.425-1.404l-6.823-6.924a1.25 1.25 0 0 0-1.78 0l-6.823 6.924Z" fill="currentColor"/></svg>
         </button>
@@ -533,7 +575,7 @@
   </div>
   <div id="wall-composer" class="composer-bar">
     <div class="composer-row">
-      <button id="organize-btn" title="Organize">
+      <button id="organize-btn" title="Organize"><div class="glass-effect"></div><div class="glass-tint"></div><div class="glass-shine"></div>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
           <rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
@@ -541,7 +583,7 @@
           <rect x="14" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
         </svg>
       </button>
-      <button id="shuffle-btn" title="Shuffle">
+      <button id="shuffle-btn" title="Shuffle"><div class="glass-effect"></div><div class="glass-tint"></div><div class="glass-shine"></div>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M18 4l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           <path d="M18 14l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -549,8 +591,8 @@
           <path d="M21 7h-1a6 6 0 0 0-6 6v0a6 6 0 0 1-6 6H3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
         </svg>
       </button>
-      <div class="composer-box">
-        <textarea rows="1" placeholder="Ask about Jesse..."></textarea>
+      <div class="composer-box"><div class="glass-effect"></div><div class="glass-tint"></div><div class="glass-shine"></div>
+        <textarea rows="1" placeholder="Ask anything about Jesse..."></textarea>
       <button class="send-btn" disabled>
         <svg width="14" height="14" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4.284 10.296A1 1 0 0 0 5.709 11.7L11 6.33V20a1 1 0 1 0 2 0V6.336l5.285 5.364a1 1 0 0 0 1.425-1.404l-6.823-6.924a1.25 1.25 0 0 0-1.78 0l-6.823 6.924Z" fill="currentColor"/></svg>
       </button>
@@ -561,6 +603,23 @@
     <button id="wall-article-close"><svg width="16" height="16" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m4.397 4.554.073-.084a.75.75 0 0 1 .976-.073l.084.073L12 10.939l6.47-6.47a.75.75 0 1 1 1.06 1.061L13.061 12l6.47 6.47a.75.75 0 0 1 .072.976l-.073.084a.75.75 0 0 1-.976.073l-.084-.073L12 13.061l-6.47 6.47a.75.75 0 0 1-1.06-1.061L10.939 12l-6.47-6.47a.75.75 0 0 1-.072-.976l.073-.084-.073.084Z" fill="currentColor"/></svg></button>
     <div id="wall-article-content"></div>
   </div>
+  <!-- SVG Filter for Liquid Glass -->
+  <svg style="display:none">
+    <filter id="glass-distortion" x="0%" y="0%" width="100%" height="100%" filterUnits="objectBoundingBox">
+      <feTurbulence type="fractalNoise" baseFrequency="0.01 0.01" numOctaves="1" seed="5" result="turbulence"/>
+      <feComponentTransfer in="turbulence" result="mapped">
+        <feFuncR type="gamma" amplitude="1" exponent="10" offset="0.5"/>
+        <feFuncG type="gamma" amplitude="0" exponent="1" offset="0"/>
+        <feFuncB type="gamma" amplitude="0" exponent="1" offset="0.5"/>
+      </feComponentTransfer>
+      <feGaussianBlur in="turbulence" stdDeviation="3" result="softMap"/>
+      <feSpecularLighting in="softMap" surfaceScale="5" specularConstant="1" specularExponent="100" lighting-color="white" result="specLight">
+        <fePointLight x="-200" y="-200" z="300"/>
+      </feSpecularLighting>
+      <feComposite in="specLight" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" result="litImage"/>
+      <feDisplacementMap in="SourceGraphic" in2="softMap" scale="150" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </svg>
   <!-- Loading screen -->
   <div id="loading-screen">
     <div id="loading-text">JESSE OS</div>
