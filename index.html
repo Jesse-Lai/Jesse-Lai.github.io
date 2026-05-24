@@ -286,7 +286,7 @@
       border-radius: 16px;
       padding: 10px 12px;
       overflow: hidden;
-      box-shadow: 0 6px 6px rgba(0, 0, 0, 0.2), 0 0 20px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 6px 6px rgba(0, 0, 0, 0.08), 0 0 20px rgba(0, 0, 0, 0.04);
       transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 2.2);
     }
     .composer-bar .composer-box:hover { transform: scale(1.05); }
@@ -298,7 +298,7 @@
     }
     .composer-bar .composer-box .glass-tint {
       position: absolute; inset: 0; z-index: 1;
-      background: rgba(255, 255, 255, 0.25);
+      background: rgba(255, 255, 255, 0.1);
     }
     .composer-bar .composer-box .glass-shine {
       position: absolute; inset: 0; z-index: 2;
@@ -385,33 +385,52 @@
     }
     #organize-btn {
       pointer-events: auto; flex-shrink: 0;
+      position: relative;
       width: 48px; height: 48px;
-      background: rgba(255,255,255,0.4);
-      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,0.6);
+      background: none;
+      border: none;
       border-radius: 16px;
       color: rgba(0,0,0,0.3);
       cursor: pointer;
       display: flex; align-items: center; justify-content: center;
-      transition: all 0.2s;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 2.2);
       padding: 0;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      overflow: hidden;
+      box-shadow: 0 6px 6px rgba(0, 0, 0, 0.08), 0 0 20px rgba(0, 0, 0, 0.04);
     }
-    #organize-btn:hover, #shuffle-btn:hover { color: rgba(0,0,0,0.6); background: rgba(255,255,255,0.55); transform: scale(1.1); }
-    #organize-btn svg, #shuffle-btn svg { width: 18px; height: 18px; }
+    #organize-btn:hover, #shuffle-btn:hover { color: rgba(0,0,0,0.6); transform: scale(1.1); }
+    #organize-btn svg, #shuffle-btn svg { position: relative; z-index: 3; width: 18px; height: 18px; }
     #shuffle-btn {
       pointer-events: auto; flex-shrink: 0;
+      position: relative;
       width: 48px; height: 48px;
-      background: rgba(255,255,255,0.4);
-      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,0.6);
+      background: none;
+      border: none;
       border-radius: 16px;
       color: rgba(0,0,0,0.3);
       cursor: pointer;
       display: flex; align-items: center; justify-content: center;
-      transition: all 0.2s;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 2.2);
       padding: 0;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      overflow: hidden;
+      box-shadow: 0 6px 6px rgba(0, 0, 0, 0.08), 0 0 20px rgba(0, 0, 0, 0.04);
+    }
+
+    #organize-btn .glass-effect, #shuffle-btn .glass-effect {
+      position: absolute; inset: 0; z-index: 0;
+      backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
+      filter: url(#glass-distortion);
+      overflow: hidden; isolation: isolate;
+    }
+    #organize-btn .glass-tint, #shuffle-btn .glass-tint {
+      position: absolute; inset: 0; z-index: 1;
+      background: rgba(255, 255, 255, 0.1);
+    }
+    #organize-btn .glass-shine, #shuffle-btn .glass-shine {
+      position: absolute; inset: 0; z-index: 2;
+      box-shadow: inset 2px 2px 1px 0 rgba(255, 255, 255, 0.5),
+        inset -1px -1px 1px 1px rgba(255, 255, 255, 0.5);
+      border-radius: 16px;
     }
 
     /* ─── Wall Article ─── */
@@ -520,7 +539,7 @@
   </div>
   <div id="wall-composer" class="composer-bar">
     <div class="composer-row">
-      <button id="organize-btn" title="Organize">
+      <button id="organize-btn" title="Organize"><div class="glass-effect"></div><div class="glass-tint"></div><div class="glass-shine"></div>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
           <rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
@@ -528,7 +547,7 @@
           <rect x="14" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
         </svg>
       </button>
-      <button id="shuffle-btn" title="Shuffle">
+      <button id="shuffle-btn" title="Shuffle"><div class="glass-effect"></div><div class="glass-tint"></div><div class="glass-shine"></div>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M18 4l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           <path d="M18 14l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
