@@ -761,6 +761,9 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg, o
 
   // Stamp is above wrinkle layer - inside is bright, outside against dark bg looks natural
 
+  // Store note-only height (without stamp overflow) for hover label positioning
+  wrapper._noteH = noteH;
+
   // Random slight rotation (keep subtle — ±1.5°)
   wrapper.rotation = (Math.random() * 3 - 1.5) * Math.PI / 180;
 
@@ -955,6 +958,62 @@ export class PhotoSystem {
     photo._staticTex = null;
   }
 
+  _showHoverLabel(photo) {
+    if (photo._hoverLabel) return;
+    const cfg = photo.config || {};
+    const categoryMap = {
+      who_i_am: 'About Me',
+      design_projects: 'Design Project',
+      design_thought: 'Design Thought',
+      hobby: 'Hobby',
+      vibe_coding: 'Vibe Coding',
+    };
+    const catText = categoryMap[cfg.category] || '';
+    const titleText = (photo.focusData?.title || cfg.caption || cfg.title || '').slice(0, 24);
+    if (!catText && !titleText) return;
+
+    const displayText = catText ? `${catText} · ${titleText}` : titleText;
+    const s = photo.group.scale.x;
+    const label = new PIXI.Text({
+      text: displayText,
+      style: new PIXI.TextStyle({
+        fontFamily: 'Red Hat Mono, monospace',
+        fontSize: 11,
+        fill: '#000000',
+        letterSpacing: 0.5,
+      }),
+    });
+    label.x = -photo.anchorX;
+    const effectiveH = photo.group._noteH ? photo.group._noteH : photo.itemH;
+    label.y = effectiveH - photo.anchorY + 12 / s;
+    label.scale.set(1 / s);
+    label.alpha = 0;
+    photo.group.addChild(label);
+    photo._hoverLabel = label;
+    const fadeIn = () => {
+      if (!photo._hoverLabel) return;
+      photo._hoverLabel.alpha = Math.min(0.5, photo._hoverLabel.alpha + 0.05);
+      if (photo._hoverLabel.alpha < 0.5) requestAnimationFrame(fadeIn);
+    };
+    requestAnimationFrame(fadeIn);
+  }
+
+  _hideHoverLabel(photo) {
+    if (!photo._hoverLabel) return;
+    const label = photo._hoverLabel;
+    photo._hoverLabel = null;
+    const fadeOut = () => {
+      label.alpha -= 0.15;
+      if (label.alpha <= 0) {
+        if (label.parent) label.parent.removeChild(label);
+        label.destroy({ children: true });
+        return;
+      }
+      requestAnimationFrame(fadeOut);
+    };
+    requestAnimationFrame(fadeOut);
+  }
+
   _makePhotoDraggable(photo) {
     let drag = false, offX = 0, offY = 0;
     let downTime = 0, downX = 0, downY = 0, moved = false;
@@ -980,7 +1039,7 @@ export class PhotoSystem {
       }
       if (topPhoto !== photo) return;
       if (hitTest(mx,my)) {
-        this._stopPhotoVideo(photo); wasHovering = false;
+        this._stopPhotoVideo(photo); this._hideHoverLabel(photo); wasHovering = false;
         drag = true; offX = photo.group.x-mx; offY = photo.group.y-my;
         downTime = Date.now(); downX = mx; downY = my; moved = false;
         this._activeDrag = photo;
@@ -1014,6 +1073,9 @@ export class PhotoSystem {
       } else if (!hovering && wasHovering) {
         this._stopPhotoVideo(photo);
       }
+      // Hover label
+      if (hovering && !wasHovering) this._showHoverLabel(photo);
+      else if (!hovering && wasHovering) this._hideHoverLabel(photo);
       wasHovering = hovering;
     };
     const onUp = e => {
@@ -1420,14 +1482,14 @@ export class FocusOverlay {
     let html = '';
     const title = article.title || focusData.title || '';
     if (title) {
-      html += `<h1 style="font-family:Special Elite,cursive;font-size:28px;color:#f0f0f0;letter-spacing:0.5px;line-height:1.4;margin:0 0 32px;padding-bottom:24px;border-bottom:1px solid rgba(255,255,255,0.08);">${title}</h1>`;
+      html += `<h1 style="font-family:Special Elite,cursive;font-size:28px;color:#1a1a1a;letter-spacing:0.5px;line-height:1.4;margin:0 0 32px;padding-bottom:24px;border-bottom:1px solid rgba(0,0,0,0.08);">${title}</h1>`;
     }
     if (article.sections) {
       for (const section of article.sections) {
         if (section.type === 'subtitle') {
-          html += `<h2 style="font-family:Special Elite,cursive;font-size:20px;color:#e0e0e0;margin:48px 0 16px;line-height:1.4;">${section.text}</h2>`;
+          html += `<h2 style="font-family:Special Elite,cursive;font-size:20px;color:#333;margin:48px 0 16px;line-height:1.4;">${section.text}</h2>`;
         } else if (section.type === 'text') {
-          html += `<p style="font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;font-size:16px;color:#a0a0a0;line-height:1.85;margin-bottom:24px;">${section.text}</p>`;
+          html += `<p style="font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;font-size:16px;color:#444;line-height:1.85;margin-bottom:24px;">${section.text}</p>`;
         } else if (section.type === 'image') {
           html += `<img src="${section.src}" alt="${section.alt || ''}" style="width:100%;border-radius:6px;margin:32px 0 8px;">`;
           if (section.caption) {
@@ -1463,7 +1525,7 @@ export class FocusOverlay {
       const blur = fromBlur + (toBlur - fromBlur) * ease;
       this.dimLayer.clear();
       this.dimLayer.rect(0, 0, W, H);
-      this.dimLayer.fill({ color: 0x000000, alpha });
+      this.dimLayer.fill({ color: 0xF6F3EE, alpha });
       this.blurFilter.strength = blur;
       this._currentDimAlpha = alpha;
       this._currentDimBlur = blur;
@@ -1549,10 +1611,10 @@ export class FocusOverlay {
     const canvasH = this.app.screen.height;
     this.dimLayer.clear();
     this.dimLayer.rect(0, 0, W, canvasH);
-    this.dimLayer.fill({ color: 0x000000, alpha: 0 });
+    this.dimLayer.fill({ color: 0xF6F3EE, alpha: 0 });
     this.dimLayer.visible = true;
     this.app.stage.addChild(this.dimLayer);
-    this._animateDim(0, 0.8, 0, 10, 500);
+    this._animateDim(0, 0.4, 0, 8, 500);
 
     // ─── Clip group focus: animate all elements together (no mesh/texture) ───
     if (item._isClipGroupFocus && item.focusData?._clipPhotos) {
@@ -1628,6 +1690,7 @@ export class FocusOverlay {
       }
 
       this.overlay.style.display = 'block';
+      document.body.classList.add('focus-active');
       setTimeout(() => this.overlay.classList.add('visible'), duration * 0.7);
       return; // skip normal single-atom mesh flow
     }
@@ -1708,6 +1771,7 @@ export class FocusOverlay {
     }
 
     this.overlay.style.display = 'block';
+    document.body.classList.add('focus-active');
     // Show text/button when fly-in animation is ~70% done
     setTimeout(() => this.overlay.classList.add('visible'), duration * 0.7);
 
@@ -1792,6 +1856,7 @@ export class FocusOverlay {
     this.mesh = null;
 
     this.overlay.classList.remove('visible');
+    document.body.classList.remove('focus-active');
     const currentDim = this._currentDimAlpha ?? 0.8;
     const currentBlur = this._currentDimBlur ?? 10;
     this._animateDim(currentDim, 0, currentBlur, 0, 400);
@@ -1947,7 +2012,7 @@ export class FocusOverlay {
 
     // 上移结束后，蒙层变全黑
     setTimeout(() => {
-      this._animateDim(0.8, 1.0, 10, 12, 400);
+      this._animateDim(0.4, 1.0, 8, 10, 400);
 
       // 蒙层变黑后，构建文章内容容器
       setTimeout(() => {
@@ -1964,16 +2029,16 @@ export class FocusOverlay {
         let html = '';
         const title = article?.title || data.title || '';
         if (title) {
-          html += `<h1 style="font-family:Special Elite,cursive;font-size:28px;color:#f0f0f0;letter-spacing:0.5px;line-height:1.4;margin:0 0 32px;padding-bottom:24px;border-bottom:1px solid rgba(255,255,255,0.08);">${title}</h1>`;
+          html += `<h1 style="font-family:Special Elite,cursive;font-size:28px;color:#1a1a1a;letter-spacing:0.5px;line-height:1.4;margin:0 0 32px;padding-bottom:24px;border-bottom:1px solid rgba(0,0,0,0.08);">${title}</h1>`;
         }
 
         // 文章正文
         if (article?.sections) {
           for (const section of article.sections) {
             if (section.type === 'subtitle') {
-              html += `<h2 style="font-family:Special Elite,cursive;font-size:20px;color:#e0e0e0;margin:48px 0 16px;line-height:1.4;">${section.text}</h2>`;
+              html += `<h2 style="font-family:Special Elite,cursive;font-size:20px;color:#333;margin:48px 0 16px;line-height:1.4;">${section.text}</h2>`;
             } else if (section.type === 'text') {
-              html += `<p style="font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;font-size:16px;color:#a0a0a0;line-height:1.85;margin-bottom:24px;">${section.text}</p>`;
+              html += `<p style="font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;font-size:16px;color:#444;line-height:1.85;margin-bottom:24px;">${section.text}</p>`;
             } else if (section.type === 'image') {
               html += `<img src="${section.src}" alt="${section.alt || ''}" style="width:100%;border-radius:6px;margin:32px 0 8px;">`;
               if (section.caption) {
@@ -1996,6 +2061,8 @@ export class FocusOverlay {
         this.overlay.appendChild(articleWrap);
         this._articleWrap = articleWrap;
 
+        // Article mode: opaque background
+
         // 先让 overlay 可滚动，再重置滚动位置（scrollTop 在非 auto 时无效）
         this.overlay.style.overflowY = 'auto';
         this.overlay.scrollTop = 0;
@@ -2005,6 +2072,7 @@ export class FocusOverlay {
         this._articleMeshBaseY = targetY;
         this._onArticleScroll = () => {
           mesh.y = this._articleMeshBaseY - this.overlay.scrollTop;
+          this._updateTOCPosition();
         };
         this.overlay.addEventListener('scroll', this._onArticleScroll);
 
@@ -2018,6 +2086,15 @@ export class FocusOverlay {
             articleWrap.style.transform = 'translateY(0)';
           });
         });
+
+        // Build TOC after article transitions in
+        setTimeout(() => {
+          const h2s = articleWrap.querySelectorAll('h2');
+          if (h2s.length) {
+            const headings = Array.from(h2s).map(el => ({ text: el.textContent, el }));
+            this._buildTOC(headings);
+          }
+        }, 550);
       }, 400);
     }, duration);
   }
@@ -2060,7 +2137,7 @@ export class FocusOverlay {
     requestAnimationFrame(tick);
 
     await new Promise(r => setTimeout(r, duration));
-    this._animateDim(0.8, 1.0, 10, 12, 400);
+    this._animateDim(0.4, 1.0, 8, 10, 400);
 
     await new Promise(r => setTimeout(r, 300));
     const data = this.activeItem.focusData;
@@ -2073,7 +2150,7 @@ export class FocusOverlay {
 
     // Title
     const title = data.title || 'Collection';
-    articleWrap.innerHTML = `<h1 style="font-family:Special Elite,cursive;font-size:28px;color:#f0f0f0;letter-spacing:0.5px;line-height:1.4;margin:0 0 32px;padding-bottom:24px;border-bottom:1px solid rgba(255,255,255,0.08);">${title}</h1>`;
+    articleWrap.innerHTML = `<h1 style="font-family:Special Elite,cursive;font-size:28px;color:#1a1a1a;letter-spacing:0.5px;line-height:1.4;margin:0 0 32px;padding-bottom:24px;border-bottom:1px solid rgba(0,0,0,0.08);">${title}</h1>`;
 
     // AI streaming target
     const aiContent = document.createElement('div');
@@ -2089,6 +2166,7 @@ export class FocusOverlay {
     this._onArticleScroll = () => {
       const scrollOff = this.overlay.scrollTop;
       for (let i = 0; i < allEls.length; i++) allEls[i].y = baseYs[i] - scrollOff;
+      this._updateTOCPosition();
     };
     this.overlay.addEventListener('scroll', this._onArticleScroll);
 
@@ -2141,7 +2219,7 @@ export class FocusOverlay {
       flushAtomBuffer();
       if (!currentEl || currentEl.tagName === 'H2') {
         currentEl = document.createElement('p');
-        currentEl.style.cssText = 'font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;font-size:16px;color:#a0a0a0;line-height:1.85;margin-bottom:24px;';
+        currentEl.style.cssText = 'font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;font-size:16px;color:#444;line-height:1.85;margin-bottom:24px;';
         aiContent.appendChild(currentEl);
       }
       currentEl.textContent += text;
@@ -2156,9 +2234,10 @@ export class FocusOverlay {
           if (headingMatch) {
             flushAtomBuffer();
             currentEl = document.createElement('h2');
-            currentEl.style.cssText = 'font-family:Special Elite,cursive;font-size:20px;color:#e0e0e0;margin:48px 0 16px;line-height:1.4;';
+            currentEl.style.cssText = 'font-family:Special Elite,cursive;font-size:20px;color:#333;margin:48px 0 16px;line-height:1.4;';
             aiContent.appendChild(currentEl);
             currentEl.textContent = headingMatch[1];
+            this._addTOCEntry(headingMatch[1], currentEl);
             buffer = buffer.slice(headingMatch[0].length);
             currentEl = null;
             continue;
@@ -2211,6 +2290,9 @@ export class FocusOverlay {
       this.overlay.removeEventListener('scroll', this._onArticleScroll);
       this._onArticleScroll = null;
     }
+
+    // 清理 TOC
+    this._destroyTOC();
 
     // 清理文章内容
     if (this._articleWrap) {
@@ -2484,7 +2566,7 @@ export class FocusOverlay {
     // 4. Dim layer
     const dimLayer = new PIXI.Graphics();
     dimLayer.rect(0, 0, VW, VH);
-    dimLayer.fill({ color: 0x000000, alpha: 0 });
+    dimLayer.fill({ color: 0xF6F3EE, alpha: 0 });
     fsApp.stage.addChild(dimLayer);
 
     // 动画 dim 0 → 0.8
@@ -2494,7 +2576,7 @@ export class FocusOverlay {
       const t = Math.min(1, (performance.now() - dimStart) / dimDuration);
       dimLayer.clear();
       dimLayer.rect(0, 0, VW, VH);
-      dimLayer.fill({ color: 0x000000, alpha: t * 0.8 });
+      dimLayer.fill({ color: 0xF6F3EE, alpha: t * 0.4 });
       if (t < 1) requestAnimationFrame(dimTick);
     };
     requestAnimationFrame(dimTick);
@@ -2610,7 +2692,7 @@ export class FocusOverlay {
         const t = Math.min(1, (performance.now() - blackStart) / blackDuration);
         dimLayer.clear();
         dimLayer.rect(0, 0, VW, VH);
-        dimLayer.fill({ color: 0x000000, alpha: 0.8 + t * 0.2 });
+        dimLayer.fill({ color: 0xF6F3EE, alpha: 0.4 + t * 0.6 });
         if (t < 1) requestAnimationFrame(blackTick);
       };
       requestAnimationFrame(blackTick);
@@ -2624,11 +2706,11 @@ export class FocusOverlay {
 
         let html = '';
         const title = article.title || focusData.title || '';
-        if (title) html += `<h1 style="font-family:Special Elite,cursive;font-size:28px;color:#f0f0f0;letter-spacing:0.5px;line-height:1.4;margin:0 0 32px;padding-bottom:24px;border-bottom:1px solid rgba(255,255,255,0.08);">${title}</h1>`;
+        if (title) html += `<h1 style="font-family:Special Elite,cursive;font-size:28px;color:#1a1a1a;letter-spacing:0.5px;line-height:1.4;margin:0 0 32px;padding-bottom:24px;border-bottom:1px solid rgba(0,0,0,0.08);">${title}</h1>`;
         if (article.sections) {
           for (const s of article.sections) {
-            if (s.type === 'subtitle') html += `<h2 style="font-family:Special Elite,cursive;font-size:20px;color:#e0e0e0;margin:48px 0 16px;line-height:1.4;">${s.text}</h2>`;
-            else if (s.type === 'text') html += `<p style="font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;font-size:16px;color:#a0a0a0;line-height:1.85;margin-bottom:24px;">${s.text}</p>`;
+            if (s.type === 'subtitle') html += `<h2 style="font-family:Special Elite,cursive;font-size:20px;color:#333;margin:48px 0 16px;line-height:1.4;">${s.text}</h2>`;
+            else if (s.type === 'text') html += `<p style="font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;font-size:16px;color:#444;line-height:1.85;margin-bottom:24px;">${s.text}</p>`;
             else if (s.type === 'image') {
               html += `<img src="${s.src}" alt="${s.alt || ''}" style="width:100%;border-radius:6px;margin:32px 0 8px;">`;
               if (s.caption) html += `<p style="font-family:Red Hat Mono,monospace;font-size:11px;color:#555;text-align:center;margin:0 0 32px;">${s.caption}</p>`;
@@ -2679,7 +2761,7 @@ export class FocusOverlay {
       const t = Math.min(1, (performance.now() - dimStart) / dimDuration);
       dimLayer.clear();
       dimLayer.rect(0, 0, VW, VH);
-      dimLayer.fill({ color: 0x000000, alpha: currentAlpha * (1 - t) });
+      dimLayer.fill({ color: 0xF6F3EE, alpha: currentAlpha * (1 - t) });
       if (t < 1) requestAnimationFrame(dimTick);
     };
     requestAnimationFrame(dimTick);
@@ -2879,5 +2961,92 @@ export class FocusOverlay {
     this._chatAtomApps.push(app);
 
     return { container, app };
+  }
+
+  _tocText(raw) {
+    let t = raw
+      .replace(/[\u{1F000}-\u{1FFFF}]|[\u2600-\u27BF]|[\u{FE00}-\u{FEFF}]/gu, '')
+      .replace(/^[\d]+\.\s*/, '')
+      .replace(/^(Discover|Details|Define|Develop|Delivery|Background|Overview)\s*[:：]\s*/i, '')
+      .replace(/\s*[✅👷🎯💡🔧📦🎙️]+\s*/g, '')
+      .trim();
+    if (t.length > 36) t = t.slice(0, 36).replace(/\s+\S*$/, '');
+    return t;
+  }
+
+  _buildTOC(headings) {
+    this._destroyTOC();
+    if (!headings.length) return;
+    const toc = document.createElement('div');
+    toc.className = 'article-toc';
+    this._tocHeadings = headings;
+    for (const h of headings) {
+      const item = document.createElement('div');
+      item.className = 'article-toc-item';
+      const bar = document.createElement('div');
+      bar.className = 'toc-bar';
+      const txt = document.createElement('div');
+      txt.className = 'toc-text';
+      txt.textContent = this._tocText(h.text);
+      item.appendChild(bar);
+      item.appendChild(txt);
+      item.addEventListener('click', () => {
+        const elTop = h.el.getBoundingClientRect().top;
+        const overlayTop = this.overlay.getBoundingClientRect().top;
+        this.overlay.scrollTo({ top: this.overlay.scrollTop + (elTop - overlayTop) - 80, behavior: 'smooth' });
+      });
+      toc.appendChild(item);
+    }
+    document.body.appendChild(toc);
+    this._tocEl = toc;
+    this._updateTOCPosition();
+  }
+
+  _addTOCEntry(text, el) {
+    if (!this._tocEl) {
+      this._tocHeadings = [];
+      const toc = document.createElement('div');
+      toc.className = 'article-toc';
+      document.body.appendChild(toc);
+      this._tocEl = toc;
+    }
+    this._tocHeadings.push({ text, el });
+    const item = document.createElement('div');
+    item.className = 'article-toc-item';
+    const bar = document.createElement('div');
+    bar.className = 'toc-bar';
+    const txt = document.createElement('div');
+    txt.className = 'toc-text';
+    txt.textContent = this._tocText(text);
+    item.appendChild(bar);
+    item.appendChild(txt);
+    item.addEventListener('click', () => {
+      const elTop = el.getBoundingClientRect().top;
+      const overlayTop = this.overlay.getBoundingClientRect().top;
+      this.overlay.scrollTo({ top: this.overlay.scrollTop + (elTop - overlayTop) - 80, behavior: 'smooth' });
+    });
+    this._tocEl.appendChild(item);
+    if (this._tocHeadings.length === 1) this._updateTOCPosition();
+  }
+
+  _updateTOCPosition() {
+    if (!this._tocEl || !this._tocHeadings?.length) return;
+    const firstP = this._articleWrap?.querySelector('p');
+    const alignEl = firstP || this._tocHeadings[0].el;
+    const rect = alignEl.getBoundingClientRect();
+    const top = Math.max(80, rect.top);
+    this._tocEl.style.top = top + 'px';
+    const items = this._tocEl.querySelectorAll('.article-toc-item');
+    let activeIdx = 0;
+    for (let i = this._tocHeadings.length - 1; i >= 0; i--) {
+      const hRect = this._tocHeadings[i].el.getBoundingClientRect();
+      if (hRect.top <= 120) { activeIdx = i; break; }
+    }
+    items.forEach((el, i) => el.classList.toggle('active', i === activeIdx));
+  }
+
+  _destroyTOC() {
+    if (this._tocEl) { this._tocEl.remove(); this._tocEl = null; }
+    this._tocHeadings = null;
   }
 }

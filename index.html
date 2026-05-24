@@ -22,6 +22,7 @@
       position: fixed; inset: 0;
       z-index: 1;
       transform: scaleX(-1);
+      transition: opacity 1.5s;
     }
     #sunlight-overlay .perspective {
       position: absolute;
@@ -139,6 +140,7 @@
     #focus-overlay.visible { pointer-events: auto; }
     #focus-overlay.visible ~ #atoms-btn,
     body:has(#focus-overlay.visible) #atoms-btn { display: none; }
+    body.focus-active #sunlight-overlay { opacity: 0; }
     #focus-backdrop {
       position: absolute; inset: 0;
       cursor: pointer;
@@ -157,34 +159,34 @@
     }
     #focus-title {
       font-family: 'Red Hat Mono', monospace;
-      font-size: 15px; color: #fff; letter-spacing: 1px;
+      font-size: 15px; color: #1a1a1a; letter-spacing: 1px;
       margin-bottom: 6px;
     }
     #focus-desc {
       font-family: 'Red Hat Mono', monospace;
-      font-size: 12px; color: #999; line-height: 1.6;
+      font-size: 12px; color: #666; line-height: 1.6;
       max-width: 400px; text-align: center;
       margin-bottom: 16px;
     }
     #focus-link {
       pointer-events: auto;
       font-family: 'Red Hat Mono', monospace;
-      font-size: 12px; color: #0a0a0a; background: #fff;
+      font-size: 12px; color: #fff; background: rgba(0,0,0,0.7);
       padding: 8px 20px; border-radius: 4px;
       text-decoration: none; letter-spacing: 1px;
       transition: background 0.2s, color 0.2s;
     }
-    #focus-link:hover { background: #ddd; }
+    #focus-link:hover { background: rgba(0,0,0,0.85); }
     #focus-close {
       position: absolute; top: 20px; right: 20px;
       pointer-events: auto;
-      background: none; border: 1px solid #555;
-      color: #999; width: 36px; height: 36px;
+      background: none; border: 1px solid rgba(0,0,0,0.2);
+      color: #666; width: 36px; height: 36px;
       border-radius: 50%; cursor: pointer;
       font-size: 16px; display: flex; align-items: center; justify-content: center;
       transition: all 0.2s;
     }
-    #focus-close:hover { border-color: #fff; color: #fff; }
+    #focus-close:hover { border-color: #333; color: #333; }
 
     /* Article mode — article content lives INSIDE the focus overlay */
     #focus-overlay.article-mode {
@@ -214,19 +216,19 @@
     }
     #focus-article .article-title {
       font-family: 'Special Elite', cursive;
-      font-size: 28px; color: #f0f0f0; letter-spacing: 0.5px;
+      font-size: 28px; color: #1a1a1a; letter-spacing: 0.5px;
       margin-bottom: 32px; line-height: 1.4;
       padding-bottom: 24px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
+      border-bottom: 1px solid rgba(0,0,0,0.08);
     }
     #focus-article .article-subtitle {
       font-family: 'Special Elite', cursive;
-      font-size: 20px; color: #e0e0e0; letter-spacing: 0.3px;
+      font-size: 20px; color: #333; letter-spacing: 0.3px;
       margin: 48px 0 16px; line-height: 1.4;
     }
     #focus-article .article-text {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-      font-size: 16px; color: #a0a0a0; line-height: 1.85;
+      font-size: 16px; color: #444; line-height: 1.85;
       margin-bottom: 24px; letter-spacing: 0.01em;
     }
     #focus-article .article-img {
@@ -239,23 +241,23 @@
       margin: 0 0 32px; letter-spacing: 0.5px;
     }
     /* Article chat */
-    .article-chat { margin-top: 48px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 32px; }
+    .article-chat { margin-top: 48px; border-top: 1px solid rgba(0,0,0,0.08); padding-top: 32px; }
     .chat-msg { margin-bottom: 32px; }
     .chat-msg.user { text-align: right; }
     .chat-msg.user .chat-bubble {
       font-family: 'Special Elite', cursive;
-      font-size: 28px; color: #f0f0f0; letter-spacing: 0.5px;
+      font-size: 28px; color: #1a1a1a; letter-spacing: 0.5px;
       line-height: 1.4;
     }
-    .chat-msg.ai .chat-bubble { color: #a0a0a0; }
+    .chat-msg.ai .chat-bubble { color: #444; }
     .chat-msg.ai .chat-bubble h2 {
       font-family: 'Special Elite', cursive;
-      font-size: 20px; color: #e0e0e0; margin: 48px 0 16px; line-height: 1.4;
+      font-size: 20px; color: #333; margin: 48px 0 16px; line-height: 1.4;
     }
     .chat-msg.ai .chat-bubble h2:first-child { margin-top: 0; }
     .chat-msg.ai .chat-bubble p {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      font-size: 16px; color: #a0a0a0; line-height: 1.85; margin-bottom: 24px;
+      font-size: 16px; color: #444; line-height: 1.85; margin-bottom: 24px;
     }
     .chat-msg.ai .chat-bubble p:last-child { margin-bottom: 0; }
     .chat-msg.ai .chat-bubble img {
@@ -265,6 +267,38 @@
       font-family: 'Red Hat Mono', monospace;
       font-size: 11px; color: #555; text-align: center; margin: 0 0 32px;
     }
+
+    /* Article TOC */
+    .article-toc {
+      position: fixed;
+      right: calc(50% + 360px);
+      width: 196px;
+      font-family: 'Red Hat Mono', monospace;
+      font-size: 11px;
+      line-height: 1.6;
+      z-index: 10001;
+    }
+    .article-toc-item {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 12px;
+      cursor: pointer;
+    }
+    .article-toc-item .toc-bar {
+      flex-shrink: 0;
+      width: 2px;
+      border-radius: 1px;
+      background: transparent;
+      transition: background 0.2s;
+    }
+    .article-toc-item .toc-text {
+      color: #999;
+      transition: color 0.2s;
+    }
+    .article-toc-item:hover .toc-text { color: #666; }
+    .article-toc-item.active .toc-text { color: #333; }
+    .article-toc-item.active .toc-bar { background: #333; }
+    @media (max-width: 1100px) { .article-toc { display: none; } }
 
     /* Atom entry (rendered via PIXI extract) */
     .atom-entry {
@@ -534,6 +568,6 @@
     <div id="loading-percent">0%</div>
   </div>
   <script src="lib/pixi.min.js"></script>
-  <script type="module" src="wall.js?v=173"></script>
+  <script type="module" src="wall.js?v=179"></script>
 </body>
 </html>
