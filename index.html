@@ -289,7 +289,7 @@
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06), 0 0 40px rgba(0, 0, 0, 0.03);
       transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 2.2);
     }
-    .composer-bar .composer-box:hover { transform: scale(1.05); }
+    .composer-bar .composer-box:hover { }
     .composer-bar .composer-box .glass-effect {
       position: absolute; inset: 0; z-index: 0;
       backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
@@ -382,7 +382,9 @@
       pointer-events: auto;
       max-width: 700px; margin: 0 auto;
       display: flex; align-items: center; gap: 12px;
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 2.2);
     }
+    .composer-row:hover { transform: scale(1.05); }
     #organize-btn {
       pointer-events: auto; flex-shrink: 0;
       position: relative;
