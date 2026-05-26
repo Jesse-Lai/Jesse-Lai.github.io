@@ -178,6 +178,7 @@ import { WallArticle } from "./wall-article.js?v=151";
       const b = stickyResult.group.getBounds();
       const stickyItem = photoSystem.addItem(stickyResult.group, b.width / atomScale, b.height / atomScale);
       if (item.focus) stickyItem.focusData = item.focus;
+      stickyItem._stickyTitle = { tx: stickyResult.titleX * atomScale, ty: stickyResult.titleY * atomScale, tw: stickyResult.titleW * atomScale, th: stickyResult.titleH * atomScale };
       rendered.push({ group: stickyResult.group, bounds: b, wallItem: item, focusableItem: stickyItem });
     } else if (item.type === 'stamp') {
       const stampResult = await renderStamp(app, imgData, 0, 0, atomsConfig.stamp);

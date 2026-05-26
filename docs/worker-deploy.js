@@ -98,6 +98,7 @@ export default {
           { method: "GET", path: "/api/projects/:id", description: "Full article for a project (use ID or slug)" },
           { method: "GET", path: "/api/search?q=keyword", description: "Search by keyword" },
           { method: "GET", path: "/api/schema", description: "This schema document" },
+          { method: "POST", path: "/api/message", description: "Leave a message for Jesse. Body: { from: string, content: string }" },
         ],
         no_auth_required: true,
       }, { headers: cors });
@@ -116,6 +117,22 @@ export default {
         status: resp.status,
         headers: { 'Content-Type': resp.headers.get('Content-Type') || 'application/json', ...cors }
       });
+    }
+
+    // POST /api/message — agent leaves a message for Jesse
+    if (path === '/api/message' && request.method === 'POST') {
+      try {
+        const { from, content } = await request.json();
+        if (!content) return Response.json({ error: 'Missing content field' }, { status: 400, headers: cors });
+        await fetch(env.DISCORD_WEBHOOK, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ content: `\ud83d\udce9 **Agent Message**\nFrom: ${from || 'anonymous'}\nContent: ${content}` })
+        });
+        return Response.json({ ok: true, message: 'Message delivered to Jesse' }, { headers: cors });
+      } catch(e) {
+        return Response.json({ error: 'Invalid request body' }, { status: 400, headers: cors });
+      }
     }
 
     return new Response('Not found', { status: 404, headers: cors });

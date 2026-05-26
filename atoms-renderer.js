@@ -769,6 +769,8 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg, o
 
   return {
     group: wrapper,
+    noteW, noteH,
+    titleX: padding, titleY: padding, titleW: titleText.width, titleH: titleText.height,
     hitTest: (mx, my) => { const h = wrapper.height; return Math.abs(mx - wrapper.x - noteW/2) < noteW*0.6 && Math.abs(my - wrapper.y - h/2) < h*0.6; },
   };
 }
@@ -996,10 +998,49 @@ export class PhotoSystem {
       if (photo._hoverLabel.alpha < 0.5) requestAnimationFrame(fadeIn);
     };
     requestAnimationFrame(fadeIn);
+
+    // Rough underline for sticky notes
+    if (photo._stickyTitle && typeof rough !== "undefined") {
+      const { tx, ty, tw, th } = photo._stickyTitle;
+      const ulCanvas = document.createElement("canvas");
+      const pad = 6;
+      ulCanvas.width = Math.ceil(tw) + pad * 2;
+      ulCanvas.height = 16;
+      const rc = rough.canvas(ulCanvas);
+      rc.line(pad, 8, tw + pad, 8 + (Math.random() - 0.5) * 4, {
+        stroke: "rgba(0,0,0,0.5)", strokeWidth: 2.5, roughness: 1.5, bowing: 2
+      });
+      const tex = PIXI.Texture.from(ulCanvas);
+      const ulSprite = new PIXI.Sprite(tex);
+      ulSprite.x = tx - pad;
+      ulSprite.y = ty + th + 2;
+      ulSprite.alpha = 0;
+      photo.group.addChild(ulSprite);
+      photo._hoverUnderline = ulSprite;
+      let progress = 0;
+      const animUl = () => {
+        if (!photo._hoverUnderline) return;
+        progress += 0.08;
+        photo._hoverUnderline.alpha = Math.min(0.8, progress);
+        if (progress < 1) requestAnimationFrame(animUl);
+      };
+      requestAnimationFrame(animUl);
+    }
   }
 
   _hideHoverLabel(photo) {
     if (!photo._hoverLabel) return;
+    // Remove underline
+    if (photo._hoverUnderline) {
+      const ul = photo._hoverUnderline;
+      photo._hoverUnderline = null;
+      const fadeUl = () => {
+        ul.alpha -= 0.15;
+        if (ul.alpha <= 0) { if (ul.parent) ul.parent.removeChild(ul); ul.destroy(); return; }
+        requestAnimationFrame(fadeUl);
+      };
+      requestAnimationFrame(fadeUl);
+    }
     const label = photo._hoverLabel;
     photo._hoverLabel = null;
     const fadeOut = () => {
