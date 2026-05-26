@@ -628,6 +628,7 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg, o
     titleText.y = padding;
     wrapper.addChild(titleText);
     titleBottom = padding + titleText.height + 4;
+    wrapper._titleW = titleText.width; wrapper._titleH = titleText.height;
   }
 
   // ── Body text with obstacle avoidance (wraps around stamp) ──
@@ -770,7 +771,7 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg, o
   return {
     group: wrapper,
     noteW, noteH,
-    titleX: padding, titleY: padding, titleW: titleText.width, titleH: titleText.height,
+    titleX: padding, titleY: padding, titleW: (titleBottom - padding - 4) > 0 ? (noteW - padding*2) : 0, titleH: Math.max(0, titleBottom - padding - 4),
     hitTest: (mx, my) => { const h = wrapper.height; return Math.abs(mx - wrapper.x - noteW/2) < noteW*0.6 && Math.abs(my - wrapper.y - h/2) < h*0.6; },
   };
 }
