@@ -1340,7 +1340,7 @@ export async function renderTearoffCard(app, x, y, cfg) {
   }});
   titleText.anchor.set(0.5, 0.5);
   titleText.x = cardW / 2;
-  titleText.y = bodyH * 0.38;
+  titleText.y = bodyH * 0.45;
   wrapper.addChild(titleText);
 
   // ── Subtitle text ──
@@ -1472,8 +1472,7 @@ export async function renderTearoffCard(app, x, y, cfg) {
           sc.visible = false;
           const anyTorn = stripState.some(s => s.torn);
           if (anyTorn) {
-            titleText.text = 'Now paste\nto your AI';
-            subtitleText.text = 'Your agent will know me';
+            titleText.text = 'Copied! Paste\nto your agent';
             subtitleText.y = titleText.y + titleText.height / 2 + 8;
             startBotCelebration();
           }
@@ -1527,31 +1526,6 @@ export async function renderTearoffCard(app, x, y, cfg) {
     stripState[idx].tearStart = performance.now();
     navigator.clipboard.writeText(strips[idx].text).catch(() => {});
 
-    // Toast notification
-    const toast = new PIXI.Text({ text: 'Copied! Paste to your AI →', style: {
-      fontFamily: 'Red Hat Mono', fontSize: 11, fill: 0xffffff, padding: 4,
-    }});
-    const toastBg = new PIXI.Graphics();
-    toastBg.roundRect(0, 0, toast.width + 24, toast.height + 10, 4);
-    toastBg.fill({ color: 0x000000, alpha: 0.7 });
-    const toastGroup = new PIXI.Container();
-    toastGroup.addChild(toastBg);
-    toast.x = 12; toast.y = 5;
-    toastGroup.addChild(toast);
-    toastGroup.x = cardW / 2 - (toast.width + 24) / 2;
-    toastGroup.y = totalH + 8;
-    toastGroup.alpha = 0;
-    wrapper.addChild(toastGroup);
-
-    const toastStart = performance.now();
-    const toastTick = () => {
-      const elapsed = performance.now() - toastStart;
-      if (elapsed < 200) { toastGroup.alpha = elapsed / 200; requestAnimationFrame(toastTick); }
-      else if (elapsed < 1200) { toastGroup.alpha = 1; requestAnimationFrame(toastTick); }
-      else if (elapsed < 1500) { toastGroup.alpha = 1 - (elapsed - 1200) / 300; requestAnimationFrame(toastTick); }
-      else { if (toastGroup.parent) toastGroup.parent.removeChild(toastGroup); toastGroup.destroy({ children: true }); }
-    };
-    requestAnimationFrame(toastTick);
   };
 
   const onMouseUp = (e) => {

@@ -184,11 +184,11 @@
       "canExistAlone": true
     },
     "strips": [
-      { "label": "Context", "text": "Jesse Lai is a product designer at Microsoft AI with 6+ years of experience. He designs AI-native interfaces." },
-      { "label": "Style", "text": "Jesse values organic, dynamic design. His portfolio uses PixiJS particles and hand-drawn aesthetics." },
-      { "label": "Projects", "text": "Key projects: Food Delivery Service (Eleme), AI Merchant Assistant, GenUI framework, Review Analysis." },
-      { "label": "Contact", "text": "Visit jesselai.com to see interactive portfolio. Ask about GenUI or AI product design." },
-      { "label": "Collab", "text": "Jesse explores AI-native design patterns. He calls it GenUI — generative UI that replaces text-only AI." }
+      { "label": "Agent", "text": "I'm interested in Jesse Lai. Access his info at: https://crimson-waterfall-c16b.laijianxun123.workers.dev/api/schema\n\nRead his background and projects, then give me a brief intro and ask what I'd like to know more about." },
+      { "label": "Agent", "text": "I'm interested in Jesse Lai. Access his info at: https://crimson-waterfall-c16b.laijianxun123.workers.dev/api/schema\n\nRead his background and projects, then give me a brief intro and ask what I'd like to know more about." },
+      { "label": "Agent", "text": "I'm interested in Jesse Lai. Access his info at: https://crimson-waterfall-c16b.laijianxun123.workers.dev/api/schema\n\nRead his background and projects, then give me a brief intro and ask what I'd like to know more about." },
+      { "label": "Agent", "text": "I'm interested in Jesse Lai. Access his info at: https://crimson-waterfall-c16b.laijianxun123.workers.dev/api/schema\n\nRead his background and projects, then give me a brief intro and ask what I'd like to know more about." },
+      { "label": "Agent", "text": "I'm interested in Jesse Lai. Access his info at: https://crimson-waterfall-c16b.laijianxun123.workers.dev/api/schema\n\nRead his background and projects, then give me a brief intro and ask what I'd like to know more about." }
     ]
   }
 }
