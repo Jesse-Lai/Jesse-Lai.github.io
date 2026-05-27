@@ -1015,14 +1015,24 @@ export class PhotoSystem {
       const ulSprite = new PIXI.Sprite(tex);
       ulSprite.x = tx - pad;
       ulSprite.y = ty + th + 2;
-      ulSprite.alpha = 0;
+      ulSprite.alpha = 0.8;
       photo.group.addChild(ulSprite);
+      // Mask for left-to-right draw animation
+      const ulMask = new PIXI.Graphics();
+      ulMask.rect(0, 0, 0, 16).fill(0xffffff);
+      ulMask.x = ulSprite.x;
+      ulMask.y = ulSprite.y;
+      photo.group.addChild(ulMask);
+      ulSprite.mask = ulMask;
       photo._hoverUnderline = ulSprite;
+      photo._hoverUnderlineMask = ulMask;
+      const totalW = ulCanvas.width;
       let progress = 0;
       const animUl = () => {
         if (!photo._hoverUnderline) return;
-        progress += 0.08;
-        photo._hoverUnderline.alpha = Math.min(0.8, progress);
+        progress += 0.05;
+        const w = Math.min(totalW, totalW * progress);
+        ulMask.clear().rect(0, 0, w, 16).fill(0xffffff);
         if (progress < 1) requestAnimationFrame(animUl);
       };
       requestAnimationFrame(animUl);
@@ -1034,10 +1044,13 @@ export class PhotoSystem {
     // Remove underline
     if (photo._hoverUnderline) {
       const ul = photo._hoverUnderline;
+      const ulMask = photo._hoverUnderlineMask;
+      photo._hoverUnderlineMask = null;
+      if (ulMask) { if (ulMask.parent) ulMask.parent.removeChild(ulMask); ulMask.destroy(); }
       photo._hoverUnderline = null;
       const fadeUl = () => {
         ul.alpha -= 0.15;
-        if (ul.alpha <= 0) { if (ul.parent) ul.parent.removeChild(ul); ul.destroy(); return; }
+        if (ul.alpha <= 0) { ul.mask = null; if (ul.parent) ul.parent.removeChild(ul); ul.destroy(); return; }
         requestAnimationFrame(fadeUl);
       };
       requestAnimationFrame(fadeUl);
