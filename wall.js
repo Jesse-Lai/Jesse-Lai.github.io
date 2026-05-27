@@ -843,7 +843,6 @@ import { WallArticle } from "./wall-article.js?v=151";
     window.addEventListener('scroll', updateSunProgress, { passive: true });
     updateSunProgress();
   }
-})();
 
   // ─── Mobile: Snap scroll + auto-trigger hover effects ───
   if ('ontouchstart' in window) {
@@ -900,3 +899,4 @@ import { WallArticle } from "./wall-article.js?v=151";
       }, 150);
     }, { passive: true });
   }
+})();
