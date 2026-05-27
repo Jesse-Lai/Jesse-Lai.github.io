@@ -554,7 +554,7 @@ import { WallArticle } from "./wall-article.js?v=151";
           strip.style.visibility = 'hidden';
           const title = cardBody.querySelector('div');
           title.innerHTML = 'Ripped! Now paste<br>to your AI';
-          cardBody.querySelectorAll('div')[1].textContent = 'Ask anything about me — your agent will know';
+          cardBody.querySelectorAll('div')[1].textContent = 'Copied! Now paste it to your agent';
         }, 600);
       });
       stripsEl.appendChild(strip);
