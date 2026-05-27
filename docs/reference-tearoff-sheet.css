@@ -1,0 +1,74 @@
+/*
+ * CSS Tear Off Sheet
+ * Source: https://codepen.io/pepebg/pen/BbXvXd
+ * By pepebg
+ *
+ * Hover on a strip to tear it off with animation.
+ * Uses CSS float layout + dotted border as perforations + @keyframes for tear animation.
+ */
+
+/* ========== HTML ========== */
+/*
+<div class="tearoff">
+  <h1>House for rent, call me on:</h1>
+  <p>123 456 789</p>
+  <p>123 456 789</p>
+  <p>123 456 789</p>
+  <p>123 456 789</p>
+  <p>123 456 789</p>
+</div>
+*/
+
+/* ========== CSS ========== */
+
+html {
+  background-image: linear-gradient(#fc6, #6cf, #f66);
+  color: #333;
+  min-height: 100%;
+  padding: 25px;
+}
+
+.tearoff {
+  width: 38.45em;
+  -webkit-filter: drop-shadow(1px 1px 2px hsla(0,0%,0%,.25));
+  filter: drop-shadow(1px 1px 2px hsla(0,0%,0%,.25));
+}
+
+/* Main card body */
+h1 {
+  background-color: #fff;
+  float: left;
+  font: bold 1.5em/10.4 sans-serif;
+  text-align: center;
+  width: 18em;
+}
+
+/* Tearable strips */
+p {
+  background-color: #fff;
+  background-clip: padding-box;
+  border-left: 3px dotted #fff;  /* Perforation line */
+  float: right;
+  font: 1.25em/2 sans-serif;
+  margin-bottom: .15em;
+  text-align: center;
+  padding: .5em 0;
+  position: relative;
+  width: 9em;
+}
+
+/* Tear animation on hover */
+p:hover {
+  animation: tearoff 1s both;
+  cursor: default;
+  transform-origin: 0 100%;
+  z-index: 10;
+  -webkit-filter: drop-shadow(1px 1px 2px hsla(0,0%,0%,.25));
+  filter: drop-shadow(1px 1px 2px hsla(0,0%,0%,.25));
+}
+
+@keyframes tearoff {
+  50% { left: 0; }
+  60% { transform: rotate(5deg); }
+  100% { left: 1.5em; }
+}
