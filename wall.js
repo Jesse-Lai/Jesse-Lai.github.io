@@ -844,17 +844,17 @@ import { WallArticle } from "./wall-article.js?v=151";
     updateSunProgress();
   }
 
-  // ─── Mobile: Snap scroll + auto-trigger hover effects ───
+  // ─── Mobile: TikTok-style snap scroll ───
   if ('ontouchstart' in window) {
     const snapTargets = renderedItems.map(r => ({
-      y: r.focusableItem.group.y - 40, // snap position (slight offset above atom)
+      y: r.focusableItem.group.y - 40,
       item: r.focusableItem,
     }));
-    let currentSnapIdx = -1;
-    let scrollTimer = null;
+    let currentSnapIdx = 0;
+    let touchStartY = 0;
+    let isAnimating = false;
 
     const activateItem = (idx) => {
-      if (idx === currentSnapIdx) return;
       // Deactivate previous
       if (currentSnapIdx >= 0 && currentSnapIdx < snapTargets.length) {
         const prev = snapTargets[currentSnapIdx].item;
@@ -866,7 +866,6 @@ import { WallArticle } from "./wall-article.js?v=151";
       // Activate current
       const cur = snapTargets[idx].item;
       photoSystem._showHoverLabel(cur);
-      // Video
       if (cur.videoSrc && cur.sprite) {
         const entry = getOrCreateVideo(cur.videoSrc);
         if (entry.ready && entry.texture) {
@@ -878,25 +877,42 @@ import { WallArticle } from "./wall-article.js?v=151";
       }
     };
 
-    const findClosestSnap = () => {
-      const scrollY = window.scrollY + window.innerHeight * 0.3;
-      let closest = 0;
-      let minDist = Infinity;
-      for (let i = 0; i < snapTargets.length; i++) {
-        const dist = Math.abs(snapTargets[i].y - scrollY);
-        if (dist < minDist) { minDist = dist; closest = i; }
-      }
-      return closest;
+    const scrollToIdx = (idx) => {
+      if (idx < 0 || idx >= snapTargets.length || isAnimating) return;
+      isAnimating = true;
+      const targetY = Math.max(0, snapTargets[idx].y - window.innerHeight * 0.3);
+      window.scrollTo({ top: targetY, behavior: 'smooth' });
+      activateItem(idx);
+      setTimeout(() => { isAnimating = false; }, 400);
     };
 
+    // Initial snap
+    scrollToIdx(0);
+
+    // Touch gesture detection
+    document.addEventListener('touchstart', (e) => {
+      touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+
+    document.addEventListener('touchend', (e) => {
+      const dy = touchStartY - e.changedTouches[0].clientY;
+      const threshold = 30; // min swipe distance
+      if (Math.abs(dy) < threshold) return;
+      if (dy > 0 && currentSnapIdx < snapTargets.length - 1) {
+        scrollToIdx(currentSnapIdx + 1);
+      } else if (dy < 0 && currentSnapIdx > 0) {
+        scrollToIdx(currentSnapIdx - 1);
+      }
+    }, { passive: true });
+
+    // Prevent free scroll — override with snap position
     window.addEventListener('scroll', () => {
-      if (scrollTimer) clearTimeout(scrollTimer);
-      scrollTimer = setTimeout(() => {
-        const idx = findClosestSnap();
-        const targetY = Math.max(0, snapTargets[idx].y - window.innerHeight * 0.3);
-        window.scrollTo({ top: targetY, behavior: 'smooth' });
-        activateItem(idx);
-      }, 150);
+      if (!isAnimating) {
+        const targetY = Math.max(0, snapTargets[currentSnapIdx].y - window.innerHeight * 0.3);
+        if (Math.abs(window.scrollY - targetY) > 100) {
+          window.scrollTo({ top: targetY, behavior: 'smooth' });
+        }
+      }
     }, { passive: true });
   }
 })();
