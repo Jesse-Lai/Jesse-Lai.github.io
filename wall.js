@@ -113,7 +113,7 @@ import { WallArticle } from "./wall-article.js?v=151";
         src: entry.cover_image,
         caption: pc.caption,
         date: pc.date,
-        focus: entry.focus || { title: entry.title, description: entry.body || entry.title, link: '#', linkText: 'Read more', article: { title: entry.title, sections: (entry.full_text || []).map(t => ({type:'text',text:t})) } },
+        keywords: entry.keywords, focus: entry.focus || { title: entry.title, description: entry.body || entry.title, link: '#', linkText: 'Read more', article: { title: entry.title, sections: (entry.full_text || []).map(t => ({type:'text',text:t})) } },
       });
     } else if (entry.atom === 'sticky') {
       wallItems.push({
@@ -124,7 +124,7 @@ import { WallArticle } from "./wall-article.js?v=151";
         date: entry.title === 'GenUI' ? "'26 04 20" : entry.title === 'AI产品设计原则' ? "'26 03 15" : "'26 05 01",
         stampSrc: stampOverrides[entry.title] || entry.cover_image || 'stamp1.webp',
         colorScheme: coolStickies.includes(entry.title) ? 'cool' : 'warm',
-        focus: entry.focus || { title: entry.title, description: entry.body || entry.title, link: '#', linkText: 'Read more', article: { title: entry.title, sections: (entry.full_text || []).map(t => ({type:'text',text:t})) } },
+        keywords: entry.keywords, focus: entry.focus || { title: entry.title, description: entry.body || entry.title, link: '#', linkText: 'Read more', article: { title: entry.title, sections: (entry.full_text || []).map(t => ({type:'text',text:t})) } },
       });
     }
   }
@@ -169,7 +169,7 @@ import { WallArticle } from "./wall-article.js?v=151";
       const photoItem = await photoSystem.addPhoto(item.src, 0, 0, photoScale, item);
       photoItem.videoSrc = item.src.replace(/\.(png|jpg|jpeg|webp)$/i, '.mp4');
       getOrCreateVideo(photoItem.videoSrc);
-      if (item.focus) photoItem.focusData = item.focus;
+      if (item.focus) { photoItem.focusData = item.focus; if (item.keywords) photoItem.focusData.description = item.keywords; }
       const b = photoItem.group.getBounds();
       rendered.push({ group: photoItem.group, bounds: b, wallItem: item, focusableItem: photoItem });
     } else if (item.type === 'sticky') {
@@ -177,7 +177,7 @@ import { WallArticle } from "./wall-article.js?v=151";
       stickyResult.group.scale.set(atomScale);
       const b = stickyResult.group.getBounds();
       const stickyItem = photoSystem.addItem(stickyResult.group, b.width / atomScale, b.height / atomScale);
-      if (item.focus) stickyItem.focusData = item.focus;
+      if (item.focus) { stickyItem.focusData = item.focus; if (item.keywords) stickyItem.focusData.description = item.keywords; }
       stickyItem._stickyTitle = { tx: stickyResult.titleX, ty: stickyResult.titleY, tw: stickyResult.titleW, th: stickyResult.titleH };
       rendered.push({ group: stickyResult.group, bounds: b, wallItem: item, focusableItem: stickyItem });
     } else if (item.type === 'stamp') {
