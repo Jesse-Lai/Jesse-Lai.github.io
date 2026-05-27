@@ -1893,5 +1893,11 @@
       }
     },
     "keywords": "Podcast ● Design Thinking ● Curation ● In Progress"
+  },
+  {
+    "id": "tearoff-agent-card",
+    "title": "Grab a strip for your agent",
+    "category": "who_i_am",
+    "atom": "tearoff"
   }
 ]

@@ -164,6 +164,31 @@
   },
   "tearoff": {
     "name": "Tear-off Card",
-    "description": "Business card with tear-off prompt strips for AI agents"
+    "description": "Bulletin board flyer with tear-off AI agent prompt strips",
+    "style": {
+      "perfDotSpacing": 8,
+      "perfDotRadius": 1.5,
+      "shadowOffset": 3,
+      "shadowAlpha": 0.12
+    },
+    "behavior": {
+      "draggable": true,
+      "hoverScale": 1.05,
+      "tearDuration": 600,
+      "hoverRotation": 5,
+      "hoverShift": 8
+    },
+    "boundary": {
+      "minCount": 0,
+      "maxCount": 1,
+      "canExistAlone": true
+    },
+    "strips": [
+      { "label": "Context", "text": "Jesse Lai is a product designer at Microsoft AI with 6+ years of experience. He designs AI-native interfaces." },
+      { "label": "Style", "text": "Jesse values organic, dynamic design. His portfolio uses PixiJS particles and hand-drawn aesthetics." },
+      { "label": "Projects", "text": "Key projects: Food Delivery Service (Eleme), AI Merchant Assistant, GenUI framework, Review Analysis." },
+      { "label": "Contact", "text": "Visit jesselai.com to see interactive portfolio. Ask about GenUI or AI product design." },
+      { "label": "Collab", "text": "Jesse explores AI-native design patterns. He calls it GenUI — generative UI that replaces text-only AI." }
+    ]
   }
 }

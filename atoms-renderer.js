@@ -908,6 +908,676 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg, o
   };
 }
 
+// ─── Paper texture generator (SVG filter → Canvas) ───
+// Replicates: https://codepen.io/Chokcoco/pen/OJWLXPY
+function generateRoughPaperTexture(w, h) {
+  return new Promise((resolve) => {
+    // Build an offscreen SVG with the exact same filter
+    const svgNS = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(svgNS, 'svg');
+    svg.setAttribute('xmlns', svgNS);
+    svg.setAttribute('width', w);
+    svg.setAttribute('height', h);
+
+    // Define the roughpaper filter — exact copy from CodePen
+    const defs = document.createElementNS(svgNS, 'defs');
+    const filter = document.createElementNS(svgNS, 'filter');
+    filter.setAttribute('id', 'roughpaper');
+    filter.setAttribute('x', '0');
+    filter.setAttribute('y', '0');
+    filter.setAttribute('width', '100%');
+    filter.setAttribute('height', '100%');
+
+    const turb = document.createElementNS(svgNS, 'feTurbulence');
+    turb.setAttribute('type', 'fractalNoise');
+    turb.setAttribute('baseFrequency', '0.04');
+    turb.setAttribute('result', 'noise');
+    turb.setAttribute('numOctaves', '5');
+    filter.appendChild(turb);
+
+    const diffLight = document.createElementNS(svgNS, 'feDiffuseLighting');
+    diffLight.setAttribute('in', 'noise');
+    diffLight.setAttribute('lighting-color', '#fff');
+    diffLight.setAttribute('surfaceScale', '2');
+    const distLight = document.createElementNS(svgNS, 'feDistantLight');
+    distLight.setAttribute('azimuth', '45');
+    distLight.setAttribute('elevation', '60');
+    diffLight.appendChild(distLight);
+    filter.appendChild(diffLight);
+
+    defs.appendChild(filter);
+    svg.appendChild(defs);
+
+    // Rectangle that uses the filter
+    const rect = document.createElementNS(svgNS, 'rect');
+    rect.setAttribute('width', w);
+    rect.setAttribute('height', h);
+    rect.setAttribute('filter', 'url(#roughpaper)');
+    svg.appendChild(rect);
+
+    // Serialize SVG → Image → Canvas
+    const svgStr = new XMLSerializer().serializeToString(svg);
+    const blob = new Blob([svgStr], { type: 'image/svg+xml;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const img = new Image();
+    img.onload = () => {
+      const c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      c.getContext('2d').drawImage(img, 0, 0);
+      URL.revokeObjectURL(url);
+      resolve(c);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); resolve(null); };
+    img.src = url;
+  });
+}
+
+// ─── Torn edge generator ───
+// Reference: https://codepen.io/kkl/pen/bVKeNw (ripped paper effect)
+// Returns array of {x, y} points forming a jagged tear line across width
+function generateTornEdge(width, amplitude = 6, segments = 40) {
+  const points = [];
+  for (let i = 0; i <= segments; i++) {
+    const x = (i / segments) * width;
+    // Mix of medium and fine-grain randomness for natural torn-paper look
+    const y = (Math.random() - 0.5) * amplitude
+            + Math.sin(i * 0.7) * (amplitude * 0.3)
+            + (Math.random() - 0.5) * (amplitude * 0.4);
+    points.push({ x, y });
+  }
+  return points;
+}
+
+// Create a canvas mask with torn bottom edge (for card body)
+function createTornBottomMask(w, h, tornPoints, tearY) {
+  const c = document.createElement('canvas');
+  c.width = Math.ceil(w); c.height = Math.ceil(h);
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = 'white';
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.lineTo(w, 0);
+  ctx.lineTo(w, tearY);
+  // Torn edge going right-to-left
+  for (let i = tornPoints.length - 1; i >= 0; i--) {
+    ctx.lineTo(tornPoints[i].x, tearY + tornPoints[i].y);
+  }
+  ctx.closePath();
+  ctx.fill();
+  return c;
+}
+
+// Create a canvas mask with torn top edge (for strip)
+function createTornTopMask(w, h, tornPoints, stripX) {
+  const c = document.createElement('canvas');
+  c.width = Math.ceil(w); c.height = Math.ceil(h);
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = 'white';
+  ctx.beginPath();
+  // Start with torn edge at top, going left-to-right
+  // tornPoints are in full-card-width coords; offset by -stripX
+  const startIdx = tornPoints.findIndex(p => p.x >= stripX);
+  const endIdx = tornPoints.findIndex(p => p.x >= stripX + w);
+  const relevantPts = tornPoints.filter(p => p.x >= stripX && p.x <= stripX + w);
+  // Start at left edge
+  ctx.moveTo(0, relevantPts.length > 0 ? relevantPts[0].y : 0);
+  for (const p of relevantPts) {
+    ctx.lineTo(p.x - stripX, p.y);
+  }
+  ctx.lineTo(w, relevantPts.length > 0 ? relevantPts[relevantPts.length - 1].y : 0);
+  ctx.lineTo(w, h);
+  ctx.lineTo(0, h);
+  ctx.closePath();
+  ctx.fill();
+  return c;
+}
+
+// ─── Render Tearoff Card ───
+// Reference: https://codepen.io/pepebg/pen/BbXvXd
+// Layout: card body on TOP, tearable strips hanging BELOW
+export async function renderTearoffCard(app, x, y, cfg) {
+  const wrapper = new PIXI.Container();
+  wrapper.x = x; wrapper.y = y;
+
+  // ── Dimensions ──
+  const strips = cfg?.strips || [];
+  const numStrips = strips.length;
+  const perfDotSpacing = cfg?.style?.perfDotSpacing || 8;
+  const perfDotR = cfg?.style?.perfDotRadius || 1.5;
+  const shadowOff = cfg?.style?.shadowOffset || 3;
+  const shadowAlpha = cfg?.style?.shadowAlpha || 0.12;
+
+  const cardW = 280;           // full width of card body
+  const bodyH = 150;           // card body height
+  const perfH = 6;             // perforation gap height
+  const stripW = cardW / numStrips; // each strip width
+  const stripH = 110;          // strip height (hanging down)
+  const totalH = bodyH + perfH + stripH;
+
+  // ── Generate shared torn edge between body and strips ──
+  const tornEdge = generateTornEdge(cardW, 5, 50);
+
+  // ── Paper texture (full card) ──
+  const paperCanvas = await generateRoughPaperTexture(cardW, totalH);
+
+  // ── Shadow for card body (torn bottom edge) ──
+  const bodyShadowContainer = new PIXI.Container();
+  const bodyShadowGfx = new PIXI.Graphics();
+  bodyShadowGfx.rect(0, 0, cardW + shadowOff, bodyH + 10 + shadowOff);
+  bodyShadowGfx.fill({ color: 0x000000, alpha: shadowAlpha });
+  bodyShadowGfx.x = shadowOff; bodyShadowGfx.y = shadowOff;
+  bodyShadowContainer.addChild(bodyShadowGfx);
+  const bodyShadowMaskCanvas = createTornBottomMask(cardW + shadowOff * 2, bodyH + 10 + shadowOff * 2, tornEdge.map(p => ({ x: p.x + shadowOff, y: p.y })), bodyH + shadowOff);
+  const bodyShadowMask = new PIXI.Sprite(PIXI.Texture.from(bodyShadowMaskCanvas));
+  bodyShadowContainer.addChild(bodyShadowMask);
+  bodyShadowContainer.mask = bodyShadowMask;
+  wrapper.addChild(bodyShadowContainer);
+
+  // ── Card body (top) — masked with torn bottom edge ──
+  const bodyContainer = new PIXI.Container();
+  const cardBody = new PIXI.Graphics();
+  cardBody.rect(0, 0, cardW, bodyH + 10); // extend past tear zone
+  cardBody.fill(0xffffff);
+  bodyContainer.addChild(cardBody);
+
+  if (paperCanvas) {
+    const bodyTex = document.createElement('canvas');
+    bodyTex.width = cardW; bodyTex.height = bodyH + 10;
+    bodyTex.getContext('2d').drawImage(paperCanvas, 0, 0, cardW, bodyH + 10, 0, 0, cardW, bodyH + 10);
+    const bodyPaper = new PIXI.Sprite(PIXI.Texture.from(bodyTex));
+    bodyPaper.alpha = 0.5;
+    bodyContainer.addChild(bodyPaper);
+  }
+
+  // Create torn-bottom mask for card body
+  const bodyMaskCanvas = createTornBottomMask(cardW, bodyH + 10, tornEdge, bodyH);
+  const bodyMask = new PIXI.Sprite(PIXI.Texture.from(bodyMaskCanvas));
+  bodyContainer.addChild(bodyMask);
+  bodyContainer.mask = bodyMask;
+  wrapper.addChild(bodyContainer);
+
+  // ── Robot drawing helper ──
+  const botW = 60, botH = 80;
+  const O = { stroke: '#333', strokeWidth: 0.8, roughness: 0.4 };
+  const OF = { ...O, fill: '#333', fillStyle: 'solid', fillWeight: 0.5 };
+
+  function drawBotBase(rc, head, arms, legs, extras) {
+    // Antenna
+    rc.line(30, 14, 30 + (head.antennaTilt || 0), 6, O);
+    rc.circle(30 + (head.antennaTilt || 0), 5, 3, OF);
+    // Head
+    rc.rectangle(14, 12, 32, 24, { ...O, roughness: 0.3 });
+    // Eyes
+    if (head.eyeStyle === 'dots') {
+      rc.circle(24, 22, 3, OF);
+      rc.circle(36, 22, 3, OF);
+    } else if (head.eyeStyle === 'open') {
+      rc.circle(24, 22, 4, { ...O, strokeWidth: 1 });
+      rc.circle(36, 22, 4, { ...O, strokeWidth: 1 });
+      rc.circle(23, 21, 1, OF); rc.circle(35, 21, 1, OF);
+    } else if (head.eyeStyle === 'hearts') {
+      // Heart-shaped eyes
+      rc.path('M 22 22 L 24 19 L 26 22 L 24 25 Z', { ...O, fill: '#e44', fillStyle: 'solid', strokeWidth: 0.6 });
+      rc.path('M 34 22 L 36 19 L 38 22 L 36 25 Z', { ...O, fill: '#e44', fillStyle: 'solid', strokeWidth: 0.6 });
+    } else if (head.eyeStyle === 'stars') {
+      rc.path('M 24 19 L 25 22 L 28 22 L 25.5 24 L 26.5 27 L 24 25 L 21.5 27 L 22.5 24 L 20 22 L 23 22 Z', { ...O, fill: '#f90', fillStyle: 'solid', strokeWidth: 0.5 });
+      rc.path('M 36 19 L 37 22 L 40 22 L 37.5 24 L 38.5 27 L 36 25 L 33.5 27 L 34.5 24 L 32 22 L 35 22 Z', { ...O, fill: '#f90', fillStyle: 'solid', strokeWidth: 0.5 });
+    }
+    // Mouth
+    if (head.mouth === 'smile') rc.path('M 22 32 Q 30 36 38 32', O);
+    else if (head.mouth === 'grin') rc.path('M 20 30 Q 30 38 40 30', { ...O, strokeWidth: 1 });
+    else if (head.mouth === 'wow') rc.ellipse(30, 32, 6, 4, { ...O, strokeWidth: 0.8 });
+    else if (head.mouth === 'laugh') {
+      rc.path('M 19 29 Q 30 40 41 29', { ...O, strokeWidth: 1 });
+      rc.line(22, 29, 38, 29, { ...O, strokeWidth: 0.6 });
+    }
+    // Hat / accessories
+    if (head.hat === 'party') {
+      rc.path('M 22 12 L 30 0 L 38 12', { ...O, fill: '#f55', fillStyle: 'solid', strokeWidth: 0.6 });
+      rc.circle(30, 0, 3, { ...O, fill: '#ff0', fillStyle: 'solid', strokeWidth: 0.5 });
+    } else if (head.hat === 'crown') {
+      rc.path('M 14 12 L 18 4 L 22 10 L 26 2 L 30 10 L 34 2 L 38 10 L 42 4 L 46 12', { ...O, fill: '#fc0', fillStyle: 'solid', strokeWidth: 0.6 });
+    }
+    // Neck
+    rc.line(30, 36, 30, 40, O);
+    // Body
+    rc.rectangle(16, 40, 28, 18, { ...O, roughness: 0.3 });
+    // Arms
+    if (arms === 'down') {
+      rc.line(16, 46, 8, 56, O); rc.line(44, 46, 52, 56, O);
+      rc.circle(7, 57, 3, O); rc.circle(53, 57, 3, O);
+    } else if (arms === 'up') {
+      rc.line(16, 44, 4, 28, O); rc.line(44, 44, 56, 28, O);
+      rc.line(2, 26, 6, 30, O); rc.line(2, 26, 4, 22, O);
+      rc.line(54, 26, 58, 30, O); rc.line(54, 26, 56, 22, O);
+    } else if (arms === 'wave') {
+      rc.line(16, 44, 4, 32, O); rc.line(44, 44, 56, 28, O);
+      rc.line(2, 30, 8, 26, O); // left hand wave
+      rc.line(54, 26, 58, 20, O); rc.line(54, 26, 50, 22, O); // right hand open
+    } else if (arms === 'cheer') {
+      rc.line(16, 44, 2, 24, O); rc.line(44, 44, 58, 24, O);
+      // Confetti from hands
+      for (let ci = 0; ci < 4; ci++) {
+        const cx = 2 + Math.random() * 8 - 4, cy = 18 + Math.random() * 10 - 5;
+        rc.rectangle(cx - 2, cy - 1, 4, 2, { stroke: ['#f55','#5af','#fc0','#5c5'][ci], strokeWidth: 0.8, roughness: 0.8 });
+      }
+      for (let ci = 0; ci < 4; ci++) {
+        const cx = 58 + Math.random() * 8 - 4, cy = 18 + Math.random() * 10 - 5;
+        rc.rectangle(cx - 2, cy - 1, 4, 2, { stroke: ['#fc0','#f55','#5c5','#5af'][ci], strokeWidth: 0.8, roughness: 0.8 });
+      }
+    }
+    // Legs
+    if (legs === 'stand') {
+      rc.line(24, 58, 24, 70, O); rc.line(36, 58, 36, 70, O);
+      rc.line(20, 70, 28, 70, O); rc.line(32, 70, 40, 70, O);
+    } else if (legs === 'runA') {
+      rc.line(24, 58, 16, 70, O); rc.line(36, 58, 44, 64, O);
+      rc.line(12, 70, 20, 70, O); rc.line(44, 64, 50, 66, O);
+    } else if (legs === 'runB') {
+      rc.line(24, 58, 32, 64, O); rc.line(36, 58, 44, 70, O);
+      rc.line(28, 64, 34, 66, O); rc.line(40, 70, 48, 70, O);
+    } else if (legs === 'jump') {
+      rc.line(22, 58, 14, 68, O); rc.line(38, 58, 46, 68, O);
+      rc.line(10, 68, 18, 68, O); rc.line(42, 68, 50, 68, O);
+    }
+    // Extras
+    if (extras?.includes('exclaim')) {
+      rc.line(8, 8, 8, 16, { ...O, strokeWidth: 1.2 }); rc.circle(8, 19, 1, OF);
+      rc.line(52, 6, 52, 14, { ...O, strokeWidth: 1.2 }); rc.circle(52, 17, 1, OF);
+    }
+    if (extras?.includes('sparkles')) {
+      [[6,6],[54,4],[10,38],[50,38]].forEach(([sx,sy]) => {
+        rc.line(sx, sy-3, sx, sy+3, { ...O, strokeWidth: 0.6 });
+        rc.line(sx-3, sy, sx+3, sy, { ...O, strokeWidth: 0.6 });
+      });
+    }
+    if (extras?.includes('hearts')) {
+      [[4,4],[56,6],[8,36]].forEach(([hx,hy]) => {
+        rc.path(`M ${hx} ${hy+2} L ${hx+2} ${hy} L ${hx+4} ${hy+2} L ${hx+2} ${hy+5} Z`, { ...O, fill: '#e55', fillStyle: 'solid', strokeWidth: 0.5 });
+      });
+    }
+  }
+
+  function makeBotFrame(head, arms, legs, extras) {
+    const c = document.createElement('canvas');
+    c.width = botW; c.height = botH;
+    drawBotBase(rough.canvas(c), head, arms, legs, extras);
+    return PIXI.Texture.from(c);
+  }
+
+  // ── Robot frames: idle + 5 escalating excitement levels (2 walk frames each) ──
+  const idleTex = makeBotFrame({ eyeStyle: 'dots', mouth: 'smile', antennaTilt: 0 }, 'down', 'stand', null);
+
+  // Level 1: happy smile, arms up, running
+  const L1A = makeBotFrame({ eyeStyle: 'open', mouth: 'grin', antennaTilt: 2 }, 'up', 'runA', ['exclaim']);
+  const L1B = makeBotFrame({ eyeStyle: 'open', mouth: 'grin', antennaTilt: -2 }, 'up', 'runB', ['exclaim']);
+  // Level 2: wow face, wave, jumping
+  const L2A = makeBotFrame({ eyeStyle: 'open', mouth: 'wow', antennaTilt: 3 }, 'wave', 'runA', ['sparkles']);
+  const L2B = makeBotFrame({ eyeStyle: 'open', mouth: 'wow', antennaTilt: -3 }, 'wave', 'runB', ['sparkles']);
+  // Level 3: party hat, cheering with confetti
+  const L3A = makeBotFrame({ eyeStyle: 'open', mouth: 'laugh', antennaTilt: 2, hat: 'party' }, 'cheer', 'runA', ['sparkles']);
+  const L3B = makeBotFrame({ eyeStyle: 'open', mouth: 'laugh', antennaTilt: -2, hat: 'party' }, 'cheer', 'runB', ['sparkles']);
+  // Level 4: heart eyes, crown, full celebration
+  const L4A = makeBotFrame({ eyeStyle: 'hearts', mouth: 'laugh', antennaTilt: 3, hat: 'crown' }, 'cheer', 'jump', ['hearts', 'sparkles']);
+  const L4B = makeBotFrame({ eyeStyle: 'hearts', mouth: 'laugh', antennaTilt: -3, hat: 'crown' }, 'cheer', 'runA', ['hearts', 'sparkles']);
+  // Level 5: star eyes, crown, everything
+  const L5A = makeBotFrame({ eyeStyle: 'stars', mouth: 'laugh', antennaTilt: 4, hat: 'crown' }, 'cheer', 'jump', ['hearts', 'sparkles', 'exclaim']);
+  const L5B = makeBotFrame({ eyeStyle: 'stars', mouth: 'laugh', antennaTilt: -4, hat: 'crown' }, 'cheer', 'runB', ['hearts', 'sparkles', 'exclaim']);
+
+  const levelFrames = [[L1A,L1B],[L2A,L2B],[L3A,L3B],[L4A,L4B],[L5A,L5B]];
+
+  // ── Robot sprite ──
+  const botSprite = new PIXI.Sprite(idleTex);
+  botSprite.x = cardW - botW - 4;
+  botSprite.y = 4;
+  wrapper.addChild(botSprite);
+
+  // ── Confetti particle system (for levels 3+) ──
+  const confettiContainer = new PIXI.Container();
+  wrapper.addChild(confettiContainer);
+  function spawnConfetti(count) {
+    const colors = [0xff5555, 0x55aaff, 0xffcc00, 0x55cc55, 0xff55ff, 0xff8800];
+    for (let ci = 0; ci < count; ci++) {
+      const p = new PIXI.Graphics();
+      const sz = 2 + Math.random() * 3;
+      p.rect(-sz/2, -sz/2, sz, sz * 0.6);
+      p.fill(colors[ci % colors.length]);
+      p.x = botSprite.x + botW / 2 + (Math.random() - 0.5) * 30;
+      p.y = botSprite.y + 20;
+      p.rotation = Math.random() * Math.PI;
+      confettiContainer.addChild(p);
+      const vx = (Math.random() - 0.5) * 3, vy = -2 - Math.random() * 3;
+      const spin = (Math.random() - 0.5) * 0.3;
+      const start = performance.now();
+      const pTick = () => {
+        const t = (performance.now() - start) / 1200;
+        if (t > 1 || wrapper.destroyed) { if (p.parent) p.parent.removeChild(p); p.destroy(); return; }
+        p.x += vx; p.y += vy + t * 5; // gravity
+        p.rotation += spin;
+        p.alpha = 1 - t * t;
+        requestAnimationFrame(pTick);
+      };
+      requestAnimationFrame(pTick);
+    }
+  }
+
+  // ── Robot celebration animation ──
+  let botAnimating = false, tornCount = 0;
+  const botHomeX = botSprite.x, botHomeY = botSprite.y;
+
+  function startBotCelebration() {
+    tornCount = stripState.filter(s => s.torn).length;
+    const level = Math.min(tornCount, 5);
+    const frames = levelFrames[level - 1];
+
+    if (botAnimating) { botSprite.texture = frames[0]; return; }
+    botAnimating = true;
+
+    // Confetti for levels 3+
+    if (level >= 3) spawnConfetti(level * 6);
+
+    const pad = 10;
+    const speed = 1 - level * 0.08; // faster at higher levels
+    const waypoints = [
+      { x: botHomeX, y: botHomeY },
+      { x: cardW / 2 - botW / 2, y: -8 },
+      { x: pad, y: 4 },
+      { x: pad, y: bodyH / 2 - botH / 2 },
+      { x: pad, y: bodyH - botH - 10 },
+      { x: cardW / 2 - botW / 2, y: bodyH - botH - 6 },
+      { x: botHomeX, y: bodyH - botH - 10 },
+      { x: botHomeX, y: botHomeY },
+    ];
+
+    const segDuration = 220 * speed;
+    const totalDur = waypoints.length * segDuration;
+    const startTime = performance.now();
+    const bounceAmp = 4 + level * 2;
+    let lastFrame = 0;
+
+    const animTick = () => {
+      if (wrapper.destroyed) return;
+      const elapsed = performance.now() - startTime;
+
+      // Walk frame cycling (swap every 120ms)
+      const frameIdx = Math.floor(elapsed / 120) % 2;
+      if (frameIdx !== lastFrame) { botSprite.texture = frames[frameIdx]; lastFrame = frameIdx; }
+
+      if (elapsed >= totalDur) {
+        botSprite.x = botHomeX; botSprite.y = botHomeY;
+        botSprite.rotation = 0;
+        botSprite.texture = frames[0]; // rest on frame A
+        botAnimating = false;
+        // Burst confetti at end for high levels
+        if (level >= 4) spawnConfetti(12);
+        return;
+      }
+
+      const progress = elapsed / totalDur;
+      const segFloat = progress * (waypoints.length - 1);
+      const segIdx = Math.floor(segFloat);
+      const segT = segFloat - segIdx;
+      const ease = segT * segT * (3 - 2 * segT);
+
+      const from = waypoints[segIdx];
+      const to = waypoints[Math.min(segIdx + 1, waypoints.length - 1)];
+      botSprite.x = from.x + (to.x - from.x) * ease;
+      botSprite.y = from.y + (to.y - from.y) * ease - Math.abs(Math.sin(progress * Math.PI * (6 + level * 2))) * bounceAmp;
+      botSprite.rotation = Math.sin(elapsed * 0.015) * (0.1 + level * 0.04);
+
+      // Confetti trail for level 5
+      if (level >= 5 && Math.random() < 0.3) spawnConfetti(2);
+
+      requestAnimationFrame(animTick);
+    };
+    requestAnimationFrame(animTick);
+  }
+
+  // ── Title text ──
+  const titleText = new PIXI.Text({ text: 'Grab a strip\nfor your agent', style: {
+    fontFamily: 'Special Elite', fontSize: 28, fill: 0x1a1a1a,
+    align: 'center', wordWrap: true, wordWrapWidth: cardW - 40, padding: 8,
+  }});
+  titleText.anchor.set(0.5, 0.5);
+  titleText.x = cardW / 2;
+  titleText.y = bodyH * 0.38;
+  wrapper.addChild(titleText);
+
+  // ── Subtitle text ──
+  const subtitleText = new PIXI.Text({ text: 'A secret key designed for agents', style: {
+    fontFamily: 'Special Elite', fontSize: 12, fill: 0x999999,
+    align: 'center', wordWrap: true, wordWrapWidth: cardW - 40, padding: 4,
+  }});
+  subtitleText.anchor.set(0.5, 0);
+  subtitleText.x = cardW / 2;
+  subtitleText.y = titleText.y + titleText.height / 2 + 8;
+  wrapper.addChild(subtitleText);
+
+
+
+  // ── Strips (bottom, hanging down) ──
+  const stripContainers = [];
+  const stripState = [];
+  const stripsStartY = bodyH + perfH;
+
+  for (let i = 0; i < numStrips; i++) {
+    const sc = new PIXI.Container();
+    // Pivot at top-center — tear-off rotates from the top (where it's attached to card)
+    sc.pivot.set(stripW / 2, 0);
+    sc.x = i * stripW + stripW / 2; // compensate pivot
+    sc.y = stripsStartY;
+
+    // Strip drop shadow (torn top edge, disappears when torn)
+    const stripShadowContainer = new PIXI.Container();
+    const stripShadowGfx = new PIXI.Graphics();
+    stripShadowGfx.rect(0, -8, stripW + shadowOff, stripH + 8 + shadowOff);
+    stripShadowGfx.fill({ color: 0x000000, alpha: shadowAlpha });
+    stripShadowGfx.x = shadowOff; stripShadowGfx.y = shadowOff;
+    stripShadowContainer.addChild(stripShadowGfx);
+    const sShadowMask = createTornTopMask(Math.ceil(stripW + shadowOff * 2), Math.ceil(stripH + 8 + shadowOff * 2), tornEdge.map(p => ({ x: p.x + shadowOff, y: p.y })), i * stripW);
+    const sShadowMaskSprite = new PIXI.Sprite(PIXI.Texture.from(sShadowMask));
+    sShadowMaskSprite.y = -8;
+    stripShadowContainer.addChild(sShadowMaskSprite);
+    stripShadowContainer.mask = sShadowMaskSprite;
+    sc.addChild(stripShadowContainer);
+
+    // Strip hover shadow (extra shadow on hover)
+    const hoverShadow = new PIXI.Graphics();
+    hoverShadow.rect(1, 2, stripW, stripH);
+    hoverShadow.fill({ color: 0x000000, alpha: 0.2 });
+    hoverShadow.alpha = 0;
+    sc.addChild(hoverShadow);
+    sc._hoverShadow = hoverShadow;
+
+    // Strip background + paper texture — masked with torn top edge
+    const stripContent = new PIXI.Container();
+    const bg = new PIXI.Graphics();
+    bg.rect(0, -8, stripW, stripH + 8); // extend above for tear zone
+    bg.fill(0xffffff);
+    stripContent.addChild(bg);
+
+    if (paperCanvas) {
+      const sx = Math.floor(i * stripW);
+      const sy = Math.floor(stripsStartY - 8);
+      const sw = Math.ceil(stripW);
+      const sh = Math.ceil(stripH + 8);
+      const stripTex = document.createElement('canvas');
+      stripTex.width = sw; stripTex.height = sh;
+      stripTex.getContext('2d').drawImage(paperCanvas, Math.max(0, sx), Math.max(0, sy), sw, sh, 0, 0, sw, sh);
+      const stripPaper = new PIXI.Sprite(PIXI.Texture.from(stripTex));
+      stripPaper.y = -8;
+      stripPaper.alpha = 0.5;
+      stripContent.addChild(stripPaper);
+    }
+
+    // Torn-top mask for this strip
+    const stripMaskCanvas = createTornTopMask(Math.ceil(stripW), Math.ceil(stripH + 8), tornEdge, i * stripW);
+    const stripMaskSprite = new PIXI.Sprite(PIXI.Texture.from(stripMaskCanvas));
+    stripMaskSprite.y = -8;
+    stripContent.addChild(stripMaskSprite);
+    stripContent.mask = stripMaskSprite;
+    sc.addChild(stripContent);
+
+    // Strip label — vertical text via offscreen canvas
+    const labelCanvas = document.createElement('canvas');
+    const fontSize = 10;
+    const lw = Math.ceil(stripW);
+    const lh = Math.ceil(stripH);
+    labelCanvas.width = lw; labelCanvas.height = lh;
+    const lctx = labelCanvas.getContext('2d');
+    lctx.save();
+    lctx.translate(lw / 2, lh / 2);
+    lctx.rotate(Math.PI / 2);
+    lctx.font = `${fontSize}px "Red Hat Mono", monospace`;
+    lctx.fillStyle = '#555';
+    lctx.textAlign = 'center';
+    lctx.textBaseline = 'middle';
+    lctx.fillText(strips[i].label, 0, 0);
+    lctx.restore();
+    const labelSprite = new PIXI.Sprite(PIXI.Texture.from(labelCanvas));
+    labelSprite.x = 0;
+    labelSprite.y = 0;
+    sc.addChild(labelSprite);
+
+    wrapper.addChild(sc);
+    stripContainers.push(sc);
+    stripState.push({ hovered: false, torn: false, tearing: false, tearStart: 0 });
+  }
+
+  // ── Hover detection & animation tick ──
+  const hoverRot = (cfg?.behavior?.hoverRotation || 5) * Math.PI / 180;
+  const hoverShiftY = cfg?.behavior?.hoverShift || 8;
+  const tearDuration = cfg?.behavior?.tearDuration || 600;
+
+  const tick = () => {
+    if (wrapper.destroyed) return;
+
+    for (let i = 0; i < stripContainers.length; i++) {
+      const sc = stripContainers[i];
+      const st = stripState[i];
+      if (st.torn) continue;
+
+      const baseX = i * stripW + stripW / 2;
+      const baseY = stripsStartY;
+
+      if (st.tearing) {
+        // Tear-off animation — strip falls away
+        const t = Math.min(1, (performance.now() - st.tearStart) / tearDuration);
+        const ease = 1 - Math.pow(1 - t, 3);
+        sc.rotation = ease * hoverRot * (i % 2 === 0 ? 1 : -1); // alternate rotation direction
+        sc.y = baseY + ease * 60;
+        sc.alpha = 1 - ease;
+        if (t >= 1) {
+          st.torn = true;
+          sc.visible = false;
+          const anyTorn = stripState.some(s => s.torn);
+          if (anyTorn) {
+            titleText.text = 'Now paste\nto your AI';
+            subtitleText.text = 'Your agent will know me';
+            subtitleText.y = titleText.y + titleText.height / 2 + 8;
+            startBotCelebration();
+          }
+        }
+      } else {
+        // Smooth hover lerp — strip shifts down and gets a slight rotation
+        const targetRot = st.hovered ? hoverRot * 0.5 : 0;
+        const targetShiftY = st.hovered ? hoverShiftY : 0;
+        sc.rotation += (targetRot - sc.rotation) * 0.15;
+        sc.y += (baseY + targetShiftY - sc.y) * 0.15;
+        // Hover shadow
+        if (sc._hoverShadow) {
+          sc._hoverShadow.alpha += ((st.hovered ? 0.15 : 0) - sc._hoverShadow.alpha) * 0.15;
+        }
+      }
+    }
+
+    requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+
+  // ── Strip hit-testing (uses getBounds, same as PhotoSystem) ──
+  const canvas = app.canvas;
+  const canvasY = (clientY) => clientY + (window.scrollY || 0);
+
+  function hitTestStrip(mx, my, idx) {
+    const sc = stripContainers[idx];
+    if (!sc.visible) return false;
+    const b = sc.getBounds();
+    return mx > b.x && mx < b.x + b.width && my > b.y && my < b.y + b.height;
+  }
+
+  // ── Mouse hover detection ──
+  const onMouseMove = (e) => {
+    if (wrapper.destroyed) { canvas.removeEventListener('mousemove', onMouseMove); return; }
+    const mx = e.clientX, my = canvasY(e.clientY);
+    for (let i = 0; i < numStrips; i++) {
+      if (stripState[i].torn || stripState[i].tearing) { stripState[i].hovered = false; continue; }
+      stripState[i].hovered = hitTestStrip(mx, my, i);
+    }
+  };
+  canvas.addEventListener('mousemove', onMouseMove);
+
+  // ── Click detection for strip tearing ──
+  let downPos = null;
+  const onMouseDown = (e) => { downPos = { x: e.clientX, y: e.clientY, time: Date.now() }; };
+  canvas.addEventListener('mousedown', onMouseDown);
+
+  const tearStrip = (idx) => {
+    stripState[idx].tearing = true;
+    stripState[idx].tearStart = performance.now();
+    navigator.clipboard.writeText(strips[idx].text).catch(() => {});
+
+    // Toast notification
+    const toast = new PIXI.Text({ text: 'Copied! Paste to your AI →', style: {
+      fontFamily: 'Red Hat Mono', fontSize: 11, fill: 0xffffff, padding: 4,
+    }});
+    const toastBg = new PIXI.Graphics();
+    toastBg.roundRect(0, 0, toast.width + 24, toast.height + 10, 4);
+    toastBg.fill({ color: 0x000000, alpha: 0.7 });
+    const toastGroup = new PIXI.Container();
+    toastGroup.addChild(toastBg);
+    toast.x = 12; toast.y = 5;
+    toastGroup.addChild(toast);
+    toastGroup.x = cardW / 2 - (toast.width + 24) / 2;
+    toastGroup.y = totalH + 8;
+    toastGroup.alpha = 0;
+    wrapper.addChild(toastGroup);
+
+    const toastStart = performance.now();
+    const toastTick = () => {
+      const elapsed = performance.now() - toastStart;
+      if (elapsed < 200) { toastGroup.alpha = elapsed / 200; requestAnimationFrame(toastTick); }
+      else if (elapsed < 1200) { toastGroup.alpha = 1; requestAnimationFrame(toastTick); }
+      else if (elapsed < 1500) { toastGroup.alpha = 1 - (elapsed - 1200) / 300; requestAnimationFrame(toastTick); }
+      else { if (toastGroup.parent) toastGroup.parent.removeChild(toastGroup); toastGroup.destroy({ children: true }); }
+    };
+    requestAnimationFrame(toastTick);
+  };
+
+  const onMouseUp = (e) => {
+    if (wrapper.destroyed) { canvas.removeEventListener('mouseup', onMouseUp); canvas.removeEventListener('mousedown', onMouseDown); return; }
+    if (!downPos || Date.now() - downPos.time > 300 || Math.abs(e.clientX - downPos.x) + Math.abs(e.clientY - downPos.y) > 10) { downPos = null; return; }
+    downPos = null;
+    const mx = e.clientX, my = canvasY(e.clientY);
+    for (let i = 0; i < numStrips; i++) {
+      if (stripState[i].torn || stripState[i].tearing) continue;
+      if (hitTestStrip(mx, my, i)) { tearStrip(i); break; }
+    }
+  };
+  canvas.addEventListener('mouseup', onMouseUp);
+
+  // Slight random rotation
+  wrapper.rotation = (Math.random() * 3 - 1.5) * Math.PI / 180;
+
+  return {
+    group: wrapper,
+    cardW,
+    cardH: totalH,
+    hitTest: (mx, my) => Math.abs(mx - wrapper.x - cardW / 2) < cardW * 0.6
+                      && Math.abs(my - wrapper.y - totalH / 2) < totalH * 0.6,
+  };
+}
+
 // ─── Render Lure ───
 export function renderLure(app, x, y, cfg) {
   const group = new PIXI.Container();
