@@ -844,3 +844,59 @@ import { WallArticle } from "./wall-article.js?v=151";
     updateSunProgress();
   }
 })();
+
+  // ─── Mobile: Snap scroll + auto-trigger hover effects ───
+  if ('ontouchstart' in window) {
+    const snapTargets = renderedItems.map(r => ({
+      y: r.focusableItem.group.y - 40, // snap position (slight offset above atom)
+      item: r.focusableItem,
+    }));
+    let currentSnapIdx = -1;
+    let scrollTimer = null;
+
+    const activateItem = (idx) => {
+      if (idx === currentSnapIdx) return;
+      // Deactivate previous
+      if (currentSnapIdx >= 0 && currentSnapIdx < snapTargets.length) {
+        const prev = snapTargets[currentSnapIdx].item;
+        photoSystem._hideHoverLabel(prev);
+        photoSystem._stopPhotoVideo(prev);
+      }
+      currentSnapIdx = idx;
+      if (idx < 0 || idx >= snapTargets.length) return;
+      // Activate current
+      const cur = snapTargets[idx].item;
+      photoSystem._showHoverLabel(cur);
+      // Video
+      if (cur.videoSrc && cur.sprite) {
+        const entry = getOrCreateVideo(cur.videoSrc);
+        if (entry.ready && entry.texture) {
+          cur._staticTex = cur.sprite.texture;
+          cur.sprite.texture = entry.texture;
+          entry.video.currentTime = 0;
+          entry.video.play().catch(() => {});
+        }
+      }
+    };
+
+    const findClosestSnap = () => {
+      const scrollY = window.scrollY + window.innerHeight * 0.3;
+      let closest = 0;
+      let minDist = Infinity;
+      for (let i = 0; i < snapTargets.length; i++) {
+        const dist = Math.abs(snapTargets[i].y - scrollY);
+        if (dist < minDist) { minDist = dist; closest = i; }
+      }
+      return closest;
+    };
+
+    window.addEventListener('scroll', () => {
+      if (scrollTimer) clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(() => {
+        const idx = findClosestSnap();
+        const targetY = Math.max(0, snapTargets[idx].y - window.innerHeight * 0.3);
+        window.scrollTo({ top: targetY, behavior: 'smooth' });
+        activateItem(idx);
+      }, 150);
+    }, { passive: true });
+  }
