@@ -1,5 +1,6 @@
 // wall-article.js — Wall-level composer + AI-generated JesseOS article
 import { streamChat, buildSystemPrompt } from './ai-client.js?v=166';
+import { createScribbleLoader } from './atoms-renderer.js?v=177';
 
 export class WallArticle {
   constructor(focusOverlay, contentData, lang) {
@@ -97,6 +98,8 @@ export class WallArticle {
     this.content.appendChild(aiMsg);
 
     this._abortController = new AbortController();
+    const removeLoader = createScribbleLoader(bubble);
+    let loaderRemoved = false;
     let currentEl = null;
     let buffer = '';
     let atomBuffer = [];
@@ -144,6 +147,7 @@ export class WallArticle {
     await streamChat(
       messages,
       (token) => {
+        if (!loaderRemoved) { removeLoader(); loaderRemoved = true; }
         buffer += token;
         while (buffer.length > 0) {
           const headingMatch = buffer.match(/^## (.+?)\n/);

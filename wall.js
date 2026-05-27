@@ -1,5 +1,5 @@
 // wall.js — Main view, uses atoms-renderer.js
-import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, makeDraggable, FocusOverlay, getOrCreateVideo, animateTo, fadeIn } from "./atoms-renderer.js?v=177";
+import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, makeDraggable, FocusOverlay, getOrCreateVideo, animateTo, fadeIn } from "./atoms-renderer.js?v=178";
 import { WallArticle } from "./wall-article.js?v=151";
 
 (async () => {
@@ -178,7 +178,7 @@ import { WallArticle } from "./wall-article.js?v=151";
       const b = stickyResult.group.getBounds();
       const stickyItem = photoSystem.addItem(stickyResult.group, b.width / atomScale, b.height / atomScale);
       if (item.focus) stickyItem.focusData = item.focus;
-      stickyItem._stickyTitle = { tx: stickyResult.titleX * atomScale, ty: stickyResult.titleY * atomScale, tw: stickyResult.titleW * atomScale, th: stickyResult.titleH * atomScale };
+      stickyItem._stickyTitle = { tx: stickyResult.titleX, ty: stickyResult.titleY, tw: stickyResult.titleW, th: stickyResult.titleH };
       rendered.push({ group: stickyResult.group, bounds: b, wallItem: item, focusableItem: stickyItem });
     } else if (item.type === 'stamp') {
       const stampResult = await renderStamp(app, imgData, 0, 0, atomsConfig.stamp);
@@ -218,6 +218,237 @@ import { WallArticle } from "./wall-article.js?v=151";
   for (const r of rendered) {
     r.initX = r.group.x;
     r.initY = r.group.y;
+  }
+
+  // ─── Tear-off card (DOM overlay) ───
+  const tearoffPrompts = [
+    { label: 'Context', text: 'Jesse Lai is a product designer at Microsoft AI with 6+ years of experience. He designs AI-native interfaces.' },
+    { label: 'Style', text: 'Jesse values organic, dynamic design. His portfolio uses PixiJS particles and hand-drawn aesthetics.' },
+    { label: 'Projects', text: 'Key projects: Food Delivery Service (Eleme), AI Merchant Assistant, GenUI framework, Review Analysis.' },
+    { label: 'Contact', text: 'Visit jesselai.com to see interactive portfolio. Ask about GenUI or AI product design.' },
+    { label: 'Collab', text: 'Jesse explores AI-native design patterns. He calls it GenUI — generative UI that replaces text-only AI.' },
+  ];
+  {
+    const tearCol = colTops.indexOf(Math.min(...colTops));
+    const tearX = (tearCol + 0.5) * colW;
+    const tearW = 220 * atomScale;
+    const tearY = colTops[tearCol];
+
+    // Generate tear edges
+    function genTearEdge(steps = 12) {
+      const pts = [];
+      for (let i = 0; i <= steps; i++) pts.push({ x: (i / steps) * 100, y: 30 + Math.random() * 70 });
+      return pts;
+    }
+    function stripClipPath(tearPts, tearH) {
+      const top = tearPts.map(p => `${p.x}% ${(p.y / 100) * tearH}px`);
+      return `polygon(${top.join(', ')}, 100% 100%, 0% 100%)`;
+    }
+    function stubClipPath(tearPts) {
+      const bottom = [...tearPts].reverse().map(p => `${p.x}% ${p.y}%`);
+      return `polygon(0% 0%, 100% 0%, ${bottom.join(', ')})`;
+    }
+    const tearH = 10;
+
+    const card = document.createElement('div');
+    const cardBaseW = 280;
+    card.style.cssText = `position:absolute;z-index:2;pointer-events:auto;font-family:Red Hat Mono,monospace;filter:drop-shadow(3px 3px 0px rgba(0,0,0,0.12));display:flex;flex-direction:column;cursor:grab;`;
+    card.style.width = cardBaseW + 'px';
+    card.style.transform = `scale(${atomScale})`;
+    card.style.transformOrigin = 'top left';
+    card.style.left = `${tearX - (cardBaseW * atomScale) / 2}px`;
+    card.style.top = `${tearY}px`;
+
+    const cardBody = document.createElement('div');
+    cardBody.style.cssText = 'background:#fff;padding:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;border-radius:2px 2px 0 0;min-height:150px;position:relative;';
+    const titleEl = document.createElement('div');
+    titleEl.style.cssText = 'font-family:Special Elite,cursive;font-size:16px;color:#1a1a1a;text-align:center;line-height:1.3;display:inline-block;';
+    titleEl.innerHTML = 'Grab a strip<br>for your agent';
+    const subtitleEl = document.createElement('div');
+    subtitleEl.style.cssText = 'font-size:10px;color:#999;text-align:center;letter-spacing:0.5px;';
+    subtitleEl.textContent = 'A secret key designed for agents';
+    cardBody.appendChild(titleEl);
+    cardBody.appendChild(subtitleEl);
+    card.appendChild(cardBody);
+
+    // Hand-drawn circle on title — triggered on hover
+    titleEl.style.position = 'relative';
+    let circleSvg = null;
+    cardBody.addEventListener('mouseenter', () => {
+      if (circleSvg) return;
+      const svgNS = 'http://www.w3.org/2000/svg';
+      const w = titleEl.offsetWidth + 16, h = titleEl.offsetHeight + 12;
+      const svg = document.createElementNS(svgNS, 'svg');
+      svg.setAttribute('width', w); svg.setAttribute('height', h);
+      svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+      svg.style.cssText = `position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;overflow:visible;`;
+      const cx = w/2, cy = h/2, rx = w/2 - 2, ry = h/2 - 2;
+      // Hand-drawn ellipse via rough path with slight randomness
+      const pts = [];
+      for (let a = 0; a <= Math.PI * 2 + 0.3; a += 0.15) {
+        const jx = (Math.random() - 0.5) * 2.5, jy = (Math.random() - 0.5) * 2.5;
+        pts.push(`${cx + rx * Math.cos(a) + jx},${cy + ry * Math.sin(a) + jy}`);
+      }
+      const path = document.createElementNS(svgNS, 'path');
+      path.setAttribute('d', `M${pts[0]} C${pts.slice(1).join(' ')}`);
+      path.setAttribute('fill', 'none');
+      path.setAttribute('stroke', 'rgba(0,0,0,0.35)');
+      path.setAttribute('stroke-width', '1.5');
+      path.setAttribute('stroke-linecap', 'round');
+      svg.appendChild(path);
+      const len = path.getTotalLength();
+      path.style.strokeDasharray = len;
+      path.style.strokeDashoffset = len;
+      path.style.animation = 'rough-draw 0.8s ease forwards';
+      titleEl.appendChild(svg);
+      circleSvg = svg;
+    });
+    cardBody.addEventListener('mouseleave', () => {
+      if (circleSvg) { circleSvg.remove(); circleSvg = null; }
+    });
+
+    const jointsEl = document.createElement('div');
+    jointsEl.style.cssText = `display:flex;width:${cardBaseW}px;margin-top:-1px;`;
+    card.appendChild(jointsEl);
+
+    const stripsEl = document.createElement('div');
+    stripsEl.style.cssText = `display:flex;width:${cardBaseW}px;margin-top:-1px;`;
+    card.appendChild(stripsEl);
+
+    // Toast
+    const toast = document.createElement('div');
+    toast.style.cssText = 'position:absolute;bottom:-30px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.7);color:#fff;font-size:11px;padding:6px 14px;border-radius:4px;pointer-events:none;opacity:0;transition:opacity 0.3s;white-space:nowrap;';
+    card.appendChild(toast);
+
+    // Drag
+    let dragOff = null;
+    cardBody.addEventListener('mousedown', e => {
+      const rect = card.getBoundingClientRect();
+      dragOff = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+      card.style.cursor = 'grabbing';
+      card.style.zIndex = '100';
+    });
+    window.addEventListener('mousemove', e => {
+      if (!dragOff) return;
+      card.style.left = (e.clientX - dragOff.x) + 'px';
+      card.style.top = (e.clientY + window.scrollY - dragOff.y) + 'px';
+      card.style.transform = `scale(${atomScale})`;
+    });
+    window.addEventListener('mouseup', () => {
+      if (!dragOff) return;
+      dragOff = null;
+      card.style.cursor = 'grab';
+      card.style.zIndex = '2';
+    });
+
+    // SVG doodle paths (hand-drawn style via slight jitter)
+    const doodlePaths = [
+      // Cat
+      'M20 10 C14 10 8 15 8 21 C8 27 14 32 20 32 C26 32 32 27 32 21 C32 15 26 10 20 10Z M12 12 L9 5 L16 10 M28 12 L31 5 L24 10 M16 19 L16 20 M24 19 L24 20 M20 23 L18 25 M20 23 L22 25',
+      // Star
+      'M20 6 L23 15 L33 15 L25 21 L28 31 L20 25 L12 31 L15 21 L7 15 L17 15 Z',
+      // Heart
+      'M20 32 C20 32 6 23 6 14 C6 8 11 5 15 8 C18 10 20 14 20 14 C20 14 22 10 25 8 C29 5 34 8 34 14 C34 23 20 32 20 32Z',
+      // Music note
+      'M15 8 L15 28 C15 31 11 33 9 31 C7 29 9 26 12 26 C13 26 14 27 15 28 M15 8 L29 5 L29 25 C29 28 25 30 23 28 C21 26 23 23 26 23 C27 23 28 24 29 25',
+      // Fish
+      'M7 20 C7 14 13 10 20 10 C27 10 33 14 33 20 C33 26 27 30 20 30 C13 30 7 26 7 20Z M33 20 L39 14 L39 26 Z M14 18 C14 17 15 17 15 18 C15 19 14 19 14 18',
+    ];
+
+    // Create SVG doodle with stroke-dashoffset draw animation
+    function createDoodleSVG(pathData) {
+      const svgNS = 'http://www.w3.org/2000/svg';
+      const svg = document.createElementNS(svgNS, 'svg');
+      svg.setAttribute('width', '40'); svg.setAttribute('height', '40');
+      svg.setAttribute('viewBox', '0 0 40 40');
+      svg.style.cssText = 'position:absolute;bottom:8px;left:50%;transform:translateX(-50%);writing-mode:horizontal-tb;pointer-events:none;overflow:visible;';
+      const path = document.createElementNS(svgNS, 'path');
+      path.setAttribute('d', pathData);
+      path.setAttribute('fill', 'none');
+      path.setAttribute('stroke', '#999');
+      path.setAttribute('stroke-width', '1.5');
+      path.setAttribute('stroke-linecap', 'round');
+      path.setAttribute('stroke-linejoin', 'round');
+      svg.appendChild(path);
+      const len = path.getTotalLength();
+      path.style.strokeDasharray = len;
+      path.style.strokeDashoffset = len;
+      path.style.animation = 'rough-draw 0.6s ease forwards';
+      return svg;
+    }
+
+    let doodleIdx = 0;
+    for (const p of tearoffPrompts) {
+      const tearEdge = genTearEdge();
+      const myDoodlePath = doodlePaths[doodleIdx % doodlePaths.length];
+      doodleIdx++;
+
+      const joint = document.createElement('div');
+      const stripW = cardBaseW / tearoffPrompts.length;
+      joint.style.cssText = `width:${stripW}px;flex-shrink:0;height:12px;background:#fff;`;
+      jointsEl.appendChild(joint);
+
+      const strip = document.createElement('div');
+      strip.style.cssText = `background:#fff;background-clip:padding-box;border-left:2px dotted #ddd;width:${stripW}px;flex-shrink:0;box-sizing:border-box;text-align:center;padding:12px 2px;cursor:pointer;position:relative;writing-mode:vertical-rl;text-orientation:mixed;font-size:9px;color:#666;letter-spacing:0.3px;line-height:1.3;min-height:100px;transition:transform 0.3s ease,filter 0.3s ease;overflow:hidden;`;
+      strip.textContent = p.label;
+
+      let doodleSvg = null;
+      strip.addEventListener('mouseenter', () => {
+        if (strip.dataset.torn) return;
+        strip.style.clipPath = stripClipPath(tearEdge, tearH);
+        joint.style.clipPath = stubClipPath(tearEdge);
+        strip.style.transform = 'translateY(8px)';
+        strip.style.filter = 'drop-shadow(1px 2px 3px rgba(0,0,0,0.15))';
+        strip.style.zIndex = '10';
+        // Draw rough doodle with stroke animation
+        if (!doodleSvg) {
+          doodleSvg = createDoodleSVG(myDoodlePath);
+          strip.appendChild(doodleSvg);
+        }
+      });
+      strip.addEventListener('mouseleave', () => {
+        if (strip.dataset.torn) return;
+        // Remove doodle
+        if (doodleSvg) { doodleSvg.remove(); doodleSvg = null; }
+        strip.style.transform = '';
+        strip.style.filter = '';
+        strip.style.zIndex = '';
+        // Wait for transition to finish before removing tear edges
+        strip.addEventListener('transitionend', function once() {
+          strip.removeEventListener('transitionend', once);
+          if (!strip.matches(':hover') && !strip.dataset.torn) {
+            strip.style.clipPath = '';
+            joint.style.clipPath = '';
+          }
+        });
+      });
+      strip.addEventListener('click', () => {
+        if (strip.dataset.torn) return;
+        strip.dataset.torn = '1';
+        strip.style.clipPath = stripClipPath(tearEdge, tearH);
+        joint.style.clipPath = stubClipPath(tearEdge);
+        navigator.clipboard.writeText(p.text).catch(() => {});
+        strip.style.animation = 'tearoff 0.6s ease-out both';
+        strip.style.transformOrigin = '50% 0%';
+        strip.style.zIndex = '10';
+        strip.style.filter = 'drop-shadow(1px 2px 3px rgba(0,0,0,0.2))';
+        toast.textContent = 'Copied! Paste to your AI →';
+        toast.style.opacity = '1';
+        setTimeout(() => toast.style.opacity = '0', 1500);
+        setTimeout(() => {
+          strip.style.visibility = 'hidden';
+          const title = cardBody.querySelector('div');
+          title.innerHTML = 'Ripped! Now paste<br>to your AI';
+          cardBody.querySelectorAll('div')[1].textContent = 'Ask anything about me — your agent will know';
+        }, 600);
+      });
+      stripsEl.appendChild(strip);
+    }
+    stripsEl.querySelector('div').style.borderLeft = 'none';
+
+    document.body.appendChild(card);
+    const cardH = cardBaseW * 1.1 * atomScale; // approximate height
+    colTops[tearCol] += cardH + gridPad;
   }
 
   // 如果内容超过视口高度，扩展 canvas

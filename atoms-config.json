@@ -161,5 +161,9 @@
       "photo",
       "note"
     ]
+  },
+  "tearoff": {
+    "name": "Tear-off Card",
+    "description": "Business card with tear-off prompt strips for AI agents"
   }
 }

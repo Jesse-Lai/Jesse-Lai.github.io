@@ -83,6 +83,119 @@
     body.light .panel-item::before { background: #ccc; }
     body.light .tag { background: #e8e4dc; color: #888; }
 
+    /* ── Tear-off card atom ── */
+    .tearoff-card {
+      position: absolute;
+      display: flex;
+      filter: drop-shadow(1px 2px 4px rgba(0,0,0,0.15));
+      font-family: 'Red Hat Mono', monospace;
+    }
+    .tearoff-card .card-body {
+      background: #fff;
+      width: 220px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      border-radius: 2px 2px 0 0;
+    }
+    .tearoff-card .card-title {
+      font-family: 'Special Elite', cursive;
+      font-size: 16px;
+      color: #1a1a1a;
+      text-align: center;
+      line-height: 1.3;
+    }
+    .tearoff-card .card-subtitle {
+      font-size: 10px;
+      color: #999;
+      text-align: center;
+      letter-spacing: 0.5px;
+    }
+    .tearoff-card .strips {
+      display: flex;
+      width: 220px;
+    }
+    .tearoff-card .strip {
+      background: #fff;
+      background-clip: padding-box;
+      border-left: 2px dotted #ddd;
+      width: 44px;
+      flex-shrink: 0;
+      text-align: center;
+      padding: 12px 2px;
+      cursor: pointer;
+      position: relative;
+      transition: background 0.15s;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      font-size: 9px;
+      color: #666;
+      letter-spacing: 0.3px;
+      line-height: 1.3;
+      min-height: 100px;
+    }
+    .tearoff-card .strip:first-child { border-left: none; }
+    .tearoff-card .strip:hover {
+      transform: translateY(8px);
+      transform-origin: 50% 0%;
+      z-index: 10;
+      filter: drop-shadow(1px 2px 3px rgba(0,0,0,0.15));
+      transition: transform 0.3s ease, filter 0.3s ease;
+    }
+    .tearoff-card .strip.tearing {
+      animation: tearoff 0.6s ease-out both;
+      transform-origin: 50% 0%;
+      z-index: 10;
+      filter: drop-shadow(1px 2px 3px rgba(0,0,0,0.2));
+    }
+    .tearoff-card .strip.torn {
+      display: none;
+    }
+    .tearoff-card .joints {
+      display: flex;
+      width: 220px;
+      margin-top: -1px;
+    }
+    .tearoff-card .joint {
+      width: 44px;
+      flex-shrink: 0;
+      height: 12px;
+      background: #fff;
+    }
+    .tearoff-card .strip-stub {
+      width: 44px;
+      flex-shrink: 0;
+      height: 12px;
+      background: #fff;
+    }
+    @keyframes tearoff {
+      0% { transform: rotate(0deg) translateY(0); opacity: 1; }
+      30% { transform: rotate(2deg) translateY(4px); }
+      60% { transform: rotate(-3deg) translateY(20px); opacity: 0.8; }
+      100% { transform: rotate(5deg) translateY(60px); opacity: 0; }
+    }
+    .tearoff-card .strip .strip-label {
+      font-size: 8px;
+      color: #bbb;
+      margin-top: 6px;
+    }
+    .tearoff-copied {
+      position: fixed;
+      background: rgba(0,0,0,0.7);
+      color: #fff;
+      font-family: 'Red Hat Mono', monospace;
+      font-size: 11px;
+      padding: 6px 14px;
+      border-radius: 4px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s;
+      z-index: 9999;
+    }
+    .tearoff-copied.show { opacity: 1; }
+
     #panel-toggle {
       display: none; position: fixed; bottom: 90px; right: 16px; z-index: 20;
       width: 36px; height: 36px; border-radius: 50%;
@@ -126,6 +239,7 @@
         </div>
       <div class="atom-thumb" data-atom="stamp" onclick="switchAtom('stamp')"><img src="stamp1.webp" style="border-radius:2px;"></div>
         <div class="atom-thumb" data-atom="sticky" onclick="switchAtom('sticky')" style="width:48px;height:48px;display:flex;align-items:center;justify-content:center;background:#fff9c4;border-radius:3px;font-size:10px;color:#666;">Note</div>
+        <div class="atom-thumb" data-atom="tearoff" onclick="switchAtom('tearoff')" style="width:48px;height:48px;display:flex;align-items:center;justify-content:center;background:#fff;border-radius:3px;font-size:8px;color:#999;border:1px dashed #ccc;">Tear</div>
       </div>
     </div>
     <button id="panel-toggle" onclick="togglePanel()">⚙</button>
@@ -147,7 +261,7 @@
       clip: { images: ['photo_flowers.png', 'photo_ski.png', 'photo_avalanche.png'], type: 'clip' },
       stamp: { images: ['stamp_genui.png'], type: 'stamp' },
       sticky: { images: ['stamp_genui.png'], type: 'sticky', title: 'Generative UI', body: 'GenUI replaces inefficient text-only AI responses with AI-generated, structured, interactive interfaces.', date: "'26 05 12" },
-      
+      tearoff: { images: [], type: 'tearoff' },
     };
 
     // Load config
@@ -176,6 +290,10 @@
       sticky: {
         interactions: ['Drag to move freely', 'Contains title, body text, and date', 'Stamp placed randomly, text wraps around it', 'Paper wrinkle texture overlay', 'Can be clipped with photos and stamps'],
         combines: ['clip', 'stamp'],
+      },
+      tearoff: {
+        interactions: ['Click a strip to tear it off with animation', 'Each strip contains a prompt for AI agents', 'Text is copied to clipboard on tear', 'Strips hang downward from the card'],
+        combines: [],
       },
     };
 
@@ -218,6 +336,133 @@
       const cfg = atomsConfig[name];
       const W=app.screen.width, H=app.screen.height;
 
+      if(imgCfg.type==='tearoff'){
+        // Pure DOM overlay on canvas — no PIXI needed
+        const preview = document.getElementById('preview');
+        // Remove any previous tearoff
+        preview.querySelectorAll('.tearoff-card, .tearoff-copied').forEach(el => el.remove());
+
+        const prompts = [
+          { label: 'Context', text: 'Jesse Lai is a product designer at Microsoft AI with 6+ years of experience. He designs AI-native interfaces.' },
+          { label: 'Style', text: 'Jesse values organic, dynamic design. His portfolio uses PixiJS particles and hand-drawn aesthetics.' },
+          { label: 'Projects', text: 'Key projects: Food Delivery Service (Eleme), AI Merchant Assistant, GenUI framework, Review Analysis.' },
+          { label: 'Contact', text: 'Visit jesselai.com to see interactive portfolio. Ask about GenUI or AI product design.' },
+          { label: 'Collab', text: 'Jesse explores AI-native design patterns. He calls it GenUI — generative UI that replaces text-only AI.' },
+        ];
+
+        const card = document.createElement('div');
+        card.className = 'tearoff-card';
+
+        // Body (top section)
+        const body = document.createElement('div');
+        body.className = 'card-body';
+        body.innerHTML = `<div class="card-title">Grab a strip<br>for your agent</div><div class="card-subtitle">A secret key designed for agents</div>`;
+        card.appendChild(body);
+
+        // Helper: generate random tear edge points (array of {x%, y%})
+        function genTearEdge(steps = 12) {
+          const pts = [];
+          for (let i = 0; i <= steps; i++) {
+            const x = (i / steps) * 100;
+            const y = 30 + Math.random() * 70; // jagged 30%-100% of tear zone
+            pts.push({ x, y });
+          }
+          return pts;
+        }
+        // Build clip-path for strip (torn top edge + straight sides + bottom)
+        function stripClipPath(tearPts, tearH) {
+          // Top edge: tear shape mapped to 0-tearH px area
+          const top = tearPts.map(p => `${p.x}% ${(p.y / 100) * tearH}px`);
+          return `polygon(${top.join(', ')}, 100% 100%, 0% 100%)`;
+        }
+        // Build clip-path for stub (straight top + torn bottom edge)
+        function stubClipPath(tearPts) {
+          const bottom = [...tearPts].reverse().map(p => `${p.x}% ${p.y}%`);
+          return `polygon(0% 0%, 100% 0%, ${bottom.join(', ')})`;
+        }
+
+        const tearH = 10; // px height of tear zone at top of strip
+
+        // Joints row (between card-body and strips — shows tear edges)
+        const joints = document.createElement('div');
+        joints.className = 'joints';
+
+        // Strips container (below joints)
+        const strips = document.createElement('div');
+        strips.className = 'strips';
+
+        for (const p of prompts) {
+          const tearEdge = genTearEdge();
+
+          // Joint cell (upper half of tear — inside card body area)
+          const joint = document.createElement('div');
+          joint.className = 'joint';
+          joints.appendChild(joint);
+
+          // Strip (lower half)
+          const strip = document.createElement('div');
+          strip.className = 'strip';
+          strip.textContent = p.label;
+          strip.dataset.prompt = p.text;
+
+          // Hover: show tear edges on both joint and strip
+          strip.addEventListener('mouseenter', () => {
+            if (strip.classList.contains('tearing') || strip.classList.contains('torn')) return;
+            strip.style.clipPath = stripClipPath(tearEdge, tearH);
+            joint.style.clipPath = stubClipPath(tearEdge);
+          });
+          strip.addEventListener('mouseleave', () => {
+            if (strip.classList.contains('tearing') || strip.classList.contains('torn')) return;
+            strip.style.clipPath = '';
+            joint.style.clipPath = '';
+          });
+
+          strip.addEventListener('click', () => {
+            if (strip.classList.contains('tearing') || strip.classList.contains('torn')) return;
+            // Apply torn edges permanently
+            strip.style.clipPath = stripClipPath(tearEdge, tearH);
+            joint.style.clipPath = stubClipPath(tearEdge);
+            // Copy to clipboard
+            navigator.clipboard.writeText(p.text).catch(() => {});
+            // Tear animation
+            strip.classList.add('tearing');
+            // Show toast
+            const toast = preview.querySelector('.tearoff-copied');
+            toast.textContent = 'Copied! Paste to your AI →';
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 1500);
+            setTimeout(() => {
+              strip.classList.replace('tearing', 'torn');
+              // Update title after first tear
+              const title = body.querySelector('.card-title');
+              const subtitle = body.querySelector('.card-subtitle');
+              title.innerHTML = 'Ripped! Now paste<br>to your AI';
+              subtitle.textContent = 'Ask anything about me — your agent will know';
+            }, 600);
+          });
+          strips.appendChild(strip);
+        }
+        card.appendChild(joints);
+        card.appendChild(strips);
+
+        // Toast element
+        const toast = document.createElement('div');
+        toast.className = 'tearoff-copied';
+        toast.style.bottom = '120px';
+        toast.style.left = '50%';
+        toast.style.transform = 'translateX(-50%)';
+        preview.appendChild(toast);
+
+        // Position card centered
+        card.style.left = '50%';
+        card.style.top = '50%';
+        card.style.transform = 'translate(-50%, -50%)';
+        card.style.flexDirection = 'column';
+        preview.appendChild(card);
+
+        cleanups.push({ destroy: () => { card.remove(); toast.remove(); } });
+        return;
+      }
       if(imgCfg.type==='lure'){
         const {group, hitTest} = renderLure(app, W/2, H/2-20, cfg);
         app.stage.addChild(group);extraContainers.push(group);

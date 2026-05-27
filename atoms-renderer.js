@@ -3,6 +3,139 @@
 import { streamChat, chatSync, buildSystemPrompt } from './ai-client.js?v=166';
 
 
+// ─── Scribble loading animation (Canvas, for AI waiting state) ───
+export function createScribbleLoader(container) {
+  const W = 640, ROW_H = 32, ROWS = 5, PAD = 14;
+  const H = ROWS * ROW_H + PAD * 2;
+  const STROKE_COLOR = '#ccc';
+
+  const canvas = document.createElement('canvas');
+  canvas.width = W;
+  canvas.height = H;
+  canvas.style.cssText = 'display:block;max-width:640px;width:100%;margin:0 auto;';
+  container.appendChild(canvas);
+  const ctx = canvas.getContext('2d');
+
+  // Pre-generate path with organic loops
+  const points = [];
+  for (let row = 0; row < ROWS; row++) {
+    const baseY = PAD + row * ROW_H + 8;
+    const leftX = Math.random() * 5;
+    const rightX = W - 20 - Math.random() * 20;
+    const rowW = rightX - leftX;
+    const goRight = row % 2 === 0;
+
+    // 3-5 loops per row, with varied sizes
+    const loopCount = 10 + Math.floor(Math.random() * 5);
+    const loops = [];
+    for (let i = 0; i < loopCount; i++) {
+      const t = (i + 0.3 + Math.random() * 0.4) / loopCount;
+      const r = 8 + Math.random() * 10; // bigger loops (8-18px)
+      const squash = 0.5 + Math.random() * 0.6; // x-squash for teardrop shape
+      const tilt = (Math.random() - 0.5) * 0.4; // random tilt
+      loops.push({ t, r, squash, tilt });
+    }
+    loops.sort((a, b) => a.t - b.t);
+
+    let curX = goRight ? leftX : rightX;
+    const dir = goRight ? 1 : -1;
+
+    for (let li = 0; li < loops.length; li++) {
+      const lp = loops[li];
+      const loopCX = goRight ? leftX + lp.t * rowW : rightX - lp.t * rowW;
+
+      // --- Baseline segment: gentle curve to loop start ---
+      const segSteps = 30;
+      const drift = (Math.random() - 0.5) * 6; // baseline isn't perfectly straight
+      for (let s = 0; s <= segSteps; s++) {
+        const frac = s / segSteps;
+        const x = curX + (loopCX - curX) * frac;
+        // Organic curve: ease into loop with slight arc
+        const arch = Math.sin(frac * Math.PI) * drift;
+        points.push({ x: x , y: baseY + arch  });
+      }
+
+      // --- Loop: teardrop/organic circle ---
+      // The pen enters from the travel direction, swings down into a full loop
+      const loopSteps = 48; // more steps = smoother
+      const { r, squash, tilt } = lp;
+      for (let s = 0; s <= loopSteps; s++) {
+        const theta = (s / loopSteps) * Math.PI * 2;
+        // Teardrop: x-radius varies with theta (narrower at top, wider at bottom)
+        const teardropX = Math.sin(theta) * (r * squash) * (1 + 0.3 * Math.sin(theta));
+        const teardropY = r * (1 - Math.cos(theta));
+        // Apply tilt rotation
+        const rx = teardropX * Math.cos(tilt) - teardropY * Math.sin(tilt);
+        const ry = teardropX * Math.sin(tilt) + teardropY * Math.cos(tilt);
+        points.push({
+          x: loopCX + rx * dir ,
+          y: baseY + ry        });
+      }
+
+      curX = loopCX;
+    }
+
+    // Final baseline to row end
+    const endX = goRight ? rightX : leftX;
+    const finalSteps = 25;
+    const finalDrift = (Math.random() - 0.5) * 4;
+    for (let s = 0; s <= finalSteps; s++) {
+      const frac = s / finalSteps;
+      const x = curX + (endX - curX) * frac;
+      const arch = Math.sin(frac * Math.PI) * finalDrift;
+      points.push({ x: x , y: baseY + arch  });
+    }
+  }
+
+  const totalPoints = points.length;
+  let drawIdx = 0;
+  // Slow: ~2-3 points per frame (was 5)
+  const POINTS_PER_FRAME = 2;
+  let animId = null;
+  let destroyed = false;
+  let frameCount = 0;
+
+  ctx.strokeStyle = STROKE_COLOR;
+  ctx.lineWidth = 1.3;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  function loop() {
+    if (destroyed) return;
+    frameCount++;
+    // Draw every other frame for 50% slowdown
+    if (frameCount % 2 === 0) {
+      animId = requestAnimationFrame(loop);
+      return;
+    }
+
+    const end = Math.min(drawIdx + POINTS_PER_FRAME, totalPoints);
+    for (let i = drawIdx; i < end; i++) {
+      if (i === 0) continue;
+      ctx.beginPath();
+      ctx.moveTo(points[i - 1].x, points[i - 1].y);
+      ctx.lineTo(points[i].x, points[i].y);
+      ctx.stroke();
+    }
+    drawIdx = end;
+
+    if (drawIdx >= totalPoints) {
+      drawIdx = 0;
+      ctx.clearRect(0, 0, W, H);
+    }
+
+    animId = requestAnimationFrame(loop);
+  }
+
+  animId = requestAnimationFrame(loop);
+
+  return () => {
+    destroyed = true;
+    if (animId) cancelAnimationFrame(animId);
+    if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
+  };
+}
+
 // ─── Animation utility ───
 export function animateTo(obj, tx, ty, duration=300) {
   const sx=obj.x, sy=obj.y;
@@ -764,6 +897,7 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg, o
 
   // Store note-only height (without stamp overflow) for hover label positioning
   wrapper._noteH = noteH;
+  wrapper._colorScheme = colorScheme;
 
   // Random slight rotation (keep subtle — ±1.5°)
   wrapper.rotation = (Math.random() * 3 - 1.5) * Math.PI / 180;
@@ -1000,28 +1134,42 @@ export class PhotoSystem {
     };
     requestAnimationFrame(fadeIn);
 
-    // Rough underline for sticky notes
+    // Rough underline for sticky notes (per-line)
     if (photo._stickyTitle && typeof rough !== "undefined") {
       const { tx, ty, tw, th } = photo._stickyTitle;
-      const ulCanvas = document.createElement("canvas");
+      const s = photo.group.scale.x;
+      // Use actual title text dimensions from wrapper
+      const actualW = photo.group._titleW || tw;
+      const actualH = photo.group._titleH || th;
+      const lineHeight = 28 * 1.2; // fontSize 28 * line-height ~1.2
+      const numLines = Math.max(1, Math.round(actualH / lineHeight));
       const pad = 6;
-      ulCanvas.width = Math.ceil(tw) + pad * 2;
-      ulCanvas.height = 16;
+      const canvasH = numLines * 16 + (numLines - 1) * (lineHeight - 16);
+      const ulCanvas = document.createElement("canvas");
+      ulCanvas.width = Math.ceil(actualW) + pad * 2;
+      ulCanvas.height = Math.ceil(actualH) + 16;
       const rc = rough.canvas(ulCanvas);
-      rc.line(pad, 8, tw + pad, 8 + (Math.random() - 0.5) * 4, {
-        stroke: "rgba(0,0,0,0.5)", strokeWidth: 2.5, roughness: 1.5, bowing: 2
-      });
+      for (let i = 0; i < numLines; i++) {
+        const lineY = (i + 1) * lineHeight - 2;
+        const lineW = actualW; // full width for all lines
+        const ulColor = photo.group._colorScheme === 'cool' ? "rgba(0,80,255,0.7)" : "rgba(200,160,0,0.7)";
+        rc.line(pad, lineY, lineW + pad, lineY + (Math.random() - 0.5) * 3, {
+          stroke: ulColor, strokeWidth: 6, roughness: 1.5, bowing: 2
+        });
+      }
       const tex = PIXI.Texture.from(ulCanvas);
       const ulSprite = new PIXI.Sprite(tex);
       ulSprite.x = tx - pad;
-      ulSprite.y = ty + th + 2;
+      ulSprite.y = ty;
+      ulSprite.scale.set(1 / s);
       ulSprite.alpha = 0.8;
       photo.group.addChild(ulSprite);
       // Mask for left-to-right draw animation
       const ulMask = new PIXI.Graphics();
-      ulMask.rect(0, 0, 0, 16).fill(0xffffff);
+      ulMask.rect(0, 0, 0, ulCanvas.height).fill(0xffffff);
       ulMask.x = ulSprite.x;
       ulMask.y = ulSprite.y;
+      ulMask.scale.set(1 / s);
       photo.group.addChild(ulMask);
       ulSprite.mask = ulMask;
       photo._hoverUnderline = ulSprite;
@@ -1032,7 +1180,7 @@ export class PhotoSystem {
         if (!photo._hoverUnderline) return;
         progress += 0.05;
         const w = Math.min(totalW, totalW * progress);
-        ulMask.clear().rect(0, 0, w, 16).fill(0xffffff);
+        ulMask.clear().rect(0, 0, w, ulCanvas.height).fill(0xffffff);
         if (progress < 1) requestAnimationFrame(animUl);
       };
       requestAnimationFrame(animUl);
@@ -2241,6 +2389,10 @@ export class FocusOverlay {
       { role: 'user', content: `Write a summary article about "${data.title}". You MUST reference ALL of these items using [[atom:KEY]] — do not skip any: ${keyList}. Introduce each one briefly then show it.` },
     ];
 
+    // Show scribble loading animation
+    const removeLoader = createScribbleLoader(aiContent);
+    let loaderRemoved = false;
+
     // Stream AI response — reuse same parsing as _streamAIResponse (headings, [[atom:key]] refs)
     let currentEl = null;
     let buffer = '';
@@ -2284,6 +2436,7 @@ export class FocusOverlay {
     await streamChat(
       messages,
       (token) => {
+        if (!loaderRemoved) { removeLoader(); loaderRemoved = true; }
         buffer += token;
         while (buffer.length > 0) {
           const headingMatch = buffer.match(/^## (.+?)\n/);
@@ -2474,6 +2627,8 @@ export class FocusOverlay {
     ];
 
     this._chatAbort = new AbortController();
+    const removeLoader = createScribbleLoader(bubble);
+    let loaderRemoved = false;
     let currentEl = null;
     let buffer = '';
     let atomBuffer = []; // consecutive atom keys
@@ -2517,6 +2672,7 @@ export class FocusOverlay {
     await streamChat(
       messages,
       (token) => {
+        if (!loaderRemoved) { removeLoader(); loaderRemoved = true; }
         buffer += token;
         while (buffer.length > 0) {
           const headingMatch = buffer.match(/^## (.+?)\n/);
