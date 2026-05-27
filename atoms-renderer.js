@@ -1046,11 +1046,12 @@ export class PhotoSystem {
       const ul = photo._hoverUnderline;
       const ulMask = photo._hoverUnderlineMask;
       photo._hoverUnderlineMask = null;
+      ul.mask = null;
       if (ulMask) { if (ulMask.parent) ulMask.parent.removeChild(ulMask); ulMask.destroy(); }
       photo._hoverUnderline = null;
       const fadeUl = () => {
         ul.alpha -= 0.15;
-        if (ul.alpha <= 0) { ul.mask = null; if (ul.parent) ul.parent.removeChild(ul); ul.destroy(); return; }
+        if (ul.alpha <= 0) { if (ul.parent) ul.parent.removeChild(ul); ul.destroy(); return; }
         requestAnimationFrame(fadeUl);
       };
       requestAnimationFrame(fadeUl);
