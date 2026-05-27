@@ -883,35 +883,30 @@ import { WallArticle } from "./wall-article.js?v=151";
       const targetY = Math.max(0, snapTargets[idx].y - window.innerHeight * 0.3);
       window.scrollTo({ top: targetY, behavior: 'smooth' });
       activateItem(idx);
-      setTimeout(() => { isAnimating = false; }, 400);
+      setTimeout(() => { isAnimating = false; }, 500);
     };
 
     // Initial snap
     scrollToIdx(0);
 
-    // Touch gesture detection
+    // Block native scroll completely — JS controls position
+    document.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+    }, { passive: false });
+
+    // Detect swipe direction on touchend
     document.addEventListener('touchstart', (e) => {
       touchStartY = e.touches[0].clientY;
     }, { passive: true });
 
     document.addEventListener('touchend', (e) => {
       const dy = touchStartY - e.changedTouches[0].clientY;
-      const threshold = 30; // min swipe distance
+      const threshold = 30;
       if (Math.abs(dy) < threshold) return;
       if (dy > 0 && currentSnapIdx < snapTargets.length - 1) {
         scrollToIdx(currentSnapIdx + 1);
       } else if (dy < 0 && currentSnapIdx > 0) {
         scrollToIdx(currentSnapIdx - 1);
-      }
-    }, { passive: true });
-
-    // Prevent free scroll — override with snap position
-    window.addEventListener('scroll', () => {
-      if (!isAnimating) {
-        const targetY = Math.max(0, snapTargets[currentSnapIdx].y - window.innerHeight * 0.3);
-        if (Math.abs(window.scrollY - targetY) > 100) {
-          window.scrollTo({ top: targetY, behavior: 'smooth' });
-        }
       }
     }, { passive: true });
   }
