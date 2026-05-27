@@ -222,11 +222,11 @@ import { WallArticle } from "./wall-article.js?v=151";
 
   // ─── Tear-off card (DOM overlay) ───
   const tearoffPrompts = [
-    { label: 'Agent', text: 'I'm interested in Jesse Lai. Access his info at: https://crimson-waterfall-c16b.laijianxun123.workers.dev/api/schema\n\nRead his background and projects, then give me a brief intro and ask what I'd like to know more about.' },
-    { label: 'Agent', text: 'I'm interested in Jesse Lai. Access his info at: https://crimson-waterfall-c16b.laijianxun123.workers.dev/api/schema\n\nRead his background and projects, then give me a brief intro and ask what I'd like to know more about.' },
-    { label: 'Agent', text: 'I'm interested in Jesse Lai. Access his info at: https://crimson-waterfall-c16b.laijianxun123.workers.dev/api/schema\n\nRead his background and projects, then give me a brief intro and ask what I'd like to know more about.' },
-    { label: 'Agent', text: 'I'm interested in Jesse Lai. Access his info at: https://crimson-waterfall-c16b.laijianxun123.workers.dev/api/schema\n\nRead his background and projects, then give me a brief intro and ask what I'd like to know more about.' },
-    { label: 'Agent', text: 'I'm interested in Jesse Lai. Access his info at: https://crimson-waterfall-c16b.laijianxun123.workers.dev/api/schema\n\nRead his background and projects, then give me a brief intro and ask what I'd like to know more about.' },
+    { label: "Agent", text: "I'm interested in Jesse Lai. Access his info at: https://crimson-waterfall-c16b.laijianxun123.workers.dev/api/schema\n\nRead his background and projects, then give me a brief intro and ask what I'd like to know more about." },
+    { label: "Agent", text: "I'm interested in Jesse Lai. Access his info at: https://crimson-waterfall-c16b.laijianxun123.workers.dev/api/schema\n\nRead his background and projects, then give me a brief intro and ask what I'd like to know more about." },
+    { label: "Agent", text: "I'm interested in Jesse Lai. Access his info at: https://crimson-waterfall-c16b.laijianxun123.workers.dev/api/schema\n\nRead his background and projects, then give me a brief intro and ask what I'd like to know more about." },
+    { label: "Agent", text: "I'm interested in Jesse Lai. Access his info at: https://crimson-waterfall-c16b.laijianxun123.workers.dev/api/schema\n\nRead his background and projects, then give me a brief intro and ask what I'd like to know more about." },
+    { label: "Agent", text: "I'm interested in Jesse Lai. Access his info at: https://crimson-waterfall-c16b.laijianxun123.workers.dev/api/schema\n\nRead his background and projects, then give me a brief intro and ask what I'd like to know more about." },
   ];
   {
     const tearCol = colTops.indexOf(Math.min(...colTops));
