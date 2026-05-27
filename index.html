@@ -445,12 +445,13 @@
       border-radius: 999px;
       color: rgba(0,0,0,0.3);
       cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
+      display: none; align-items: center; justify-content: center;
       transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 2.2);
       padding: 0;
       overflow: hidden;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06), 0 0 40px rgba(0, 0, 0, 0.03);
     }
+    #shuffle-btn.visible { display: flex; }
 
     #organize-btn .glass-effect, #shuffle-btn .glass-effect {
       position: absolute; inset: 0; z-index: 0;

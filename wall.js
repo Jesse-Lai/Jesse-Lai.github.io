@@ -660,9 +660,11 @@ import { WallArticle } from "./wall-article.js?v=151";
   // Wire buttons
   document.getElementById('organize-btn')?.addEventListener('click', () => {
     organizeByCategory();
+    document.getElementById('shuffle-btn')?.classList.add('visible');
   });
   document.getElementById('shuffle-btn')?.addEventListener('click', () => {
     shuffleToInitial();
+    document.getElementById('shuffle-btn')?.classList.remove('visible');
   });
 
   // ─── Ticker ───

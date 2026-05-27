@@ -1257,7 +1257,7 @@ export class PhotoSystem {
       if (drag) {
         photo.group.x = cmx+offX;
         photo.group.y = cmy+offY;
-        if (Math.abs(cmx-downX)>5 || Math.abs(cmy-downY)>5) moved = true;
+        if (Math.abs(cmx-downX)>5 || Math.abs(cmy-downY)>5) { moved = true; document.getElementById('shuffle-btn')?.classList.add('visible'); }
       }
       // Hover scale + cursor
       const hovering = !drag && hitTest(cmx, cmy) && !photo.clipped;
