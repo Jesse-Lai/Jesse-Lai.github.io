@@ -3,6 +3,33 @@
 import { streamChat, chatSync, buildSystemPrompt } from './ai-client.js?v=166';
 
 
+// ─── Paper texture generation (matches SVG #paper-texture filter) ───
+function generatePaperTexture(w, h) {
+  const svgStr = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}">
+    <filter id="_pt">
+      <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="5" result="noise"/>
+      <feDiffuseLighting in="noise" lighting-color="#fff" surfaceScale="1">
+        <feDistantLight azimuth="45" elevation="60"/>
+      </feDiffuseLighting>
+    </filter>
+    <rect width="100%" height="100%" filter="url(#_pt)"/>
+  </svg>`;
+  const blob = new Blob([svgStr], {type: 'image/svg+xml;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      const c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      c.getContext('2d').drawImage(img, 0, 0);
+      URL.revokeObjectURL(url);
+      resolve(c);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); resolve(null); };
+    img.src = url;
+  });
+}
+
 // ─── Scribble loading animation (Canvas, for AI waiting state) ───
 export function createScribbleLoader(container) {
   const W = 640, ROW_H = 32, ROWS = 5, PAD = 14;
@@ -833,41 +860,14 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg, o
     wrapper.addChild(dateText);
   }
 
-  // Wrinkle/crease texture overlay
-  const wrinkleCanvas = document.createElement('canvas');
-  wrinkleCanvas.width = noteW;
-  wrinkleCanvas.height = 400; // will be cropped by noteH later
-  const wctx = wrinkleCanvas.getContext('2d');
-  // Generate subtle noise/crease pattern
-  const imgData2 = wctx.createImageData(noteW, 400);
-  for (let i = 0; i < imgData2.data.length; i += 4) {
-    const x = (i/4) % noteW;
-    const y = Math.floor((i/4) / noteW);
-    // Subtle diagonal creases
-    // Broad, gentle creases (low frequency, large areas)
-    const crease1 = Math.sin(x * 0.012 + y * 0.008) * Math.sin(x * 0.006 - y * 0.01);
-    const crease2 = Math.sin(x * 0.02 - y * 0.015) * 0.5;
-    const noise = (Math.random() - 0.5) * 4;
-    const val = 128 + crease1 * 25 + crease2 * 15 + noise;
-    imgData2.data[i] = val;
-    imgData2.data[i+1] = val;
-    imgData2.data[i+2] = val;
-    imgData2.data[i+3] = 30; // subtle
-  }
-  wctx.putImageData(imgData2, 0, 0);
-  const wrinkleTex = PIXI.Texture.from(wrinkleCanvas);
-  const wrinkleSprite = new PIXI.Sprite(wrinkleTex);
-  wrinkleSprite.width = noteW;
-  wrinkleSprite.blendMode = 'multiply';
-  wrapper.addChild(wrinkleSprite);
-  // Move stamp above wrinkle so it is not affected by texture
+  // Move stamp to top so it renders above other content
   if (stampContainer) { wrapper.removeChild(stampContainer); wrapper.addChild(stampContainer); }
 
   // Calculate actual content height from known content positions
   let contentBottom = titleBottom; // at least title height
   // Check body text lines
   for (const child of wrapper.children) {
-    if (child === bg || child === shadow || child === wrinkleSprite) continue;
+    if (child === bg || child === shadow) continue;
     if (child === stampContainer) {
       // Use actual stamp position + height (not rotated bounds)
       const sb = stampContainer.y + stampH;
@@ -890,8 +890,6 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg, o
   shadow.roundRect(3, 3, noteW, noteH, 3);
   shadow.fill({color: 0x000000, alpha: 0.12});
 
-  // Resize wrinkle to match note height
-  wrinkleSprite.height = noteH;
 
   // Stamp is above wrinkle layer - inside is bright, outside against dark bg looks natural
 

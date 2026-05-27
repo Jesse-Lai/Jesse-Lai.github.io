@@ -252,7 +252,7 @@ import { WallArticle } from "./wall-article.js?v=151";
 
     const card = document.createElement('div');
     const cardBaseW = 280;
-    card.style.cssText = `position:absolute;z-index:2;pointer-events:auto;font-family:Red Hat Mono,monospace;filter:drop-shadow(3px 3px 0px rgba(0,0,0,0.12));display:flex;flex-direction:column;cursor:grab;`;
+    card.style.cssText = `position:absolute;z-index:0;pointer-events:auto;font-family:Red Hat Mono,monospace;filter:drop-shadow(3px 3px 0px rgba(0,0,0,0.12));display:flex;flex-direction:column;cursor:grab;`;
     card.style.width = cardBaseW + 'px';
     card.style.transform = `scale(${atomScale})`;
     card.style.transformOrigin = 'top left';
@@ -260,12 +260,16 @@ import { WallArticle } from "./wall-article.js?v=151";
     card.style.top = `${tearY}px`;
 
     const cardBody = document.createElement('div');
-    cardBody.style.cssText = 'background:#fff;padding:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;border-radius:2px 2px 0 0;min-height:150px;position:relative;';
+    cardBody.style.cssText = 'padding:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;border-radius:2px 2px 0 0;min-height:150px;position:relative;overflow:hidden;';
+    // Paper texture background layer (Chokcoco technique)
+    const paperTex = document.createElement('div');
+    paperTex.style.cssText = 'position:absolute;inset:0;filter:url(#paper-texture);';
+    cardBody.appendChild(paperTex);
     const titleEl = document.createElement('div');
-    titleEl.style.cssText = 'font-family:Special Elite,cursive;font-size:16px;color:#1a1a1a;text-align:center;line-height:1.3;display:inline-block;';
+    titleEl.style.cssText = 'font-family:Special Elite,cursive;font-size:28px;color:#1a1a1a;text-align:center;line-height:1.3;display:inline-block;position:relative;';
     titleEl.innerHTML = 'Grab a strip<br>for your agent';
     const subtitleEl = document.createElement('div');
-    subtitleEl.style.cssText = 'font-size:10px;color:#999;text-align:center;letter-spacing:0.5px;';
+    subtitleEl.style.cssText = 'font-family:Special Elite,cursive;font-size:17px;color:#999;text-align:center;letter-spacing:0.5px;position:relative;';
     subtitleEl.textContent = 'A secret key designed for agents';
     cardBody.appendChild(titleEl);
     cardBody.appendChild(subtitleEl);
@@ -302,9 +306,62 @@ import { WallArticle } from "./wall-article.js?v=151";
       path.style.animation = 'rough-draw 0.8s ease forwards';
       titleEl.appendChild(svg);
       circleSvg = svg;
+
+      // Robot head doodle in empty space
+      const botSvg = document.createElementNS(svgNS, 'svg');
+      botSvg.setAttribute('width', '60'); botSvg.setAttribute('height', '60');
+      botSvg.setAttribute('viewBox', '0 0 60 60');
+      botSvg.style.cssText = 'position:absolute;top:8px;right:12px;pointer-events:none;overflow:visible;';
+      // Generate jittery hand-drawn path helper
+      const jit = () => (Math.random() - 0.5) * 2.5;
+      const jLine = (x1,y1,x2,y2) => {
+        const mx = (x1+x2)/2 + jit()*2, my = (y1+y2)/2 + jit()*2;
+        return `M${x1+jit()},${y1+jit()} Q${mx},${my} ${x2+jit()},${y2+jit()}`;
+      };
+      const jCircle = (cx,cy,r) => {
+        const pts = [];
+        for (let a = 0; a <= Math.PI*2+0.4; a += 0.3) {
+          pts.push(`${cx+r*Math.cos(a)+jit()},${cy+r*Math.sin(a)+jit()}`);
+        }
+        return `M${pts[0]} C${pts.slice(1).join(' ')}`;
+      };
+      const jRect = (x,y,w2,h2) => {
+        return [jLine(x,y,x+w2,y), jLine(x+w2,y,x+w2,y+h2), jLine(x+w2,y+h2,x,y+h2), jLine(x,y+h2,x,y)].join(' ');
+      };
+      const botParts = [
+        jRect(14, 15, 32, 27),                      // head
+        jLine(30, 15, 30, 8),                        // antenna stick
+        jCircle(30, 6, 3),                           // antenna ball
+        jCircle(23, 25, 4),                          // left eye
+        jCircle(37, 25, 4),                          // right eye
+        [jLine(22,35,26,37), jLine(26,37,30,35), jLine(30,35,34,37), jLine(34,37,38,35)].join(' '), // mouth
+        [jLine(10,23,14,23), jLine(46,23,50,23)].join(' '), // ears top
+        [jLine(10,31,14,31), jLine(46,31,50,31)].join(' '), // ears bottom
+      ];
+      let botDelay = 0.3;
+      for (const d of botParts) {
+        const p = document.createElementNS(svgNS, 'path');
+        p.setAttribute('d', d);
+        p.setAttribute('fill', 'none');
+        p.setAttribute('stroke', 'rgba(0,0,0,0.25)');
+        p.setAttribute('stroke-width', '1.5');
+        p.setAttribute('stroke-linecap', 'round');
+        p.setAttribute('stroke-linejoin', 'round');
+        botSvg.appendChild(p);
+        const pLen = p.getTotalLength();
+        p.style.strokeDasharray = pLen;
+        p.style.strokeDashoffset = pLen;
+        p.style.animation = `rough-draw 0.4s ease ${botDelay}s forwards`;
+        botDelay += 0.1;
+      }
+      cardBody.appendChild(botSvg);
+      circleSvg._botSvg = botSvg;
     });
     cardBody.addEventListener('mouseleave', () => {
-      if (circleSvg) { circleSvg.remove(); circleSvg = null; }
+      if (circleSvg) {
+        if (circleSvg._botSvg) circleSvg._botSvg.remove();
+        circleSvg.remove(); circleSvg = null;
+      }
     });
 
     const jointsEl = document.createElement('div');
@@ -326,7 +383,7 @@ import { WallArticle } from "./wall-article.js?v=151";
       const rect = card.getBoundingClientRect();
       dragOff = { x: e.clientX - rect.left, y: e.clientY - rect.top };
       card.style.cursor = 'grabbing';
-      card.style.zIndex = '100';
+      card.style.zIndex = '0';
     });
     window.addEventListener('mousemove', e => {
       if (!dragOff) return;
@@ -338,59 +395,117 @@ import { WallArticle } from "./wall-article.js?v=151";
       if (!dragOff) return;
       dragOff = null;
       card.style.cursor = 'grab';
-      card.style.zIndex = '2';
+      card.style.zIndex = '0';
     });
 
-    // SVG doodle paths (hand-drawn style via slight jitter)
-    const doodlePaths = [
+    // Jitter helpers for hand-drawn doodles on strips
+    const jt = () => (Math.random() - 0.5) * 2;
+    const jLn = (x1,y1,x2,y2) => {
+      const mx = (x1+x2)/2 + jt()*2, my = (y1+y2)/2 + jt()*2;
+      return `M${x1+jt()},${y1+jt()} Q${mx},${my} ${x2+jt()},${y2+jt()}`;
+    };
+    const jCir = (cx,cy,r) => {
+      const pts = [];
+      for (let a = 0; a <= Math.PI*2+0.4; a += 0.35) pts.push(`${cx+r*Math.cos(a)+jt()},${cy+r*Math.sin(a)+jt()}`);
+      return `M${pts[0]} C${pts.slice(1).join(' ')}`;
+    };
+
+    // Doodle generators: each returns array of path strings (multi-part)
+    const doodleGens = [
       // Cat
-      'M20 10 C14 10 8 15 8 21 C8 27 14 32 20 32 C26 32 32 27 32 21 C32 15 26 10 20 10Z M12 12 L9 5 L16 10 M28 12 L31 5 L24 10 M16 19 L16 20 M24 19 L24 20 M20 23 L18 25 M20 23 L22 25',
+      () => [
+        jCir(20, 20, 10),                          // head
+        jLn(13,12, 10,4), jLn(10,4, 16,10),       // left ear
+        jLn(27,12, 30,4), jLn(30,4, 24,10),       // right ear
+        jCir(16, 19, 2), jCir(24, 19, 2),          // eyes
+        jLn(20,23, 18,26), jLn(20,23, 22,26),     // nose/mouth
+      ],
       // Star
-      'M20 6 L23 15 L33 15 L25 21 L28 31 L20 25 L12 31 L15 21 L7 15 L17 15 Z',
+      () => {
+        const cx=20,cy=20,r=12,ri=5,pts=[];
+        for (let i=0;i<5;i++) {
+          const a1=(i*72-90)*Math.PI/180, a2=(i*72+36-90)*Math.PI/180;
+          pts.push([cx+r*Math.cos(a1)+jt(),cy+r*Math.sin(a1)+jt()]);
+          pts.push([cx+ri*Math.cos(a2)+jt(),cy+ri*Math.sin(a2)+jt()]);
+        }
+        const segs = [];
+        for (let i=0;i<pts.length;i++) {
+          const n = pts[(i+1)%pts.length];
+          segs.push(jLn(pts[i][0],pts[i][1],n[0],n[1]));
+        }
+        return segs;
+      },
       // Heart
-      'M20 32 C20 32 6 23 6 14 C6 8 11 5 15 8 C18 10 20 14 20 14 C20 14 22 10 25 8 C29 5 34 8 34 14 C34 23 20 32 20 32Z',
+      () => [
+        `M${20+jt()},${32+jt()} C${20+jt()},${32+jt()} ${6+jt()},${23+jt()} ${6+jt()},${14+jt()} C${6+jt()},${8+jt()} ${11+jt()},${5+jt()} ${15+jt()},${8+jt()} C${18+jt()},${10+jt()} ${20+jt()},${14+jt()} ${20+jt()},${14+jt()}`,
+        `M${20+jt()},${14+jt()} C${20+jt()},${14+jt()} ${22+jt()},${10+jt()} ${25+jt()},${8+jt()} C${29+jt()},${5+jt()} ${34+jt()},${8+jt()} ${34+jt()},${14+jt()} C${34+jt()},${23+jt()} ${20+jt()},${32+jt()} ${20+jt()},${32+jt()}`,
+      ],
       // Music note
-      'M15 8 L15 28 C15 31 11 33 9 31 C7 29 9 26 12 26 C13 26 14 27 15 28 M15 8 L29 5 L29 25 C29 28 25 30 23 28 C21 26 23 23 26 23 C27 23 28 24 29 25',
+      () => [
+        jLn(15,8, 15,28),                          // stem left
+        jCir(11, 29, 4),                            // note head left
+        jLn(15,8, 29,5),                            // bar
+        jLn(29,5, 29,25),                           // stem right
+        jCir(25, 26, 4),                            // note head right
+      ],
       // Fish
-      'M7 20 C7 14 13 10 20 10 C27 10 33 14 33 20 C33 26 27 30 20 30 C13 30 7 26 7 20Z M33 20 L39 14 L39 26 Z M14 18 C14 17 15 17 15 18 C15 19 14 19 14 18',
+      () => [
+        jCir(18, 20, 11),                           // body
+        jLn(29,20, 36,13), jLn(29,20, 36,27), jLn(36,13, 36,27), // tail
+        jCir(13, 18, 2),                            // eye
+      ],
     ];
 
-    // Create SVG doodle with stroke-dashoffset draw animation
-    function createDoodleSVG(pathData) {
+    // Create SVG doodle with per-part stroke draw animation
+    function createDoodleSVG(genFn) {
       const svgNS = 'http://www.w3.org/2000/svg';
       const svg = document.createElementNS(svgNS, 'svg');
       svg.setAttribute('width', '40'); svg.setAttribute('height', '40');
       svg.setAttribute('viewBox', '0 0 40 40');
       svg.style.cssText = 'position:absolute;bottom:8px;left:50%;transform:translateX(-50%);writing-mode:horizontal-tb;pointer-events:none;overflow:visible;';
-      const path = document.createElementNS(svgNS, 'path');
-      path.setAttribute('d', pathData);
-      path.setAttribute('fill', 'none');
-      path.setAttribute('stroke', '#999');
-      path.setAttribute('stroke-width', '1.5');
-      path.setAttribute('stroke-linecap', 'round');
-      path.setAttribute('stroke-linejoin', 'round');
-      svg.appendChild(path);
-      const len = path.getTotalLength();
-      path.style.strokeDasharray = len;
-      path.style.strokeDashoffset = len;
-      path.style.animation = 'rough-draw 0.6s ease forwards';
+      const parts = genFn();
+      let delay = 0;
+      for (const d of parts) {
+        const p = document.createElementNS(svgNS, 'path');
+        p.setAttribute('d', d);
+        p.setAttribute('fill', 'none');
+        p.setAttribute('stroke', 'rgba(0,0,0,0.3)');
+        p.setAttribute('stroke-width', '1.5');
+        p.setAttribute('stroke-linecap', 'round');
+        p.setAttribute('stroke-linejoin', 'round');
+        svg.appendChild(p);
+        const len = p.getTotalLength();
+        p.style.strokeDasharray = len;
+        p.style.strokeDashoffset = len;
+        p.style.animation = `rough-draw 0.3s ease ${delay}s forwards`;
+        delay += 0.06;
+      }
       return svg;
     }
 
     let doodleIdx = 0;
     for (const p of tearoffPrompts) {
       const tearEdge = genTearEdge();
-      const myDoodlePath = doodlePaths[doodleIdx % doodlePaths.length];
+      const myDoodleGen = doodleGens[doodleIdx % doodleGens.length];
       doodleIdx++;
 
       const joint = document.createElement('div');
       const stripW = cardBaseW / tearoffPrompts.length;
-      joint.style.cssText = `width:${stripW}px;flex-shrink:0;height:12px;background:#fff;`;
+      joint.style.cssText = `width:${stripW}px;flex-shrink:0;height:12px;position:relative;overflow:hidden;`;
+      const jointTex = document.createElement('div');
+      jointTex.style.cssText = 'position:absolute;inset:0;filter:url(#paper-texture);';
+      joint.appendChild(jointTex);
       jointsEl.appendChild(joint);
 
       const strip = document.createElement('div');
-      strip.style.cssText = `background:#fff;background-clip:padding-box;border-left:2px dotted #ddd;width:${stripW}px;flex-shrink:0;box-sizing:border-box;text-align:center;padding:12px 2px;cursor:pointer;position:relative;writing-mode:vertical-rl;text-orientation:mixed;font-size:9px;color:#666;letter-spacing:0.3px;line-height:1.3;min-height:100px;transition:transform 0.3s ease,filter 0.3s ease;overflow:hidden;`;
-      strip.textContent = p.label;
+      strip.style.cssText = `background-clip:padding-box;border-left:2px dotted #ddd;width:${stripW}px;flex-shrink:0;box-sizing:border-box;text-align:center;padding:12px 2px;cursor:pointer;position:relative;writing-mode:vertical-rl;text-orientation:mixed;font-size:9px;color:#666;letter-spacing:0.3px;line-height:1.3;min-height:100px;transition:transform 0.3s ease,filter 0.3s ease;overflow:hidden;`;
+      const stripTex = document.createElement('div');
+      stripTex.style.cssText = 'position:absolute;inset:0;filter:url(#paper-texture);';
+      strip.appendChild(stripTex);
+      const stripLabel = document.createElement('span');
+      stripLabel.style.cssText = 'position:relative;';
+      stripLabel.textContent = p.label;
+      strip.appendChild(stripLabel);
 
       let doodleSvg = null;
       strip.addEventListener('mouseenter', () => {
@@ -402,7 +517,7 @@ import { WallArticle } from "./wall-article.js?v=151";
         strip.style.zIndex = '10';
         // Draw rough doodle with stroke animation
         if (!doodleSvg) {
-          doodleSvg = createDoodleSVG(myDoodlePath);
+          doodleSvg = createDoodleSVG(myDoodleGen);
           strip.appendChild(doodleSvg);
         }
       });
