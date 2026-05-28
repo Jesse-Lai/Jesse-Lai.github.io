@@ -120,11 +120,19 @@
     #atoms-btn {
       position: fixed; top: 20px; right: 20px; z-index: 9999;
       padding: 8px 0; background: none; border: none;
-      color: #666; cursor: pointer; font-size: 13px;
+      color: rgba(0,0,0,0.4); cursor: pointer; font-size: 13px;
       font-family: 'Red Hat Mono', monospace; letter-spacing: 1px;
       transition: color 0.2s; user-select: none;
     }
-    #atoms-btn:hover { color: #fff; }
+    #atoms-btn:hover { color: rgba(0,0,0,0.7); }
+    #bg-toggle {
+      position: fixed; top: 20px; right: 80px; z-index: 9999;
+      background: none; border: none;
+      color: rgba(0,0,0,0.4); cursor: pointer; font-size: 13px; padding: 8px 0;
+      font-family: 'Red Hat Mono', monospace; letter-spacing: 1px;
+      transition: color 0.2s; user-select: none;
+    }
+    #bg-toggle:hover { color: rgba(0,0,0,0.7); }
 
     /* Focus overlay */
     canvas.focus-active {
@@ -558,6 +566,7 @@
       if (windFilter) windFilter.remove();
     }
   </script>
+  <button id="bg-toggle" onclick="window._toggleBg && window._toggleBg()">Wood</button>
   <div id="atoms-btn" style="display:none" onclick="location.href='atoms.html'">Atoms</div>
   <script>if(location.hostname==='localhost'||location.hostname==='127.0.0.1'||location.search.includes('dev'))document.getElementById('atoms-btn').style.display='';</script>
   <div id="focus-overlay">

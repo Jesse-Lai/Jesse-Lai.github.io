@@ -228,7 +228,7 @@ import { WallArticle } from "./wall-article.js?v=151";
     r.initY = r.group.y;
   }
 
-  const totalH = Math.max(...colTops) + gridPad + 80; // +80 for chat bar
+  const totalH = Math.max(...colTops) + gridPad + 160; // extra padding for chat bar + tearoff strips
   const contentH = Math.max(totalH, H); // Save for resize handler
   app.renderer.resize(W, Math.max(totalH, H));
   app.canvas.style.height = Math.max(totalH, H) + 'px';
@@ -236,6 +236,32 @@ import { WallArticle } from "./wall-article.js?v=151";
     document.body.style.overflowY = 'auto';
     app.canvas.style.touchAction = 'pan-y';
   }
+
+  // ─── Wood texture overlay + background mode toggle ───
+  let bgMode = 'wood'; // 'wood' | 'gradient'
+  let woodSprite = null;
+  {
+    const bgImg = new Image();
+    bgImg.src = 'background.webp';
+    bgImg.onload = () => {
+      const bgTex = PIXI.Texture.from(bgImg);
+      woodSprite = new PIXI.TilingSprite({ texture: bgTex, width: W, height: Math.max(totalH, H) });
+      woodSprite.alpha = 1;
+      app.stage.addChildAt(woodSprite, 0);
+    };
+  }
+  const btnEl = document.getElementById('bg-toggle');
+  window._toggleBg = () => {
+    if (bgMode === 'wood') {
+      bgMode = 'gradient';
+      if (woodSprite) woodSprite.visible = false;
+      if (btnEl) btnEl.textContent = 'Gradient';
+    } else {
+      bgMode = 'wood';
+      if (woodSprite) woodSprite.visible = true;
+      if (btnEl) btnEl.textContent = 'Wood';
+    }
+  };
 
   // 注册所有有文章的 wall items，供 chat 推荐使用
   for (const { wallItem, focusableItem } of renderedItems) {
@@ -481,8 +507,8 @@ import { WallArticle } from "./wall-article.js?v=151";
       const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
       const p = Math.min(1, Math.max(0, scrollY / maxScroll));
 
-      // Background color
-      app.renderer.background.color = lerpColorStops(p, bgStops);
+      // Background color (only in gradient mode)
+      if (bgMode === 'gradient') app.renderer.background.color = lerpColorStops(p, bgStops);
 
       // Perspective: opacity + angle shift with scroll
       if (perspective) {
@@ -507,9 +533,9 @@ import { WallArticle } from "./wall-article.js?v=151";
 
   // ─── Mobile: TikTok-style snap scroll ───
   if ('ontouchstart' in window) {
-    const snapTargets = renderedItems.map(r => ({
-      y: r.focusableItem.group.y - 40,
-      item: r.focusableItem,
+    const snapTargets = rendered.map(r => ({
+      y: r.group.y - 40,
+      item: r.focusableItem,  // may be null for tearoff
     }));
     let currentSnapIdx = 0;
     let touchStartY = 0;
@@ -519,13 +545,13 @@ import { WallArticle } from "./wall-article.js?v=151";
       // Deactivate previous
       if (currentSnapIdx >= 0 && currentSnapIdx < snapTargets.length) {
         const prev = snapTargets[currentSnapIdx].item;
-        photoSystem._hideHoverLabel(prev);
-        photoSystem._stopPhotoVideo(prev);
+        if (prev) { photoSystem._hideHoverLabel(prev); photoSystem._stopPhotoVideo(prev); }
       }
       currentSnapIdx = idx;
       if (idx < 0 || idx >= snapTargets.length) return;
       // Activate current
       const cur = snapTargets[idx].item;
+      if (!cur) return; // tearoff has no focusable item
       photoSystem._showHoverLabel(cur);
       if (cur.videoSrc && cur.sprite) {
         const entry = getOrCreateVideo(cur.videoSrc);
