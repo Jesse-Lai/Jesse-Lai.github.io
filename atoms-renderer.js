@@ -1776,76 +1776,10 @@ export class PhotoSystem {
     };
     requestAnimationFrame(fadeIn);
 
-    // Rough underline for sticky notes (per-line)
-    if (photo._stickyTitle && typeof rough !== "undefined") {
-      const { tx, ty, tw, th } = photo._stickyTitle;
-      const s = photo.group.scale.x;
-      // Use actual title text dimensions from wrapper
-      const actualW = photo.group._titleW || tw;
-      const actualH = photo.group._titleH || th;
-      const lineHeight = 28 * 1.2; // fontSize 28 * line-height ~1.2
-      const numLines = Math.max(1, Math.round(actualH / lineHeight));
-      const pad = 6;
-      const canvasH = numLines * 16 + (numLines - 1) * (lineHeight - 16);
-      const ulCanvas = document.createElement("canvas");
-      ulCanvas.width = Math.ceil(actualW) + pad * 2;
-      ulCanvas.height = Math.ceil(actualH) + 16;
-      const rc = rough.canvas(ulCanvas);
-      for (let i = 0; i < numLines; i++) {
-        const lineY = (i + 1) * lineHeight - 2;
-        const lineW = actualW; // full width for all lines
-        const ulColor = photo.group._colorScheme === 'cool' ? "rgba(0,80,255,0.7)" : "rgba(200,160,0,0.7)";
-        rc.line(pad, lineY, lineW + pad, lineY + (Math.random() - 0.5) * 3, {
-          stroke: ulColor, strokeWidth: 6, roughness: 1.5, bowing: 2
-        });
-      }
-      const tex = PIXI.Texture.from(ulCanvas);
-      const ulSprite = new PIXI.Sprite(tex);
-      ulSprite.x = tx - pad;
-      ulSprite.y = ty;
-      ulSprite.scale.set(1 / s);
-      ulSprite.alpha = 0.8;
-      photo.group.addChild(ulSprite);
-      // Mask for left-to-right draw animation
-      const ulMask = new PIXI.Graphics();
-      ulMask.rect(0, 0, 0, ulCanvas.height).fill(0xffffff);
-      ulMask.x = ulSprite.x;
-      ulMask.y = ulSprite.y;
-      ulMask.scale.set(1 / s);
-      photo.group.addChild(ulMask);
-      ulSprite.mask = ulMask;
-      photo._hoverUnderline = ulSprite;
-      photo._hoverUnderlineMask = ulMask;
-      const totalW = ulCanvas.width;
-      let progress = 0;
-      const animUl = () => {
-        if (!photo._hoverUnderline) return;
-        progress += 0.05;
-        const w = Math.min(totalW, totalW * progress);
-        ulMask.clear().rect(0, 0, w, ulCanvas.height).fill(0xffffff);
-        if (progress < 1) requestAnimationFrame(animUl);
-      };
-      requestAnimationFrame(animUl);
-    }
   }
 
   _hideHoverLabel(photo) {
     if (!photo._hoverLabel) return;
-    // Remove underline
-    if (photo._hoverUnderline) {
-      const ul = photo._hoverUnderline;
-      const ulMask = photo._hoverUnderlineMask;
-      photo._hoverUnderlineMask = null;
-      ul.mask = null;
-      if (ulMask) { if (ulMask.parent) ulMask.parent.removeChild(ulMask); ulMask.destroy(); }
-      photo._hoverUnderline = null;
-      const fadeUl = () => {
-        ul.alpha -= 0.15;
-        if (ul.alpha <= 0) { if (ul.parent) ul.parent.removeChild(ul); ul.destroy(); return; }
-        requestAnimationFrame(fadeUl);
-      };
-      requestAnimationFrame(fadeUl);
-    }
     const label = photo._hoverLabel;
     photo._hoverLabel = null;
     const fadeOut = () => {
