@@ -1756,7 +1756,7 @@ export class PhotoSystem {
     const label = new PIXI.Text({
       text: displayText,
       style: new PIXI.TextStyle({
-        fontFamily: 'Red Hat Mono, monospace',
+        fontFamily: getComputedStyle(document.documentElement).getPropertyValue('--body-font').trim() || 'Red Hat Mono, monospace',
         fontSize: 11,
         fill: '#000000',
         letterSpacing: 0.5,
@@ -2262,12 +2262,12 @@ export class FocusOverlay {
     let html = '';
     const title = article.title || focusData.title || '';
     if (title) {
-      html += `<h1 style="font-family:Special Elite,cursive;font-size:28px;color:#1a1a1a;letter-spacing:0.5px;line-height:1.4;margin:0 0 32px;padding-bottom:24px;border-bottom:1px solid rgba(0,0,0,0.08);">${title}</h1>`;
+      html += `<h1 style="font-family:var(--title-font, Special Elite);font-size:28px;color:#1a1a1a;letter-spacing:0.5px;line-height:1.4;margin:0 0 32px;padding-bottom:24px;border-bottom:1px solid rgba(0,0,0,0.08);">${title}</h1>`;
     }
     if (article.sections) {
       for (const section of article.sections) {
         if (section.type === 'subtitle') {
-          html += `<h2 style="font-family:Special Elite,cursive;font-size:20px;color:#333;margin:48px 0 16px;line-height:1.4;">${section.text}</h2>`;
+          html += `<h2 style="font-family:var(--title-font, Special Elite);font-size:20px;color:#333;margin:48px 0 16px;line-height:1.4;">${section.text}</h2>`;
         } else if (section.type === 'text') {
           html += `<p style="font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;font-size:16px;color:#444;line-height:1.85;margin-bottom:24px;">${section.text}</p>`;
         } else if (section.type === 'image') {
@@ -2809,14 +2809,14 @@ export class FocusOverlay {
         let html = '';
         const title = article?.title || data.title || '';
         if (title) {
-          html += `<h1 style="font-family:Special Elite,cursive;font-size:28px;color:#1a1a1a;letter-spacing:0.5px;line-height:1.4;margin:0 0 32px;padding-bottom:24px;border-bottom:1px solid rgba(0,0,0,0.08);">${title}</h1>`;
+          html += `<h1 style="font-family:var(--title-font, Special Elite);font-size:28px;color:#1a1a1a;letter-spacing:0.5px;line-height:1.4;margin:0 0 32px;padding-bottom:24px;border-bottom:1px solid rgba(0,0,0,0.08);">${title}</h1>`;
         }
 
         // 文章正文
         if (article?.sections) {
           for (const section of article.sections) {
             if (section.type === 'subtitle') {
-              html += `<h2 style="font-family:Special Elite,cursive;font-size:20px;color:#333;margin:48px 0 16px;line-height:1.4;">${section.text}</h2>`;
+              html += `<h2 style="font-family:var(--title-font, Special Elite);font-size:20px;color:#333;margin:48px 0 16px;line-height:1.4;">${section.text}</h2>`;
             } else if (section.type === 'text') {
               html += `<p style="font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;font-size:16px;color:#444;line-height:1.85;margin-bottom:24px;">${section.text}</p>`;
             } else if (section.type === 'image') {
@@ -2930,7 +2930,7 @@ export class FocusOverlay {
 
     // Title
     const title = data.title || 'Collection';
-    articleWrap.innerHTML = `<h1 style="font-family:Special Elite,cursive;font-size:28px;color:#1a1a1a;letter-spacing:0.5px;line-height:1.4;margin:0 0 32px;padding-bottom:24px;border-bottom:1px solid rgba(0,0,0,0.08);">${title}</h1>`;
+    articleWrap.innerHTML = `<h1 style="font-family:var(--title-font, Special Elite);font-size:28px;color:#1a1a1a;letter-spacing:0.5px;line-height:1.4;margin:0 0 32px;padding-bottom:24px;border-bottom:1px solid rgba(0,0,0,0.08);">${title}</h1>`;
 
     // AI streaming target
     const aiContent = document.createElement('div');
@@ -3019,7 +3019,7 @@ export class FocusOverlay {
           if (headingMatch) {
             flushAtomBuffer();
             currentEl = document.createElement('h2');
-            currentEl.style.cssText = 'font-family:Special Elite,cursive;font-size:20px;color:#333;margin:48px 0 16px;line-height:1.4;';
+            currentEl.style.cssText = 'font-family:var(--title-font, Special Elite);font-size:20px;color:#333;margin:48px 0 16px;line-height:1.4;';
             aiContent.appendChild(currentEl);
             currentEl.textContent = headingMatch[1];
             this._addTOCEntry(headingMatch[1], currentEl);
@@ -3494,10 +3494,10 @@ export class FocusOverlay {
 
         let html = '';
         const title = article.title || focusData.title || '';
-        if (title) html += `<h1 style="font-family:Special Elite,cursive;font-size:28px;color:#1a1a1a;letter-spacing:0.5px;line-height:1.4;margin:0 0 32px;padding-bottom:24px;border-bottom:1px solid rgba(0,0,0,0.08);">${title}</h1>`;
+        if (title) html += `<h1 style="font-family:var(--title-font, Special Elite);font-size:28px;color:#1a1a1a;letter-spacing:0.5px;line-height:1.4;margin:0 0 32px;padding-bottom:24px;border-bottom:1px solid rgba(0,0,0,0.08);">${title}</h1>`;
         if (article.sections) {
           for (const s of article.sections) {
-            if (s.type === 'subtitle') html += `<h2 style="font-family:Special Elite,cursive;font-size:20px;color:#333;margin:48px 0 16px;line-height:1.4;">${s.text}</h2>`;
+            if (s.type === 'subtitle') html += `<h2 style="font-family:var(--title-font, Special Elite);font-size:20px;color:#333;margin:48px 0 16px;line-height:1.4;">${s.text}</h2>`;
             else if (s.type === 'text') html += `<p style="font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;font-size:16px;color:#444;line-height:1.85;margin-bottom:24px;">${s.text}</p>`;
             else if (s.type === 'image') {
               html += `<img src="${s.src}" alt="${s.alt || ''}" style="width:100%;border-radius:6px;margin:32px 0 8px;">`;

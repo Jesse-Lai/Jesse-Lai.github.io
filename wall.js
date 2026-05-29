@@ -62,6 +62,24 @@ import { WallArticle } from "./wall-article.js?v=151";
   // ─── Language ───
   const LANG = localStorage.getItem('wall-lang') || 'en';
 
+  // Language toggle
+  const langBtn = document.getElementById('lang-toggle');
+  if (langBtn) langBtn.textContent = LANG === 'zh' ? 'EN' : '中';
+  window._toggleLang = () => {
+    const next = (localStorage.getItem('wall-lang') || 'en') === 'en' ? 'zh' : 'en';
+    localStorage.setItem('wall-lang', next);
+    location.reload();
+  };
+
+  // Apply Chinese fonts when in zh mode
+  if (LANG === 'zh') {
+    document.documentElement.style.setProperty('--title-font', '"LXGW WenKai", serif');
+    document.documentElement.style.setProperty('--body-font', '"Noto Sans SC", sans-serif');
+  } else {
+    document.documentElement.style.setProperty('--title-font', '"Special Elite", cursive');
+    document.documentElement.style.setProperty('--body-font', '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif');
+  }
+
   // Bilingual overrides: keyed by original title
   const i18n = {
     'Hello I\'m Jesse Lai':  { zh: { title: '你好，我是Jesse Lai', body: '微软AI产品设计师，探索人与AI自然交互的未来。' } },
