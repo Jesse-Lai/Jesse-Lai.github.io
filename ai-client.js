@@ -24,7 +24,7 @@ export function buildSystemPrompt(contentData, registry, lang) {
       .filter(s => s.type === 'text' || s.type === 'subtitle')
       .map(s => s.text).join('\n');
     return {
-      key: e.cover_image || e.title,
+      key: e.title,
       title: e.title,
       category: e.category,
       body: e.body || '',

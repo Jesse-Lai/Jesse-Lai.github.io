@@ -677,27 +677,49 @@ export async function renderClip(app, images, x, y, maxW, maxH, cfg) {
 
 
 // ─── Stamp perforation mask (shared) ───
-// Draws rectangle with semi-circles CUT INTO edges (like real postage stamps)
-function createStampMask(w, h, toothR, toothSpacing) {
+// Creates an irregular torn paper edge mask using noise displacement
+function createTornPaperMask(w, h, seed) {
+  const pad = 3; // how far the irregular edge can extend inward
+  const cw = Math.ceil(w); const ch = Math.ceil(h);
   const c = document.createElement('canvas');
-  c.width = Math.ceil(w); c.height = Math.ceil(h);
+  c.width = cw; c.height = ch;
   const ctx = c.getContext('2d');
 
-  // Full white rectangle
-  ctx.fillStyle = 'white';
-  ctx.fillRect(0, 0, w, h);
+  // Simple seeded pseudo-random for consistent edges
+  const s = seed || Math.random() * 999;
+  const noise = (t) => {
+    const x = Math.sin(s + t * 127.1) * 43758.5453;
+    return x - Math.floor(x);
+  };
 
-  // Cut semi-circles along edges (circles centered ON the edge → half inside, half outside)
-  ctx.globalCompositeOperation = 'destination-out';
-  ctx.fillStyle = 'black';
-  for (let x = toothSpacing / 2; x < w; x += toothSpacing) {
-    ctx.beginPath(); ctx.arc(x, 0, toothR, 0, Math.PI * 2); ctx.fill(); // top
-    ctx.beginPath(); ctx.arc(x, h, toothR, 0, Math.PI * 2); ctx.fill(); // bottom
+  // Build irregular path around the rectangle
+  ctx.beginPath();
+  const step = 6; // pixel step along each edge
+
+  // Top edge (left to right)
+  for (let x = 0; x <= cw; x += step) {
+    const n = noise(x * 0.1) * pad;
+    ctx.lineTo(x, n);
   }
-  for (let y = toothSpacing / 2; y < h; y += toothSpacing) {
-    ctx.beginPath(); ctx.arc(0, y, toothR, 0, Math.PI * 2); ctx.fill(); // left
-    ctx.beginPath(); ctx.arc(w, y, toothR, 0, Math.PI * 2); ctx.fill(); // right
+  // Right edge (top to bottom)
+  for (let y = 0; y <= ch; y += step) {
+    const n = noise(y * 0.1 + 100) * pad;
+    ctx.lineTo(cw - n, y);
   }
+  // Bottom edge (right to left)
+  for (let x = cw; x >= 0; x -= step) {
+    const n = noise(x * 0.1 + 200) * pad;
+    ctx.lineTo(x, ch - n);
+  }
+  // Left edge (bottom to top)
+  for (let y = ch; y >= 0; y -= step) {
+    const n = noise(y * 0.1 + 300) * pad;
+    ctx.lineTo(n, y);
+  }
+
+  ctx.closePath();
+  ctx.fillStyle = 'white';
+  ctx.fill();
 
   const sprite = new PIXI.Sprite(PIXI.Texture.from(c));
   return sprite;
@@ -714,41 +736,36 @@ export async function renderStamp(app, stampImgData, x, y, cfg, options) {
   const stampW = Math.min(maxStampW, stampImgData.w * 0.3);
   const stampH = stampW * imgRatio;
 
-  const toothR = cfg?.style?.toothRadius ?? 4;
-  const toothSp = cfg?.style?.toothSpacing ?? 14;
+  const seed = Math.random() * 999;
 
-  // Shadow with same perforated shape, offset
-  const shadowMask = createStampMask(stampW, stampH, toothR, toothSp);
-  const shadowGroup = new PIXI.Container();
-  shadowGroup.x = 1.2; shadowGroup.y = 1.2;
-  const shadowFill = new PIXI.Graphics();
-  shadowFill.rect(0, 0, stampW, stampH);
-  shadowFill.fill({color: 0x000000, alpha: 0.12});
-  shadowGroup.addChild(shadowFill);
-  shadowGroup.addChild(shadowMask);
-  shadowGroup.mask = shadowMask;
-  wrapper.addChild(shadowGroup);
+  // Shadow (disabled when embedded in sticky note — sticky handles its own)
+  if (!options?.noShadow) {
+    const shadowGfx = new PIXI.Graphics();
+    shadowGfx.roundRect(1.5, 1.5, stampW, stampH, 2);
+    shadowGfx.fill({ color: 0x000000, alpha: 0.15 });
+    wrapper.addChildAt(shadowGfx, 0);
+  }
 
-  // Masked content group (image clipped by perforated mask directly)
+  // Masked content group (image clipped by torn paper mask)
   const masked = new PIXI.Container();
   wrapper.addChild(masked);
 
-  // Stamp image fills entire area, mask punches holes at edges
+  // Stamp image fills entire area
   const stampSprite = new PIXI.Sprite(stampImgData.tex);
   stampSprite.width = stampW;
   stampSprite.height = stampH;
   masked.addChild(stampSprite);
 
-  // Perforated edge mask
-  const perf = createStampMask(stampW, stampH, toothR, toothSp);
-  masked.addChild(perf);
-  masked.mask = perf;
+  // Torn paper edge mask (same seed as shadow for matching shape)
+  const tornMask = createTornPaperMask(stampW, stampH, seed);
+  masked.addChild(tornMask);
+  masked.mask = tornMask;
 
   // Slight random rotation
   wrapper.rotation = (Math.random() * 10 - 5) * Math.PI / 180;
 
   return {
-    group: wrapper, stampW, stampH,
+    group: wrapper, stampW, stampH, stampSprite, seed,
     hitTest: (mx, my) => Math.abs(mx - wrapper.x - stampW/2) < stampW*0.6 && Math.abs(my - wrapper.y - stampH/2) < stampH*0.6,
   };
 }
@@ -798,11 +815,14 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg, o
   let stampRect = null;
   let stampW = 0, stampH = 0;
   let stampContainer = null;
+  let stampSpriteRef = null;
   if (stampImgData) {
-    const stampResult = await renderStamp(app, stampImgData, 0, 0, cfg, { maxW: 160 });
+    const stampResult = await renderStamp(app, stampImgData, 0, 0, cfg, { maxW: 160, noShadow: true });
     stampContainer = stampResult.group;
+    stampSpriteRef = stampResult.stampSprite;
     stampW = stampResult.stampW;
     stampH = stampResult.stampH;
+    var stampSeed = stampResult.seed;
 
     // Random position near an edge (not center)
     const edge = Math.floor(Math.random() * 4); // 0=right, 1=bottom, 2=left, 3=bottom-right
@@ -891,7 +911,19 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg, o
   shadow.fill({color: 0x000000, alpha: 0.12});
 
 
-  // Stamp is above wrinkle layer - inside is bright, outside against dark bg looks natural
+  // ── Stamp shadow: torn paper shape, inside stampContainer ──
+  if (stampContainer) {
+    const shadContainer = new PIXI.Container();
+    shadContainer.x = 1.5; shadContainer.y = 1.5;
+    const shadFill = new PIXI.Graphics();
+    shadFill.rect(0, 0, stampW, stampH);
+    shadFill.fill({ color: 0x000000, alpha: 0.15 });
+    shadContainer.addChild(shadFill);
+    const shadMask = createTornPaperMask(stampW, stampH, stampSeed);
+    shadContainer.addChild(shadMask);
+    shadContainer.mask = shadMask;
+    stampContainer.addChildAt(shadContainer, 0);
+  }
 
   // Store note-only height (without stamp overflow) for hover label positioning
   wrapper._noteH = noteH;
@@ -903,6 +935,7 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg, o
   return {
     group: wrapper,
     noteW, noteH,
+    stampSprite: stampSpriteRef,
     titleX: padding, titleY: padding, titleW: (titleBottom - padding - 4) > 0 ? (noteW - padding*2) : 0, titleH: Math.max(0, titleBottom - padding - 4),
     hitTest: (mx, my) => { const h = wrapper.height; return Math.abs(mx - wrapper.x - noteW/2) < noteW*0.6 && Math.abs(my - wrapper.y - h/2) < h*0.6; },
   };
@@ -1062,12 +1095,12 @@ export async function renderTearoffCard(app, x, y, cfg) {
 
   // ── Shadow for card body (torn bottom edge) ──
   const bodyShadowContainer = new PIXI.Container();
+  bodyShadowContainer.x = shadowOff; bodyShadowContainer.y = shadowOff;
   const bodyShadowGfx = new PIXI.Graphics();
-  bodyShadowGfx.rect(0, 0, cardW + shadowOff, bodyH + 10 + shadowOff);
+  bodyShadowGfx.rect(0, 0, cardW, bodyH + 10);
   bodyShadowGfx.fill({ color: 0x000000, alpha: shadowAlpha });
-  bodyShadowGfx.x = shadowOff; bodyShadowGfx.y = shadowOff;
   bodyShadowContainer.addChild(bodyShadowGfx);
-  const bodyShadowMaskCanvas = createTornBottomMask(cardW + shadowOff * 2, bodyH + 10 + shadowOff * 2, tornEdge.map(p => ({ x: p.x + shadowOff, y: p.y })), bodyH + shadowOff);
+  const bodyShadowMaskCanvas = createTornBottomMask(cardW, bodyH + 10, tornEdge, bodyH);
   const bodyShadowMask = new PIXI.Sprite(PIXI.Texture.from(bodyShadowMaskCanvas));
   bodyShadowContainer.addChild(bodyShadowMask);
   bodyShadowContainer.mask = bodyShadowMask;
@@ -1367,15 +1400,15 @@ export async function renderTearoffCard(app, x, y, cfg) {
     sc.x = i * stripW + stripW / 2; // compensate pivot
     sc.y = stripsStartY;
 
-    // Strip drop shadow (torn top edge, disappears when torn)
+    // Strip drop shadow (torn top edge matching card body's torn bottom)
     const stripShadowContainer = new PIXI.Container();
+    stripShadowContainer.x = shadowOff; stripShadowContainer.y = shadowOff;
     const stripShadowGfx = new PIXI.Graphics();
-    stripShadowGfx.rect(0, -8, stripW + shadowOff, stripH + 8 + shadowOff);
+    stripShadowGfx.rect(0, -8, stripW, stripH + 8);
     stripShadowGfx.fill({ color: 0x000000, alpha: shadowAlpha });
-    stripShadowGfx.x = shadowOff; stripShadowGfx.y = shadowOff;
     stripShadowContainer.addChild(stripShadowGfx);
-    const sShadowMask = createTornTopMask(Math.ceil(stripW + shadowOff * 2), Math.ceil(stripH + 8 + shadowOff * 2), tornEdge.map(p => ({ x: p.x + shadowOff, y: p.y })), i * stripW);
-    const sShadowMaskSprite = new PIXI.Sprite(PIXI.Texture.from(sShadowMask));
+    const sShadowMaskCanvas = createTornTopMask(Math.ceil(stripW), Math.ceil(stripH + 8), tornEdge, i * stripW);
+    const sShadowMaskSprite = new PIXI.Sprite(PIXI.Texture.from(sShadowMaskCanvas));
     sShadowMaskSprite.y = -8;
     stripShadowContainer.addChild(sShadowMaskSprite);
     stripShadowContainer.mask = sShadowMaskSprite;
@@ -2979,22 +3012,29 @@ export class FocusOverlay {
       if (atomBuffer.length === 0) return;
       const keys = [...atomBuffer];
       atomBuffer = [];
-      const placeholder = document.createElement('div');
-      placeholder.className = 'atom-entry';
-      aiContent.appendChild(placeholder);
-      if (keys.length === 1) {
-        const meta = this._wallItemRegistry[keys[0]];
-        if (meta) {
-          this._createAtomEntry(meta).then(entry => {
-            if (entry) { placeholder.replaceWith(entry.container); }
-            else placeholder.remove();
-          });
-        } else placeholder.remove();
-      } else {
+
+      const allPhotos = keys.length > 1 && keys.every(k => this._wallItemRegistry[k]?.atomType === 'photo');
+
+      if (allPhotos) {
+        const placeholder = document.createElement('div');
+        placeholder.className = 'atom-entry';
+        aiContent.appendChild(placeholder);
         this._createClipEntry(keys).then(entry => {
           if (entry) { placeholder.replaceWith(entry.container); }
           else placeholder.remove();
         });
+      } else {
+        for (const key of keys) {
+          const meta = this._wallItemRegistry[key];
+          if (!meta) continue;
+          const placeholder = document.createElement('div');
+          placeholder.className = 'atom-entry';
+          aiContent.appendChild(placeholder);
+          this._createAtomEntry(meta).then(entry => {
+            if (entry) { placeholder.replaceWith(entry.container); }
+            else placeholder.remove();
+          });
+        }
       }
     };
 
@@ -3214,23 +3254,29 @@ export class FocusOverlay {
       if (atomBuffer.length === 0) return;
       const keys = [...atomBuffer];
       atomBuffer = [];
-      // Insert placeholder synchronously, render async
-      const placeholder = document.createElement('div');
-      placeholder.className = 'atom-entry';
-      bubble.appendChild(placeholder);
-      if (keys.length === 1) {
-        const meta = this._wallItemRegistry[keys[0]];
-        if (meta) {
-          this._createAtomEntry(meta).then(entry => {
-            if (entry) { placeholder.replaceWith(entry.container); this._scrollToBottom(); }
-            else placeholder.remove();
-          });
-        } else placeholder.remove();
-      } else {
+
+      const allPhotos = keys.length > 1 && keys.every(k => this._wallItemRegistry[k]?.atomType === 'photo');
+
+      if (allPhotos) {
+        const placeholder = document.createElement('div');
+        placeholder.className = 'atom-entry';
+        bubble.appendChild(placeholder);
         this._createClipEntry(keys).then(entry => {
           if (entry) { placeholder.replaceWith(entry.container); this._scrollToBottom(); }
           else placeholder.remove();
         });
+      } else {
+        for (const key of keys) {
+          const meta = this._wallItemRegistry[key];
+          if (!meta) continue;
+          const placeholder = document.createElement('div');
+          placeholder.className = 'atom-entry';
+          bubble.appendChild(placeholder);
+          this._createAtomEntry(meta).then(entry => {
+            if (entry) { placeholder.replaceWith(entry.container); this._scrollToBottom(); }
+            else placeholder.remove();
+          });
+        }
       }
     };
 

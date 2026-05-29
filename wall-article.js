@@ -109,22 +109,32 @@ export class WallArticle {
       if (atomBuffer.length === 0) return;
       const keys = [...atomBuffer];
       atomBuffer = [];
-      const placeholder = document.createElement('div');
-      placeholder.className = 'atom-entry';
-      bubble.appendChild(placeholder);
-      if (keys.length === 1) {
-        const meta = this.focusOverlay._wallItemRegistry[keys[0]];
-        if (meta) {
-          this.focusOverlay._createAtomEntry(meta).then(entry => {
-            if (entry) { placeholder.replaceWith(entry.container); this._atomApps.push(entry.app); this._scrollToBottom(); }
-            else placeholder.remove();
-          });
-        } else placeholder.remove();
-      } else {
+
+      // Check if ALL atoms are photos — only then use clip layout
+      const registry = this.focusOverlay._wallItemRegistry;
+      const allPhotos = keys.length > 1 && keys.every(k => registry[k]?.atomType === 'photo');
+
+      if (allPhotos) {
+        const placeholder = document.createElement('div');
+        placeholder.className = 'atom-entry';
+        bubble.appendChild(placeholder);
         this.focusOverlay._createClipEntry(keys).then(entry => {
           if (entry) { placeholder.replaceWith(entry.container); this._atomApps.push(entry.app); this._scrollToBottom(); }
           else placeholder.remove();
         });
+      } else {
+        // Render each atom individually
+        for (const key of keys) {
+          const meta = registry[key];
+          if (!meta) continue;
+          const placeholder = document.createElement('div');
+          placeholder.className = 'atom-entry';
+          bubble.appendChild(placeholder);
+          this.focusOverlay._createAtomEntry(meta).then(entry => {
+            if (entry) { placeholder.replaceWith(entry.container); this._atomApps.push(entry.app); this._scrollToBottom(); }
+            else placeholder.remove();
+          });
+        }
       }
     };
 

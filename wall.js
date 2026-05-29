@@ -83,16 +83,16 @@ import { WallArticle } from "./wall-article.js?v=151";
   // Bilingual overrides: keyed by original title
   const i18n = {
     'Hello I\'m Jesse Lai':  { zh: { title: '你好，我是Jesse Lai', body: '微软AI产品设计师，探索人与AI自然交互的未来。' } },
-    'My Story':              { zh: { title: '我的故事', body: '微软AI产品设计师，6年以上AI产品设计经验，涵盖B2C和B2B。' } },
-    'Food Delivery Service': { zh: { title: '外卖配送服务', body: '饿了么是中国知名外卖平台。我缩短了商家入驻流程，改进了任务奖励系统，帮助商家运营并提高存活率。' } },
-    'AI Merchant Assistant': { zh: { title: 'AI商家助手', body: '我分析了生成式AI对饿了么商家在线咨询服务的影响，设计并构建了对话式助手，提升商家咨询体验。' } },
-    'Review Analysis':       { zh: { title: '评价分析', body: '评价分析对外卖商家运营至关重要。我发现用户很少使用该功能，通过设计研究找到原因并提出创新方案。' } },
+    'Microsoft':             { zh: { title: 'Microsoft', body: 'AI builder at Microsoft' } },
+    'Alibaba':               { zh: { title: 'Alibaba', body: '构建AI产品，帮助本地生活服务用户' } },
     'Stand-up Comedian':     { zh: { title: '脱口秀演员', body: '脱口秀是我一生的热爱。把生活的酸甜苦辣变成段子搬上舞台，已经成为我生活不可分割的一部分。' } },
-    'Fishing':               { zh: { title: '钓鱼', body: '清晨的第一竿：安静得只剩水面在呼吸。今天的战利品：不大，但足够让人开心一整天。' } },
     'Drawing':               { zh: { title: '画画', body: '即将推出' } },
+    'Vibe Coding':           { zh: { title: 'Vibe Coding', body: 'Vibe Coding项目合集——用代码构建创意工具和交互体验。' } },
+    'Arduino Light':         { zh: { title: 'Arduino交互灯', body: '用Arduino打造的交互灯——硬件与创意的融合。' } },
     'GenUI':                 { en: { title: 'GenUI', body: 'In the AI era, our interaction experiences have regressed — from rich GUIs back to text-based chat. GenUI explores AI-generated interfaces that match the shape of information.' } },
     'AI产品设计原则':          { en: { title: 'AI Design Principles', body: 'A growing collection of AI product design principles, drawing from industry leaders and my own practice.' } },
-    '播客分享':               { en: { title: 'Podcast', body: 'Jesse\'s podcast recommendations — notable episodes, key insights, and ideas worth sharing.' } },
+    'Vibe Coding':           { en: { title: 'Vibe Coding', body: 'A collection of vibe coding projects — building creative tools and interactive experiences with code.' } },
+    'Arduino Light':         { en: { title: 'Arduino Light', body: 'An interactive light built with Arduino — merging hardware and creativity.' } },
   };
 
   function t(entry, field) {
@@ -105,21 +105,20 @@ import { WallArticle } from "./wall-article.js?v=151";
   const photoCaptions = {
     'Hello I\'m Jesse Lai': { caption: 'Hello I\'m Jesse Lai', date: "'25 03 20" },
     'Stand-up Comedian':    { caption: 'Stand-up Comedian', date: "'26 01 15" },
-    'Fishing':              { caption: 'Fishing', date: "'25 06 15" },
     'Drawing':              { caption: 'Drawing', date: "'25 08 10" },
-    '播客分享':              { caption: 'Podcast', date: "'26 03 01" },
+    'Vibe Coding':          { caption: 'Vibe Coding', date: "'26 05 01" },
+    'Arduino Light':        { caption: 'Arduino Light', date: "'26 04 15" },
   };
 
   // Stamp image overrides
   const stampOverrides = {
-    'GenUI': 'photo_stamp.webp',
-    'My Story': 'stamp_mystory.png',
-    'Food Delivery Service': 'photo_ski.webp',
-    'AI Merchant Assistant': 'AI-Merchant-Assistant.webp',
-    'Review Analysis': 'review.webp',
+    'GenUI': 'genui.webp',
+    'AI产品设计原则': 'aidesign.webp',
+    'Microsoft': 'Microsoft.webp',
+    'Alibaba': 'alibaba.webp',
   };
 
-  const coolStickies = ['AI Merchant Assistant', 'Review Analysis', 'GenUI', 'AI产品设计原则'];
+  const coolStickies = ['Alibaba', 'GenUI', 'AI产品设计原则'];
 
   const wallItems = [];
   for (const entry of contentData) {
@@ -199,6 +198,13 @@ import { WallArticle } from "./wall-article.js?v=151";
       const stickyItem = photoSystem.addItem(stickyResult.group, b.width / atomScale, b.height / atomScale);
       if (item.focus) { stickyItem.focusData = item.focus; if (item.keywords) stickyItem.focusData.description = item.keywords; }
       stickyItem._stickyTitle = { tx: stickyResult.titleX, ty: stickyResult.titleY, tw: stickyResult.titleW, th: stickyResult.titleH };
+      // Stamp video: swap stamp sprite texture on hover
+      if (stickyResult.stampSprite && item.stampSrc) {
+        const videoSrc = item.stampSrc.replace(/\.(png|jpg|jpeg|webp)$/i, '.mp4');
+        stickyItem.videoSrc = videoSrc;
+        stickyItem.sprite = stickyResult.stampSprite;
+        getOrCreateVideo(videoSrc);
+      }
       rendered.push({ group: stickyResult.group, bounds: b, wallItem: item, focusableItem: stickyItem });
     } else if (item.type === 'stamp') {
       const stampResult = await renderStamp(app, imgData, 0, 0, atomsConfig.stamp);
@@ -255,36 +261,11 @@ import { WallArticle } from "./wall-article.js?v=151";
     app.canvas.style.touchAction = 'pan-y';
   }
 
-  // ─── Wood texture overlay + background mode toggle ───
-  let bgMode = 'wood'; // 'wood' | 'gradient'
-  let woodSprite = null;
-  {
-    const bgImg = new Image();
-    bgImg.src = 'background.webp';
-    bgImg.onload = () => {
-      const bgTex = PIXI.Texture.from(bgImg);
-      woodSprite = new PIXI.TilingSprite({ texture: bgTex, width: W, height: Math.max(totalH, H) });
-      woodSprite.alpha = 1;
-      app.stage.addChildAt(woodSprite, 0);
-    };
-  }
-  const btnEl = document.getElementById('bg-toggle');
-  window._toggleBg = () => {
-    if (bgMode === 'wood') {
-      bgMode = 'gradient';
-      if (woodSprite) woodSprite.visible = false;
-      if (btnEl) btnEl.textContent = 'Gradient';
-    } else {
-      bgMode = 'wood';
-      if (woodSprite) woodSprite.visible = true;
-      if (btnEl) btnEl.textContent = 'Wood';
-    }
-  };
 
   // 注册所有有文章的 wall items，供 chat 推荐使用
   for (const { wallItem, focusableItem } of renderedItems) {
     if (wallItem.focus?.article && focusableItem) {
-      const key = wallItem.src || wallItem.title;
+      const key = wallItem.title;
       focusOverlay.registerWallItem(key, {
         ...wallItem.focus,
         caption: wallItem.caption,
@@ -510,9 +491,40 @@ import { WallArticle } from "./wall-article.js?v=151";
       return stops[stops.length-1][1];
     };
 
-    const bgStops = [
-      [0, '#F6F3EE'], [0.5, '#FCCC83'], [1.0, '#DB7A2A']
+    // ── Time-of-day color: top & bottom per period, lerp between periods + scroll ──
+    const timeColorStops = [
+      [6,  '#F6F3EE', '#F8F3E3'],  // morning 6-12
+      [12, '#FFFAF2', '#E8CDA3'],  // afternoon 12-18
+      [18, '#FCCC83', '#E79648'],  // dusk 18-20
+      [20, '#262145', '#131028'],  // night 20-6
+      [30, '#262145', '#131028'],  // night wrap
     ];
+    const lerpHex = (hexA, hexB, t) => {
+      const a = hexToRgb(hexA), b = hexToRgb(hexB);
+      return rgbToHex(lerp(a[0],b[0],t), lerp(a[1],b[1],t), lerp(a[2],b[2],t));
+    };
+    const getTimeColors = (overrideHour) => {
+      const h = overrideHour !== undefined ? overrideHour : new Date().getHours() + new Date().getMinutes() / 60;
+      const t = h < 6 ? h + 24 : h;
+      for (let i = 0; i < timeColorStops.length - 1; i++) {
+        if (t >= timeColorStops[i][0] && t <= timeColorStops[i+1][0]) {
+          const local = (t - timeColorStops[i][0]) / (timeColorStops[i+1][0] - timeColorStops[i][0]);
+          return {
+            top: lerpHex(timeColorStops[i][1], timeColorStops[i+1][1], local),
+            bottom: lerpHex(timeColorStops[i][2], timeColorStops[i+1][2], local),
+          };
+        }
+      }
+      return { top: timeColorStops[0][1], bottom: timeColorStops[0][2] };
+    };
+    const darken = (hex, amount) => {
+      const [r,g,b] = hexToRgb(hex);
+      return rgbToHex(r * (1-amount), g * (1-amount), b * (1-amount));
+    };
+
+    let timeOverride = null;
+    const getTimeBg = () => timeOverride !== null ? getTimeColors(timeOverride) : getTimeColors();
+    let currentBgColors = getTimeBg(); // { top, bottom }
 
     // Sunlight overlay elements (null on mobile — removed from DOM)
     const perspective = document.querySelector('#sunlight-overlay .perspective');
@@ -525,12 +537,17 @@ import { WallArticle } from "./wall-article.js?v=151";
       const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
       const p = Math.min(1, Math.max(0, scrollY / maxScroll));
 
-      // Background color (only in gradient mode)
-      if (bgMode === 'gradient') app.renderer.background.color = lerpColorStops(p, bgStops);
+      // Background color — lerp between top and bottom based on scroll
+      app.renderer.background.color = lerpHex(currentBgColors.top, currentBgColors.bottom, p);
+
+      const [cr,cg,cb] = hexToRgb(currentBgColors.top);
+      const brightness = (cr + cg + cb) / 3;
 
       // Perspective: opacity + angle shift with scroll
       if (perspective) {
+        const isNight = brightness < 80;
         perspective.style.opacity = lerp(0.12, 0.3, p);
+        perspective.style.mixBlendMode = isNight ? 'multiply' : 'soft-light';
         const m00 = lerp(0.75, 0.8333, p);
         const m01 = lerp(-0.0625, 0.0833, p);
         const m03 = lerp(0.0008, 0.0003, p);
@@ -539,14 +556,49 @@ import { WallArticle } from "./wall-article.js?v=151";
 
       // Blinds: gap shrinks, shutters grow as you scroll down
       if (shuttersEl) shuttersEl.style.gap = lerp(42, 14, p) + 'px';
-      shutterEls.forEach(s => s.style.height = lerp(28, 60, p) + 'px');
+      shutterEls.forEach(s => {
+        s.style.height = lerp(28, 60, p) + 'px';
+        // Night: override shutter color directly, bypassing blend mode issues
+        if (brightness < 80) {
+          s.style.backgroundColor = '#04040f';
+          s.style.mixBlendMode = 'normal';
+        } else {
+          s.style.backgroundColor = '';
+          s.style.mixBlendMode = '';
+        }
+      });
 
-      // Shadow & bounce light colors
-      root.style.setProperty('--shadow', lerpColorStops(p, [[0, '#1a1917'], [1, '#030307']]));
+      // Shadow & bounce light colors — adaptive darken + saturation boost
+      // Dark backgrounds: less darken to preserve color; light backgrounds: more darken
+      const darkenAmt = brightness < 80 ? 0.5 : 0.85;
+      const darkened = darken(currentBgColors.top, darkenAmt);
+      const [dr,dg,db] = hexToRgb(darkened);
+      const avg = (dr + dg + db) / 3;
+      const boost = brightness < 80 ? 3 : 1;
+      const sr = Math.min(255, Math.max(0, avg + (dr - avg) * boost));
+      const sg = Math.min(255, Math.max(0, avg + (dg - avg) * boost));
+      const sb = Math.min(255, Math.max(0, avg + (db - avg) * boost));
+      root.style.setProperty('--shadow', rgbToHex(sr, sg, sb));
+
+      // Update UI button colors based on background brightness
+      const btnColor = brightness > 160 ? 'rgba(0,0,0,0.4)' : 'rgba(255,255,255,0.5)';
+      const btnHover = brightness > 160 ? 'rgba(0,0,0,0.7)' : 'rgba(255,255,255,0.8)';
+      const atomsBtn = document.getElementById('atoms-btn');
+      const timeBtn = document.getElementById('time-preview');
+      [atomsBtn, timeBtn].forEach(el => {
+        if (el) { el.style.color = btnColor; el.onmouseenter = () => el.style.color = btnHover; el.onmouseleave = () => el.style.color = btnColor; }
+      });
     };
 
     window.addEventListener('scroll', updateSunProgress, { passive: true });
     updateSunProgress();
+
+    // Expose time preview control
+    window._setTimePreview = (hour) => {
+      timeOverride = hour;
+      currentBgColors = getTimeBg();
+      updateSunProgress();
+    };
   }
 
   // ─── Mobile: TikTok-style snap scroll ───

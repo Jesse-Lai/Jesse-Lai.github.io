@@ -32,7 +32,6 @@
       top: -30vh; right: 0;
       width: 65vw; height: 130vh;
       opacity: 0.12;
-      mix-blend-mode: soft-light;
       transform-origin: top right;
       transform-style: preserve-3d;
       transform: matrix3d(0.75,-0.0625,0,0.0008, 0,1,0,0, 0,0,1,0, 0,0,0,1);
@@ -121,29 +120,32 @@
       color: #444; font-size: 11px; margin-top: 10px;
     }
     #atoms-btn {
-      position: fixed; top: 20px; right: 80px; z-index: 9999;
-      padding: 8px 0; background: none; border: none;
-      color: rgba(0,0,0,0.4); cursor: pointer; font-size: 13px;
+      position: fixed; top: 20px; right: 160px; z-index: 9999;
+      padding: 6px 0; background: none; border: none;
+      color: rgba(255,255,255,0.5); cursor: pointer; font-size: 13px;
       font-family: 'Red Hat Mono', monospace; letter-spacing: 1px;
       transition: color 0.2s; user-select: none;
     }
-    #atoms-btn:hover { color: rgba(0,0,0,0.7); }
-    #bg-toggle {
+    #atoms-btn:hover { color: rgba(255,255,255,0.8); }
+    #time-preview {
       position: fixed; top: 20px; right: 20px; z-index: 9999;
       background: none; border: none;
-      color: rgba(0,0,0,0.4); cursor: pointer; font-size: 13px; padding: 8px 0;
+      color: rgba(255,255,255,0.5); cursor: pointer; font-size: 13px; padding: 6px 0;
       font-family: 'Red Hat Mono', monospace; letter-spacing: 1px;
-      transition: color 0.2s; user-select: none;
+      transition: color 0.2s;
+      appearance: none; -webkit-appearance: none;
+      outline: none;
     }
-    #bg-toggle:hover { color: rgba(0,0,0,0.7); }
+    #time-preview:hover { color: rgba(255,255,255,0.8); }
+    #time-preview option { color: #333; background: #fff; }
     #lang-toggle {
-      position: fixed; top: 20px; right: 50px; z-index: 9999;
+      position: fixed; top: 20px; right: 80px; z-index: 9999;
       background: none; border: none;
-      color: rgba(0,0,0,0.4); cursor: pointer; font-size: 13px; padding: 8px 0;
+      color: rgba(255,255,255,0.5); cursor: pointer; font-size: 13px; padding: 6px 0;
       font-family: "Red Hat Mono", monospace; letter-spacing: 1px;
       transition: color 0.2s; user-select: none;
     }
-    #lang-toggle:hover { color: rgba(0,0,0,0.7); }
+    #lang-toggle:hover { color: rgba(255,255,255,0.8); }
 
     /* Focus overlay */
     canvas.focus-active {
@@ -345,7 +347,7 @@
     .composer-bar .composer-box:hover { transform: scale(1.01, 1.05); }
     .composer-bar .composer-box .glass-effect {
       position: absolute; inset: 0; z-index: 0;
-      backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
+      backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
       filter: url(#glass-distortion);
       overflow: hidden; isolation: isolate;
     }
@@ -474,7 +476,7 @@
 
     #organize-btn .glass-effect, #shuffle-btn .glass-effect {
       position: absolute; inset: 0; z-index: 0;
-      backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
+      backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
       filter: url(#glass-distortion);
       overflow: hidden; isolation: isolate;
     }
@@ -577,7 +579,12 @@
       if (windFilter) windFilter.remove();
     }
   </script>
-  <button id="bg-toggle" onclick="window._toggleBg && window._toggleBg()">Wood</button>
+  <select id="time-preview" onchange="window._setTimePreview && window._setTimePreview(this.value === 'auto' ? null : Number(this.value))">
+    <option value="9">Morning</option>
+    <option value="15">Afternoon</option>
+    <option value="18">Dusk</option>
+    <option value="22">Night</option>
+  </select>
   <div id="atoms-btn" style="display:none" onclick="location.href='atoms.html'">Atoms</div>
   <button id="lang-toggle" onclick="window._toggleLang && window._toggleLang()">中</button>
   <script>if(location.hostname==='localhost'||location.hostname==='127.0.0.1'||location.search.includes('dev'))document.getElementById('atoms-btn').style.display='';</script>
@@ -647,11 +654,11 @@
         <feFuncB type="gamma" amplitude="0" exponent="1" offset="0.5"/>
       </feComponentTransfer>
       <feGaussianBlur in="turbulence" stdDeviation="3" result="softMap"/>
-      <feSpecularLighting in="softMap" surfaceScale="5" specularConstant="1" specularExponent="100" lighting-color="white" result="specLight">
+      <feSpecularLighting in="softMap" surfaceScale="3" specularConstant="1" specularExponent="100" lighting-color="white" result="specLight">
         <fePointLight x="-200" y="-200" z="300"/>
       </feSpecularLighting>
       <feComposite in="specLight" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" result="litImage"/>
-      <feDisplacementMap in="SourceGraphic" in2="softMap" scale="150" xChannelSelector="R" yChannelSelector="G"/>
+      <feDisplacementMap in="SourceGraphic" in2="softMap" scale="50" xChannelSelector="R" yChannelSelector="G"/>
     </filter>
     <filter id="paper-texture">
       <feTurbulence type="fractalNoise" baseFrequency="0.04" result="noise" numOctaves="5"/>
