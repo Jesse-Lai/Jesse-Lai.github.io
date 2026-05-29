@@ -586,14 +586,36 @@ export async function renderClip(app, images, x, y, maxW, maxH, cfg) {
   }
   const photoSprites = photoContainers; // alias for toggle logic
 
-  // Paperclip SVG
+  // Paperclip SVG — two-layer approach (inner loop behind photos, outer hook on top)
   const clipTex = await PIXI.Assets.load({src:'paperclip.svg', data:{resolution:4}});
+  const clipScale = Math.min(maxW*0.25/clipTex.width, maxH*0.55/clipTex.height);
+  const clipX = -maxW/2+8;
+  const clipY = -maxH/2 - clipTex.height*clipScale*0.25;
+  const clipW = clipTex.width * clipScale;
+  const clipH = clipTex.height * clipScale;
+
+  // Bottom layer (inner loop) — goes BEHIND photos
+  const clipBottom = new PIXI.Sprite(clipTex);
+  clipBottom.scale.set(clipScale);
+  clipBottom.x = clipX;
+  clipBottom.y = clipY;
+  const clipBottomMask = new PIXI.Graphics();
+  clipBottomMask.rect(clipX, clipY + clipH * 0.35, clipW, clipH * 0.35).fill(0xffffff);
+  group.addChild(clipBottomMask);
+  clipBottom.mask = clipBottomMask;
+  group.addChildAt(clipBottom, 0); // Behind everything
+
+  // Top layer (outer hook) — goes ON TOP of photos
   const clipSp = new PIXI.Sprite(clipTex);
-  const clipScale = Math.min(maxW*0.25/clipSp.texture.width, maxH*0.55/clipSp.texture.height);
   clipSp.scale.set(clipScale);
-  clipSp.x = -maxW/2+8;
-  clipSp.y = -maxH/2 - clipSp.texture.height*clipScale*0.25;
-  group.addChild(clipSp);
+  clipSp.x = clipX;
+  clipSp.y = clipY;
+  const clipTopMask = new PIXI.Graphics();
+  clipTopMask.rect(clipX, clipY, clipW, clipH * 0.35).fill(0xffffff);
+  clipTopMask.rect(clipX, clipY + clipH * 0.7, clipW, clipH * 0.3).fill(0xffffff);
+  group.addChild(clipTopMask);
+  clipSp.mask = clipTopMask;
+  group.addChild(clipSp); // On top of everything
 
   // Group shadow
   const clipShadow = new PIXI.Graphics();
