@@ -4,7 +4,7 @@
     "title": "Hello I’m Jesse Lai",
     "category": "who_i_am",
     "atom": "photo",
-    "body": "I’m a product designer at Microsoft AI, exploring how people will naturally interact with AI in the future. I have experience designing AI products fo",
+    "body": "I’m an AI Builder at Microsoft, designing AI-native products and building them in production code. With experience at Alibaba and Microsoft, I have de",
     "cover_image": "photo_portrait.webp",
     "focus": {
       "title": "Hello I'm Jesse Lai",
@@ -16,16 +16,15 @@
         "sections": [
           {
             "type": "text",
-            "text": "I’m a product designer at Microsoft AI, exploring how people will naturally interact with AI in the future. I have experience designing AI products for both B2C and B2B scenarios."
+            "text": "I’m an AI Builder at Microsoft, designing AI-native products and building them in production code."
           },
           {
             "type": "text",
-            "text": "Over the past six years, I’ve been recognized multiple times by the company’s official media as an outstanding employee. I also write some design articles here WeChat Blog  Medium. Apart from work, I passionate about performing stand-up comedy"
+            "text": "With experience at Alibaba and Microsoft, I have designed AI-native products for both B2B and B2C users."
           },
           {
-            "type": "image",
-            "caption": "",
-            "src": "content_images/116400ee_1.webp"
+            "type": "text",
+            "text": "Over the past six years, I’ve been recognized multiple times by the company’s <a href=\"https://mp.weixin.qq.com/s/5FFKYeLy22Bx1S-b4z8UKw\">official media</a> as an outstanding employee. I also write some design articles here <a href=\"https://mp.weixin.qq.com/s/hbqhQS9mMXhLmtFRbWKDEQ\">WeChat Blog</a><a href=\"https://medium.com/@laijianxun123\">Medium</a>. Apart from work, I passionate about<a href=\"/146400ee0cf5808f87e8d536e92e21ee\">performing stand-up comedy</a>"
           },
           {
             "type": "subtitle",
@@ -57,11 +56,11 @@
           },
           {
             "type": "text",
-            "text": "Medium"
+            "text": "<a href=\"https://medium.com/me/settings#accounthttps://medium.com/me/settings#account\">Medium</a>"
           },
           {
             "type": "text",
-            "text": "WeChat Blog"
+            "text": "<a href=\"https://mp.weixin.qq.com/s/hbqhQS9mMXhLmtFRbWKDEQ\">WeChat Blog</a>"
           },
           {
             "type": "text",
@@ -69,15 +68,15 @@
           },
           {
             "type": "text",
-            "text": "Red"
+            "text": "<a href=\"https://www.xiaohongshu.com/explore/67065888000000001b023c4b?xhsshare=pc_web&xsec_token=ABw1ES8_EqaPzuG9CPM8gRpkKkVtO35n1DTUzl2BlAaQs%3D&xsec_source=pc_share\">Red</a>"
           },
           {
             "type": "text",
-            "text": "WeChat Account"
+            "text": "<a href=\"https://mp.weixin.qq.com/s/5FFKYeLy22Bx1S-b4z8UKw\">WeChat Account</a>"
           },
           {
             "type": "text",
-            "text": "Recruiting Website"
+            "text": "<a href=\"https://talent.ele.me/campus/home?lang=zh\">Recruiting Website</a>"
           }
         ]
       }
@@ -483,327 +482,6 @@
           {
             "type": "text",
             "text": "好啦，虽然还有很多没说完，但是真的要去睡觉了😴 欢迎交流！"
-          },
-          {
-            "type": "subtitle",
-            "text": "背景：AI时代下人机界面体验反而倒退了 ✅"
-          },
-          {
-            "type": "text",
-            "text": "在AI这个时代，我们拥有了足够智能且持续进化的AI系统。讽刺的是，我们的人机交互体验在很多场景反而倒退了——从丰富的图形化界面体验退回到基于文本的对话聊天，能力强大，但表达原始，很多时候信息可读性很低，阅读效率也不高。（这里暂不考虑CLI带来的底层架构变化带来的体验变化）"
-          },
-          {
-            "type": "image",
-            "src": "content_images/30d400ee_14.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "尽管AI能理解复杂的用户意图，情绪和主次关系等，但输出的Text-based界面创造了一种扁平的信息层级，试图用整段文字进行表达时，这些重要的细节会被丢失。"
-          },
-          {
-            "type": "image",
-            "src": "content_images/30d400ee_15.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "特别是现在AI也被用在一些任务流的场景中，其实非常低效"
-          },
-          {
-            "type": "image",
-            "src": "content_images/30d400ee_16.png",
-            "caption": ""
-          },
-          {
-            "type": "image",
-            "src": "content_images/30d400ee_17.png",
-            "caption": ""
-          },
-          {
-            "type": "subtitle",
-            "text": "现在的Text-based回答的问题（一些调研）✅"
-          },
-          {
-            "type": "text",
-            "text": "只有整段文字的回答overwhelming，难以阅读，73%的用户认为AI output 的“易懂”是最重要的。"
-          },
-          {
-            "type": "image",
-            "src": "content_images/30d400ee_18.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "用户只能扫读，在大段的文字中寻找相关的信息，过高的认知负荷和跳跃的重点，会降低用户对AI 的回答的信任感。"
-          },
-          {
-            "type": "image",
-            "src": "content_images/30d400ee_19.png",
-            "caption": ""
-          },
-          {
-            "type": "image",
-            "src": "content_images/30d400ee_20.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "结构化和信息分层的AI 回答内容对用户更有帮助，让内容更容易理解。但是目前主流的AI回答仅支持Markdown的格式，给人的感觉还是大段的文字内容。"
-          },
-          {
-            "type": "image",
-            "src": "content_images/30d400ee_21.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "这种负面体验会直接导致用户流失，超过一半的用户因为AI回答的信息组织问题而转向使用其它的平台或工具。"
-          },
-          {
-            "type": "image",
-            "src": "content_images/30d400ee_22.png",
-            "caption": ""
-          },
-          {
-            "type": "subtitle",
-            "text": "GenUI是这个时代的人机界面（好处） ✅"
-          },
-          {
-            "type": "text",
-            "text": "GenUI是由AI在实时动态生成的用户界面，用于提供贴合用户需求与情境的定制化体验。"
-          },
-          {
-            "type": "image",
-            "src": "content_images/30d400ee_23.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "GenUI的结构化内容让用户更加聚焦，参与感更强，用户更愿意进一步互动和探索，降低用户的认知负荷。"
-          },
-          {
-            "type": "image",
-            "src": "content_images/30d400ee_24.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "总的来说GenUI通过结构化和可交互的output，对比当前的大部分Text-based回答："
-          },
-          {
-            "type": "text",
-            "text": "• 用户有更好的阅读效率，更易理解"
-          },
-          {
-            "type": "text",
-            "text": "• 用户有更高的互动意愿"
-          },
-          {
-            "type": "text",
-            "text": "• 用户对回答/AI有更强的信任感"
-          },
-          {
-            "type": "subtitle",
-            "text": "GenUI的形态 ✅"
-          },
-          {
-            "type": "text",
-            "text": "大多数真实世界的AI产品体验可以归为三种界面形态：Chat、Chat+、Chatless。GenUI在不同形态的产品中也有不同的表现。"
-          },
-          {
-            "type": "text",
-            "text": "Chat: 在对话中的交互，对话就是产品。"
-          },
-          {
-            "type": "image",
-            "src": "content_images/30d400ee_25.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "在这种模式下，GenUI 通常以内嵌形式出现，例如卡片、图表、摘要或工具的结构化区块。"
-          },
-          {
-            "type": "image",
-            "src": "content_images/30d400ee_26.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "Chat+：对话+产品界面共同协作，聊天依然存在，但它只是更大工作区域的一部分。用户通过对话，让AI在可操作的界面中生成GenUI，共同完成任务。"
-          },
-          {
-            "type": "image",
-            "src": "content_images/30d400ee_27.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "Chatless：界面会在没有任何聊天窗口的情况下自动适配。用户几乎感觉不到“在和 AI 对话”，系统会根据用户的input直接输出新的GenUI更新界面。"
-          },
-          {
-            "type": "image",
-            "src": "content_images/30d400ee_28.png",
-            "caption": ""
-          },
-          {
-            "type": "image",
-            "src": "content_images/30d400ee_29.png",
-            "caption": ""
-          },
-          {
-            "type": "image",
-            "src": "content_images/30d400ee_30.png",
-            "caption": ""
-          },
-          {
-            "type": "image",
-            "src": "content_images/30d400ee_31.png",
-            "caption": ""
-          },
-          {
-            "type": "subtitle",
-            "text": "GenUI的行为：自由度和控制方法 ✅"
-          },
-          {
-            "type": "text",
-            "text": "有2个影响 GenUI 行为的关键：表达自由度和谁来控制表达"
-          },
-          {
-            "type": "text",
-            "text": "表达自由度（Freedom of Expression）：决定了系统在视觉和结构上可以让AI “生成到什么程度”。一般来说有3种："
-          },
-          {
-            "type": "text",
-            "text": "• 固定组件系统（Fixed system）：AI 仅允许调用有限的系统预设组件（比如lists，widget，cards），AI 只能在固定卡片、列表或表单之间选择，不允许结构突破"
-          },
-          {
-            "type": "image",
-            "src": "content_images/30d400ee_32.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "• 扩展组件系统（Composable system）：AI 仅允许调用有限的系统预设组件，但允许不同组件的组合Grouping"
-          },
-          {
-            "type": "image",
-            "src": "content_images/30d400ee_33.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "• 开放生成系统（Open-ended system）：AI 可以生成完整的HTML 或free-form布局"
-          },
-          {
-            "type": "image",
-            "src": "content_images/30d400ee_34.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "谁来控制表达（Who Controls the Representation）："
-          },
-          {
-            "type": "text",
-            "text": "• 一些场景开发者会定义好应用引用GenUI的规则（比如只能用某 3 种卡片），这种情况下产品规定结构，模型只填数据。"
-          },
-          {
-            "type": "text",
-            "text": "• 另一些场景会让模型自己决定怎么呈现（如用表格，生成多个卡的Grouping，或输出完整 HTML）。产品不再规定结构，只负责渲染模型输出的内容"
-          },
-          {
-            "type": "text",
-            "text": "• 大多数现实世界的产品处于中间地带，由应用设定边界，而模型在这些边界内进行自适应。"
-          },
-          {
-            "type": "subtitle",
-            "text": "GenUI的技术实现 ✅"
-          },
-          {
-            "type": "text",
-            "text": "GenUI的实现需要数据，设计组件和AI的决策机制。"
-          },
-          {
-            "type": "image",
-            "src": "content_images/30d400ee_35.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "了解用户的context\n过往行为、偏好（例如深色模式、无障碍需求）以及实时数据（设备类型、屏幕尺寸、位置，甚至一天中的时间）等输入信息。\n例如：打车应用检测到你正在开车时，会自动切换为语音优先的界面；银行应用发现你身处海外时，会优先展示货币转换功能。"
-          },
-          {
-            "type": "text",
-            "text": "定义框架\n设计师构建一套包含 UI 组件、布局和规则的原子组件库，就像一套乐高积木。AI 并不会发明新的控件，而是在预设约束内，组合经过批准的组件。这种以结果为导向的设计方法，让人类设定边界，由 AI 根据用户目标在边界内进行填充与适配。"
-          },
-          {
-            "type": "text",
-            "text": "AI 组装界面\n基于用户的context和组件库，系统会选择并排列合适的界面元素，以匹配当下场景。它可能使用经过训练的机器学习模型、启发式规则，或两者结合。随着语境变化，界面也会随之调整，始终以无缝支持用户意图为目标。"
-          },
-          {
-            "type": "image",
-            "src": "content_images/30d400ee_36.png",
-            "caption": ""
-          },
-          {
-            "type": "subtitle",
-            "text": "GenUI的使用场景和局限性 👷"
-          },
-          {
-            "type": "text",
-            "text": "用户提出不同类型的问题，对于AI的回答也有不同期待。比如在用户询问“宽泛”的问题时，更在意的是回答的简练以及效率；但当用户问出一个“具体”的问题时，期待的是回答能带来“好奇和启发”，以及是“视觉舒适”的。"
-          },
-          {
-            "type": "image",
-            "src": "content_images/30d400ee_37.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "GenUI也应该遵循这些原则，在宽泛的问题下，提升回答的阅读效率，在具体的问题下激发用户的好奇心。"
-          },
-          {
-            "type": "text",
-            "text": "• 生成速度与交互延迟：Google论文将“生成速度慢（分钟级）”列为主要局限，并提出流式渲染可缩短用户等待（但并未宣称已彻底解决）。"
-          },
-          {
-            "type": "text",
-            "text": "• 前端错误与稳定性：论文指出可能出现JavaScript/CSS/HTML等错误；这意味着体验问题不再只是“回答不准”，而是“界面不可用”。"
-          },
-          {
-            "type": "text",
-            "text": "• 跨工具/跨工件的连续性：形成性研究显示用户强烈关注与既有工具链（设计、文档、研发）之间的转移摩擦；否则会造成“重新劳动”。"
-          },
-          {
-            "type": "subtitle",
-            "text": "A2UI ✅"
-          },
-          {
-            "type": "text",
-            "text": "现在很多项目都是多agent合作执行的，这些agent无法合作生成 UI 层。如果要生成GenUI，一般是 AI 生成 HTML/JS 代码直接注入iframe，但这个方法存在安全风险并且难以呈现风格一致的 UI。"
-          },
-          {
-            "type": "text",
-            "text": "因此Google提出了一个协议，让Agent间可以使用一个叫 A2UI 的数据结构让UI像代码一样在不同的Agent之间通信，A2UI 用 结构化消息（JSON） 来描述 UI，而不是发送可执行代码。"
-          },
-          {
-            "type": "image",
-            "src": "content_images/30d400ee_38.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "简单的理解就是厨师学校（Google）把菜谱做好，和各个饭店（不同的Agents）打好招呼，以后看到A就做辣椒炒肉，看到B就做芋头炖牛腩。这样不同饭店都可以共享同一份菜谱，但执行起来每家饭店厨师做法又稍有不同，可以保持独特的口味。"
-          },
-          {
-            "type": "subtitle",
-            "text": "Claude interactive UI"
-          },
-          {
-            "type": "text",
-            "text": "后面需要补充实践部分"
           }
         ]
       }
