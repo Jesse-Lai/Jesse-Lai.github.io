@@ -73,8 +73,8 @@ import { WallArticle } from "./wall-article.js?v=151";
 
   // Apply Chinese fonts when in zh mode
   if (LANG === 'zh') {
-    document.documentElement.style.setProperty('--title-font', '"LXGW WenKai", serif');
-    document.documentElement.style.setProperty('--body-font', '"Noto Sans SC", sans-serif');
+    document.documentElement.style.setProperty('--title-font', '"Optima", "PingFang SC", sans-serif');
+    document.documentElement.style.setProperty('--body-font', '"Optima", "PingFang SC", sans-serif');
   } else {
     document.documentElement.style.setProperty('--title-font', '"Special Elite", cursive');
     document.documentElement.style.setProperty('--body-font', '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif');
