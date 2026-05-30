@@ -149,8 +149,12 @@ import { WallArticle } from "./wall-article.js?v=151";
   }
 
   // ─── Scale factor for non-photo atoms ───
-  const cols = W < 600 ? 1 : W < 1024 ? 2 : W < 1600 ? 3 : 4;
-  const colW = W / cols;
+  // remoteCols: what the remote would use (1/2/3/4); cols: capped at 3
+  // colW uses remoteCols so atom size matches remote's 4-col sizing on wide screens
+  const remoteCols = W < 600 ? 1 : W < 1024 ? 2 : W < 1600 ? 3 : 4;
+  const cols = Math.min(remoteCols, 3);
+  const colW = W / remoteCols;
+  const gridOffsetX = (W - colW * cols) / 2;
   const atomScale = colW / 480;
 
   // ─── Grid config ───
@@ -235,7 +239,7 @@ import { WallArticle } from "./wall-article.js?v=151";
 
   for (const r of rendered) {
     const col = colTops.indexOf(Math.min(...colTops));
-    const colCenterX = (col + 0.5) * colW;
+    const colCenterX = gridOffsetX + (col + 0.5) * colW;
     const boundsW = r.bounds.width;
     const boundsH = r.bounds.height;
 
@@ -373,7 +377,7 @@ import { WallArticle } from "./wall-article.js?v=151";
       // Use first item's bounds as representative size
       const b0 = items[0].group.getBounds();
       const col = colTopsNew.indexOf(Math.min(...colTopsNew));
-      const colCenterX = (col + 0.5) * colW;
+      const colCenterX = gridOffsetX + (col + 0.5) * colW;
       catLayout[cat] = {
         targetX: colCenterX - b0.width / 2,
         targetY: colTopsNew[col],
@@ -503,8 +507,8 @@ import { WallArticle } from "./wall-article.js?v=151";
       [6,  '#F6F3EE', '#F8F3E3'],  // morning 6-12
       [12, '#FFFAF2', '#E8CDA3'],  // afternoon 12-18
       [18, '#FCCC83', '#E79648'],  // dusk 18-20
-      [20, '#262145', '#131028'],  // night 20-6
-      [30, '#262145', '#131028'],  // night wrap
+      [20, '#241F44', '#040B24'],  // night 20-6
+      [30, '#241F44', '#040B24'],  // night wrap
     ];
     const lerpHex = (hexA, hexB, t) => {
       const a = hexToRgb(hexA), b = hexToRgb(hexB);
@@ -529,14 +533,17 @@ import { WallArticle } from "./wall-article.js?v=151";
       return rgbToHex(r * (1-amount), g * (1-amount), b * (1-amount));
     };
 
-    let timeOverride = null;
-    const getTimeBg = () => timeOverride !== null ? getTimeColors(timeOverride) : getTimeColors();
-    let currentBgColors = getTimeBg(); // { top, bottom }
+    // Default to current hour's time period
+    const autoHour = (() => { const h = new Date().getHours(); return h >= 20 || h < 6 ? 22 : h >= 18 ? 18 : h >= 12 ? 15 : 9; })();
+    let timeOverride = autoHour;
+    let currentBgColors = getTimeColors(timeOverride);
 
     // Sunlight overlay elements (null on mobile — removed from DOM)
+    const nightGradient = document.getElementById('night-gradient');
     const perspective = document.querySelector('#sunlight-overlay .perspective');
     const shuttersEl = document.querySelector('#sunlight-overlay .shutters');
     const shutterEls = document.querySelectorAll('#sunlight-overlay .shutter');
+    const barEls = document.querySelectorAll('#sunlight-overlay .bar');
     const root = document.documentElement;
 
     const updateSunProgress = () => {
@@ -550,10 +557,16 @@ import { WallArticle } from "./wall-article.js?v=151";
       const [cr,cg,cb] = hexToRgb(currentBgColors.top);
       const brightness = (cr + cg + cb) / 3;
 
+      // Right-to-left gradient overlay — stronger at night
+      if (nightGradient) {
+        const gradAlpha = brightness < 80 ? 0.3 : 0.25;
+        nightGradient.style.background = `linear-gradient(to left, rgba(0,0,0,${gradAlpha}) 0%, rgba(0,0,0,0) 50%)`;
+      }
+
       // Perspective: opacity + angle shift with scroll
       if (perspective) {
         const isNight = brightness < 80;
-        perspective.style.opacity = lerp(0.12, 0.3, p);
+        perspective.style.opacity = isNight ? lerp(0.16, 0.4, p) : lerp(0.12, 0.3, p);
         perspective.style.mixBlendMode = isNight ? 'multiply' : 'soft-light';
         const m00 = lerp(0.75, 0.8333, p);
         const m01 = lerp(-0.0625, 0.0833, p);
@@ -574,6 +587,15 @@ import { WallArticle } from "./wall-article.js?v=151";
           s.style.mixBlendMode = '';
         }
       });
+      barEls.forEach(b => {
+        if (brightness < 80) {
+          b.style.backgroundColor = '#04040f';
+          b.style.mixBlendMode = 'normal';
+        } else {
+          b.style.backgroundColor = '';
+          b.style.mixBlendMode = '';
+        }
+      });
 
       // Shadow & bounce light colors — adaptive darken + saturation boost
       // Dark backgrounds: less darken to preserve color; light backgrounds: more darken
@@ -587,12 +609,16 @@ import { WallArticle } from "./wall-article.js?v=151";
       const sb = Math.min(255, Math.max(0, avg + (db - avg) * boost));
       root.style.setProperty('--shadow', rgbToHex(sr, sg, sb));
 
+      // Hover label color — light on dark backgrounds, dark on light
+      photoSystem._labelColor = brightness > 160 ? '#000000' : 'rgba(255,255,255,0.85)';
+
       // Update UI button colors based on background brightness
       const btnColor = brightness > 160 ? 'rgba(0,0,0,0.4)' : 'rgba(255,255,255,0.5)';
       const btnHover = brightness > 160 ? 'rgba(0,0,0,0.7)' : 'rgba(255,255,255,0.8)';
       const atomsBtn = document.getElementById('atoms-btn');
       const timeBtn = document.getElementById('time-preview');
-      [atomsBtn, timeBtn].forEach(el => {
+      const langBtn = document.getElementById('lang-toggle');
+      [atomsBtn, timeBtn, langBtn].forEach(el => {
         if (el) { el.style.color = btnColor; el.onmouseenter = () => el.style.color = btnHover; el.onmouseleave = () => el.style.color = btnColor; }
       });
     };
@@ -603,7 +629,7 @@ import { WallArticle } from "./wall-article.js?v=151";
     // Expose time preview control
     window._setTimePreview = (hour) => {
       timeOverride = hour;
-      currentBgColors = getTimeBg();
+      currentBgColors = getTimeColors(timeOverride);
       updateSunProgress();
     };
   }

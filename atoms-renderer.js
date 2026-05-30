@@ -1813,7 +1813,7 @@ export class PhotoSystem {
       style: new PIXI.TextStyle({
         fontFamily: getComputedStyle(document.documentElement).getPropertyValue('--body-font').trim() || 'Red Hat Mono, monospace',
         fontSize: 11,
-        fill: '#000000',
+        fill: this._labelColor || '#000000',
         letterSpacing: 0.5,
       }),
     });

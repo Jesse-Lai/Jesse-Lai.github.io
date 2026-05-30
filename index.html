@@ -20,6 +20,13 @@
     canvas { display: block; }
 
     /* ── Sunlight overlay ── */
+    #night-gradient {
+      pointer-events: none;
+      position: fixed; inset: 0;
+      z-index: 0;
+      background: linear-gradient(to left, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0) 50%);
+      opacity: 1;
+    }
     #sunlight-overlay {
       pointer-events: none;
       position: fixed; inset: 0;
@@ -119,33 +126,21 @@
       font-family: 'Red Hat Mono', 'Courier New', monospace;
       color: #444; font-size: 11px; margin-top: 10px;
     }
-    #atoms-btn {
-      position: fixed; top: 20px; right: 160px; z-index: 9999;
-      padding: 6px 0; background: none; border: none;
-      color: rgba(255,255,255,0.5); cursor: pointer; font-size: 13px;
-      font-family: 'Red Hat Mono', monospace; letter-spacing: 1px;
-      transition: color 0.2s; user-select: none;
-    }
-    #atoms-btn:hover { color: rgba(255,255,255,0.8); }
-    #time-preview {
+    #top-bar {
       position: fixed; top: 20px; right: 20px; z-index: 9999;
+      display: flex; align-items: center; gap: 16px;
+    }
+    #top-bar button, #top-bar select, #top-bar div {
       background: none; border: none;
       color: rgba(255,255,255,0.5); cursor: pointer; font-size: 13px; padding: 6px 0;
       font-family: 'Red Hat Mono', monospace; letter-spacing: 1px;
-      transition: color 0.2s;
-      appearance: none; -webkit-appearance: none;
-      outline: none;
-    }
-    #time-preview:hover { color: rgba(255,255,255,0.8); }
-    #time-preview option { color: #333; background: #fff; }
-    #lang-toggle {
-      position: fixed; top: 20px; right: 80px; z-index: 9999;
-      background: none; border: none;
-      color: rgba(255,255,255,0.5); cursor: pointer; font-size: 13px; padding: 6px 0;
-      font-family: "Red Hat Mono", monospace; letter-spacing: 1px;
       transition: color 0.2s; user-select: none;
     }
-    #lang-toggle:hover { color: rgba(255,255,255,0.8); }
+    #top-bar button:hover, #top-bar select:hover, #top-bar div:hover { color: rgba(255,255,255,0.8); }
+    #time-preview {
+      appearance: none; -webkit-appearance: none; outline: none;
+    }
+    #time-preview option { color: #333; background: #fff; }
 
     /* Focus overlay */
     canvas.focus-active {
@@ -159,8 +154,7 @@
       pointer-events: none;
     }
     #focus-overlay.visible { pointer-events: auto; }
-    #focus-overlay.visible ~ #atoms-btn,
-    body:has(#focus-overlay.visible) #atoms-btn { display: none; }
+    body:has(#focus-overlay.visible) #top-bar { display: none; }
     body.focus-active #sunlight-overlay { opacity: 0; }
     #focus-backdrop {
       position: absolute; inset: 0;
@@ -531,6 +525,7 @@
   </style>
 </head>
 <body>
+  <div id="night-gradient"></div>
   <!-- Sunlight overlay: perspective + blinds -->
   <div id="sunlight-overlay">
     <div class="perspective">
@@ -579,14 +574,24 @@
       if (windFilter) windFilter.remove();
     }
   </script>
-  <select id="time-preview" onchange="window._setTimePreview && window._setTimePreview(this.value === 'auto' ? null : Number(this.value))">
-    <option value="9">Morning</option>
-    <option value="15">Afternoon</option>
-    <option value="18">Dusk</option>
-    <option value="22">Night</option>
-  </select>
-  <div id="atoms-btn" style="display:none" onclick="location.href='atoms.html'">Atoms</div>
-  <button id="lang-toggle" onclick="window._toggleLang && window._toggleLang()">中</button>
+  <div id="top-bar">
+    <div id="atoms-btn" style="display:none" onclick="location.href='atoms.html'">Atoms</div>
+    <button id="lang-toggle" onclick="window._toggleLang && window._toggleLang()">中</button>
+    <select id="time-preview" onchange="window._setTimePreview && window._setTimePreview(Number(this.value))">
+      <option value="9">Morning</option>
+      <option value="15">Afternoon</option>
+      <option value="18">Dusk</option>
+      <option value="22">Night</option>
+    </select>
+    <script>
+      // Auto-select time period based on current hour
+      (function() {
+        var h = new Date().getHours();
+        var v = h >= 20 || h < 6 ? '22' : h >= 18 ? '18' : h >= 12 ? '15' : '9';
+        document.getElementById('time-preview').value = v;
+      })();
+    </script>
+  </div>
   <script>if(location.hostname==='localhost'||location.hostname==='127.0.0.1'||location.search.includes('dev'))document.getElementById('atoms-btn').style.display='';</script>
   <div id="focus-overlay">
     <div id="focus-backdrop"></div>
