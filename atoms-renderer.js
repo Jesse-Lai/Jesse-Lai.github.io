@@ -2324,7 +2324,7 @@ export class FocusOverlay {
         if (section.type === 'subtitle') {
           html += `<h2 style="font-family:var(--title-font, Special Elite);font-size:20px;color:#333;margin:48px 0 16px;line-height:1.4;">${section.text}</h2>`;
         } else if (section.type === 'text') {
-          html += `<p style="font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;font-size:16px;color:#444;line-height:1.85;margin-bottom:24px;">${section.text}</p>`;
+          html += `<p style="font-family:var(--body-font, -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif);font-size:16px;color:#444;line-height:1.85;margin-bottom:24px;">${section.text}</p>`;
         } else if (section.type === 'image') {
           html += `<img src="${section.src}" alt="${section.alt || ''}" style="width:100%;border-radius:6px;margin:32px 0 8px;">`;
           if (section.caption) {
@@ -2873,7 +2873,7 @@ export class FocusOverlay {
             if (section.type === 'subtitle') {
               html += `<h2 style="font-family:var(--title-font, Special Elite);font-size:20px;color:#333;margin:48px 0 16px;line-height:1.4;">${section.text}</h2>`;
             } else if (section.type === 'text') {
-              html += `<p style="font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;font-size:16px;color:#444;line-height:1.85;margin-bottom:24px;">${section.text}</p>`;
+              html += `<p style="font-family:var(--body-font, -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif);font-size:16px;color:#444;line-height:1.85;margin-bottom:24px;">${section.text}</p>`;
             } else if (section.type === 'image') {
               html += `<img src="${section.src}" alt="${section.alt || ''}" style="width:100%;border-radius:6px;margin:32px 0 8px;">`;
               if (section.caption) {
@@ -3065,7 +3065,7 @@ export class FocusOverlay {
       flushAtomBuffer();
       if (!currentEl || currentEl.tagName === 'H2') {
         currentEl = document.createElement('p');
-        currentEl.style.cssText = 'font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;font-size:16px;color:#444;line-height:1.85;margin-bottom:24px;';
+        currentEl.style.cssText = 'font-family:var(--body-font, -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif);font-size:16px;color:#444;line-height:1.85;margin-bottom:24px;';
         aiContent.appendChild(currentEl);
       }
       currentEl.textContent += text;
@@ -3566,7 +3566,7 @@ export class FocusOverlay {
         if (article.sections) {
           for (const s of article.sections) {
             if (s.type === 'subtitle') html += `<h2 style="font-family:var(--title-font, Special Elite);font-size:20px;color:#333;margin:48px 0 16px;line-height:1.4;">${s.text}</h2>`;
-            else if (s.type === 'text') html += `<p style="font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;font-size:16px;color:#444;line-height:1.85;margin-bottom:24px;">${s.text}</p>`;
+            else if (s.type === 'text') html += `<p style="font-family:var(--body-font, -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif);font-size:16px;color:#444;line-height:1.85;margin-bottom:24px;">${s.text}</p>`;
             else if (s.type === 'image') {
               html += `<img src="${s.src}" alt="${s.alt || ''}" style="width:100%;border-radius:6px;margin:32px 0 8px;">`;
               if (s.caption) html += `<p style="font-family:Red Hat Mono,monospace;font-size:11px;color:#555;text-align:center;margin:0 0 32px;">${s.caption}</p>`;
