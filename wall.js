@@ -643,8 +643,27 @@ import { WallArticle } from "./wall-article.js?v=151";
       setTimeout(() => { isAnimating = false; }, 500);
     };
 
-    // Initial snap
+    // Initial snap (no video on first load — iOS requires user interaction)
     scrollToIdx(0);
+    
+    // Unlock video after first touch
+    let videoUnlocked = false;
+    const unlockVideo = () => {
+      if (videoUnlocked) return;
+      videoUnlocked = true;
+      // Re-activate current item to start video now that touch has happened
+      const cur = snapTargets[currentSnapIdx]?.item;
+      if (cur && cur.videoSrc && cur.sprite) {
+        const entry = getOrCreateVideo(cur.videoSrc);
+        if (entry.ready && entry.texture) {
+          cur._staticTex = cur._staticTex || cur.sprite.texture;
+          cur.sprite.texture = entry.texture;
+          entry.video.currentTime = 0;
+          entry.video.play().catch(() => {});
+        }
+      }
+    };
+    document.addEventListener('touchstart', unlockVideo, { once: true, passive: true });
 
     // Block native scroll completely — JS controls position
     document.addEventListener('touchmove', (e) => {
