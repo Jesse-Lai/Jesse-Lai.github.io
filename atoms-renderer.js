@@ -1582,6 +1582,7 @@ export async function renderTearoffCard(app, x, y, cfg) {
     stripState[idx].tearing = true;
     stripState[idx].tearStart = performance.now();
     navigator.clipboard.writeText(strips[idx].text).catch(() => {});
+        if (window.umami) umami.track('tearoff-rip');
 
   };
 
@@ -1928,6 +1929,7 @@ export class PhotoSystem {
           photo.sprite.texture = entry.texture;
           entry.video.currentTime = 0;
           entry.video.play().catch(() => {});
+          if (window.umami) umami.track('video-play', { src: photo.videoSrc });
         }
       } else if (!hovering && wasHovering) {
         this._stopPhotoVideo(photo);
@@ -2374,8 +2376,9 @@ export class FocusOverlay {
     if (title) {
       html += `<h1 style="font-family:var(--title-font, Special Elite);font-size:28px;color:var(--text-primary, #1a1a1a);letter-spacing:0.5px;line-height:1.4;margin:0 0 32px;padding-bottom:24px;border-bottom:1px solid var(--border-divider, rgba(0,0,0,0.08));">${title}</h1>`;
     }
-    if (article.sections) {
-      for (const section of article.sections) {
+    const _sections = (this._lang === 'en' && article.sections_en) ? article.sections_en : article.sections;
+    if (_sections) {
+      for (const section of _sections) {
         if (section.type === 'subtitle') {
           html += `<h2 style="font-family:var(--title-font, Special Elite);font-size:20px;color:var(--text-secondary, #333);margin:48px 0 16px;line-height:1.4;">${section.text}</h2>`;
         } else if (section.type === 'text') {
@@ -2461,6 +2464,9 @@ export class FocusOverlay {
     if (this.activeItem) return;
     this.activeItem = item;
     this._photoSystem?.hideAllHoverUI();
+    this._focusOpenTime = Date.now();
+    this._chatRounds = 0;
+    if (window.umami) umami.track('focus-open', { title: item.focusData?.title || '' });
     this.overlay.scrollTop = 0;
     // Hide wall composer when focus overlay is open
     const wallComposer = document.getElementById('wall-composer');
@@ -2820,6 +2826,15 @@ export class FocusOverlay {
 
   close() {
     if (!this.activeItem) return;
+    // Track focus duration
+    if (this._focusOpenTime && window.umami) {
+      const seconds = Math.round((Date.now() - this._focusOpenTime) / 1000);
+      umami.track('focus-duration', { title: this.activeItem.focusData?.title || '', seconds });
+      if (this._chatRounds > 0) {
+        umami.track('focus-chat-rounds', { title: this.activeItem.focusData?.title || '', rounds: this._chatRounds });
+      }
+      this._focusOpenTime = null;
+    }
     this._cleanupFocusVideo();
     const item = this.activeItem;
     // Restore original focusData if this was a clip group focus
@@ -2950,6 +2965,8 @@ export class FocusOverlay {
   // ─── Article Mode (lives inside the focus overlay) ───
 
   openArticle() {
+    this._articleOpenTime = Date.now();
+    if (window.umami) umami.track('article-view', { title: this.activeItem?.focusData?.title || '' });
     if (!this.activeItem) return;
 
     // Clip group → AI-generated summary article (no mesh)
@@ -3011,7 +3028,8 @@ export class FocusOverlay {
 
         // 文章正文
         if (article?.sections) {
-          for (const section of article.sections) {
+          const _secs2 = (this._lang === 'en' && article.sections_en) ? article.sections_en : article.sections;
+          for (const section of _secs2) {
             if (section.type === 'subtitle') {
               html += `<h2 style="font-family:var(--title-font, Special Elite);font-size:20px;color:var(--text-secondary, #333);margin:48px 0 16px;line-height:1.4;">${section.text}</h2>`;
             } else if (section.type === 'text') {
@@ -3270,6 +3288,11 @@ export class FocusOverlay {
   }
 
   closeArticle() {
+    if (this._articleOpenTime && window.umami) {
+      const duration = Math.round((Date.now() - this._articleOpenTime) / 1000);
+      umami.track('article-duration', { title: this.activeItem?.focusData?.title || '', seconds: duration });
+      this._articleOpenTime = null;
+    }
     if (!this._articleMode) return;
     this._articleMode = false;
 
@@ -3371,6 +3394,8 @@ export class FocusOverlay {
   }
 
   _sendChatMessage(textarea, sendBtn) {
+    this._chatRounds = (this._chatRounds || 0) + 1;
+    if (window.umami) umami.track('chat-send', { title: this.activeItem?.focusData?.title || 'wall', round: this._chatRounds });
     const query = textarea.value.trim();
     if (!query) return;
 
@@ -3710,8 +3735,9 @@ export class FocusOverlay {
         let html = '';
         const title = article.title || focusData.title || '';
         if (title) html += `<h1 style="font-family:var(--title-font, Special Elite);font-size:28px;color:var(--text-primary, #1a1a1a);letter-spacing:0.5px;line-height:1.4;margin:0 0 32px;padding-bottom:24px;border-bottom:1px solid var(--border-divider, rgba(0,0,0,0.08));">${title}</h1>`;
-        if (article.sections) {
-          for (const s of article.sections) {
+        const _secs3 = (this._lang === 'en' && article.sections_en) ? article.sections_en : article.sections;
+        if (_secs3) {
+          for (const s of _secs3) {
             if (s.type === 'subtitle') html += `<h2 style="font-family:var(--title-font, Special Elite);font-size:20px;color:var(--text-secondary, #333);margin:48px 0 16px;line-height:1.4;">${s.text}</h2>`;
             else if (s.type === 'text') html += `<p style="font-family:var(--body-font, -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif);font-size:16px;color:var(--text-body, #444);line-height:1.85;margin-bottom:24px;">${s.text}</p>`;
             else if (s.type === 'image') {
