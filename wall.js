@@ -562,7 +562,9 @@ import { WallArticle } from "./wall-article.js?v=151";
       const p = Math.min(1, Math.max(0, scrollY / maxScroll));
 
       // Background color — lerp between top and bottom based on scroll
-      app.renderer.background.color = lerpHex(currentBgColors.top, currentBgColors.bottom, p);
+      const currentColor = lerpHex(currentBgColors.top, currentBgColors.bottom, p);
+      app.renderer.background.color = currentColor;
+      document.documentElement.style.backgroundColor = currentColor;
 
       const [cr,cg,cb] = hexToRgb(currentBgColors.top);
       const brightness = (cr + cg + cb) / 3;
