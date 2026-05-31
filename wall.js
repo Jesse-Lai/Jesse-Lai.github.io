@@ -693,13 +693,18 @@ import { WallArticle } from "./wall-article.js?v=151";
           }
           cur._staticTex = cur._staticTex || cur.sprite.texture;
           cur.sprite.texture = entry.texture;
-          // After first successful play, bg-load all other videos
+          // After first successful play, fetch all other videos as blobs
           if (!window._videosLoading) {
             window._videosLoading = true;
             snapTargets.forEach(t => {
               if (t.item && t.item.videoSrc && t.item !== cur) {
                 const e = getOrCreateVideo(t.item.videoSrc);
-                if (!e.ready) e.video.load();
+                if (!e.ready) {
+                  fetch(t.item.videoSrc).then(r => r.blob()).then(blob => {
+                    e.video.src = URL.createObjectURL(blob);
+                    e.video.load();
+                  }).catch(() => {});
+                }
               }
             });
           }
