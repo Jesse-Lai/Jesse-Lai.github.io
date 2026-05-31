@@ -798,8 +798,8 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg, o
   // opts.colorScheme: 'warm' (default yellow) | 'cool' (light blue)
   const colorScheme = opts.colorScheme || 'warm';
   const palette = colorScheme === 'cool'
-    ? { bg: 0xc4e4ff, title: 0x1a2a3a, body: 0x3a4a5a, date: 0x5a7a8a }
-    : { bg: 0xfff9c4, title: 0x222222, body: 0x444444, date: 0x666666 };
+    ? { bg: 0xD8EDFF, title: 0x1a2a3a, body: 0x3a4a5a, date: 0x5a7a8a }
+    : { bg: 0xFFFAD1, title: 0x222222, body: 0x444444, date: 0x666666 };
   const wrapper = new PIXI.Container();
   wrapper.x = x; wrapper.y = y;
 

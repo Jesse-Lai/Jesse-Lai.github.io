@@ -159,6 +159,10 @@ import { WallArticle } from "./wall-article.js?v=151";
 
   // ─── Grid config ───
   const gridPad = colW * 0.216;
+  // Mobile: extra top padding so first atom sits near vertical center of screen
+  const topPad = isMobile ? H * 0.25 : gridPad;
+  // Mobile: wider gap between atoms
+  const itemGap = isMobile ? gridPad * 1.8 : gridPad;
 
   // ─── Focus Overlay ───
   const focusOverlay = new FocusOverlay(app, contentData, LANG);
@@ -234,7 +238,7 @@ import { WallArticle } from "./wall-article.js?v=151";
   }
 
   // ─── Step 2: Masonry layout using actual bounds ───
-  const colTops = new Array(cols).fill(gridPad);
+  const colTops = new Array(cols).fill(topPad);
   const renderedItems = [];
 
   for (const r of rendered) {
@@ -252,7 +256,7 @@ import { WallArticle } from "./wall-article.js?v=151";
     r.group.x = colCenterX - boundsW / 2 - offsetX;
     r.group.y = colTops[col] - offsetY;
 
-    colTops[col] += boundsH + gridPad;
+    colTops[col] += boundsH + itemGap;
 
     if (r.focusableItem) renderedItems.push({ wallItem: r.wallItem, focusableItem: r.focusableItem });
   }
@@ -263,7 +267,7 @@ import { WallArticle } from "./wall-article.js?v=151";
     r.initY = r.group.y;
   }
 
-  const totalH = Math.max(...colTops) + gridPad + 160; // extra padding for chat bar + tearoff strips
+  const totalH = Math.max(...colTops) + itemGap + 160; // extra padding for chat bar + tearoff strips
   const contentH = Math.max(totalH, H); // Save for resize handler
   app.renderer.resize(W, Math.max(totalH, H));
   app.canvas.style.height = Math.max(totalH, H) + 'px';
@@ -639,6 +643,8 @@ import { WallArticle } from "./wall-article.js?v=151";
     const snapTargets = rendered.map(r => ({
       y: r.group.y - 40,
       item: r.focusableItem,  // may be null for tearoff
+      group: r.group,
+      baseScale: r.group.scale.x,
     }));
     let currentSnapIdx = 0;
     let touchStartY = 0;
@@ -647,39 +653,42 @@ import { WallArticle } from "./wall-article.js?v=151";
     const activateItem = (idx) => {
       // Deactivate previous
       if (currentSnapIdx >= 0 && currentSnapIdx < snapTargets.length) {
-        const prev = snapTargets[currentSnapIdx].item;
+        const prevTarget = snapTargets[currentSnapIdx];
+        const prev = prevTarget.item;
         if (prev) {
           photoSystem._hideHoverLabel(prev);
           photoSystem._stopPhotoVideo(prev);
-          // Animate scale down
-          const restoreScale = prev.baseScale;
-          const animDown = () => {
-            const s = prev.group.scale.x;
-            const next = s + (restoreScale - s) * 0.12;
-            prev.group.scale.set(next);
-            if (Math.abs(next - restoreScale) > 0.001) requestAnimationFrame(animDown);
-            else prev.group.scale.set(restoreScale);
-          };
-          requestAnimationFrame(animDown);
         }
+        // Animate scale down for all atom types
+        const restoreScale = prevTarget.baseScale;
+        const prevGroup = prevTarget.group;
+        const animDown = () => {
+          const s = prevGroup.scale.x;
+          const next = s + (restoreScale - s) * 0.12;
+          prevGroup.scale.set(next);
+          if (Math.abs(next - restoreScale) > 0.001) requestAnimationFrame(animDown);
+          else prevGroup.scale.set(restoreScale);
+        };
+        requestAnimationFrame(animDown);
       }
       currentSnapIdx = idx;
       if (idx < 0 || idx >= snapTargets.length) return;
       // Activate current
-      const cur = snapTargets[idx].item;
-      if (!cur) return; // tearoff has no focusable item
-      photoSystem._showHoverLabel(cur);
-      // Animate scale up
-      const targetScale = cur.baseScale * 1.05;
+      const curTarget = snapTargets[idx];
+      const cur = curTarget.item;
+      if (cur) photoSystem._showHoverLabel(cur);
+      // Animate scale up for all atom types
+      const targetScale = curTarget.baseScale * 1.10;
+      const curGroup = curTarget.group;
       const animScale = () => {
-        const s = cur.group.scale.x;
+        const s = curGroup.scale.x;
         const next = s + (targetScale - s) * 0.12;
-        cur.group.scale.set(next);
+        curGroup.scale.set(next);
         if (Math.abs(next - targetScale) > 0.001) requestAnimationFrame(animScale);
-        else cur.group.scale.set(targetScale);
+        else curGroup.scale.set(targetScale);
       };
       requestAnimationFrame(animScale);
-      if (cur.videoSrc && cur.sprite) {
+      if (cur && cur.videoSrc && cur.sprite) {
         const entry = getOrCreateVideo(cur.videoSrc);
         // Use blob URL for first video if available
         const blob = window._firstVideoBlob && window._firstVideoBlob.src === cur.videoSrc ? window._firstVideoBlob : null;
