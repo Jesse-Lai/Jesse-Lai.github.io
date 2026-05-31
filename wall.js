@@ -188,6 +188,13 @@ import { WallArticle } from "./wall-article.js?v=151";
       const photoItem = await photoSystem.addPhoto(item.src, 0, 0, photoScale, item);
       photoItem.videoSrc = item.src.replace(/\.(png|jpg|jpeg|webp)$/i, '.mp4');
       getOrCreateVideo(photoItem.videoSrc);
+      // Mobile: prefetch first video as blob so it can play without user interaction
+      if (isMobile && !window._firstVideoPrefetched) {
+        window._firstVideoPrefetched = true;
+        fetch(photoItem.videoSrc).then(r => r.blob()).then(blob => {
+          window._firstVideoBlob = { src: photoItem.videoSrc, url: URL.createObjectURL(blob) };
+        }).catch(() => {});
+      }
       if (item.focus) { photoItem.focusData = item.focus; if (item.keywords) photoItem.focusData.description = item.keywords; }
       const b = photoItem.group.getBounds();
       rendered.push({ group: photoItem.group, bounds: b, wallItem: item, focusableItem: photoItem });
@@ -653,6 +660,19 @@ import { WallArticle } from "./wall-article.js?v=151";
           cur.sprite.texture = entry.texture;
           entry.video.currentTime = 0;
           entry.video.play().catch(() => {});
+        } else {
+          // iOS: video not preloaded yet — use blob if available, else force load
+          const blob = window._firstVideoBlob && window._firstVideoBlob.src === cur.videoSrc ? window._firstVideoBlob : null;
+          const video = entry.video;
+          if (blob) video.src = blob.url;
+          video.play().then(() => {
+            if (!entry.texture) {
+              entry.texture = PIXI.Texture.from(video, { resourceOptions: { autoPlay: false } });
+              entry.ready = true;
+            }
+            cur._staticTex = cur._staticTex || cur.sprite.texture;
+            cur.sprite.texture = entry.texture;
+          }).catch(() => {});
         }
       }
     };
@@ -669,22 +689,33 @@ import { WallArticle } from "./wall-article.js?v=151";
     // Initial snap (no video on first load — iOS requires user interaction)
     scrollToIdx(0);
     
-    // Unlock video after first touch
+    // Unlock video after first touch + preload all other videos
     let videoUnlocked = false;
     const unlockVideo = () => {
       if (videoUnlocked) return;
       videoUnlocked = true;
-      // Re-activate current item to start video now that touch has happened
+      // Re-activate current item video
       const cur = snapTargets[currentSnapIdx]?.item;
       if (cur && cur.videoSrc && cur.sprite) {
         const entry = getOrCreateVideo(cur.videoSrc);
-        if (entry.ready && entry.texture) {
+        const blob = window._firstVideoBlob && window._firstVideoBlob.src === cur.videoSrc ? window._firstVideoBlob : null;
+        if (blob) entry.video.src = blob.url;
+        entry.video.play().then(() => {
+          if (!entry.texture) {
+            entry.texture = PIXI.Texture.from(entry.video, { resourceOptions: { autoPlay: false } });
+            entry.ready = true;
+          }
           cur._staticTex = cur._staticTex || cur.sprite.texture;
           cur.sprite.texture = entry.texture;
-          entry.video.currentTime = 0;
-          entry.video.play().catch(() => {});
-        }
+        }).catch(() => {});
       }
+      // Background-load all other videos
+      snapTargets.forEach(t => {
+        if (t.item && t.item.videoSrc) {
+          const e = getOrCreateVideo(t.item.videoSrc);
+          if (!e.ready) e.video.load();
+        }
+      });
     };
     document.addEventListener('touchstart', unlockVideo, { once: true, passive: true });
 
