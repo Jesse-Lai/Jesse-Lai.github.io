@@ -2,6 +2,8 @@
 // All atom types are rendered from here. Both atoms.html and wall.js import this.
 import { streamChat, chatSync, buildSystemPrompt } from './ai-client.js?v=166';
 
+const getCSSFont = (varName, fallback) =>
+  getComputedStyle(document.documentElement).getPropertyValue(varName).trim() || fallback;
 
 // ─── Paper texture generation (matches SVG #paper-texture filter) ───
 function generatePaperTexture(w, h) {
@@ -819,7 +821,7 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg, o
   let bodyBottom = titleBottom;
   if (noteData.title) {
     const titleText = new PIXI.Text({text: noteData.title, style: {
-      fontFamily: 'Special Elite', fontSize: 28, fill: palette.title,
+      fontFamily: getCSSFont('--atom-font', 'Special Elite'), fontSize: 28, fill: palette.title,
       wordWrap: true, wordWrapWidth: noteW - padding*2,
       padding: 8,
     }});
@@ -876,7 +878,7 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg, o
       areaX: padding, areaY: titleBottom,
       areaW: noteW - padding*2,
       areaH: 250 - titleBottom, // max text area before stamp
-      fontSize: 17, fontFamily: 'Special Elite', fill: palette.body,
+      fontSize: 17, fontFamily: getCSSFont('--atom-font', 'Special Elite'), fill: palette.body,
       obstacles,
     });
     renderTextLines(wrapper, bodyLines);
@@ -1390,7 +1392,7 @@ export async function renderTearoffCard(app, x, y, cfg) {
 
   // ── Title text ──
   const titleText = new PIXI.Text({ text: 'Grab a strip\nfor your agent', style: {
-    fontFamily: 'Special Elite', fontSize: 28, fill: 0x1a1a1a,
+    fontFamily: getCSSFont('--atom-font', 'Special Elite'), fontSize: 28, fill: 0x1a1a1a,
     align: 'center', wordWrap: true, wordWrapWidth: cardW - 40, padding: 8,
   }});
   titleText.anchor.set(0.5, 0.5);
@@ -1400,7 +1402,7 @@ export async function renderTearoffCard(app, x, y, cfg) {
 
   // ── Subtitle text ──
   const subtitleText = new PIXI.Text({ text: 'A secret key designed for agents', style: {
-    fontFamily: 'Special Elite', fontSize: 12, fill: 0x999999,
+    fontFamily: getCSSFont('--atom-font', 'Special Elite'), fontSize: 12, fill: 0x999999,
     align: 'center', wordWrap: true, wordWrapWidth: cardW - 40, padding: 4,
   }});
   subtitleText.anchor.set(0.5, 0);
@@ -1663,12 +1665,12 @@ export class PhotoSystem {
   async addPhoto(imgSrc, x, y, scale, meta) {
     const imgData = await loadImagePixels(imgSrc);
     const sc = scale || Math.min(200/imgData.w, 300/imgData.h);
-    const { group, sprite } = await renderPhoto(this.app, imgData, x, y, sc, meta, this.config?.photo);
+    const { group, sprite, shadow, frame } = await renderPhoto(this.app, imgData, x, y, sc, meta, this.config?.photo);
     this.app.stage.addChild(group);
     const pw = imgData.w*sc, ph = imgData.h*sc;
     const border = pw*0.06, bottomBorder = border*3;
     const photo = {
-      group, sprite, imgData, scale: sc, config: meta, clipped: false, splitCooldown: 0,
+      group, sprite, shadow, frame, imgData, scale: sc, config: meta, clipped: false, splitCooldown: 0,
       // anchor = offset from group origin (photo center) to bounds top-left
       itemW: pw+border*2, itemH: ph+border+bottomBorder,
       anchorX: pw/2 + border, anchorY: ph/2 + border,
@@ -1792,7 +1794,27 @@ export class PhotoSystem {
     photo._staticTex = null;
   }
 
+  _isFocusOpen() {
+    return document.body.classList.contains('focus-active');
+  }
+
+  _clearHoverLabelImmediate(photo) {
+    for (const key of ['_hoverLabel', '_fadingHoverLabel']) {
+      const label = photo?.[key];
+      if (!label) continue;
+      photo[key] = null;
+      if (label.parent) label.parent.removeChild(label);
+      label.destroy({ children: true });
+    }
+  }
+
+  hideAllHoverUI() {
+    for (const p of this.photos) this._clearHoverLabelImmediate(p);
+    for (const cg of this.clipGroups) this._hideClipHoverLabelImmediate(cg);
+  }
+
   _showHoverLabel(photo) {
+    if (this._isFocusOpen()) return;
     if (photo._hoverLabel) return;
     const cfg = photo.config || {};
     const categoryMap = {
@@ -1837,11 +1859,13 @@ export class PhotoSystem {
     if (!photo._hoverLabel) return;
     const label = photo._hoverLabel;
     photo._hoverLabel = null;
+    photo._fadingHoverLabel = label; // track during fade so clearImmediate can still catch it
     const fadeOut = () => {
       label.alpha -= 0.15;
       if (label.alpha <= 0) {
         if (label.parent) label.parent.removeChild(label);
         label.destroy({ children: true });
+        if (photo._fadingHoverLabel === label) photo._fadingHoverLabel = null;
         return;
       }
       requestAnimationFrame(fadeOut);
@@ -1908,10 +1932,15 @@ export class PhotoSystem {
       } else if (!hovering && wasHovering) {
         this._stopPhotoVideo(photo);
       }
-      // Hover label
-      if (hovering && !wasHovering) this._showHoverLabel(photo);
-      else if (!hovering && wasHovering) this._hideHoverLabel(photo);
-      wasHovering = hovering;
+      // Hover label (suppressed while focus overlay is open)
+      if (!this._isFocusOpen()) {
+        if (hovering && !wasHovering) this._showHoverLabel(photo);
+        else if (!hovering && wasHovering) this._hideHoverLabel(photo);
+        wasHovering = hovering;
+      } else if (wasHovering) {
+        this._hideHoverLabel(photo);
+        wasHovering = false;
+      }
     };
     const onUp = e => {
       if (!drag) return;
@@ -1922,6 +1951,8 @@ export class PhotoSystem {
 
       // Click → focus overlay
       if (wasClick && photo.focusData && this.onFocus) {
+        this._clearHoverLabelImmediate(photo);
+        this.hideAllHoverUI();
         this.onFocus(photo);
         return;
       }
@@ -2000,6 +2031,7 @@ export class PhotoSystem {
   }
 
   _showClipHoverLabel(cg) {
+    if (this._isFocusOpen()) return;
     if (cg._hoverAnimating) return;
     if (!cg.label) return;
     cg._hoverAnimating = true;
@@ -2086,6 +2118,20 @@ export class PhotoSystem {
     requestAnimationFrame(tick);
   }
 
+  _hideClipHoverLabelImmediate(cg) {
+    if (!cg._hoverArrow && !cg._hoverText) return;
+    const arrow = cg._hoverArrow;
+    const text = cg._hoverText;
+    const mask = cg._hoverTextMask;
+    cg._hoverArrow = null;
+    cg._hoverText = null;
+    cg._hoverTextMask = null;
+    cg._hoverAnimating = false;
+    if (arrow) { if (arrow.parent) arrow.parent.removeChild(arrow); arrow.destroy(); }
+    if (text) { text.mask = null; if (text.parent) text.parent.removeChild(text); text.destroy(); }
+    if (mask) { if (mask.parent) mask.parent.removeChild(mask); mask.destroy(); }
+  }
+
   _hideClipHoverLabel(cg) {
     if (!cg._hoverArrow && !cg._hoverText) return;
     const arrow = cg._hoverArrow;
@@ -2104,6 +2150,7 @@ export class PhotoSystem {
   setupMobileScrollHover() {
     let lastCheck = 0;
     const check = () => {
+      if (this._isFocusOpen()) return;
       if (performance.now() - lastCheck < 200) return;
       lastCheck = performance.now();
       const scrollY = window.scrollY || 0;
@@ -2156,6 +2203,7 @@ export class PhotoSystem {
             groupDrag = cg;
             groupOffX = mx; groupOffY = my;
             groupDownTime = Date.now(); groupMoved = false;
+            this._hideClipHoverLabelImmediate(cg);
             for (const gp of cg.photos) gp.group.scale.set(gp.baseScale * 1.05);
             return;
           }
@@ -2213,10 +2261,12 @@ export class PhotoSystem {
         for (const p of cg.photos) { const ts = (groupHovered || groupDrag===cg ? 1.05 : 1.0) * p.baseScale; const c=p.group.scale.x; p.group.scale.set(c+(ts-c)*0.15); }
 
         // Hover label: show on enter, hide on leave
-        if (groupHovered && !cg._hoverArrow) {
-          this._showClipHoverLabel(cg);
-        } else if (!groupHovered && cg._hoverArrow) {
-          this._hideClipHoverLabel(cg);
+        if (!this._isFocusOpen()) {
+          if (groupHovered && !cg._hoverArrow) {
+            this._showClipHoverLabel(cg);
+          } else if (!groupHovered && cg._hoverArrow) {
+            this._hideClipHoverLabel(cg);
+          }
         }
       }
     });
@@ -2225,6 +2275,7 @@ export class PhotoSystem {
         for (const gp of groupDrag.photos) gp.group.scale.set(gp.baseScale);
         // Click (not drag) on clip group → open focus overlay
         if (!groupMoved && (Date.now() - groupDownTime) < 200 && this.onFocus) {
+          this.hideAllHoverUI();
           const firstPhoto = groupDrag.photos[0];
           firstPhoto._savedFocusData = firstPhoto.focusData;
           firstPhoto.focusData = this._buildClipFocusData(groupDrag);
@@ -2247,10 +2298,14 @@ export class PhotoSystem {
   }
 }
 
+// Returns the appropriate dim layer background color based on current time mode
+const getDimColor = () => document.documentElement.classList.contains('night-mode') ? 0x0d0c1a : getDimColor();
+
 // ─── Focus Overlay — click-to-detail with paper curl effect ───
 export class FocusOverlay {
-  constructor(app, contentData, lang) {
+  constructor(app, contentData, lang, photoSystem) {
     this.app = app;
+    this._photoSystem = photoSystem || null;
     this._contentData = contentData || [];
     this._lang = lang || 'en';
     this.overlay = document.getElementById('focus-overlay');
@@ -2317,18 +2372,18 @@ export class FocusOverlay {
     let html = '';
     const title = article.title || focusData.title || '';
     if (title) {
-      html += `<h1 style="font-family:var(--title-font, Special Elite);font-size:28px;color:#1a1a1a;letter-spacing:0.5px;line-height:1.4;margin:0 0 32px;padding-bottom:24px;border-bottom:1px solid rgba(0,0,0,0.08);">${title}</h1>`;
+      html += `<h1 style="font-family:var(--title-font, Special Elite);font-size:28px;color:var(--text-primary, #1a1a1a);letter-spacing:0.5px;line-height:1.4;margin:0 0 32px;padding-bottom:24px;border-bottom:1px solid var(--border-divider, rgba(0,0,0,0.08));">${title}</h1>`;
     }
     if (article.sections) {
       for (const section of article.sections) {
         if (section.type === 'subtitle') {
-          html += `<h2 style="font-family:var(--title-font, Special Elite);font-size:20px;color:#333;margin:48px 0 16px;line-height:1.4;">${section.text}</h2>`;
+          html += `<h2 style="font-family:var(--title-font, Special Elite);font-size:20px;color:var(--text-secondary, #333);margin:48px 0 16px;line-height:1.4;">${section.text}</h2>`;
         } else if (section.type === 'text') {
-          html += `<p style="font-family:var(--body-font, -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif);font-size:16px;color:#444;line-height:1.85;margin-bottom:24px;">${section.text}</p>`;
+          html += `<p style="font-family:var(--body-font, -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif);font-size:16px;color:var(--text-body, #444);line-height:1.85;margin-bottom:24px;">${section.text}</p>`;
         } else if (section.type === 'image') {
           html += `<img src="${section.src}" alt="${section.alt || ''}" style="width:100%;border-radius:6px;margin:32px 0 8px;">`;
           if (section.caption) {
-            html += `<p style="font-family:Red Hat Mono,monospace;font-size:11px;color:#555;text-align:center;margin:0 0 32px;">${section.caption}</p>`;
+            html += `<p style="font-family:Red Hat Mono,monospace;font-size:11px;color:var(--text-caption, #555);text-align:center;margin:0 0 32px;">${section.caption}</p>`;
           }
         }
       }
@@ -2336,7 +2391,9 @@ export class FocusOverlay {
 
     // 更新 DOM
     this._articleWrap.innerHTML = html;
+    this._articleWrap.querySelectorAll('a').forEach(a => { a.setAttribute('target', '_blank'); a.style.color = 'inherit'; });
     this._articleWrap.style.paddingBottom = '160px';
+    this._bindImageLightbox();
 
     // 重建 chat 容器
     const chatContainer = document.createElement('div');
@@ -2360,7 +2417,7 @@ export class FocusOverlay {
       const blur = fromBlur + (toBlur - fromBlur) * ease;
       this.dimLayer.clear();
       this.dimLayer.rect(0, 0, W, H);
-      this.dimLayer.fill({ color: 0xF6F3EE, alpha });
+      this.dimLayer.fill({ color: getDimColor(), alpha });
       this.blurFilter.strength = blur;
       this._currentDimAlpha = alpha;
       this._currentDimBlur = blur;
@@ -2403,6 +2460,7 @@ export class FocusOverlay {
   open(item) {
     if (this.activeItem) return;
     this.activeItem = item;
+    this._photoSystem?.hideAllHoverUI();
     this.overlay.scrollTop = 0;
     // Hide wall composer when focus overlay is open
     const wallComposer = document.getElementById('wall-composer');
@@ -2415,6 +2473,19 @@ export class FocusOverlay {
     this.origScale = item.group.scale.x;
     this.origRotation = item.group.rotation || 0;
 
+    // For sticky notes: capture how much the bounds extend beyond the group origin.
+    // The extracted mesh texture starts at b.x (bounds left), not at item.group.x,
+    // so children with negative local x (e.g. left-edge stamp overflow) appear shifted
+    // in the mesh and need the same offset applied to the overlay stamp position.
+    if (item._stickyTitle) {
+      const b = item.group.getBounds();
+      this._stickyLocalLeft = (b.x - item.group.x) / item.group.scale.x;
+      this._stickyLocalTop  = (b.y - item.group.y) / item.group.scale.x;
+    } else {
+      this._stickyLocalLeft = 0;
+      this._stickyLocalTop  = 0;
+    }
+
     // Responsive scale: fit atom + text block centered in viewport
     const topPad = 40;
     const textBlockH = 150;
@@ -2424,15 +2495,6 @@ export class FocusOverlay {
     const maxScaleW = maxW / item.itemW;
     const maxScaleH = maxAtomH / item.itemH;
     const targetScale = Math.min(1.3, maxScaleW, maxScaleH);
-
-    // Clean up hover labels BEFORE snapshotting stage children (they'd be destroyed but still in bgChildren)
-    if (item._isClipGroupFocus && item._clipGroupRef) {
-      const cg = item._clipGroupRef;
-      if (cg._hoverArrow) { if (cg._hoverArrow.parent) cg._hoverArrow.parent.removeChild(cg._hoverArrow); cg._hoverArrow.destroy(); cg._hoverArrow = null; }
-      if (cg._hoverText) { cg._hoverText.mask = null; if (cg._hoverText.parent) cg._hoverText.parent.removeChild(cg._hoverText); cg._hoverText.destroy(); cg._hoverText = null; }
-      if (cg._hoverTextMask) { if (cg._hoverTextMask.parent) cg._hoverTextMask.parent.removeChild(cg._hoverTextMask); cg._hoverTextMask.destroy(); cg._hoverTextMask = null; }
-      cg._hoverAnimating = false;
-    }
 
     // Wrap background into blur container
     this.bgContainer = new PIXI.Container();
@@ -2446,10 +2508,10 @@ export class FocusOverlay {
     const canvasH = this.app.screen.height;
     this.dimLayer.clear();
     this.dimLayer.rect(0, 0, W, canvasH);
-    this.dimLayer.fill({ color: 0xF6F3EE, alpha: 0 });
+    this.dimLayer.fill({ color: getDimColor(), alpha: 0 });
     this.dimLayer.visible = true;
     this.app.stage.addChild(this.dimLayer);
-    this._animateDim(0, 0.4, 0, 8, 500);
+    this._animateDim(0, 0.6, 0, 8, 500);
 
     // ─── Clip group focus: animate all elements together (no mesh/texture) ───
     if (item._isClipGroupFocus && item.focusData?._clipPhotos) {
@@ -2615,65 +2677,145 @@ export class FocusOverlay {
       setTimeout(() => {
         if (!this.mesh) return;
         const entry = getOrCreateVideo(item.videoSrc);
-        if (!entry.ready || !entry.texture) return;
 
-        // Position group at mesh's focus location (mesh stays visible underneath)
-        const focusScale = this.mesh.width / item.itemW;
-        item.group.scale.set(focusScale);
-        item.group.x = this.mesh.x - this.mesh.width / 2 + item.anchorX * focusScale;
-        item.group.y = this.mesh.y - this.mesh.height / 2 + item.anchorY * focusScale;
-        item.group.rotation = this.mesh.rotation;
-        item.group.visible = true;
-        this.app.stage.addChild(item.group);
+        const startPlayback = () => {
+          if (!this.mesh) return;
+          if (!entry.texture) {
+            entry.texture = PIXI.Texture.from(entry.video, { resourceOptions: { autoPlay: false } });
+            entry.ready = true;
+          }
 
-        // Hide only shadow + frame — keep sprite and handwritten text visible
-        if (item.shadow) item.shadow.visible = false;
-        if (item.frame) item.frame.visible = false;
+          const focusScale = this.mesh.width / item.itemW;
 
-        // Swap sprite texture — same as wall hover
-        item._staticTex = item.sprite.texture;
-        item.sprite.texture = entry.texture;
-        entry.video.loop = false;
-        entry.video.currentTime = 0;
-        entry.video.play().catch(() => {});
-        this._videoPlaying = true;
+          if (item._stickyTitle) {
+            // Sticky: overlay only the stampContainer on top of the mesh.
+            // mesh stays visible and item.group never moves — no jump.
+            let stampContainer = item.sprite;
+            while (stampContainer && stampContainer.parent !== item.group) {
+              stampContainer = stampContainer.parent;
+            }
+            if (!stampContainer) return;
 
-        const onEnded = () => {
-          entry.video.loop = true;
-          if (!this._videoPlaying) return;
-          this._cleanupFocusVideo();
+            const meshLeft = this.mesh.x - this.mesh.width / 2; // anchorX = 0
+            const meshTop  = this.mesh.y - this.mesh.height / 2;
+            const origStampX     = stampContainer.x;
+            const origStampY     = stampContainer.y;
+            const origStampScale = stampContainer.scale.x;
+
+            // Subtract the bounds offset so the overlay aligns with the stamp
+            // as it appears in the mesh texture (texture pixel-0 = bounds left, not group origin).
+            const localLeft = this._stickyLocalLeft;
+            const localTop  = this._stickyLocalTop;
+
+            item.group.removeChild(stampContainer);
+            stampContainer.x = meshLeft + (origStampX - localLeft) * focusScale;
+            stampContainer.y = meshTop  + (origStampY - localTop)  * focusScale;
+            stampContainer.scale.set(focusScale);
+            stampContainer.alpha = 0;
+            this.app.stage.addChild(stampContainer);
+
+            item._overlayStamp = { container: stampContainer, origX: origStampX, origY: origStampY, origScale: origStampScale };
+
+            item._staticTex = item.sprite.texture;
+            item.sprite.texture = entry.texture;
+            entry.video.loop = false;
+            entry.video.currentTime = 0;
+            entry.video.play().catch(() => {});
+            this._videoPlaying = true;
+
+            // Fade in stamp overlay
+            const FADE = 300, t0 = performance.now();
+            const fadeIn = () => {
+              if (!this._videoPlaying) return;
+              stampContainer.alpha = Math.min(1, (performance.now() - t0) / FADE);
+              if (stampContainer.alpha < 1) requestAnimationFrame(fadeIn);
+            };
+            requestAnimationFrame(fadeIn);
+          } else {
+            // Photo / other: position live group at mesh, hide mesh
+            item.group.scale.set(focusScale);
+            item.group.x = this.mesh.x - this.mesh.width / 2 + item.anchorX * focusScale;
+            item.group.y = this.mesh.y - this.mesh.height / 2 + item.anchorY * focusScale;
+            item.group.rotation = this.mesh.rotation;
+            item.group.visible = true;
+            this.app.stage.addChild(item.group);
+            this.mesh.visible = false;
+
+            item._staticTex = item.sprite.texture;
+            item.sprite.texture = entry.texture;
+            entry.video.loop = false;
+            entry.video.currentTime = 0;
+            entry.video.play().catch(() => {});
+            this._videoPlaying = true;
+          }
+
+          const onEnded = () => {
+            entry.video.loop = true;
+            if (!this._videoPlaying) return;
+            this._cleanupFocusVideo();
+          };
+          entry.video.addEventListener('ended', onEnded, { once: true });
+          this._videoEndedCleanup = () => {
+            entry.video.removeEventListener('ended', onEnded);
+            entry.video.pause();
+            entry.video.currentTime = 0;
+            entry.video.loop = true;
+          };
         };
-        entry.video.addEventListener('ended', onEnded, { once: true });
-        this._videoEndedCleanup = () => {
-          entry.video.removeEventListener('ended', onEnded);
-          entry.video.pause();
-          entry.video.currentTime = 0;
-          entry.video.loop = true;
-        };
+
+        if (entry.ready && entry.texture) {
+          startPlayback();
+        } else {
+          entry.video.addEventListener('canplay', startPlayback, { once: true });
+        }
       }, duration);
     }
   }
 
   _cleanupFocusVideo() {
     if (!this._videoPlaying) return;
-    const item = this.activeItem;
-    if (item) {
-      // Restore sprite texture
-      if (item._staticTex) {
-        item.sprite.texture = item._staticTex;
-        item._staticTex = null;
-      }
-      // Restore hidden shadow + frame
-      if (item.shadow) item.shadow.visible = true;
-      if (item.frame) item.frame.visible = true;
-      item.group.visible = false;
-      this.app.stage.removeChild(item.group);
-    }
+    this._videoPlaying = false;
+
     if (this._videoEndedCleanup) {
       this._videoEndedCleanup();
       this._videoEndedCleanup = null;
     }
-    this._videoPlaying = false;
+
+    const item = this.activeItem;
+    if (!item) return;
+
+    // Restore sprite texture
+    if (item._staticTex) {
+      item.sprite.texture = item._staticTex;
+      item._staticTex = null;
+    }
+
+    if (item._overlayStamp) {
+      // Sticky: fade out the overlay stampContainer then return it to item.group
+      const { container, origX, origY, origScale } = item._overlayStamp;
+      item._overlayStamp = null;
+      const FADE = 300, t0 = performance.now();
+      const fadeOut = () => {
+        const p = Math.min(1, (performance.now() - t0) / FADE);
+        container.alpha = 1 - p;
+        if (p < 1) {
+          requestAnimationFrame(fadeOut);
+        } else {
+          if (container.parent) container.parent.removeChild(container);
+          container.x = origX;
+          container.y = origY;
+          container.scale.set(origScale);
+          container.alpha = 1;
+          item.group.addChild(container);
+        }
+      };
+      requestAnimationFrame(fadeOut);
+    } else {
+      // Photo / other: restore mesh visibility and remove live group from stage
+      if (this.mesh) this.mesh.visible = true;
+      item.group.visible = false;
+      this.app.stage.removeChild(item.group);
+    }
   }
 
   close() {
@@ -2847,7 +2989,7 @@ export class FocusOverlay {
 
     // 上移结束后，蒙层变全黑
     setTimeout(() => {
-      this._animateDim(0.4, 1.0, 8, 10, 400);
+      this._animateDim(0.6, 1.0, 8, 10, 400);
 
       // 蒙层变黑后，构建文章内容容器
       setTimeout(() => {
@@ -2864,26 +3006,27 @@ export class FocusOverlay {
         let html = '';
         const title = article?.title || data.title || '';
         if (title) {
-          html += `<h1 style="font-family:var(--title-font, Special Elite);font-size:28px;color:#1a1a1a;letter-spacing:0.5px;line-height:1.4;margin:0 0 32px;padding-bottom:24px;border-bottom:1px solid rgba(0,0,0,0.08);">${title}</h1>`;
+          html += `<h1 style="font-family:var(--title-font, Special Elite);font-size:28px;color:var(--text-primary, #1a1a1a);letter-spacing:0.5px;line-height:1.4;margin:0 0 32px;padding-bottom:24px;border-bottom:1px solid var(--border-divider, rgba(0,0,0,0.08));">${title}</h1>`;
         }
 
         // 文章正文
         if (article?.sections) {
           for (const section of article.sections) {
             if (section.type === 'subtitle') {
-              html += `<h2 style="font-family:var(--title-font, Special Elite);font-size:20px;color:#333;margin:48px 0 16px;line-height:1.4;">${section.text}</h2>`;
+              html += `<h2 style="font-family:var(--title-font, Special Elite);font-size:20px;color:var(--text-secondary, #333);margin:48px 0 16px;line-height:1.4;">${section.text}</h2>`;
             } else if (section.type === 'text') {
-              html += `<p style="font-family:var(--body-font, -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif);font-size:16px;color:#444;line-height:1.85;margin-bottom:24px;">${section.text}</p>`;
+              html += `<p style="font-family:var(--body-font, -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif);font-size:16px;color:var(--text-body, #444);line-height:1.85;margin-bottom:24px;">${section.text}</p>`;
             } else if (section.type === 'image') {
               html += `<img src="${section.src}" alt="${section.alt || ''}" style="width:100%;border-radius:6px;margin:32px 0 8px;">`;
               if (section.caption) {
-                html += `<p style="font-family:Red Hat Mono,monospace;font-size:11px;color:#555;text-align:center;margin:0 0 32px;">${section.caption}</p>`;
+                html += `<p style="font-family:Red Hat Mono,monospace;font-size:11px;color:var(--text-caption, #555);text-align:center;margin:0 0 32px;">${section.caption}</p>`;
               }
             }
           }
         }
 
         articleWrap.innerHTML = html;
+        articleWrap.querySelectorAll('a').forEach(a => { a.setAttribute('target', '_blank'); a.style.color = 'inherit'; });
         articleWrap.style.paddingBottom = '160px';
 
         // Chat 容器（在文章内容下方）
@@ -2896,7 +3039,7 @@ export class FocusOverlay {
         this.overlay.appendChild(articleWrap);
         this._articleWrap = articleWrap;
 
-        // Article mode: opaque background
+        this.overlay.classList.add('article-open');
 
         // 先让 overlay 可滚动，再重置滚动位置（scrollTop 在非 auto 时无效）
         this.overlay.style.overflowY = 'auto';
@@ -2922,13 +3065,14 @@ export class FocusOverlay {
           });
         });
 
-        // Build TOC after article transitions in
+        // Build TOC + bind image lightbox after article transitions in
         setTimeout(() => {
           const h2s = articleWrap.querySelectorAll('h2');
           if (h2s.length) {
             const headings = Array.from(h2s).map(el => ({ text: el.textContent, el }));
             this._buildTOC(headings);
           }
+          this._bindImageLightbox();
         }, 550);
       }, 400);
     }, duration);
@@ -2972,7 +3116,7 @@ export class FocusOverlay {
     requestAnimationFrame(tick);
 
     await new Promise(r => setTimeout(r, duration));
-    this._animateDim(0.4, 1.0, 8, 10, 400);
+    this._animateDim(0.6, 1.0, 8, 10, 400);
 
     await new Promise(r => setTimeout(r, 300));
     const data = this.activeItem.focusData;
@@ -2985,7 +3129,7 @@ export class FocusOverlay {
 
     // Title
     const title = data.title || 'Collection';
-    articleWrap.innerHTML = `<h1 style="font-family:var(--title-font, Special Elite);font-size:28px;color:#1a1a1a;letter-spacing:0.5px;line-height:1.4;margin:0 0 32px;padding-bottom:24px;border-bottom:1px solid rgba(0,0,0,0.08);">${title}</h1>`;
+    articleWrap.innerHTML = `<h1 style="font-family:var(--title-font, Special Elite);font-size:28px;color:var(--text-primary, #1a1a1a);letter-spacing:0.5px;line-height:1.4;margin:0 0 32px;padding-bottom:24px;border-bottom:1px solid var(--border-divider, rgba(0,0,0,0.08));">${title}</h1>`;
 
     // AI streaming target
     const aiContent = document.createElement('div');
@@ -2993,6 +3137,7 @@ export class FocusOverlay {
 
     this.overlay.appendChild(articleWrap);
     this._articleWrap = articleWrap;
+    this.overlay.classList.add('article-open');
     this.overlay.style.overflowY = 'auto';
     requestAnimationFrame(() => { articleWrap.style.opacity = '1'; articleWrap.style.transform = 'translateY(0)'; });
 
@@ -3065,7 +3210,7 @@ export class FocusOverlay {
       flushAtomBuffer();
       if (!currentEl || currentEl.tagName === 'H2') {
         currentEl = document.createElement('p');
-        currentEl.style.cssText = 'font-family:var(--body-font, -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif);font-size:16px;color:#444;line-height:1.85;margin-bottom:24px;';
+        currentEl.style.cssText = 'font-family:var(--body-font, -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif);font-size:16px;color:var(--text-body, #444);line-height:1.85;margin-bottom:24px;';
         aiContent.appendChild(currentEl);
       }
       currentEl.textContent += text;
@@ -3081,7 +3226,7 @@ export class FocusOverlay {
           if (headingMatch) {
             flushAtomBuffer();
             currentEl = document.createElement('h2');
-            currentEl.style.cssText = 'font-family:var(--title-font, Special Elite);font-size:20px;color:#333;margin:48px 0 16px;line-height:1.4;';
+            currentEl.style.cssText = 'font-family:var(--title-font, Special Elite);font-size:20px;color:var(--text-secondary, #333);margin:48px 0 16px;line-height:1.4;';
             aiContent.appendChild(currentEl);
             currentEl.textContent = headingMatch[1];
             this._addTOCEntry(headingMatch[1], currentEl);
@@ -3138,8 +3283,9 @@ export class FocusOverlay {
       this._onArticleScroll = null;
     }
 
-    // 清理 TOC
+    // 清理 TOC + lightbox
     this._destroyTOC();
+    this._closeLightbox();
 
     // 清理文章内容
     if (this._articleWrap) {
@@ -3148,6 +3294,7 @@ export class FocusOverlay {
     }
     this.overlay.scrollTop = 0;
     this.overlay.style.overflowY = '';
+    this.overlay.classList.remove('article-open');
     this.closeBtn.style.position = '';
     document.getElementById('focus-content').style.display = '';
 
@@ -3422,7 +3569,7 @@ export class FocusOverlay {
     // 4. Dim layer
     const dimLayer = new PIXI.Graphics();
     dimLayer.rect(0, 0, VW, VH);
-    dimLayer.fill({ color: 0xF6F3EE, alpha: 0 });
+    dimLayer.fill({ color: getDimColor(), alpha: 0 });
     fsApp.stage.addChild(dimLayer);
 
     // 动画 dim 0 → 0.8
@@ -3432,7 +3579,7 @@ export class FocusOverlay {
       const t = Math.min(1, (performance.now() - dimStart) / dimDuration);
       dimLayer.clear();
       dimLayer.rect(0, 0, VW, VH);
-      dimLayer.fill({ color: 0xF6F3EE, alpha: t * 0.4 });
+      dimLayer.fill({ color: getDimColor(), alpha: t * 0.6 });
       if (t < 1) requestAnimationFrame(dimTick);
     };
     requestAnimationFrame(dimTick);
@@ -3548,7 +3695,7 @@ export class FocusOverlay {
         const t = Math.min(1, (performance.now() - blackStart) / blackDuration);
         dimLayer.clear();
         dimLayer.rect(0, 0, VW, VH);
-        dimLayer.fill({ color: 0xF6F3EE, alpha: 0.4 + t * 0.6 });
+        dimLayer.fill({ color: getDimColor(), alpha: 0.6 + t * 0.4 });
         if (t < 1) requestAnimationFrame(blackTick);
       };
       requestAnimationFrame(blackTick);
@@ -3562,14 +3709,14 @@ export class FocusOverlay {
 
         let html = '';
         const title = article.title || focusData.title || '';
-        if (title) html += `<h1 style="font-family:var(--title-font, Special Elite);font-size:28px;color:#1a1a1a;letter-spacing:0.5px;line-height:1.4;margin:0 0 32px;padding-bottom:24px;border-bottom:1px solid rgba(0,0,0,0.08);">${title}</h1>`;
+        if (title) html += `<h1 style="font-family:var(--title-font, Special Elite);font-size:28px;color:var(--text-primary, #1a1a1a);letter-spacing:0.5px;line-height:1.4;margin:0 0 32px;padding-bottom:24px;border-bottom:1px solid var(--border-divider, rgba(0,0,0,0.08));">${title}</h1>`;
         if (article.sections) {
           for (const s of article.sections) {
-            if (s.type === 'subtitle') html += `<h2 style="font-family:var(--title-font, Special Elite);font-size:20px;color:#333;margin:48px 0 16px;line-height:1.4;">${s.text}</h2>`;
-            else if (s.type === 'text') html += `<p style="font-family:var(--body-font, -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif);font-size:16px;color:#444;line-height:1.85;margin-bottom:24px;">${s.text}</p>`;
+            if (s.type === 'subtitle') html += `<h2 style="font-family:var(--title-font, Special Elite);font-size:20px;color:var(--text-secondary, #333);margin:48px 0 16px;line-height:1.4;">${s.text}</h2>`;
+            else if (s.type === 'text') html += `<p style="font-family:var(--body-font, -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif);font-size:16px;color:var(--text-body, #444);line-height:1.85;margin-bottom:24px;">${s.text}</p>`;
             else if (s.type === 'image') {
               html += `<img src="${s.src}" alt="${s.alt || ''}" style="width:100%;border-radius:6px;margin:32px 0 8px;">`;
-              if (s.caption) html += `<p style="font-family:Red Hat Mono,monospace;font-size:11px;color:#555;text-align:center;margin:0 0 32px;">${s.caption}</p>`;
+              if (s.caption) html += `<p style="font-family:Red Hat Mono,monospace;font-size:11px;color:var(--text-caption, #555);text-align:center;margin:0 0 32px;">${s.caption}</p>`;
             }
           }
         }
@@ -3617,7 +3764,7 @@ export class FocusOverlay {
       const t = Math.min(1, (performance.now() - dimStart) / dimDuration);
       dimLayer.clear();
       dimLayer.rect(0, 0, VW, VH);
-      dimLayer.fill({ color: 0xF6F3EE, alpha: currentAlpha * (1 - t) });
+      dimLayer.fill({ color: getDimColor(), alpha: currentAlpha * (1 - t) });
       if (t < 1) requestAnimationFrame(dimTick);
     };
     requestAnimationFrame(dimTick);
@@ -3839,12 +3986,9 @@ export class FocusOverlay {
     for (const h of headings) {
       const item = document.createElement('div');
       item.className = 'article-toc-item';
-      const bar = document.createElement('div');
-      bar.className = 'toc-bar';
       const txt = document.createElement('div');
       txt.className = 'toc-text';
       txt.textContent = this._tocText(h.text);
-      item.appendChild(bar);
       item.appendChild(txt);
       item.addEventListener('click', () => {
         const elTop = h.el.getBoundingClientRect().top;
@@ -3869,12 +4013,9 @@ export class FocusOverlay {
     this._tocHeadings.push({ text, el });
     const item = document.createElement('div');
     item.className = 'article-toc-item';
-    const bar = document.createElement('div');
-    bar.className = 'toc-bar';
     const txt = document.createElement('div');
     txt.className = 'toc-text';
     txt.textContent = this._tocText(text);
-    item.appendChild(bar);
     item.appendChild(txt);
     item.addEventListener('click', () => {
       const elTop = el.getBoundingClientRect().top;
@@ -3904,5 +4045,45 @@ export class FocusOverlay {
   _destroyTOC() {
     if (this._tocEl) { this._tocEl.remove(); this._tocEl = null; }
     this._tocHeadings = null;
+  }
+
+  // ─── Image Lightbox ───
+
+  _bindImageLightbox() {
+    if (!this._articleWrap) return;
+    const imgs = this._articleWrap.querySelectorAll('img');
+    imgs.forEach(img => {
+      img.style.cursor = 'zoom-in';
+      img.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this._openLightbox(img.src);
+      });
+    });
+  }
+
+  _openLightbox(src) {
+    const lb = document.createElement('div');
+    lb.className = 'img-lightbox';
+    const img = document.createElement('img');
+    img.src = src;
+    lb.appendChild(img);
+    document.body.appendChild(lb);
+    this._lightboxEl = lb;
+    requestAnimationFrame(() => requestAnimationFrame(() => lb.classList.add('visible')));
+    lb.addEventListener('click', () => this._closeLightbox());
+    this._lightboxKeyHandler = (e) => { if (e.key === 'Escape') this._closeLightbox(); };
+    document.addEventListener('keydown', this._lightboxKeyHandler);
+  }
+
+  _closeLightbox() {
+    if (!this._lightboxEl) return;
+    this._lightboxEl.classList.remove('visible');
+    const el = this._lightboxEl;
+    setTimeout(() => el.remove(), 250);
+    this._lightboxEl = null;
+    if (this._lightboxKeyHandler) {
+      document.removeEventListener('keydown', this._lightboxKeyHandler);
+      this._lightboxKeyHandler = null;
+    }
   }
 }

@@ -17,20 +17,41 @@
     * { margin: 0; padding: 0; }
     html, body { background: #FFFDFA; overflow-x: hidden; --shadow: #1a1917; }
     body { min-height: 100vh; }
+
+    /* ── CSS design tokens (light defaults, dark overrides) ── */
+    html {
+      --text-primary: #1a1a1a;
+      --text-secondary: #333;
+      --text-body: #444;
+      --text-caption: #555;
+      --text-muted: #666;
+      --border-divider: rgba(0,0,0,0.08);
+      --overlay-bg: #FFFDFA;
+    }
+    html.night-mode {
+      --text-primary: #dde1eb;
+      --text-secondary: #b8bed0;
+      --text-body: #8e94aa;
+      --text-caption: #666e85;
+      --text-muted: #565d72;
+      --border-divider: rgba(180,190,220,0.1);
+      --overlay-bg: #0d0c1a;
+    }
     canvas { display: block; }
 
     /* ── Sunlight overlay ── */
     #night-gradient {
       pointer-events: none;
       position: fixed; inset: 0;
-      z-index: 0;
+      z-index: 1;
       background: linear-gradient(to left, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0) 50%);
       opacity: 1;
+      transition: opacity 0.4s ease;
     }
     #sunlight-overlay {
       pointer-events: none;
       position: fixed; inset: 0;
-      z-index: 1;
+      z-index: 2;
       transform: scaleX(-1);
       transition: opacity 1.5s;
     }
@@ -148,14 +169,26 @@
       transition: filter 0.4s ease;
     }
     canvas { transition: filter 0.4s ease; }
+    body.focus-active canvas {
+      position: relative;
+      z-index: 3;
+    }
     #focus-overlay {
       position: fixed; inset: 0; z-index: 10000;
       display: none;
       pointer-events: none;
+      background: transparent;
     }
     #focus-overlay.visible { pointer-events: auto; }
-    body:has(#focus-overlay.visible) #top-bar { display: none; }
-    body.focus-active #sunlight-overlay { opacity: 0; }
+    body:has(#focus-overlay.visible:not(.article-open)) #top-bar { display: none; }
+    body:has(#focus-overlay.article-open) #top-bar,
+    body:has(#wall-article.visible) #top-bar { z-index: 10001; right: 64px; }
+    body:has(#focus-overlay.article-open) #time-preview,
+    body:has(#wall-article.visible) #time-preview { display: none; }
+    body.focus-active #sunlight-overlay,
+    body.focus-active #night-gradient,
+    body:has(#wall-article.visible) #sunlight-overlay,
+    body:has(#wall-article.visible) #night-gradient { opacity: 0; }
     #focus-backdrop {
       position: absolute; inset: 0;
       cursor: pointer;
@@ -173,12 +206,12 @@
       transform: translateY(0); opacity: 1;
     }
     #focus-title {
-      font-family: 'Red Hat Mono', monospace;
+      font-family: var(--title-font, 'Red Hat Mono', monospace);
       font-size: 15px; color: #1a1a1a; letter-spacing: 1px;
       margin-bottom: 6px;
     }
     #focus-desc {
-      font-family: 'Red Hat Mono', monospace;
+      font-family: var(--body-font, 'Red Hat Mono', monospace);
       font-size: 12px; color: #666; line-height: 1.6;
       max-width: 400px; text-align: center;
       margin-bottom: 16px;
@@ -230,19 +263,19 @@
       opacity: 1; transform: translateY(0);
     }
     #focus-article .article-title {
-      font-family: 'Special Elite', cursive;
+      font-family: var(--title-font, 'Special Elite', cursive);
       font-size: 28px; color: #1a1a1a; letter-spacing: 0.5px;
       margin-bottom: 32px; line-height: 1.4;
       padding-bottom: 24px;
       border-bottom: 1px solid rgba(0,0,0,0.08);
     }
     #focus-article .article-subtitle {
-      font-family: 'Special Elite', cursive;
+      font-family: var(--title-font, 'Special Elite', cursive);
       font-size: 20px; color: #333; letter-spacing: 0.3px;
       margin: 48px 0 16px; line-height: 1.4;
     }
     #focus-article .article-text {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      font-family: var(--body-font, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif);
       font-size: 16px; color: #444; line-height: 1.85;
       margin-bottom: 24px; letter-spacing: 0.01em;
     }
@@ -266,12 +299,12 @@
     }
     .chat-msg.ai .chat-bubble { color: #444; }
     .chat-msg.ai .chat-bubble h2 {
-      font-family: 'Special Elite', cursive;
+      font-family: var(--title-font, 'Special Elite', cursive);
       font-size: 20px; color: #333; margin: 48px 0 16px; line-height: 1.4;
     }
     .chat-msg.ai .chat-bubble h2:first-child { margin-top: 0; }
     .chat-msg.ai .chat-bubble p {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-family: var(--body-font, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
       font-size: 16px; color: #444; line-height: 1.85; margin-bottom: 24px;
     }
     .chat-msg.ai .chat-bubble p:last-child { margin-bottom: 0; }
@@ -288,6 +321,7 @@
       position: fixed;
       right: calc(50% + 360px);
       width: 196px;
+      padding-top: 6px;
       font-family: 'Red Hat Mono', monospace;
       font-size: 11px;
       line-height: 1.6;
@@ -295,16 +329,8 @@
     }
     .article-toc-item {
       display: flex;
-      gap: 10px;
       margin-bottom: 12px;
       cursor: pointer;
-    }
-    .article-toc-item .toc-bar {
-      flex-shrink: 0;
-      width: 2px;
-      border-radius: 1px;
-      background: transparent;
-      transition: background 0.2s;
     }
     .article-toc-item .toc-text {
       color: #999;
@@ -312,8 +338,26 @@
     }
     .article-toc-item:hover .toc-text { color: #666; }
     .article-toc-item.active .toc-text { color: #333; }
-    .article-toc-item.active .toc-bar { background: #333; }
     @media (max-width: 1100px) { .article-toc { display: none; } }
+
+    /* Image lightbox */
+    .img-lightbox {
+      position: fixed; inset: 0; z-index: 10005;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      cursor: zoom-out;
+      opacity: 0; transition: opacity 0.25s ease;
+    }
+    .img-lightbox.visible { opacity: 1; }
+    .img-lightbox img {
+      max-width: 90vw; max-height: 90vh;
+      object-fit: contain;
+      border-radius: 6px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+      transform: scale(0.92); transition: transform 0.3s ease;
+    }
+    .img-lightbox.visible img { transform: scale(1); }
 
     /* Atom entry (rendered via PIXI extract) */
     .atom-entry {
@@ -487,7 +531,7 @@
 
     /* ─── Wall Article ─── */
     #wall-article {
-      position: fixed; inset: 0; z-index: 9999;
+      position: fixed; inset: 0; z-index: 10000;
       overflow-y: auto; background: #FFFDFA;
       display: none; opacity: 0;
       transition: opacity 0.4s ease;
@@ -521,6 +565,89 @@
       30% { transform: rotate(2deg) translateY(4px); }
       60% { transform: rotate(-3deg) translateY(20px); opacity: 0.8; }
       100% { transform: rotate(5deg) translateY(60px); opacity: 0; }
+    }
+
+    /* ── Night mode dark overrides ── */
+    /* Wall article (AI chat overlay) */
+    html.night-mode #wall-article {
+      background: var(--overlay-bg);
+    }
+    html.night-mode #wall-article-close {
+      border-color: rgba(180,190,220,0.2);
+      color: rgba(180,190,220,0.5);
+    }
+    html.night-mode #wall-article-close:hover {
+      border-color: rgba(180,190,220,0.6);
+      color: rgba(180,190,220,0.95);
+    }
+
+    /* Focus overlay — title / desc / close */
+    html.night-mode #focus-title { color: var(--text-primary); }
+    html.night-mode #focus-desc { color: var(--text-primary); }
+    html.night-mode #focus-close {
+      border-color: rgba(180,190,220,0.2);
+      color: rgba(180,190,220,0.5);
+    }
+    html.night-mode #focus-close:hover {
+      border-color: rgba(180,190,220,0.6);
+      color: rgba(180,190,220,0.95);
+    }
+
+    /* Nested overlay close button */
+    html.night-mode #nested-close {
+      border-color: rgba(180,190,220,0.2);
+      color: rgba(180,190,220,0.5);
+    }
+    html.night-mode #nested-close:hover {
+      border-color: rgba(180,190,220,0.6);
+      color: rgba(180,190,220,0.95);
+    }
+
+    /* Article content (CSS-class-based) */
+    html.night-mode #focus-article .article-title {
+      color: var(--text-primary);
+      border-bottom-color: var(--border-divider);
+    }
+    html.night-mode #focus-article .article-subtitle { color: var(--text-secondary); }
+    html.night-mode #focus-article .article-text { color: var(--text-body); }
+    html.night-mode #focus-article .article-caption { color: var(--text-caption); }
+
+    /* Chat messages */
+    html.night-mode .chat-msg.user .chat-bubble { color: var(--text-primary); }
+    html.night-mode .chat-msg.ai .chat-bubble { color: var(--text-body); }
+    html.night-mode .chat-msg.ai .chat-bubble h2 { color: var(--text-secondary); }
+    html.night-mode .chat-msg.ai .chat-bubble p { color: var(--text-body); }
+    html.night-mode .chat-msg.ai .chat-bubble .img-caption { color: var(--text-caption); }
+    html.night-mode .article-chat { border-top-color: var(--border-divider); }
+
+    /* Table of contents */
+    html.night-mode .article-toc-item .toc-text { color: #42485a; }
+    html.night-mode .article-toc-item:hover .toc-text { color: var(--text-caption); }
+    html.night-mode .article-toc-item.active .toc-text { color: var(--text-secondary); }
+
+    /* Composer textarea */
+    html.night-mode .composer-bar textarea {
+      color: var(--text-secondary);
+    }
+    html.night-mode .composer-bar textarea::placeholder {
+      color: rgba(180,190,220,0.3);
+    }
+
+    /* Glass tint — darker in night mode */
+    html.night-mode .composer-bar .composer-box .glass-tint {
+      background: rgba(10, 8, 24, 0.45);
+    }
+    html.night-mode #organize-btn .glass-tint,
+    html.night-mode #shuffle-btn .glass-tint {
+      background: rgba(10, 8, 24, 0.45);
+    }
+    html.night-mode #organize-btn,
+    html.night-mode #shuffle-btn {
+      color: rgba(180,190,220,0.35);
+    }
+    html.night-mode #organize-btn:hover,
+    html.night-mode #shuffle-btn:hover {
+      color: rgba(180,190,220,0.8);
     }
   </style>
 </head>
@@ -681,6 +808,6 @@
   <script src="lib/pixi.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/roughjs@4.6.6/bundled/rough.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/rough-notation@0.5.1/lib/rough-notation.iife.min.js"></script>
-  <script type="module" src="wall.js?v=192"></script>
+  <script type="module" src="wall.js?v=199"></script>
 </body>
 </html>

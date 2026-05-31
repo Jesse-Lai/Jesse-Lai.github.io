@@ -1,5 +1,5 @@
 // wall.js — Main view, uses atoms-renderer.js
-import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, renderTearoffCard, makeDraggable, FocusOverlay, getOrCreateVideo, animateTo, fadeIn } from "./atoms-renderer.js?v=191";
+import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, renderTearoffCard, makeDraggable, FocusOverlay, getOrCreateVideo, animateTo, fadeIn } from "./atoms-renderer.js?v=203";
 import { WallArticle } from "./wall-article.js?v=151";
 
 (async () => {
@@ -65,20 +65,26 @@ import { WallArticle } from "./wall-article.js?v=151";
   // Language toggle
   const langBtn = document.getElementById('lang-toggle');
   if (langBtn) langBtn.textContent = LANG === 'zh' ? 'EN' : '中';
+
+  function applyLangFonts(lang) {
+    if (lang === 'zh') {
+      document.documentElement.style.setProperty('--title-font', '"Optima", "PingFang SC", sans-serif');
+      document.documentElement.style.setProperty('--body-font', '"Optima", "PingFangTC-light", sans-serif');
+      document.documentElement.style.setProperty('--atom-font', '"Optima", "PingFangTC-light", sans-serif');
+    } else {
+      document.documentElement.style.setProperty('--title-font', '"Special Elite", cursive');
+      document.documentElement.style.setProperty('--body-font', '"Red Hat Mono", monospace');
+      document.documentElement.style.setProperty('--atom-font', '"Special Elite", cursive');
+    }
+  }
+
   window._toggleLang = () => {
     const next = (localStorage.getItem('wall-lang') || 'en') === 'en' ? 'zh' : 'en';
     localStorage.setItem('wall-lang', next);
     location.reload();
   };
 
-  // Apply Chinese fonts when in zh mode
-  if (LANG === 'zh') {
-    document.documentElement.style.setProperty('--title-font', '"Optima", "PingFang SC", sans-serif');
-    document.documentElement.style.setProperty('--body-font', '"Optima", "PingFang SC", sans-serif');
-  } else {
-    document.documentElement.style.setProperty('--title-font', '"Special Elite", cursive');
-    document.documentElement.style.setProperty('--body-font', '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif');
-  }
+  applyLangFonts(LANG);
 
   // Bilingual overrides: keyed by original title
   const i18n = {
@@ -165,7 +171,7 @@ import { WallArticle } from "./wall-article.js?v=151";
   const itemGap = isMobile ? gridPad * 1.4 : gridPad;
 
   // ─── Focus Overlay ───
-  const focusOverlay = new FocusOverlay(app, contentData, LANG);
+  const focusOverlay = new FocusOverlay(app, contentData, LANG, photoSystem);
 
   setProgress(15);
 
@@ -315,7 +321,7 @@ import { WallArticle } from "./wall-article.js?v=151";
   wallArticle.setupComposer();
   // Update composer placeholder for language
   const wcTextarea = document.querySelector('#wall-composer textarea');
-  if (wcTextarea) wcTextarea.placeholder = LANG === 'zh' ? '问Jesse任何问题...' : 'Ask Jesse anything...';
+  if (wcTextarea) wcTextarea.placeholder = LANG === 'zh' ? '问Jesse任何问题...' : 'Ask anything about Jesse...';
 
   const mouse = { x:-9999, y:-9999 };
 
@@ -613,6 +619,9 @@ import { WallArticle } from "./wall-article.js?v=151";
       const sb = Math.min(255, Math.max(0, avg + (db - avg) * boost));
       root.style.setProperty('--shadow', rgbToHex(sr, sg, sb));
 
+      // Night mode class — drives dark mode for all non-wall overlays
+      document.documentElement.classList.toggle('night-mode', brightness < 80);
+
       // Hover label color — light on dark backgrounds, dark on light
       photoSystem._labelColor = brightness > 160 ? '#000000' : 'rgba(255,255,255,0.85)';
 
@@ -676,7 +685,7 @@ import { WallArticle } from "./wall-article.js?v=151";
       // Activate current
       const curTarget = snapTargets[idx];
       const cur = curTarget.item;
-      if (cur) photoSystem._showHoverLabel(cur);
+      if (cur && !document.body.classList.contains('focus-active')) photoSystem._showHoverLabel(cur);
       // Animate scale up for all atom types
       const targetScale = curTarget.baseScale * 1.10;
       const curGroup = curTarget.group;
