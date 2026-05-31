@@ -618,7 +618,16 @@ import { WallArticle } from "./wall-article.js?v=151";
         if (prev) {
           photoSystem._hideHoverLabel(prev);
           photoSystem._stopPhotoVideo(prev);
-          prev.group.scale.set(prev.baseScale); // restore scale
+          // Animate scale down
+          const restoreScale = prev.baseScale;
+          const animDown = () => {
+            const s = prev.group.scale.x;
+            const next = s + (restoreScale - s) * 0.12;
+            prev.group.scale.set(next);
+            if (Math.abs(next - restoreScale) > 0.001) requestAnimationFrame(animDown);
+            else prev.group.scale.set(restoreScale);
+          };
+          requestAnimationFrame(animDown);
         }
       }
       currentSnapIdx = idx;
@@ -627,7 +636,16 @@ import { WallArticle } from "./wall-article.js?v=151";
       const cur = snapTargets[idx].item;
       if (!cur) return; // tearoff has no focusable item
       photoSystem._showHoverLabel(cur);
-      cur.group.scale.set(cur.baseScale * 1.05); // scale up
+      // Animate scale up
+      const targetScale = cur.baseScale * 1.05;
+      const animScale = () => {
+        const s = cur.group.scale.x;
+        const next = s + (targetScale - s) * 0.12;
+        cur.group.scale.set(next);
+        if (Math.abs(next - targetScale) > 0.001) requestAnimationFrame(animScale);
+        else cur.group.scale.set(targetScale);
+      };
+      requestAnimationFrame(animScale);
       if (cur.videoSrc && cur.sprite) {
         const entry = getOrCreateVideo(cur.videoSrc);
         if (entry.ready && entry.texture) {
