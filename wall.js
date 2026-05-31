@@ -162,7 +162,7 @@ import { WallArticle } from "./wall-article.js?v=151";
   // Mobile: extra top padding so first atom sits near vertical center of screen
   const topPad = isMobile ? H * 0.25 : gridPad;
   // Mobile: wider gap between atoms
-  const itemGap = isMobile ? gridPad * 1.8 : gridPad;
+  const itemGap = isMobile ? gridPad * 1.4 : gridPad;
 
   // ─── Focus Overlay ───
   const focusOverlay = new FocusOverlay(app, contentData, LANG);
