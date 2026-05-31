@@ -225,13 +225,13 @@
   },
   {
     "id": "30d400ee-0cf5-805a-ab9d-cf4d576901da",
-    "title": "GenUI",
+    "title": "GenUI 设计指南",
     "category": "design_thought",
     "atom": "sticky",
     "body": "在微软工作一年后，我决定重新开始写写AI native designer的转型过程，和AI design workflow的变化，希望能链接更多感兴趣的人。 这次聊的话题是因为前段时间参与了一些Generative UI的项目，因此分享一些总结和反思。看完本文你能获得：",
     "cover_image": "content_images/30d400ee_1.png",
     "focus": {
-      "title": "GenUI",
+      "title": "GenUI 设计指南",
       "description": "在微软工作一年后，我决定重新开始写写AI native designer的转型过程，和AI design workflow的变化，希望能链接更多感兴趣的人。 这次聊的话题是因为前段时间参与了一些Generative UI的项目，因此分享一些总结和反思。看完本文你能获得：",
       "link": "#",
       "linkText": "Read more",
@@ -731,9 +731,13 @@
             "text": "Alright, there's still much more to say, but I really need to sleep 😴 Feel free to reach out!"
           }
         ]
-      }
+      },
+      "title_en": "Designing for GenUI"
     },
-    "keywords": "AI Native ● Generative UI ● Interaction Paradigm ● 2026"
+    "keywords": "AI Native ● Generative UI ● Interaction Paradigm ● 2026",
+    "title_en": "Designing for GenUI",
+    "subtitle": "我对 GenUI 形态、系统与工作流的总结",
+    "subtitle_en": "A summary of my thoughts on GenUI systems and workflows."
   },
   {
     "id": "358400ee-0cf5-81e1-aff1-ee6de5859ccd",
