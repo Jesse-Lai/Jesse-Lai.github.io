@@ -65,9 +65,13 @@ import { WallArticle } from "./wall-article.js?v=151";
   // Language toggle
   const langBtn = document.getElementById('lang-toggle');
   if (langBtn) langBtn.textContent = LANG === 'zh' ? 'EN' : '中';
+  // ─── Analytics tracking helper ───
+  const track = (event, data) => { if (window.umami) umami.track(event, data); };
+
   window._toggleLang = () => {
     const next = (localStorage.getItem('wall-lang') || 'en') === 'en' ? 'zh' : 'en';
     localStorage.setItem('wall-lang', next);
+    track('lang-toggle', { lang: next });
     location.reload();
   };
 
@@ -295,7 +299,7 @@ import { WallArticle } from "./wall-article.js?v=151";
       focusOverlay.registerFocusItem(focusableItem, key);
     }
   }
-  photoSystem.onFocus = (item) => focusOverlay.open(item);
+  photoSystem.onFocus = (item) => { track('atom-click', { title: item.focusData?.title || '' }); focusOverlay.open(item); };
 
   // ─── Reveal: hide loading, show canvas ───
   setProgress(100);
@@ -476,10 +480,12 @@ import { WallArticle } from "./wall-article.js?v=151";
   // Wire buttons
   document.getElementById('organize-btn')?.addEventListener('click', () => {
     organizeByCategory();
+    track('organize-click');
     document.getElementById('shuffle-btn')?.classList.add('visible');
   });
   document.getElementById('shuffle-btn')?.addEventListener('click', () => {
     shuffleToInitial();
+    track('shuffle-click');
     document.getElementById('shuffle-btn')?.classList.remove('visible');
   });
 
@@ -697,6 +703,7 @@ import { WallArticle } from "./wall-article.js?v=151";
         entry.video.currentTime = 0;
         entry.video.play().then(() => {
           if (!entry.texture) {
+          if (window.umami) umami.track("video-play", { src: cur.videoSrc });
             entry.texture = PIXI.Texture.from(entry.video, { resourceOptions: { autoPlay: false } });
             entry.ready = true;
           }

@@ -1580,6 +1580,7 @@ export async function renderTearoffCard(app, x, y, cfg) {
     stripState[idx].tearing = true;
     stripState[idx].tearStart = performance.now();
     navigator.clipboard.writeText(strips[idx].text).catch(() => {});
+        if (window.umami) umami.track('tearoff-rip');
 
   };
 
@@ -1904,6 +1905,7 @@ export class PhotoSystem {
           photo.sprite.texture = entry.texture;
           entry.video.currentTime = 0;
           entry.video.play().catch(() => {});
+          if (window.umami) umami.track('video-play', { src: photo.videoSrc });
         }
       } else if (!hovering && wasHovering) {
         this._stopPhotoVideo(photo);
@@ -2808,6 +2810,8 @@ export class FocusOverlay {
   // ─── Article Mode (lives inside the focus overlay) ───
 
   openArticle() {
+    this._articleOpenTime = Date.now();
+    if (window.umami) umami.track('article-view', { title: this.activeItem?.focusData?.title || '' });
     if (!this.activeItem) return;
 
     // Clip group → AI-generated summary article (no mesh)
@@ -3125,6 +3129,11 @@ export class FocusOverlay {
   }
 
   closeArticle() {
+    if (this._articleOpenTime && window.umami) {
+      const duration = Math.round((Date.now() - this._articleOpenTime) / 1000);
+      umami.track('article-duration', { title: this.activeItem?.focusData?.title || '', seconds: duration });
+      this._articleOpenTime = null;
+    }
     if (!this._articleMode) return;
     this._articleMode = false;
 
@@ -3224,6 +3233,7 @@ export class FocusOverlay {
   }
 
   _sendChatMessage(textarea, sendBtn) {
+    if (window.umami) umami.track('chat-send');
     const query = textarea.value.trim();
     if (!query) return;
 
