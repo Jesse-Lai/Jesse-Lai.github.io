@@ -2405,6 +2405,9 @@ export class FocusOverlay {
   open(item) {
     if (this.activeItem) return;
     this.activeItem = item;
+    this._focusOpenTime = Date.now();
+    this._chatRounds = 0;
+    if (window.umami) umami.track('focus-open', { title: item.focusData?.title || '' });
     this.overlay.scrollTop = 0;
     // Hide wall composer when focus overlay is open
     const wallComposer = document.getElementById('wall-composer');
@@ -2680,6 +2683,15 @@ export class FocusOverlay {
 
   close() {
     if (!this.activeItem) return;
+    // Track focus duration
+    if (this._focusOpenTime && window.umami) {
+      const seconds = Math.round((Date.now() - this._focusOpenTime) / 1000);
+      umami.track('focus-duration', { title: this.activeItem.focusData?.title || '', seconds });
+      if (this._chatRounds > 0) {
+        umami.track('focus-chat-rounds', { title: this.activeItem.focusData?.title || '', rounds: this._chatRounds });
+      }
+      this._focusOpenTime = null;
+    }
     this._cleanupFocusVideo();
     const item = this.activeItem;
     // Restore original focusData if this was a clip group focus
@@ -3233,7 +3245,8 @@ export class FocusOverlay {
   }
 
   _sendChatMessage(textarea, sendBtn) {
-    if (window.umami) umami.track('chat-send');
+    this._chatRounds = (this._chatRounds || 0) + 1;
+    if (window.umami) umami.track('chat-send', { title: this.activeItem?.focusData?.title || 'wall', round: this._chatRounds });
     const query = textarea.value.trim();
     if (!query) return;
 
