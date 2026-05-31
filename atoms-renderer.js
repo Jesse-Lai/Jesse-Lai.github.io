@@ -2321,8 +2321,9 @@ export class FocusOverlay {
     if (title) {
       html += `<h1 style="font-family:var(--title-font, Special Elite);font-size:28px;color:#1a1a1a;letter-spacing:0.5px;line-height:1.4;margin:0 0 32px;padding-bottom:24px;border-bottom:1px solid rgba(0,0,0,0.08);">${title}</h1>`;
     }
-    if (article.sections) {
-      for (const section of article.sections) {
+    const _sections = (this._lang === 'en' && article.sections_en) ? article.sections_en : article.sections;
+    if (_sections) {
+      for (const section of _sections) {
         if (section.type === 'subtitle') {
           html += `<h2 style="font-family:var(--title-font, Special Elite);font-size:20px;color:#333;margin:48px 0 16px;line-height:1.4;">${section.text}</h2>`;
         } else if (section.type === 'text') {
@@ -2885,7 +2886,8 @@ export class FocusOverlay {
 
         // 文章正文
         if (article?.sections) {
-          for (const section of article.sections) {
+          const _secs2 = (this._lang === 'en' && article.sections_en) ? article.sections_en : article.sections;
+          for (const section of _secs2) {
             if (section.type === 'subtitle') {
               html += `<h2 style="font-family:var(--title-font, Special Elite);font-size:20px;color:#333;margin:48px 0 16px;line-height:1.4;">${section.text}</h2>`;
             } else if (section.type === 'text') {
@@ -3586,8 +3588,9 @@ export class FocusOverlay {
         let html = '';
         const title = article.title || focusData.title || '';
         if (title) html += `<h1 style="font-family:var(--title-font, Special Elite);font-size:28px;color:#1a1a1a;letter-spacing:0.5px;line-height:1.4;margin:0 0 32px;padding-bottom:24px;border-bottom:1px solid rgba(0,0,0,0.08);">${title}</h1>`;
-        if (article.sections) {
-          for (const s of article.sections) {
+        const _secs3 = (this._lang === 'en' && article.sections_en) ? article.sections_en : article.sections;
+        if (_secs3) {
+          for (const s of _secs3) {
             if (s.type === 'subtitle') html += `<h2 style="font-family:var(--title-font, Special Elite);font-size:20px;color:#333;margin:48px 0 16px;line-height:1.4;">${s.text}</h2>`;
             else if (s.type === 'text') html += `<p style="font-family:var(--body-font, -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif);font-size:16px;color:#444;line-height:1.85;margin-bottom:24px;">${s.text}</p>`;
             else if (s.type === 'image') {
