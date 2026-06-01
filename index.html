@@ -17,7 +17,7 @@
     }
     * { margin: 0; padding: 0; }
     html { overflow-x: hidden; --shadow: #1a1917; background-color: #FFFDFA; }
-    body { background: #FFFDFA; overflow-x: hidden; }
+    body { background: transparent; overflow-x: hidden; }
     body { min-height: 100vh; }
 
     /* ── Safe area insets (for edge-to-edge layout) ── */
@@ -46,7 +46,7 @@
       --overlay-bg: #0d0c1a;
       background-color: #241F44;
     }
-    html.night-mode body { background-color: #040B24; }
+    html.night-mode body { background-color: transparent; }
     canvas { display: block; margin-top: calc(-1 * env(safe-area-inset-top, 0px)); }
 
     /* ── Sunlight overlay ── */

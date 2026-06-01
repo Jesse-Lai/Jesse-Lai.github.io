@@ -575,6 +575,7 @@ import { WallArticle } from "./wall-article.js?v=151";
       const currentColor = lerpHex(currentBgColors.top, currentBgColors.bottom, p);
       app.renderer.background.color = currentColor;
       document.documentElement.style.backgroundColor = currentColor;
+      document.body.style.backgroundColor = currentColor;
 
       const [cr,cg,cb] = hexToRgb(currentBgColors.top);
       const brightness = (cr + cg + cb) / 3;
