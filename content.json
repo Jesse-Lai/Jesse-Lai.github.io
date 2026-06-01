@@ -4,7 +4,7 @@
     "title": "Hello I’m Jesse Lai",
     "category": "who_i_am",
     "atom": "photo",
-    "body": "I’m an AI Builder at Microsoft, designing AI-native products and building them in production code. With experience at Alibaba and Microsoft, I have de",
+    "body": "嗨👋 我是微软的一个 AI Builder，一边设计 AI Native 产品，一边把我的设计在生产环境coding出来，直接交付产品的线上体验。 过去5年我先后在阿里巴巴和微软工作，并且在生成式AI的早期，就开始为 ToC 和 ToB 用户设计各种 AI Native产品。",
     "cover_image": "photo_portrait.webp",
     "focus": {
       "title": "Hello I'm Jesse Lai",
@@ -16,67 +16,229 @@
         "sections": [
           {
             "type": "text",
-            "text": "I’m an AI Builder at Microsoft, designing AI-native products and building them in production code."
+            "text": "嗨👋 我是微软的一个 AI Builder，一边设计 AI Native 产品，一边把我的设计在生产环境coding出来，直接交付产品的线上体验。"
           },
           {
             "type": "text",
-            "text": "With experience at Alibaba and Microsoft, I have designed AI-native products for both B2B and B2C users."
+            "text": "过去5年我先后在阿里巴巴和微软工作，并且在生成式AI的早期，就开始为 ToC 和 ToB 用户设计各种 AI Native产品。"
           },
           {
             "type": "text",
-            "text": "Over the past six years, I’ve been recognized multiple times by the company’s <a href=\"https://mp.weixin.qq.com/s/5FFKYeLy22Bx1S-b4z8UKw\">official media</a> as an outstanding employee. I also write some design articles here <a href=\"https://mp.weixin.qq.com/s/hbqhQS9mMXhLmtFRbWKDEQ\">WeChat Blog</a><a href=\"https://medium.com/@laijianxun123\">Medium</a>. Apart from work, I passionate about<a href=\"/146400ee0cf5808f87e8d536e92e21ee\">performing stand-up comedy</a>"
+            "text": "幸运的是，我曾多次被 <a href=\"https://mp.weixin.qq.com/s/5FFKYeLy22Bx1S-b4z8UKw\">公司官方媒体</a>报道为“优秀员工”。在工作之余，我偶尔也会在 <a href=\"https://mp.weixin.qq.com/s/hbqhQS9mMXhLmtFRbWKDEQ\">微信公众号</a>和 <a href=\"https://medium.com/@laijianxun123\">Medium</a> 上写一些关于 AI 时代产品设计的思考。"
+          },
+          {
+            "type": "text",
+            "text": "对了，如果我不在做设计和Vibe coding，那大概率是在创作<a href=\"/146400ee0cf5808f87e8d536e92e21ee\">脱口秀</a> 🤣"
           },
           {
             "type": "subtitle",
-            "text": "About Me"
+            "text": "教育经历"
+          },
+          {
+            "type": "text",
+            "text": "学校 | 学位 | 地点 | 时间"
+          },
+          {
+            "type": "text",
+            "text": "湖南大学 | 工业设计学士 | 长沙 | 2012-2016"
+          },
+          {
+            "type": "text",
+            "text": "湖南大学 | 数字媒体硕士 | 长沙 | 2016-2020"
+          },
+          {
+            "type": "text",
+            "text": "伦敦艺术大学 | 服务设计硕士 | 伦敦 | 2018-2020"
+          },
+          {
+            "type": "text",
+            "text": "• 以专业排名第一保送研究生"
+          },
+          {
+            "type": "text",
+            "text": "• 连续获得4次国家一等奖学金"
           },
           {
             "type": "subtitle",
-            "text": "Projects"
+            "text": "工作经历"
+          },
+          {
+            "type": "text",
+            "text": "公司 | 职位 | 地点 | 时间"
+          },
+          {
+            "type": "text",
+            "text": "微软 AI | 产品设计师 | 北京 | 2025.2 – 至今"
+          },
+          {
+            "type": "text",
+            "text": "阿里巴巴 – 本地生活 | UX设计师 | 上海 | 2020–2024"
+          },
+          {
+            "type": "text",
+            "text": "阿里巴巴："
+          },
+          {
+            "type": "text",
+            "text": "• 23年初大模型刚刚兴起时，作为主设计师负责商家端生成式 AI 产品体验，从0-1搭建 AI 产品框架"
+          },
+          {
+            "type": "text",
+            "text": "• 连续4年优秀绩效"
+          },
+          {
+            "type": "text",
+            "text": "• 作为mentor指导团队新成员"
+          },
+          {
+            "type": "text",
+            "text": "微软："
+          },
+          {
+            "type": "text",
+            "text": "• 与global团队一起，设计 To C/B 两端的 Copilot 产品体验，专注于 GenUI 和 Agent 体验"
+          },
+          {
+            "type": "text",
+            "text": "• 将 Vibe Coding 工作流融入产品开发，交付从设计到前端开发的全链路体验"
+          },
+          {
+            "type": "text",
+            "text": "• 25年完成了10+个 Vibe Coding 产品插件和原型"
+          },
+          {
+            "type": "subtitle",
+            "text": "技能"
+          },
+          {
+            "type": "text",
+            "text": "类别 | 详情"
+          },
+          {
+            "type": "text",
+            "text": "AI | • 熟练使用Claude code, VS code，Cursor等coding工具，不仅自己开发工具，还能在生产环境有效产出。把控Design to code的体验还原度\n\n• 有自己的AI工作流，不断探索AI时代的设计师边界"
+          },
+          {
+            "type": "text",
+            "text": "语言能力 | • 中文母语，能在英文环境工作"
           },
           {
             "type": "subtitle",
             "text": "Media"
+          }
+        ],
+        "sections_en": [
+          {
+            "type": "text",
+            "text": "Hi 👋 I'm an AI Builder at Microsoft — I design AI-native products and code my designs into production, delivering live product experiences end-to-end."
           },
           {
             "type": "text",
-            "text": "Contact"
+            "text": "Over the past 5 years, I've worked at Alibaba and Microsoft. Since the early days of generative AI, I've been designing AI-native products for both consumer and enterprise users."
           },
           {
             "type": "text",
-            "text": "+86 18774829129"
+            "text": "Fortunately, I've been recognised multiple times by company official media as an \"outstanding employee\". Outside of work, I occasionally write about product design in the AI era on WeChat Blog and Medium."
           },
           {
             "type": "text",
-            "text": "Laijianxun123@gmail.com"
+            "text": "Oh, and if I'm not designing or vibe coding, I'm probably doing stand-up comedy 🤣"
+          },
+          {
+            "type": "subtitle",
+            "text": "Education"
           },
           {
             "type": "text",
-            "text": "Personal account"
+            "text": "School | Degree | Location | Year"
           },
           {
             "type": "text",
-            "text": "<a href=\"https://medium.com/me/settings#accounthttps://medium.com/me/settings#account\">Medium</a>"
+            "text": "Hunan University | B.A. Industrial Design | Changsha | 2012-2016"
           },
           {
             "type": "text",
-            "text": "<a href=\"https://mp.weixin.qq.com/s/hbqhQS9mMXhLmtFRbWKDEQ\">WeChat Blog</a>"
+            "text": "Hunan University | M.S. Digital Media | Changsha | 2016-2020"
           },
           {
             "type": "text",
-            "text": "Company’s media that related to me"
+            "text": "University of the Arts London | M.S. Service Design | London | 2018-2020"
           },
           {
             "type": "text",
-            "text": "<a href=\"https://www.xiaohongshu.com/explore/67065888000000001b023c4b?xhsshare=pc_web&xsec_token=ABw1ES8_EqaPzuG9CPM8gRpkKkVtO35n1DTUzl2BlAaQs%3D&xsec_source=pc_share\">Red</a>"
+            "text": "• Admitted to graduate school ranked #1 in major"
           },
           {
             "type": "text",
-            "text": "<a href=\"https://mp.weixin.qq.com/s/5FFKYeLy22Bx1S-b4z8UKw\">WeChat Account</a>"
+            "text": "• 4-time National First-Class Scholarship recipient"
+          },
+          {
+            "type": "subtitle",
+            "text": "Work Experience"
           },
           {
             "type": "text",
-            "text": "<a href=\"https://talent.ele.me/campus/home?lang=zh\">Recruiting Website</a>"
+            "text": "Company | Role | Location | Period"
+          },
+          {
+            "type": "text",
+            "text": "Microsoft AI | Product Designer | Beijing | Feb. 2025 – Present"
+          },
+          {
+            "type": "text",
+            "text": "Alibaba – Local Service | UX Designer | Shanghai | 2020–2024"
+          },
+          {
+            "type": "text",
+            "text": "Alibaba:"
+          },
+          {
+            "type": "text",
+            "text": "• Led generative AI product experience for merchant-side from 0 to 1 when LLMs first emerged in early 2023"
+          },
+          {
+            "type": "text",
+            "text": "• Consistently excellent performance for 4 years"
+          },
+          {
+            "type": "text",
+            "text": "• Mentored new team members"
+          },
+          {
+            "type": "text",
+            "text": "Microsoft:"
+          },
+          {
+            "type": "text",
+            "text": "• Designing Copilot experiences for both C-end and B-end with global team, focusing on GenUI and Agent experiences"
+          },
+          {
+            "type": "text",
+            "text": "• Integrating Vibe Coding workflow into product development, delivering full-chain experiences from design to front-end code"
+          },
+          {
+            "type": "text",
+            "text": "• Completed 10+ Vibe Coding product plugins and prototypes in 2025"
+          },
+          {
+            "type": "subtitle",
+            "text": "Skills"
+          },
+          {
+            "type": "text",
+            "text": "Category | Details"
+          },
+          {
+            "type": "text",
+            "text": "AI | • Proficient with Claude Code, VS Code, Cursor and other coding tools — not just building tools but shipping in production. Ensuring design-to-code fidelity.\n\n• Developed my own AI workflow, continuously exploring the boundaries of designers in the AI era"
+          },
+          {
+            "type": "text",
+            "text": "Language | • Native Mandarin, able to work in English environment"
+          },
+          {
+            "type": "subtitle",
+            "text": "Media"
           }
         ]
       }
