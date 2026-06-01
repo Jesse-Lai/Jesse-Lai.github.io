@@ -559,7 +559,7 @@ import { WallArticle } from "./wall-article.js?v=151";
     let currentBgColors = getTimeColors(timeOverride);
 
     // Sunlight overlay elements (null on mobile — removed from DOM)
-    const nightGradient = document.getElementById('night-gradient');
+    const nightGradient = document.querySelector('#night-gradient > .gradient-bg');
     const perspective = document.querySelector('#sunlight-overlay .perspective');
     const shuttersEl = document.querySelector('#sunlight-overlay .shutters');
     const shutterEls = document.querySelectorAll('#sunlight-overlay .shutter');

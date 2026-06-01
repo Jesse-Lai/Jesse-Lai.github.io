@@ -70,9 +70,12 @@
       pointer-events: none;
       position: fixed; inset: 0;
       z-index: 1;
-      background: linear-gradient(to left, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0) 50%);
       opacity: 1;
       transition: opacity 0.4s ease;
+    }
+    #night-gradient > .gradient-bg {
+      position: absolute; inset: 0;
+      background: linear-gradient(to left, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0) 50%);
     }
     #sunlight-overlay {
       pointer-events: none;
@@ -369,13 +372,16 @@
     /* Image lightbox */
     .img-lightbox {
       position: fixed; inset: 0; z-index: 10005;
-      display: flex; align-items: center; justify-content: center;
-      background: rgba(0,0,0,0.85);
-      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      display: none; align-items: center; justify-content: center;
       cursor: zoom-out;
       opacity: 0; transition: opacity 0.25s ease;
     }
-    .img-lightbox.visible { opacity: 1; }
+    .img-lightbox > .lightbox-bg {
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    }
+    .img-lightbox.visible { display: flex; opacity: 1; }
     .img-lightbox img {
       max-width: 90vw; max-height: 90vh;
       object-fit: contain;
@@ -694,7 +700,7 @@
   </script>
 </head>
 <body>
-  <div id="night-gradient"></div>
+  <div id="night-gradient"><div class="gradient-bg"></div></div>
   <!-- Sunlight overlay: perspective + blinds -->
   <div id="sunlight-overlay">
     <div class="perspective">

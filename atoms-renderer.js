@@ -4090,6 +4090,9 @@ export class FocusOverlay {
   _openLightbox(src) {
     const lb = document.createElement('div');
     lb.className = 'img-lightbox';
+    const bg = document.createElement('div');
+    bg.className = 'lightbox-bg';
+    lb.appendChild(bg);
     const img = document.createElement('img');
     img.src = src;
     lb.appendChild(img);
