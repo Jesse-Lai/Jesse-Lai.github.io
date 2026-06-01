@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#FFFDFA">
   <link rel="icon" type="image/png" href="favicon.png">
   <script defer src="https://cloud.umami.is/script.js" data-website-id="0511feb5-f981-4761-84f3-2aca16b5f66c"></script>
   <title>JesseOS</title>
@@ -21,8 +20,9 @@
     else if (t >= 12) bg = '#FFFAF2';
     else bg = '#F6F3EE';
     document.documentElement.style.backgroundColor = bg;
-    var meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute('content', bg);
+    document.addEventListener('DOMContentLoaded', function() {
+      document.body.style.backgroundColor = bg;
+    });
   })();
   </script>
   <style>
@@ -33,7 +33,7 @@
     }
     * { margin: 0; padding: 0; }
     html { overflow-x: hidden; --shadow: #1a1917; background-color: #FFFDFA; }
-    body { background: transparent; overflow-x: hidden; }
+    body { background-color: #FFFDFA; overflow-x: hidden; }
     body { min-height: 100vh; }
 
     /* ── Safe area insets (for edge-to-edge layout) ── */
@@ -62,7 +62,7 @@
       --overlay-bg: #0d0c1a;
       background-color: #241F44;
     }
-    html.night-mode body { background-color: transparent; }
+    html.night-mode body { background-color: #241F44; }
     canvas { display: block; margin-top: calc(-1 * env(safe-area-inset-top, 0px)); }
 
     /* ── Sunlight overlay ── */
