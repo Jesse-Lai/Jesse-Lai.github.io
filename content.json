@@ -125,6 +125,46 @@
           {
             "type": "subtitle",
             "text": "Media"
+          },
+          {
+            "type": "text",
+            "text": "联系方式"
+          },
+          {
+            "type": "text",
+            "text": "+86 18774829129"
+          },
+          {
+            "type": "text",
+            "text": "Laijianxun123@gmail.com"
+          },
+          {
+            "type": "text",
+            "text": "个人思考"
+          },
+          {
+            "type": "text",
+            "text": "<a href=\"https://medium.com/me/settings#accounthttps://medium.com/me/settings#account\">Medium</a>"
+          },
+          {
+            "type": "text",
+            "text": "<a href=\"https://mp.weixin.qq.com/s/hbqhQS9mMXhLmtFRbWKDEQ\">WeChat Blog</a>"
+          },
+          {
+            "type": "text",
+            "text": "荣誉与认可"
+          },
+          {
+            "type": "text",
+            "text": "<a href=\"https://www.xiaohongshu.com/explore/67065888000000001b023c4b?xhsshare=pc_web&xsec_token=ABw1ES8_EqaPzuG9CPM8gRpkKkVtO35n1DTUzl2BlAaQs%3D&xsec_source=pc_share\">Red</a>"
+          },
+          {
+            "type": "text",
+            "text": "<a href=\"https://mp.weixin.qq.com/s/5FFKYeLy22Bx1S-b4z8UKw\">WeChat Account</a>"
+          },
+          {
+            "type": "text",
+            "text": "<a href=\"https://talent.ele.me/campus/home?lang=zh\">Recruiting Website</a>"
           }
         ],
         "sections_en": [
@@ -186,7 +226,7 @@
           },
           {
             "type": "text",
-            "text": "Alibaba – Local Service | UX Designer | Shanghai | 2020–2024"
+            "text": "Alibaba – Local Service | UX Designer | Shanghai | 2020–2025"
           },
           {
             "type": "text",
@@ -198,7 +238,7 @@
           },
           {
             "type": "text",
-            "text": "• Consistently excellent performance for 4 years"
+            "text": "• Consistently excellent performance for 5 years"
           },
           {
             "type": "text",
@@ -297,7 +337,7 @@
     "title": "Stand-up Comedian",
     "category": "hobby",
     "atom": "photo",
-    "body": "Stand-up comedy is a lifelong passion of mine. The process of turning life's highs and lows into jokes and performing them on stage has become an inte",
+    "body": "脱口秀是我一生的热爱。把生活的酸甜苦辣变成段子搬上舞台的过程，已经成为我生活中不可分割的一部分。我发现脱口秀和设计之间有很多共通之处： • 两者都需要对日常生活的敏锐观察力",
     "cover_image": "content_images/146400ee_3.webp",
     "focus": {
       "title": "Stand-up Comedian",
@@ -309,7 +349,90 @@
         "sections": [
           {
             "type": "text",
-            "text": "Stand-up comedy is a lifelong passion of mine. The process of turning life's highs and lows into jokes and performing them on stage has become an integral part of my life."
+            "text": "脱口秀是我一生的热爱。把生活的酸甜苦辣变成段子搬上舞台的过程，已经成为我生活中不可分割的一部分。我发现脱口秀和设计之间有很多共通之处："
+          },
+          {
+            "type": "text",
+            "text": "• 两者都需要对日常生活的敏锐观察力"
+          },
+          {
+            "type": "text",
+            "text": "• 两者都需要不断迭代和打磨素材"
+          },
+          {
+            "type": "text",
+            "text": "• 两者都是把日常痛点转化为有意义的东西——设计将其变为解决方案，喜剧将其变为笑声"
+          },
+          {
+            "type": "text",
+            "text": "• 开放麦本质上就是一种用户测试：你听取观众反馈，迭代，再改进"
+          },
+          {
+            "type": "text",
+            "text": "• 喜剧和设计都需要品味——能注意到大多数人忽略但又能引起共鸣的东西"
+          },
+          {
+            "type": "image",
+            "src": "content_images/146400ee_1.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "喜剧不仅提升了我的幽默感，也锻炼了我的演讲和沟通能力。在工作中用讲故事的方式推动想法，更容易获得认同。"
+          },
+          {
+            "type": "image",
+            "src": "content_images/146400ee_2.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "从2023年开始，我一直在用英文做脱口秀，学习了 Norah 和 Dave Chappelle 等知名喜剧演员的技巧。我的材料通常围绕文化差异、科技行业的荒诞、以及作为设计师的日常展开。"
+          },
+          {
+            "type": "image",
+            "src": "content_images/146400ee_3.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "虽然中国的英文脱口秀场景相对小众，但你可以在上海和北京的各个开放麦活动中看到我的表演。"
+          },
+          {
+            "type": "image",
+            "src": "content_images/146400ee_4.png",
+            "caption": ""
+          }
+        ],
+        "sections_en": [
+          {
+            "type": "text",
+            "text": "Stand-up comedy is a lifelong passion of mine. The process of turning life's highs and lows into jokes and performing them on stage has become an integral part of my life. Comedy and design have many things in common."
+          },
+          {
+            "type": "text",
+            "text": "• Both require a sharp eye for observing everyday life."
+          },
+          {
+            "type": "text",
+            "text": "• Both involve constant iteration and refinement of ideas and materials."
+          },
+          {
+            "type": "text",
+            "text": "• Both turn everyday pain points into something meaningful — design turns them into solutions, comedy turns them into punchlines."
+          },
+          {
+            "type": "text",
+            "text": "• An open mic is essentially a form of user testing: you listen to audience feedback, iterate, and improve. Sometimes the feedback is so bad that the material never makes it to production 🤣"
+          },
+          {
+            "type": "text",
+            "text": "• Both comedy and design require taste—the ability to notice things that most people overlook but somehow feel off. This sensitivity is a talent shared by great comedians and great designers alike."
+          },
+          {
+            "type": "image",
+            "src": "content_images/146400ee_en_1.png",
+            "caption": ""
           },
           {
             "type": "text",
@@ -317,39 +440,26 @@
           },
           {
             "type": "image",
-            "caption": "Performing at the Microsoft Kickoff in front of over 2,000 people",
-            "src": "content_images/146400ee_1.webp"
-          },
-          {
-            "type": "image",
-            "caption": "Performing in the finals of Alibaba's stand-up competition",
-            "src": "content_images/146400ee_2.webp"
+            "src": "content_images/146400ee_en_2.png",
+            "caption": ""
           },
           {
             "type": "text",
-            "text": "Just like my professional aspiration, I aim to perform in more international settings. Since 2023, I’ve been doing stand-up in English, learning from well-known comedians like Norah and Davy, popular faces on Rock & Roast."
+            "text": "Since 2023, I’ve been doing stand-up in English, learning from well-known comedians like Norah and Davy, popular faces on Rock & Roast."
           },
           {
             "type": "image",
-            "caption": "",
-            "src": "content_images/146400ee_3.webp"
+            "src": "content_images/146400ee_en_3.png",
+            "caption": ""
           },
           {
             "type": "text",
             "text": "Although the English stand-up scene in China is relatively niche, you can catch my performances at some international comedy clubs."
           },
           {
-            "type": "text",
-            "text": "I hope to bring some laughs to you, my future colleagues!"
-          },
-          {
             "type": "image",
-            "caption": "Open mic at Comedy Remedy",
-            "src": "content_images/146400ee_4.webp"
-          },
-          {
-            "type": "text",
-            "text": "If you're curious about my jokes, I’ve included a clip of my English open-mic performance recorded at SpicyComedy 👇（Youtube, VPN needed）"
+            "src": "content_images/146400ee_en_4.png",
+            "caption": ""
           }
         ]
       }
@@ -361,7 +471,7 @@
     "title": "Drawing",
     "category": "hobby",
     "atom": "photo",
-    "body": "Coming soon",
+    "body": "我以前经常画画，这能让我感到心流的快乐，经常一不小心就发现已经天亮了。\n下面是我的一些古法绘画作品，绝不含AI，请欣赏 🙂",
     "cover_image": "content_images/360400ee_1.webp",
     "focus": {
       "title": "Drawing",
@@ -373,11 +483,41 @@
         "sections": [
           {
             "type": "text",
-            "text": "Coming soon"
+            "text": "我以前经常画画，这能让我感到心流的快乐，经常一不小心就发现已经天亮了。\n下面是我的一些古法绘画作品，绝不含AI，请欣赏 🙂"
           },
           {
             "type": "image",
-            "src": "content_images/360400ee_1.webp",
+            "src": "content_images/360400ee_1.png",
+            "caption": ""
+          },
+          {
+            "type": "image",
+            "src": "content_images/360400ee_2.png",
+            "caption": ""
+          },
+          {
+            "type": "image",
+            "src": "content_images/360400ee_3.png",
+            "caption": ""
+          },
+          {
+            "type": "image",
+            "src": "content_images/360400ee_4.png",
+            "caption": ""
+          },
+          {
+            "type": "image",
+            "src": "content_images/360400ee_5.png",
+            "caption": ""
+          },
+          {
+            "type": "image",
+            "src": "content_images/360400ee_6.png",
+            "caption": ""
+          },
+          {
+            "type": "image",
+            "src": "content_images/360400ee_7.png",
             "caption": ""
           }
         ]
@@ -414,7 +554,7 @@
           },
           {
             "type": "text",
-            "text": "看完本文你不能获得：\n❎ OpenAI的工作机会（但可以增加你获得的概率）\n❎ 一只会叫你名字的黑色小猫咪（但你可以自己vibe coding它）"
+            "text": "看完本文你不能获得：\n❎ OpenAI的工作机会（但可以增加你获得的概率）\n❎ 一只会叫你名字的可爱小猫咪 🐱（但你可以自己vibe coding它）"
           },
           {
             "type": "text",
@@ -661,7 +801,7 @@
           },
           {
             "type": "text",
-            "text": "What you won't get:\n❎ A job at OpenAI (but this might improve your chances)\n❎ A black kitten that calls your name (but you can vibe-code one yourself)"
+            "text": "What you won't get:\n❎ A job at OpenAI (but this might improve your chances)\n❎ A cute kitten that calls your name 🐱(but you can vibe-code one yourself)"
           },
           {
             "type": "text",
@@ -906,7 +1046,7 @@
     "title": "AI产品设计原则",
     "category": "design_thought",
     "atom": "sticky",
-    "body": "📌 状态：积累中 | 素材越多文章越充实，Jesse觉得可以发了就进入定稿 • Jakob Nielsen — Intent by Discovery: Designing the AI User Experience (2026-03-26) 链接",
+    "body": "我在构思这个个人网站的时候，我希望网站本身就是一个 AI native 产品，符合我对 AI native 产品的设计原则，我觉得一个AI native 的产品应该符合以下原则： • 把AI能力从产品中拿走，这个产品就不成立了",
     "cover_image": "content_images/358400ee_cover.webp",
     "focus": {
       "title": "AI产品设计原则",
@@ -917,125 +1057,96 @@
         "title": "AI产品设计原则",
         "sections": [
           {
+            "type": "text",
+            "text": "我在构思这个个人网站的时候，我希望网站本身就是一个 AI native 产品，符合我对 AI native 产品的设计原则，我觉得一个AI native 的产品应该符合以下原则："
+          },
+          {
+            "type": "text",
+            "text": "• 把AI能力从产品中拿走，这个产品就不成立了"
+          },
+          {
+            "type": "text",
+            "text": "• 产品会随着AI模型能力提升而变得更强"
+          },
+          {
+            "type": "text",
+            "text": "• 为Agent设计"
+          },
+          {
+            "type": "text",
+            "text": "在后续迭代中，我还希望我的AI产品："
+          },
+          {
+            "type": "text",
+            "text": "• Dynamic：行为从简单规则涌现，而不是处处写死规则"
+          },
+          {
+            "type": "text",
+            "text": "• Primitive：从最小单元组合出更大的无限可能"
+          },
+          {
+            "type": "text",
+            "text": "• Constraint: 了解模型能力的边界，在边界内选择最好的设计方案，提供最好的产品体验"
+          },
+          {
             "type": "image",
-            "src": "content_images/358400ee_cover.webp",
+            "src": "content_images/358400ee_1.png",
             "caption": ""
           },
           {
             "type": "text",
-            "text": "📌 状态：积累中 | 素材越多文章越充实，Jesse觉得可以发了就进入定稿"
-          },
-          {
-            "type": "subtitle",
-            "text": "素材来源"
+            "text": "我觉得做AI产品和钓鱼很像（对的我也喜欢钓鱼），来得太早或太晚都没有收获（模型能力没达到，或已被模型能力覆盖），而是要判断潮汐趋势，在对的timing下竿。"
           },
           {
             "type": "text",
-            "text": "• Jakob Nielsen — Intent by Discovery: Designing the AI User Experience (2026-03-26) 链接"
-          },
+            "text": "做AI产品，要提前判断模型能力的发展，让产品能在模型能力的边界处发光。"
+          }
+        ],
+        "sections_en": [
           {
-            "type": "subtitle",
-            "text": "文章草稿"
-          },
-          {
-            "type": "subtitle",
-            "text": "AI时代，用户不再\"操作\"，而是\"表达意图\""
+            "type": "text",
+            "text": "When conceiving this personal website, I wanted the site itself to be an AI-native product, aligning with my design principles for AI-native products. I believe an AI-native product should follow these principles:"
           },
           {
             "type": "text",
-            "text": "上一篇聊了GenUI——AI怎么输出更好的界面。这次换个方向：用户怎么告诉AI自己想要什么？"
+            "text": "• Remove AI capabilities from the product, and the product ceases to exist"
           },
           {
             "type": "text",
-            "text": "Jakob Nielsen（没错，就是那个写了《可用性工程》的老爷子）最近提出了一个框架：Intent-based interaction。核心观点是——AI彻底改变了用户的角色。过去你是操作者，一步步告诉电脑怎么做；现在你是监督者，只需要说\"我要什么\"，AI来搞定怎么做。"
+            "text": "• The product gets stronger as AI model capabilities improve"
           },
           {
             "type": "text",
-            "text": "听起来很美好对吧？但设计上的挑战才刚刚开始。"
-          },
-          {
-            "type": "subtitle",
-            "text": "问题一：用户根本不知道自己要什么"
+            "text": "• Designing for Agents"
           },
           {
             "type": "text",
-            "text": "Nielsen把这个叫\"表达障碍\"（Articulation Barrier）。用户面对一个空白的prompt框，经常是懵的——不是因为他们笨，而是很多需求本身就是模糊的、需要在过程中逐步清晰的。"
+            "text": "In future iterations, I also want my AI product to be:"
           },
           {
             "type": "text",
-            "text": "这跟传统GUI不一样，GUI把选项摆在你面前，你点就行；但AI需要你先说出来，才能帮你做。"
+            "text": "• Dynamic: Behaviors emerge from simple rules, rather than being hardcoded everywhere"
           },
           {
             "type": "text",
-            "text": "这就是为什么现在很多AI产品都在做\"引导式对话\"——不是直接扔个输入框给你，而是通过提问、示例、推荐来帮你发现自己到底要什么。Nielsen管这个叫 Intent by Discovery。"
-          },
-          {
-            "type": "subtitle",
-            "text": "问题二：怎么衡量\"好不好用\"？"
+            "text": "• Primitive: Infinite possibilities composed from the smallest units"
           },
           {
             "type": "text",
-            "text": "传统可用性看的是：用户能不能完成任务、花了多少步骤、犯了几个错。但在AI产品里，用户的主要工作变成了验证AI的输出——看它做得对不对、改不改。所以新的可用性指标应该关注：验证效率、修正成本、用户对结果的信任度。"
+            "text": "• Constraint: Understand the boundaries of model capabilities, choose the best design within those boundaries, and deliver the best product experience"
           },
           {
-            "type": "subtitle",
-            "text": "三层设计模型"
-          },
-          {
-            "type": "text",
-            "text": "Nielsen提出AI产品应该有三层："
+            "type": "image",
+            "src": "content_images/358400ee_en_1.png",
+            "caption": ""
           },
           {
             "type": "text",
-            "text": "• 意图层 — 用户表达\"我要什么\""
+            "text": "I think building AI products is like fishing (yes, I also love fishing) — arriving too early or too late yields nothing (model capabilities haven't reached the threshold, or have already surpassed it). The key is to anticipate where the boundary will be"
           },
           {
             "type": "text",
-            "text": "• 编排层 — AI拆解任务、调度执行"
-          },
-          {
-            "type": "text",
-            "text": "• 直接操控层 — 用户可以随时接管，手动微调"
-          },
-          {
-            "type": "text",
-            "text": "这个框架和我之前做GenUI的经验很吻合。最好的AI体验不是\"全自动黑箱\"，也不是\"什么都要用户手动\"，而是让用户能在不同层级之间自由切换。"
-          },
-          {
-            "type": "subtitle",
-            "text": "认知摩擦：该快的快，该慢的慢"
-          },
-          {
-            "type": "text",
-            "text": "不是所有操作都应该\"一键完成\"。高风险的决策（发邮件、删数据、花钱）需要刻意设计确认环节——Nielsen叫它 calibrated friction。低风险的可以自动执行，高风险的要故意慢下来让用户确认。这其实是信任设计的核心。"
-          },
-          {
-            "type": "text",
-            "text": "💡 待补充：更多素材加入后，继续丰富每个section的案例和个人实战经验。"
-          },
-          {
-            "type": "subtitle",
-            "text": "素材 #2"
-          },
-          {
-            "type": "text",
-            "text": "• Bear Liu 推文解读 + Nielsen原文: AI is First New UI Paradigm in 60 Years 推文链接 | 原文链接"
-          },
-          {
-            "type": "subtitle",
-            "text": "Bear Liu 的核心观点"
-          },
-          {
-            "type": "text",
-            "text": "60年来首次范式转移。从命令行到GUI，人机交互的本质没变——都是告诉机器\"怎么做\"。AI是第三个范式：你告诉它\"要什么\"，它自己搞定\"怎么做\"。从how到what。"
-          },
-          {
-            "type": "text",
-            "text": "关键洞察：约50%的人说不清自己真正需要什么。所以AI产品的竞争力 = 能否猜对用户的隐性意图。不只是听你说了什么，还要理解你想要什么。"
-          },
-          {
-            "type": "text",
-            "text": "实践结论：好的AI产品设计要在两个范式之间找平衡——让意图表达更自然，但不放弃用户对过程的可见性和掌控感。混合式界面（保留点击 + 加入意图识别）是现阶段最优方案。"
+            "text": "Building AI products requires anticipating the development of model capabilities, so the product can shine right at the frontier of what's possible."
           }
         ]
       }
@@ -1095,5 +1206,124 @@
     "title": "Grab a strip for your agent",
     "category": "who_i_am",
     "atom": "tearoff"
+  },
+  {
+    "id": "36f400ee-0cf5-807e-9b7c-f87b177542ee",
+    "title": "Born Builder",
+    "title_en": "Born Builder",
+    "category": "hobby",
+    "atom": "photo",
+    "body": "这个项目是我还在上学时的一个课程作业，已经过去快10年了，但我还是很喜欢。\n因为它提醒我 —— 我是一个builder，不论在有没有AI的时代，把东西做出来，就会让我兴奋！ 火焰是最原始的人与光的互动媒介，人们会用双手保护蜡烛的火苗，用嘴吹灭火苗，微微的风也能改变火苗方向。电灯的出现让人与光的交互变",
+    "cover_image": "",
+    "focus": {
+      "title": "Born Builder",
+      "title_en": "Born Builder",
+      "description": "",
+      "link": "#",
+      "linkText": "Read more",
+      "article": {
+        "title": "Born Builder",
+        "sections": [
+          {
+            "type": "text",
+            "text": "这个项目是我还在上学时的一个课程作业，已经过去快10年了，但我还是很喜欢。\n因为它提醒我 —— 我是一个builder，不论在有没有AI的时代，把东西做出来，就会让我兴奋！"
+          },
+          {
+            "type": "text",
+            "text": "火焰是最原始的人与光的互动媒介，人们会用双手保护蜡烛的火苗，用嘴吹灭火苗，微微的风也能改变火苗方向。电灯的出现让人与光的交互变得更直接，这个项目尝试用人与火苗的互动方式去重新设计电灯。"
+          },
+          {
+            "type": "image",
+            "src": "content_images/builder_1.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "我用了不同的sensors，来让这个产品感知周围的温度，光线和大气压力，让后用一块Arduino来根据这些输入控制输出 —— 1个LED灯泡"
+          },
+          {
+            "type": "image",
+            "src": "content_images/builder_2.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "我希望这个产品是一个有温度的艺术品，而不是科技感满满的电子产品，所以我自己制作硅胶模具，用水泥作为材料，做了好几版不同的产品设计。"
+          },
+          {
+            "type": "image",
+            "src": "content_images/builder_3.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "这是其中最满意的一个造型，用户可以用火柴点亮它，用手和它互动，以及 —— 像吹生日蜡烛一样熄灭它！"
+          },
+          {
+            "type": "image",
+            "src": "content_images/builder_4.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "这里有一个来自“古代”的视频展示👇"
+          },
+          {
+            "type": "text",
+            "text": "<a href=\"https://youtu.be/Gt6PV9eqL3g?si=xElQHb_Xjrn926mp\">https://youtu.be/Gt6PV9eqL3g?si=xElQHb_Xjrn926mp</a>"
+          }
+        ],
+        "sections_en": [
+          {
+            "type": "text",
+            "text": "This project was a school assignment from nearly 10 years ago, but I still love it. Because it reminds me — I'm a builder. Whether or not we're in the AI era, making things come to life excites me!"
+          },
+          {
+            "type": "text",
+            "text": "Fire is the most primitive medium of interaction between humans and light. People cup their hands to protect a candle flame, blow to extinguish it, and even a gentle breeze can change its direction. The invention of electric light made human-light interaction more direct. This project attempts to redesign electric lighting using the interactive language of fire and flame."
+          },
+          {
+            "type": "image",
+            "src": "content_images/builder_en_1.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "I used different sensors to let the product perceive surrounding temperature, light, and atmospheric pressure, then used an Arduino to control the output based on these inputs."
+          },
+          {
+            "type": "image",
+            "src": "content_images/builder_en_2.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "I wanted this product to be a warm piece of art rather than a tech-heavy electronic device. So I made my own silicone molds and used cement as the material, going through several iterations of different forms."
+          },
+          {
+            "type": "image",
+            "src": "content_images/builder_en_3.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "This is my favorite form among them. Users can light it with a match, interact with it by hand, and blow it out like a birthday candle!"
+          },
+          {
+            "type": "image",
+            "src": "content_images/builder_en_4.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "Here is a video demo from the ancient times below"
+          },
+          {
+            "type": "text",
+            "text": "<a href=\"https://youtu.be/Gt6PV9eqL3g?si=xElQHb_Xjrn926mp\">https://youtu.be/Gt6PV9eqL3g?si=xElQHb_Xjrn926mp</a>"
+          }
+        ]
+      }
+    }
   }
 ]
