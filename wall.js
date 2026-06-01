@@ -576,6 +576,7 @@ import { WallArticle } from "./wall-article.js?v=151";
       app.renderer.background.color = currentColor;
       document.documentElement.style.backgroundColor = currentColor;
       document.body.style.backgroundColor = currentColor;
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', currentColor);
 
       const [cr,cg,cb] = hexToRgb(currentBgColors.top);
       const brightness = (cr + cg + cb) / 3;
