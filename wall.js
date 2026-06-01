@@ -3,14 +3,17 @@ import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, renderTear
 import { WallArticle } from "./wall-article.js?v=151";
 
 (async () => {
+  const sat = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sat')) || 0;
+  const sab = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sab')) || 0;
   const W = window.innerWidth;
-  const H = window.innerHeight;
+  const H = window.innerHeight + sat + sab;
   const dpr = Math.min(window.devicePixelRatio || 1, W < 768 ? 2 : Infinity);
 
   const app = new PIXI.Application();
   await app.init({ width: W, height: H, antialias: true, resolution: dpr, autoDensity: true, backgroundColor: 0xFFFDFA });
   document.body.appendChild(app.canvas);
   app.canvas.style.touchAction = "pan-y";
+  if (sat > 0) app.canvas.style.marginTop = `-${sat}px`;
   // On mobile: completely remove PixiJS event system listeners to allow native scroll
   const isTouchDevice = 'ontouchstart' in window;
   if (isTouchDevice && app.renderer.events) {
@@ -19,6 +22,7 @@ import { WallArticle } from "./wall-article.js?v=151";
     app.renderer.events.destroy();
   }
   app.stage.sortableChildren = true;
+  app.stage.y = sat; // Offset stage content into safe area (canvas extends behind status bar)
   app.stage.visible = false; // Hide until fully loaded
 
   // Loading progress helpers
@@ -122,13 +126,13 @@ import { WallArticle } from "./wall-article.js?v=151";
 
   // Stamp image overrides
   const stampOverrides = {
-    'GenUI': 'genui.webp',
+    'GenUI 设计指南': 'genui.png',
     'AI产品设计原则': 'aidesign.webp',
     'Microsoft': 'Microsoft.webp',
     'Alibaba': 'alibaba.webp',
   };
 
-  const coolStickies = ['Alibaba', 'GenUI', 'AI产品设计原则'];
+  const coolStickies = ['Alibaba', 'GenUI 设计指南', 'AI产品设计原则'];
 
   const wallItems = [];
   for (const entry of contentData) {
@@ -148,7 +152,7 @@ import { WallArticle } from "./wall-article.js?v=151";
         category: entry.category,
         title: t(entry, 'title') || entry.title,
         body: t(entry, 'body') || entry.body || '',
-        date: entry.title === 'GenUI' ? "'26 04 20" : entry.title === 'AI产品设计原则' ? "'26 03 15" : "'26 05 01",
+        date: entry.title === 'GenUI 设计指南' ? "'26 04 20" : entry.title === 'AI产品设计原则' ? "'26 03 15" : "'26 05 01",
         stampSrc: stampOverrides[entry.title] || entry.cover_image || 'stamp1.webp',
         colorScheme: coolStickies.includes(entry.title) ? 'cool' : 'warm',
         keywords: entry.keywords, focus: entry.focus || { title: entry.title, description: entry.body || entry.title, link: '#', linkText: 'Read more', article: { title: entry.title, sections: (entry.full_text || []).map(t => ({type:'text',text:t})) } },
@@ -278,9 +282,9 @@ import { WallArticle } from "./wall-article.js?v=151";
   }
 
   const totalH = Math.max(...colTops) + itemGap + 160; // extra padding for chat bar + tearoff strips
-  const contentH = Math.max(totalH, H); // Save for resize handler
-  app.renderer.resize(W, Math.max(totalH, H));
-  app.canvas.style.height = Math.max(totalH, H) + 'px';
+  const contentH = Math.max(totalH + sat + sab, H); // Save for resize handler
+  app.renderer.resize(W, Math.max(totalH + sat + sab, H));
+  app.canvas.style.height = Math.max(totalH + sat + sab, H) + 'px';
   if (totalH > H) {
     document.body.style.overflowY = 'auto';
     app.canvas.style.touchAction = 'pan-y';
@@ -462,7 +466,7 @@ import { WallArticle } from "./wall-article.js?v=151";
 
     // Resize canvas if needed
     const newH = Math.max(...colTopsNew) + gridPad;
-    app.renderer.resize(W, Math.max(newH, window.innerHeight)); app.canvas.style.height = Math.max(newH, window.innerHeight) + "px";
+    app.renderer.resize(W, Math.max(newH + sat + sab, H)); app.canvas.style.height = Math.max(newH + sat + sab, H) + "px";
   }
 
   // ─── Shuffle: reset to initial wall layout ───
@@ -480,7 +484,7 @@ import { WallArticle } from "./wall-article.js?v=151";
 
     // Resize canvas
     const totalH = Math.max(...colTops) + gridPad + 80;
-    app.renderer.resize(W, Math.max(totalH, window.innerHeight)); app.canvas.style.height = Math.max(totalH, window.innerHeight) + "px";
+    app.renderer.resize(W, Math.max(totalH + sat + sab, H)); app.canvas.style.height = Math.max(totalH + sat + sab, H) + "px";
   }
 
   // Wire buttons

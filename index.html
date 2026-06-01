@@ -16,9 +16,15 @@
       font-weight: 400;
     }
     * { margin: 0; padding: 0; }
-    html { overflow-x: hidden; --shadow: #1a1917; }
+    html { overflow-x: hidden; --shadow: #1a1917; background-color: #FFFDFA; }
     body { background: #FFFDFA; overflow-x: hidden; }
     body { min-height: 100vh; }
+
+    /* ── Safe area insets (for edge-to-edge layout) ── */
+    :root {
+      --sat: env(safe-area-inset-top, 0px);
+      --sab: env(safe-area-inset-bottom, 0px);
+    }
 
     /* ── CSS design tokens (light defaults, dark overrides) ── */
     html {
@@ -38,8 +44,10 @@
       --text-muted: #565d72;
       --border-divider: rgba(180,190,220,0.1);
       --overlay-bg: #0d0c1a;
+      background-color: #241F44;
     }
-    canvas { display: block; }
+    html.night-mode body { background-color: #040B24; }
+    canvas { display: block; margin-top: calc(-1 * env(safe-area-inset-top, 0px)); }
 
     /* ── Sunlight overlay ── */
     #night-gradient {
@@ -379,7 +387,7 @@
       flex: 1; max-width: 640px; margin: 0 auto; box-sizing: border-box;
       display: flex; align-items: center; gap: 8px;
       border-radius: 999px;
-      padding: 10px 12px;
+      padding: 10px 12px 10px 16px;
       overflow: hidden;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06), 0 0 40px rgba(0, 0, 0, 0.03);
       transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 2.2);
@@ -629,10 +637,17 @@
 
     /* Composer textarea */
     html.night-mode .composer-bar textarea {
-      color: var(--text-secondary);
+      color: rgba(255,255,255,0.75);
     }
     html.night-mode .composer-bar textarea::placeholder {
-      color: rgba(180,190,220,0.3);
+      color: rgba(255,255,255,0.28);
+    }
+    html.night-mode .composer-bar .send-btn {
+      background: rgba(255,255,255,0.12);
+    }
+    html.night-mode .composer-bar .send-btn:disabled {
+      background: rgba(255,255,255,0.06);
+      color: rgba(255,255,255,0.2);
     }
 
     /* Glass tint — darker in night mode */
@@ -645,13 +660,22 @@
     }
     html.night-mode #organize-btn,
     html.night-mode #shuffle-btn {
-      color: rgba(180,190,220,0.35);
+      color: rgba(255,255,255,0.3);
     }
     html.night-mode #organize-btn:hover,
     html.night-mode #shuffle-btn:hover {
-      color: rgba(180,190,220,0.8);
+      color: rgba(255,255,255,0.75);
     }
   </style>
+  <script>
+    (function() {
+      var h = new Date().getHours();
+      if (h >= 20 || h < 6) {
+        document.documentElement.classList.add('night-mode');
+        document.documentElement.style.backgroundColor = '#241F44';
+      }
+    })();
+  </script>
 </head>
 <body>
   <div id="night-gradient"></div>
