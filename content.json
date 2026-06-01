@@ -289,7 +289,7 @@
     "title": "Microsoft",
     "category": "design_projects",
     "atom": "sticky",
-    "body": "AI builder at Microsoft",
+    "body": "我作为微软Copilot产品设计师，有幸与global团队合作，参与了CopilotC/B两端的产品体验设计，经验主要集中于AI chat 产品中的 Generative UI 体验。 • 设计 Copilot consumer 的 answer card 和 consumption page，用户",
     "cover_image": "Microsoft.webp",
     "keywords": "microsoft copilot ai design",
     "focus": {
@@ -301,8 +301,70 @@
         "title": "Microsoft",
         "sections": [
           {
+            "type": "subtitle",
+            "text": "Microsoft Copilot"
+          },
+          {
             "type": "text",
-            "text": "AI builder at Microsoft"
+            "text": "我作为微软Copilot产品设计师，有幸与global团队合作，参与了CopilotC/B两端的产品体验设计，经验主要集中于AI chat 产品中的 Generative UI 体验。"
+          },
+          {
+            "type": "subtitle",
+            "text": "To C: Copilot消费者端"
+          },
+          {
+            "type": "text",
+            "text": "• 设计 Copilot consumer 的 answer card 和 consumption page，用户会在对话中触发这些体验，进行进一步交互"
+          },
+          {
+            "type": "subtitle",
+            "text": "To B: Copilot企业端"
+          },
+          {
+            "type": "text",
+            "text": "• 设计和开发 To B copilot 中的 GenUX 组件"
+          },
+          {
+            "type": "subtitle",
+            "text": "Microsoft MSN"
+          },
+          {
+            "type": "text",
+            "text": "• 参与微软内容产品的设计，为微软生态内如 Edge, Bing, Copilot 等产品提供内容服务"
+          }
+        ],
+        "sections_en": [
+          {
+            "type": "subtitle",
+            "text": "Microsoft Copilot"
+          },
+          {
+            "type": "text",
+            "text": "As a product designer on Microsoft Copilot, I've had the privilege of collaborating with our global team on both consumer and enterprise Copilot experiences. My expertise focuses on Generative UX and Agent experience design within AI chat products."
+          },
+          {
+            "type": "subtitle",
+            "text": "To C: Copilot Consumer"
+          },
+          {
+            "type": "text",
+            "text": "• Designed Copilot consumer answer cards and consumption pages — users trigger these experiences during conversations for further interaction"
+          },
+          {
+            "type": "subtitle",
+            "text": "To B: Copilot Enterprise"
+          },
+          {
+            "type": "text",
+            "text": "• Designed and developed GenUX components in enterprise Copilot"
+          },
+          {
+            "type": "subtitle",
+            "text": "Microsoft MSN"
+          },
+          {
+            "type": "text",
+            "text": "• Contributing to Microsoft's content product design, providing content services for products across the Microsoft ecosystem including Edge, Bing, and Copilot"
           }
         ]
       }
@@ -313,7 +375,7 @@
     "title": "Alibaba",
     "category": "design_projects",
     "atom": "sticky",
-    "body": "Building AI product to help local service users",
+    "body": "<a href=\"https://www.notion.so/116400ee0cf581569ca8fbc4ded84bda\">Untitled</a> <a href=\"https://www.notion.so/116400ee0cf581408042c2e67a33abc4\">Untitle",
     "cover_image": "alibaba.webp",
     "focus": {
       "title": "Alibaba",
@@ -325,7 +387,77 @@
         "sections": [
           {
             "type": "text",
-            "text": "Building AI product to help local service users"
+            "text": "<a href=\"https://www.notion.so/116400ee0cf581569ca8fbc4ded84bda\">Untitled</a>"
+          },
+          {
+            "type": "text",
+            "text": "<a href=\"https://www.notion.so/116400ee0cf581408042c2e67a33abc4\">Untitled</a>"
+          },
+          {
+            "type": "text",
+            "text": "<a href=\"https://www.notion.so/19eecf3c361c4d2bb39d94e02b39dbd3\">Untitled</a>"
+          },
+          {
+            "type": "subtitle",
+            "text": "🍔 外卖配送服务：商家入驻体验优化"
+          },
+          {
+            "type": "text",
+            "text": "饿了么是中国知名的外卖配送平台。通过设计研究，我发现用户在开店前试图处理复杂流程导致流失。我缩短了开店前流程以提高入驻效率，并改进了任务奖励系统帮助商家运营在线店铺、提高存活率。"
+          },
+          {
+            "type": "subtitle",
+            "text": "🤖 AI 商家助手"
+          },
+          {
+            "type": "text",
+            "text": "在这个项目中，我分析了生成式 AI 对饿了么商家在线咨询服务的影响。我设计了合适的交互模型，并从零开始为 App 和 PC 端搭建了对话式助手，旨在提升商家咨询体验并降低人力成本。"
+          },
+          {
+            "type": "subtitle",
+            "text": "🔍 评价分析"
+          },
+          {
+            "type": "text",
+            "text": "\"评价分析\"对外卖在线店铺运营至关重要，帮助用户了解顾客反馈并改进服务质量。我发现用户很少使用该功能，通过设计研究找到原因并提出创新方案。"
+          }
+        ],
+        "sections_en": [
+          {
+            "type": "text",
+            "text": "<a href=\"https://www.notion.so/116400ee0cf581569ca8fbc4ded84bda\">Untitled</a>"
+          },
+          {
+            "type": "text",
+            "text": "<a href=\"https://www.notion.so/116400ee0cf581408042c2e67a33abc4\">Untitled</a>"
+          },
+          {
+            "type": "text",
+            "text": "<a href=\"https://www.notion.so/19eecf3c361c4d2bb39d94e02b39dbd3\">Untitled</a>"
+          },
+          {
+            "type": "subtitle",
+            "text": "🍔 Food Delivery Service: Restaurant Owner's Onboarding Experience"
+          },
+          {
+            "type": "text",
+            "text": "Eleme (饿了么) is a renowned food delivery service in China, it means “Are you hungry?”\nThrough the design research, I found that our users tried to deal with the complexity before opening, which led to churn. Our users are also not familiar with online restaurant operations, which leads to a low survival rate. I shortened the pre-opening process to higher onboarding efficiency and improved the task-reward system to help our users operate their online restaurants and increase their survival rate."
+          },
+          {
+            "type": "subtitle",
+            "text": "🤖 AI Merchant Assistant"
+          },
+          {
+            "type": "text",
+            "text": "In this project, I analyzed the impact of generative AI on Eleme's merchant online consultation service. I designed suitable interaction models and built a conversational assistant for the app and PC from scratch, aiming to enhance merchants' consultation experience and reduce labour costs."
+          },
+          {
+            "type": "subtitle",
+            "text": "🔍 Review Analysis"
+          },
+          {
+            "type": "text",
+            "text": "\"Review analysis\" is essential for managing takeout online shops, helping users understand customer feedback to optimize their services and food. However, through research, I found that most users rarely access the review analysis page. This project identifies the reasons through design and user research, and offers innovative design solutions to meet diverse user needs, thereby increasing the number of users using the evaluation analysis feature."
           }
         ]
       }
@@ -487,37 +619,37 @@
           },
           {
             "type": "image",
-            "src": "content_images/360400ee_1.png",
+            "src": "content_images/drawing_zh_1.png",
             "caption": ""
           },
           {
             "type": "image",
-            "src": "content_images/360400ee_2.png",
+            "src": "content_images/drawing_zh_2.png",
             "caption": ""
           },
           {
             "type": "image",
-            "src": "content_images/360400ee_3.png",
+            "src": "content_images/drawing_zh_3.png",
             "caption": ""
           },
           {
             "type": "image",
-            "src": "content_images/360400ee_4.png",
+            "src": "content_images/drawing_zh_4.png",
             "caption": ""
           },
           {
             "type": "image",
-            "src": "content_images/360400ee_5.png",
+            "src": "content_images/drawing_zh_5.png",
             "caption": ""
           },
           {
             "type": "image",
-            "src": "content_images/360400ee_6.png",
+            "src": "content_images/drawing_zh_6.png",
             "caption": ""
           },
           {
             "type": "image",
-            "src": "content_images/360400ee_7.png",
+            "src": "content_images/drawing_zh_7.png",
             "caption": ""
           }
         ]
