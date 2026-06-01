@@ -2,13 +2,29 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#FFFDFA">
   <link rel="icon" type="image/png" href="favicon.png">
   <script defer src="https://cloud.umami.is/script.js" data-website-id="0511feb5-f981-4761-84f3-2aca16b5f66c"></script>
   <title>JesseOS</title>
   <link href="https://fonts.googleapis.com/css2?family=Schoolbell&family=Special+Elite&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1/style.css" rel="stylesheet">
+  <script>
+  // Set initial background + theme-color based on time, before first paint
+  (function(){
+    var h = new Date().getHours() + new Date().getMinutes() / 60;
+    var t = h < 6 ? h + 24 : h;
+    var bg = '#FFFDFA';
+    if (t >= 20 || t < 6) bg = '#241F44';
+    else if (t >= 18) bg = '#FCCC83';
+    else if (t >= 12) bg = '#FFFAF2';
+    else bg = '#F6F3EE';
+    document.documentElement.style.backgroundColor = bg;
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', bg);
+  })();
+  </script>
   <style>
     @font-face {
       font-family: 'Red Hat Mono';
