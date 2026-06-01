@@ -126,7 +126,7 @@ import { WallArticle } from "./wall-article.js?v=151";
 
   // Stamp image overrides
   const stampOverrides = {
-    'GenUI 设计指南': 'genui.png',
+    'GenUI 设计指南': 'genui.webp',
     'AI产品设计原则': 'aidesign.webp',
     'Microsoft': 'Microsoft.webp',
     'Alibaba': 'alibaba.webp',
