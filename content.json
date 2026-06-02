@@ -632,6 +632,51 @@
             "src": "content_images/drawing_zh_7.png",
             "caption": ""
           }
+        ],
+        "sections_en": [
+          {
+            "type": "text",
+            "text": "I used to draw a lot. It was one of the few things that could put me into a true flow state—I’d get so absorbed that I’d suddenly realize it was already morning."
+          },
+          {
+            "type": "text",
+            "text": "Here are some of my pre-AI-era artworks, created entirely by hand. Hope you enjoy them! 🙂"
+          },
+          {
+            "type": "image",
+            "src": "content_images/drawing_en_1.png",
+            "caption": ""
+          },
+          {
+            "type": "image",
+            "src": "content_images/drawing_en_2.png",
+            "caption": ""
+          },
+          {
+            "type": "image",
+            "src": "content_images/drawing_en_3.png",
+            "caption": ""
+          },
+          {
+            "type": "image",
+            "src": "content_images/drawing_en_4.png",
+            "caption": ""
+          },
+          {
+            "type": "image",
+            "src": "content_images/drawing_en_5.png",
+            "caption": ""
+          },
+          {
+            "type": "image",
+            "src": "content_images/drawing_en_6.png",
+            "caption": ""
+          },
+          {
+            "type": "image",
+            "src": "content_images/drawing_en_7.png",
+            "caption": ""
+          }
         ]
       }
     },
