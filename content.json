@@ -289,7 +289,7 @@
     "title": "Microsoft",
     "category": "design_projects",
     "atom": "sticky",
-    "body": "我作为微软Copilot产品设计师，有幸与global团队合作，参与了CopilotC/B两端的产品体验设计，经验主要集中于AI chat 产品中的 Generative UI 体验。 • 设计 Copilot consumer 的 answer card 和 consumption page，用户",
+    "body": "Building AI products at Microsoft, designing next-gen human-AI interaction experiences.",
     "cover_image": "Microsoft.webp",
     "keywords": "microsoft copilot ai design",
     "focus": {
@@ -368,14 +368,16 @@
           }
         ]
       }
-    }
+    },
+    "body_en": "Building AI products at Microsoft, designing next-gen human-AI interaction experiences.",
+    "title_en": "Microsoft"
   },
   {
     "id": "116400ee-0cf5-8156-9ca8-fbc4ded84bda",
     "title": "Alibaba",
     "category": "design_projects",
     "atom": "sticky",
-    "body": "<a href=\"https://www.notion.so/116400ee0cf581569ca8fbc4ded84bda\">Untitled</a> <a href=\"https://www.notion.so/116400ee0cf581408042c2e67a33abc4\">Untitle",
+    "body": "Building AI products to help local service users get better experiences.",
     "cover_image": "alibaba.webp",
     "focus": {
       "title": "Alibaba",
@@ -462,7 +464,9 @@
         ]
       }
     },
-    "keywords": "B2C ● Eleme ● Onboarding ● Survival Rate ● 2023"
+    "keywords": "B2C ● Eleme ● Onboarding ● Survival Rate ● 2023",
+    "body_en": "Building AI products to help local service users get better experiences.",
+    "title_en": "Alibaba"
   },
   {
     "id": "146400ee-0cf5-808f-87e8-d536e92e21ee",
