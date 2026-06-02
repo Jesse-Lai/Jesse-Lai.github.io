@@ -1275,8 +1275,8 @@
             "text": "这里有一个来自“古代”的视频展示👇"
           },
           {
-            "type": "text",
-            "text": "https://youtu.be/Gt6PV9eqL3g?si=xElQHb_Xjrn926mp"
+            "type": "video",
+            "src": "https://www.youtube.com/embed/Gt6PV9eqL3g"
           }
         ],
         "sections_en": [
@@ -1325,8 +1325,8 @@
             "text": "Here is a video demo from the ancient times below"
           },
           {
-            "type": "text",
-            "text": "https://youtu.be/Gt6PV9eqL3g?si=xElQHb_Xjrn926mp"
+            "type": "video",
+            "src": "https://www.youtube.com/embed/Gt6PV9eqL3g"
           }
         ]
       }
@@ -1400,8 +1400,8 @@
             "text": "这里有一个来自“古代”的视频展示👇"
           },
           {
-            "type": "text",
-            "text": "https://youtu.be/Gt6PV9eqL3g?si=xElQHb_Xjrn926mp"
+            "type": "video",
+            "src": "https://www.youtube.com/embed/Gt6PV9eqL3g"
           }
         ],
         "sections_en": [
@@ -1450,8 +1450,8 @@
             "text": "Here is a video demo from the ancient times below"
           },
           {
-            "type": "text",
-            "text": "https://youtu.be/Gt6PV9eqL3g?si=xElQHb_Xjrn926mp"
+            "type": "video",
+            "src": "https://www.youtube.com/embed/Gt6PV9eqL3g"
           }
         ]
       }

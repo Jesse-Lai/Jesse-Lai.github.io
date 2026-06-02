@@ -2388,6 +2388,8 @@ export class FocusOverlay {
           if (section.caption) {
             html += `<p style="font-family:Red Hat Mono,monospace;font-size:11px;color:var(--text-caption, #555);text-align:center;margin:0 0 32px;">${section.caption}</p>`;
           }
+        } else if (section.type === 'video') {
+          html += `<div style="position:relative;width:100%;padding-bottom:56.25%;margin:32px 0;"><iframe src="${section.src}" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:6px;" allowfullscreen></iframe></div>`;
         }
       }
     }
@@ -3039,6 +3041,8 @@ export class FocusOverlay {
               if (section.caption) {
                 html += `<p style="font-family:Red Hat Mono,monospace;font-size:11px;color:var(--text-caption, #555);text-align:center;margin:0 0 32px;">${section.caption}</p>`;
               }
+            } else if (section.type === 'video') {
+              html += `<div style="position:relative;width:100%;padding-bottom:56.25%;margin:32px 0;"><iframe src="${section.src}" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:6px;" allowfullscreen></iframe></div>`;
             }
           }
         }
