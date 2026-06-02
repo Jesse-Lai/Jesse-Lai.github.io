@@ -294,7 +294,7 @@
     "keywords": "microsoft copilot ai design",
     "focus": {
       "title": "Microsoft",
-      "description": "AI builder at Microsoft",
+      "description": "Microsoft Copilot",
       "link": "#",
       "linkText": "Read more",
       "article": {
@@ -381,24 +381,12 @@
     "cover_image": "alibaba.webp",
     "focus": {
       "title": "Alibaba",
-      "description": "Building AI product to help local service users",
+      "description": "<a href=\"https://www.notion.so/116400ee0cf581569ca8fbc4ded84bda\">Untitled</a>",
       "link": "#",
       "linkText": "Read more",
       "article": {
         "title": "Alibaba",
         "sections": [
-          {
-            "type": "text",
-            "text": "<a href=\"https://www.notion.so/116400ee0cf581569ca8fbc4ded84bda\">Untitled</a>"
-          },
-          {
-            "type": "text",
-            "text": "<a href=\"https://www.notion.so/116400ee0cf581408042c2e67a33abc4\">Untitled</a>"
-          },
-          {
-            "type": "text",
-            "text": "<a href=\"https://www.notion.so/19eecf3c361c4d2bb39d94e02b39dbd3\">Untitled</a>"
-          },
           {
             "type": "subtitle",
             "text": "🍔 外卖配送服务：商家入驻体验优化"
@@ -425,18 +413,6 @@
           }
         ],
         "sections_en": [
-          {
-            "type": "text",
-            "text": "<a href=\"https://www.notion.so/116400ee0cf581569ca8fbc4ded84bda\">Untitled</a>"
-          },
-          {
-            "type": "text",
-            "text": "<a href=\"https://www.notion.so/116400ee0cf581408042c2e67a33abc4\">Untitled</a>"
-          },
-          {
-            "type": "text",
-            "text": "<a href=\"https://www.notion.so/19eecf3c361c4d2bb39d94e02b39dbd3\">Untitled</a>"
-          },
           {
             "type": "subtitle",
             "text": "🍔 Food Delivery Service: Restaurant Owner's Onboarding Experience"
