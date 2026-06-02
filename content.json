@@ -20,11 +20,11 @@
           },
           {
             "type": "text",
-            "text": "过去5年我先后在阿里巴巴和微软工作，并且在生成式AI的早期，就开始为 ToC 和 ToB 用户设计各种 AI Native产品。"
+            "text": "过去5年，我先后在阿里巴巴和微软工作，并且在生成式AI的早期，就开始为 ToC 和 ToB 用户设计各种 AI Native产品。"
           },
           {
             "type": "text",
-            "text": "幸运的是，我曾多次被 <a href=\"https://mp.weixin.qq.com/s/5FFKYeLy22Bx1S-b4z8UKw\">公司官方媒体</a>报道为“优秀员工”。在工作之余，我偶尔也会在 <a href=\"https://mp.weixin.qq.com/s/hbqhQS9mMXhLmtFRbWKDEQ\">微信公众号</a>和 <a href=\"https://medium.com/@laijianxun123\">Medium</a> 上写一些关于 AI 时代产品设计的思考。"
+            "text": "幸运的是，我曾多次被 <a href=\"https://mp.weixin.qq.com/s/5FFKYeLy22Bx1S-b4z8UKw\">公司官方媒体</a>作为优秀案例报道。在工作之余，我偶尔也会在 <a href=\"https://mp.weixin.qq.com/s/hbqhQS9mMXhLmtFRbWKDEQ\">微信公众号</a>和 <a href=\"https://medium.com/@laijianxun123\">Medium</a> 上写一些关于 AI 时代产品设计的思考。"
           },
           {
             "type": "text",
@@ -33,22 +33,6 @@
           {
             "type": "subtitle",
             "text": "教育经历"
-          },
-          {
-            "type": "text",
-            "text": "学校 | 学位 | 地点 | 时间"
-          },
-          {
-            "type": "text",
-            "text": "湖南大学 | 工业设计学士 | 长沙 | 2012-2016"
-          },
-          {
-            "type": "text",
-            "text": "湖南大学 | 数字媒体硕士 | 长沙 | 2016-2020"
-          },
-          {
-            "type": "text",
-            "text": "伦敦艺术大学 | 服务设计硕士 | 伦敦 | 2018-2020"
           },
           {
             "type": "text",
@@ -61,18 +45,6 @@
           {
             "type": "subtitle",
             "text": "工作经历"
-          },
-          {
-            "type": "text",
-            "text": "公司 | 职位 | 地点 | 时间"
-          },
-          {
-            "type": "text",
-            "text": "微软 AI | 产品设计师 | 北京 | 2025.2 – 至今"
-          },
-          {
-            "type": "text",
-            "text": "阿里巴巴 – 本地生活 | UX设计师 | 上海 | 2020–2024"
           },
           {
             "type": "text",
@@ -111,60 +83,8 @@
             "text": "技能"
           },
           {
-            "type": "text",
-            "text": "类别 | 详情"
-          },
-          {
-            "type": "text",
-            "text": "AI | • 熟练使用Claude code, VS code，Cursor等coding工具，不仅自己开发工具，还能在生产环境有效产出。把控Design to code的体验还原度\n\n• 有自己的AI工作流，不断探索AI时代的设计师边界"
-          },
-          {
-            "type": "text",
-            "text": "语言能力 | • 中文母语，能在英文环境工作"
-          },
-          {
             "type": "subtitle",
             "text": "Media"
-          },
-          {
-            "type": "text",
-            "text": "联系方式"
-          },
-          {
-            "type": "text",
-            "text": "+86 18774829129"
-          },
-          {
-            "type": "text",
-            "text": "Laijianxun123@gmail.com"
-          },
-          {
-            "type": "text",
-            "text": "个人思考"
-          },
-          {
-            "type": "text",
-            "text": "<a href=\"https://medium.com/me/settings#accounthttps://medium.com/me/settings#account\">Medium</a>"
-          },
-          {
-            "type": "text",
-            "text": "<a href=\"https://mp.weixin.qq.com/s/hbqhQS9mMXhLmtFRbWKDEQ\">WeChat Blog</a>"
-          },
-          {
-            "type": "text",
-            "text": "荣誉与认可"
-          },
-          {
-            "type": "text",
-            "text": "<a href=\"https://www.xiaohongshu.com/explore/67065888000000001b023c4b?xhsshare=pc_web&xsec_token=ABw1ES8_EqaPzuG9CPM8gRpkKkVtO35n1DTUzl2BlAaQs%3D&xsec_source=pc_share\">Red</a>"
-          },
-          {
-            "type": "text",
-            "text": "<a href=\"https://mp.weixin.qq.com/s/5FFKYeLy22Bx1S-b4z8UKw\">WeChat Account</a>"
-          },
-          {
-            "type": "text",
-            "text": "<a href=\"https://talent.ele.me/campus/home?lang=zh\">Recruiting Website</a>"
           }
         ],
         "sections_en": [
@@ -178,31 +98,15 @@
           },
           {
             "type": "text",
-            "text": "Fortunately, I've been recognised multiple times by company official media as an \"outstanding employee\". Outside of work, I occasionally write about product design in the AI era on WeChat Blog and Medium."
+            "text": "Fortunately, I've been recognised multiple times by company official media as an \"outstanding employee\". Outside of work, I occasionally write about product design in the AI era on <a href=\"https://mp.weixin.qq.com/s/5FFKYeLy22Bx1S-b4z8UKw\">WeChat Blog</a> and <a href=\"https://medium.com/@jesselai\">Medium</a>."
           },
           {
             "type": "text",
-            "text": "Oh, and if I'm not designing or vibe coding, I'm probably doing stand-up comedy 🤣"
+            "text": "Oh, and if I'm not designing or vibe coding, I'm probably doing <a href=\"/146400ee0cf5808f87e8d536e92e21ee\">stand-up comedy</a> 🤣"
           },
           {
             "type": "subtitle",
             "text": "Education"
-          },
-          {
-            "type": "text",
-            "text": "School | Degree | Location | Year"
-          },
-          {
-            "type": "text",
-            "text": "Hunan University | B.A. Industrial Design | Changsha | 2012-2016"
-          },
-          {
-            "type": "text",
-            "text": "Hunan University | M.S. Digital Media | Changsha | 2016-2020"
-          },
-          {
-            "type": "text",
-            "text": "University of the Arts London | M.S. Service Design | London | 2018-2020"
           },
           {
             "type": "text",
@@ -215,18 +119,6 @@
           {
             "type": "subtitle",
             "text": "Work Experience"
-          },
-          {
-            "type": "text",
-            "text": "Company | Role | Location | Period"
-          },
-          {
-            "type": "text",
-            "text": "Microsoft AI | Product Designer | Beijing | Feb. 2025 – Present"
-          },
-          {
-            "type": "text",
-            "text": "Alibaba – Local Service | UX Designer | Shanghai | 2020–2025"
           },
           {
             "type": "text",
@@ -263,18 +155,6 @@
           {
             "type": "subtitle",
             "text": "Skills"
-          },
-          {
-            "type": "text",
-            "text": "Category | Details"
-          },
-          {
-            "type": "text",
-            "text": "AI | • Proficient with Claude Code, VS Code, Cursor and other coding tools — not just building tools but shipping in production. Ensuring design-to-code fidelity.\n\n• Developed my own AI workflow, continuously exploring the boundaries of designers in the AI era"
-          },
-          {
-            "type": "text",
-            "text": "Language | • Native Mandarin, able to work in English environment"
           },
           {
             "type": "subtitle",
