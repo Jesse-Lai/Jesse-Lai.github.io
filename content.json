@@ -485,7 +485,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/146400ee_1.png",
+            "src": "content_images/comedy_zh_1.png",
             "caption": ""
           },
           {
@@ -494,25 +494,25 @@
           },
           {
             "type": "image",
-            "src": "content_images/146400ee_2.png",
+            "src": "content_images/comedy_zh_2.png",
             "caption": ""
           },
           {
             "type": "text",
-            "text": "从2023年开始，我一直在用英文做脱口秀，学习了 Norah 和 Dave Chappelle 等知名喜剧演员的技巧。我的材料通常围绕文化差异、科技行业的荒诞、以及作为设计师的日常展开。"
+            "text": "从2023年开始，我一直在用英文做脱口秀，跟随 Norah 和 Dave 等知名喜剧演员学习技巧。我的素材通常围绕文化差异、科技行业的趣事、以及个人生活的日常展开。"
           },
           {
             "type": "image",
-            "src": "content_images/146400ee_3.png",
+            "src": "content_images/comedy_zh_3.png",
             "caption": ""
           },
           {
             "type": "text",
-            "text": "虽然中国的英文脱口秀场景相对小众，但你可以在上海和北京的各个开放麦活动中看到我的表演。"
+            "text": "虽然中国的英文脱口秀场景相对小众，但你偶尔可以在上海和北京的开放麦活动中看到我。"
           },
           {
             "type": "image",
-            "src": "content_images/146400ee_4.png",
+            "src": "content_images/comedy_zh_4.png",
             "caption": ""
           }
         ],
@@ -543,7 +543,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/146400ee_en_1.png",
+            "src": "content_images/comedy_en_1.png",
             "caption": ""
           },
           {
@@ -552,7 +552,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/146400ee_en_2.png",
+            "src": "content_images/comedy_en_2.png",
             "caption": ""
           },
           {
@@ -561,7 +561,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/146400ee_en_3.png",
+            "src": "content_images/comedy_en_3.png",
             "caption": ""
           },
           {
@@ -570,7 +570,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/146400ee_en_4.png",
+            "src": "content_images/comedy_en_4.png",
             "caption": ""
           }
         ]
@@ -1352,7 +1352,101 @@
         "sections": [
           {
             "type": "text",
-            "text": "An interactive light built with Arduino — merging hardware and creativity."
+            "text": "这个项目是我还在上学时的一个课程作业，已经过去快10年了，但我还是很喜欢。\n因为它提醒我 —— 我是一个builder，不论在有没有AI的时代，把东西做出来，就会让我兴奋！"
+          },
+          {
+            "type": "text",
+            "text": "火焰是最原始的人与光的互动媒介，人们会用双手保护蜡烛的火苗，用嘴吹灭火苗，微微的风也能改变火苗方向。电灯的出现让人与光的交互变得更直接，这个项目尝试用人与火苗的互动方式去重新设计电灯。"
+          },
+          {
+            "type": "image",
+            "src": "content_images/builder_zh2_1.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "我用了不同的sensors，来让这个产品感知周围的温度，光线和大气压力，让后用一块Arduino来根据这些输入控制输出 —— 1个LED灯泡"
+          },
+          {
+            "type": "image",
+            "src": "content_images/builder_zh2_2.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "我希望这个产品是一个有温度的艺术品，而不是科技感满满的电子产品，所以我自己制作硅胶模具，用水泥作为材料，做了好几版不同的产品设计。"
+          },
+          {
+            "type": "image",
+            "src": "content_images/builder_zh2_3.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "这是其中最满意的一个造型，用户可以用火柴点亮它，用手和它互动，以及 —— 像吹生日蜡烛一样熄灭它！"
+          },
+          {
+            "type": "image",
+            "src": "content_images/builder_zh2_4.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "这里有一个来自“古代”的视频展示👇"
+          },
+          {
+            "type": "text",
+            "text": "https://youtu.be/Gt6PV9eqL3g?si=xElQHb_Xjrn926mp"
+          }
+        ],
+        "sections_en": [
+          {
+            "type": "text",
+            "text": "This project was a school assignment from nearly 10 years ago, but I still love it. Because it reminds me — I'm a builder. Whether or not we're in the AI era, making things come to life excites me!"
+          },
+          {
+            "type": "text",
+            "text": "Fire is the most primitive medium of interaction between humans and light. People cup their hands to protect a candle flame, blow to extinguish it, and even a gentle breeze can change its direction. The invention of electric light made human-light interaction more direct. This project attempts to redesign electric lighting using the interactive language of fire and flame."
+          },
+          {
+            "type": "image",
+            "src": "content_images/builder_en2_1.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "I used different sensors to let the product perceive surrounding temperature, light, and atmospheric pressure, then used an Arduino to control the output based on these inputs."
+          },
+          {
+            "type": "image",
+            "src": "content_images/builder_en2_2.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "I wanted this product to be a warm piece of art rather than a tech-heavy electronic device. So I made my own silicone molds and used cement as the material, going through several iterations of different forms."
+          },
+          {
+            "type": "image",
+            "src": "content_images/builder_en2_3.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "This is my favorite form among them. Users can light it with a match, interact with it by hand, and blow it out like a birthday candle!"
+          },
+          {
+            "type": "image",
+            "src": "content_images/builder_en2_4.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "Here is a video demo from the ancient times below"
+          },
+          {
+            "type": "text",
+            "text": "https://youtu.be/Gt6PV9eqL3g?si=xElQHb_Xjrn926mp"
           }
         ]
       }
@@ -1391,7 +1485,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/builder_1.png",
+            "src": "content_images/builder_zh2_1.png",
             "caption": ""
           },
           {
@@ -1400,7 +1494,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/builder_2.png",
+            "src": "content_images/builder_zh2_2.png",
             "caption": ""
           },
           {
@@ -1409,7 +1503,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/builder_3.png",
+            "src": "content_images/builder_zh2_3.png",
             "caption": ""
           },
           {
@@ -1418,7 +1512,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/builder_4.png",
+            "src": "content_images/builder_zh2_4.png",
             "caption": ""
           },
           {
@@ -1427,7 +1521,7 @@
           },
           {
             "type": "text",
-            "text": "<a href=\"https://youtu.be/Gt6PV9eqL3g?si=xElQHb_Xjrn926mp\">https://youtu.be/Gt6PV9eqL3g?si=xElQHb_Xjrn926mp</a>"
+            "text": "https://youtu.be/Gt6PV9eqL3g?si=xElQHb_Xjrn926mp"
           }
         ],
         "sections_en": [
@@ -1441,7 +1535,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/builder_en_1.png",
+            "src": "content_images/builder_en2_1.png",
             "caption": ""
           },
           {
@@ -1450,7 +1544,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/builder_en_2.png",
+            "src": "content_images/builder_en2_2.png",
             "caption": ""
           },
           {
@@ -1459,7 +1553,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/builder_en_3.png",
+            "src": "content_images/builder_en2_3.png",
             "caption": ""
           },
           {
@@ -1468,7 +1562,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/builder_en_4.png",
+            "src": "content_images/builder_en2_4.png",
             "caption": ""
           },
           {
@@ -1477,7 +1571,7 @@
           },
           {
             "type": "text",
-            "text": "<a href=\"https://youtu.be/Gt6PV9eqL3g?si=xElQHb_Xjrn926mp\">https://youtu.be/Gt6PV9eqL3g?si=xElQHb_Xjrn926mp</a>"
+            "text": "https://youtu.be/Gt6PV9eqL3g?si=xElQHb_Xjrn926mp"
           }
         ]
       }
