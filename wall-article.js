@@ -16,6 +16,7 @@ export class WallArticle {
     this._abortController = null;
     this._atomApps = [];
     this._pendingAtoms = []; // atom insertions queued during streaming
+    this._chatHistory = [];
     this.isOpen = false;
 
     this.closeBtn.addEventListener('click', () => this.close());
@@ -49,13 +50,23 @@ export class WallArticle {
     textarea.value = '';
     textarea.style.height = 'auto';
     sendBtn.disabled = true;
-    this.open(query);
+    if (this.isOpen) {
+      // Follow-up question in existing conversation
+      const userMsg = document.createElement('div');
+      userMsg.className = 'chat-msg user';
+      userMsg.innerHTML = `<div class="chat-bubble">${this._escapeHtml(query)}</div>`;
+      this.content.appendChild(userMsg);
+      this._scrollToBottom(true);
+      this._callAI(query);
+    } else {
+      this.open(query);
+    }
   }
 
   open(query) {
     this.isOpen = true;
+    this._chatHistory = [];
     this.canvas.classList.add('faded');
-    this.composerEl.style.display = 'none';
     if (this.atomsBtn) this.atomsBtn.style.display = 'none';
     this.overlay.style.display = 'block';
     requestAnimationFrame(() => {
@@ -75,6 +86,7 @@ export class WallArticle {
   close() {
     if (!this.isOpen) return;
     this.isOpen = false;
+    this._chatHistory = [];
     if (this._abortController) { this._abortController.abort(); this._abortController = null; }
     for (const a of this._atomApps) a.destroy();
     this._atomApps = [];
@@ -102,6 +114,7 @@ export class WallArticle {
     let loaderRemoved = false;
     let currentEl = null;
     let buffer = '';
+    let fullResponse = '';
     let atomBuffer = [];
     const insertedAtoms = new Set();
 
@@ -149,15 +162,17 @@ export class WallArticle {
       this._scrollToBottom();
     };
 
+    this._chatHistory.push({ role: 'user', content: query });
     const messages = [
       { role: 'system', content: buildSystemPrompt(this.contentData, this.focusOverlay._wallItemRegistry, this.lang) },
-      { role: 'user', content: query },
+      ...this._chatHistory,
     ];
 
     await streamChat(
       messages,
       (token) => {
         if (!loaderRemoved) { removeLoader(); loaderRemoved = true; }
+        fullResponse += token;
         buffer += token;
         while (buffer.length > 0) {
           const headingMatch = buffer.match(/^## (.+?)\n/);
@@ -205,17 +220,19 @@ export class WallArticle {
         if (buffer.trim()) flushText(buffer.trim());
         flushAtomBuffer();
         this._abortController = null;
+        this._chatHistory.push({ role: 'assistant', content: fullResponse });
       },
       this._abortController.signal,
     );
   }
 
 
-  _scrollToBottom() {
+  _scrollToBottom(force) {
     requestAnimationFrame(() => {
       const el = this.overlay;
-      const nearBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 150;
-      if (nearBottom) el.scrollTop = el.scrollHeight;
+      if (force || el.scrollHeight - el.scrollTop - el.clientHeight < 150) {
+        el.scrollTop = el.scrollHeight;
+      }
     });
   }
 
