@@ -59,6 +59,12 @@ FORMAT:
 export async function streamChat(messages, onToken, onDone, signal) {
   await _envReady;
 
+  // Track user question via Umami
+  const lastUserMsg = [...messages].reverse().find(m => m.role === 'user');
+  if (lastUserMsg && typeof umami !== 'undefined') {
+    try { umami.track('user-question', { question: lastUserMsg.content.slice(0, 400), source: 'website' }); } catch(e) {}
+  }
+
   // Choose endpoint: local dev (direct Azure) or production (Cloudflare Worker)
   const url = USE_LOCAL
     ? 'https://jesseai.openai.azure.com/openai/deployments/gpt-5.4-mini/chat/completions?api-version=2025-04-01-preview'
