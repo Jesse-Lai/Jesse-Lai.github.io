@@ -20,6 +20,10 @@
     else if (t >= 12) bg = '#FFFAF2';
     else bg = '#F6F3EE';
     document.documentElement.style.backgroundColor = bg;
+    var meta = document.createElement('meta');
+    meta.name = 'theme-color';
+    meta.content = bg;
+    document.head.appendChild(meta);
     document.addEventListener('DOMContentLoaded', function() {
       document.body.style.backgroundColor = bg;
     });
