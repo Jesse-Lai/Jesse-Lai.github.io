@@ -286,13 +286,13 @@
       pointer-events: auto;
       position: relative; overflow: hidden;
       background: none; border: none;
-      color: rgba(255,255,255,0.7); width: 36px; height: 36px;
+      color: rgba(0,0,0,0.4); width: 36px; height: 36px;
       border-radius: 50%; cursor: pointer;
       font-size: 16px; display: flex; align-items: center; justify-content: center;
       transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08), 0 0 20px rgba(0, 0, 0, 0.04);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
     }
-    .glass-dismiss:hover { transform: scale(1.12); color: rgba(255,255,255,0.95); }
+    .glass-dismiss:hover { transform: scale(1.12); color: rgba(0,0,0,0.7); }
     .glass-dismiss .glass-effect {
       position: absolute; inset: 0; z-index: 0;
       backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
@@ -302,18 +302,26 @@
     }
     .glass-dismiss .glass-tint {
       position: absolute; inset: 0; z-index: 1;
-      background: rgba(255, 255, 255, 0.15);
+      background: rgba(0, 0, 0, 0.06);
       border-radius: 50%;
     }
     .glass-dismiss .glass-shine {
       position: absolute; inset: 0; z-index: 2;
-      box-shadow: inset 1px 1px 1px 0 rgba(255, 255, 255, 0.2),
-        inset -1px -1px 1px 0 rgba(255, 255, 255, 0.15);
+      box-shadow: inset 1px 1px 1px 0 rgba(255, 255, 255, 0.4),
+        inset -1px -1px 1px 0 rgba(0, 0, 0, 0.05);
       border-radius: 50%;
     }
     .glass-dismiss svg { position: relative; z-index: 3; }
+    html.night-mode .glass-dismiss {
+      color: rgba(255,255,255,0.7);
+    }
+    html.night-mode .glass-dismiss:hover { color: rgba(255,255,255,0.95); }
     html.night-mode .glass-dismiss .glass-tint {
       background: rgba(10, 8, 24, 0.35);
+    }
+    html.night-mode .glass-dismiss .glass-shine {
+      box-shadow: inset 1px 1px 1px 0 rgba(255, 255, 255, 0.2),
+        inset -1px -1px 1px 0 rgba(255, 255, 255, 0.15);
     }
     #focus-close {
       position: absolute; top: 20px; right: 20px;
