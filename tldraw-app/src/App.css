@@ -1,0 +1,41 @@
+.app {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: background-color 2s ease;
+}
+
+.tldraw-container {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+/* Override tldraw background to transparent */
+.tldraw-container .tl-background {
+  background: transparent !important;
+}
+.tldraw-container .tl-canvas {
+  background: transparent !important;
+}
+.tldraw-container [data-testid="canvas-background"] {
+  background: transparent !important;
+}
+
+.top-controls {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  display: flex;
+  gap: 12px;
+}
+
+/* Font imports */
+@import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=Schoolbell&family=Red+Hat+Mono:wght@400;500&display=swap');
+
+:root {
+  --title-font: 'Special Elite', cursive;
+  --caption-font: 'Schoolbell', cursive;
+  --body-font: 'Red Hat Mono', monospace;
+}

@@ -1,0 +1,99 @@
+.focus-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.focus-panel {
+  position: relative;
+  width: 90%;
+  max-width: 720px;
+  max-height: 85vh;
+  background: #FFFDFA;
+  border-radius: 12px;
+  padding: 48px 40px;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.focus-close {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.focus-close:hover { background: #f0f0f0; }
+
+.focus-title {
+  font-family: var(--title-font, 'Special Elite', cursive);
+  font-size: 28px;
+  color: #222;
+  margin-bottom: 32px;
+  line-height: 1.3;
+}
+
+.focus-subtitle {
+  font-family: var(--title-font, 'Special Elite', cursive);
+  font-size: 20px;
+  color: #333;
+  margin: 48px 0 16px;
+  line-height: 1.4;
+}
+
+.focus-text {
+  font-family: var(--body-font, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+  font-size: 16px;
+  color: #444;
+  line-height: 1.85;
+  margin-bottom: 24px;
+}
+.focus-text a {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+.focus-image {
+  width: 100%;
+  border-radius: 6px;
+  margin: 32px 0 8px;
+}
+
+.focus-video {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%;
+  margin: 32px 0;
+}
+.focus-video iframe {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  border: none;
+  border-radius: 6px;
+}
