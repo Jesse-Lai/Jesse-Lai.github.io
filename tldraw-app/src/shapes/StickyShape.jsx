@@ -1,62 +1,73 @@
 import { BaseBoxShapeUtil, HTMLContainer } from 'tldraw'
 
-const WARM_COLORS = ['#FFF8DC', '#FFFACD', '#FFF5E1', '#FFEFD5']
-const COOL_COLORS = ['#E8F4FD', '#E0F0FF', '#F0F4FF', '#EAF2FF']
-
 export class StickyShapeUtil extends BaseBoxShapeUtil {
   static type = 'portfolio-sticky'
 
   getDefaultProps() {
-    return { w: 280, h: 280, title: '', body: '', stampSrc: '', colorScheme: 'warm', entry: '{}' }
+    return { w: 280, h: 280, title: '', body: '', stampSrc: '', colorScheme: 'warm', entryId: '' }
   }
 
   component(shape) {
     const { w, h, title, body, stampSrc, colorScheme } = shape.props
-    const colors = colorScheme === 'cool' ? COOL_COLORS : WARM_COLORS
-    const bg = colors[Math.floor(Math.random() * colors.length)]
+    const bgColor = colorScheme === 'cool' ? '#EAF2FF' : '#FFF8DC'
 
     return (
       <HTMLContainer id={shape.id} style={{ pointerEvents: 'all' }}>
         <div style={{
           width: w,
           height: h,
-          background: colorScheme === 'cool' ? '#E8F4FD' : '#FFF8DC',
-          borderRadius: '2px',
-          boxShadow: '2px 3px 12px rgba(0,0,0,0.1)',
-          padding: '20px',
+          background: bgColor,
+          borderRadius: '1px',
+          boxShadow: '2px 3px 14px rgba(0,0,0,0.1)',
+          padding: '22px 20px',
           display: 'flex',
           flexDirection: 'column',
           cursor: 'pointer',
           position: 'relative',
-          fontFamily: 'var(--title-font, Special Elite, cursive)',
+          overflow: 'hidden',
         }}>
+          {/* Tape effect */}
           <div style={{
-            fontSize: '18px',
+            position: 'absolute',
+            top: '-4px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: '60px',
+            height: '20px',
+            background: 'rgba(255,255,255,0.5)',
+            borderRadius: '0 0 2px 2px',
+            boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
+          }} />
+
+          <div style={{
+            fontSize: '17px',
             fontWeight: 'bold',
             color: '#222',
-            marginBottom: '12px',
+            marginBottom: '10px',
+            marginTop: '8px',
             lineHeight: 1.3,
+            fontFamily: "'Special Elite', cursive",
           }}>
             {title}
           </div>
           <div style={{
-            fontSize: '13px',
+            fontSize: '12.5px',
             color: '#555',
-            lineHeight: 1.6,
+            lineHeight: 1.65,
             flex: 1,
             overflow: 'hidden',
-            fontFamily: 'var(--body-font, Red Hat Mono, monospace)',
+            fontFamily: "'Red Hat Mono', monospace",
           }}>
-            {body && body.length > 120 ? body.slice(0, 120) + '...' : body}
+            {body && body.length > 100 ? body.slice(0, 100) + '...' : body}
           </div>
           {stampSrc && (
             <div style={{
               position: 'absolute',
-              bottom: '15px',
-              right: '15px',
-              width: '80px',
-              height: '80px',
-              opacity: 0.7,
+              bottom: '12px',
+              right: '12px',
+              width: '72px',
+              height: '72px',
+              opacity: 0.65,
               borderRadius: '4px',
               overflow: 'hidden',
             }}>

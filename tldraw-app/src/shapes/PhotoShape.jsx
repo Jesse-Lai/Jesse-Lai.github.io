@@ -4,7 +4,7 @@ export class PhotoShapeUtil extends BaseBoxShapeUtil {
   static type = 'portfolio-photo'
 
   getDefaultProps() {
-    return { w: 260, h: 320, src: '', caption: '', entry: '{}' }
+    return { w: 260, h: 320, src: '', caption: '', entryId: '' }
   }
 
   component(shape) {
@@ -16,12 +16,12 @@ export class PhotoShapeUtil extends BaseBoxShapeUtil {
           height: h,
           background: '#fff',
           borderRadius: '2px',
-          boxShadow: '2px 4px 16px rgba(0,0,0,0.13)',
-          padding: '12px 12px 44px',
+          boxShadow: '3px 5px 20px rgba(0,0,0,0.12), 0 1px 3px rgba(0,0,0,0.08)',
+          padding: '12px 12px 48px',
           display: 'flex',
           flexDirection: 'column',
           cursor: 'pointer',
-          fontFamily: 'var(--caption-font, Schoolbell, cursive)',
+          transition: 'box-shadow 0.2s',
         }}>
           <div style={{
             flex: 1,
@@ -32,11 +32,17 @@ export class PhotoShapeUtil extends BaseBoxShapeUtil {
             {src && <img src={src} alt={caption} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />}
           </div>
           <div style={{
-            marginTop: '8px',
+            position: 'absolute',
+            bottom: '14px',
+            left: '16px',
+            right: '16px',
             fontSize: '15px',
             color: '#333',
             textAlign: 'center',
-            fontFamily: 'var(--caption-font)',
+            fontFamily: "'Schoolbell', cursive",
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
           }}>
             {caption}
           </div>

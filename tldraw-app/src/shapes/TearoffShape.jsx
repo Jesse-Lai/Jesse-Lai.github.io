@@ -4,12 +4,12 @@ export class TearoffShapeUtil extends BaseBoxShapeUtil {
   static type = 'portfolio-tearoff'
 
   getDefaultProps() {
-    return { w: 200, h: 300, entry: '{}' }
+    return { w: 200, h: 320, entryId: '' }
   }
 
   component(shape) {
     const { w, h } = shape.props
-    const strips = Array.from({ length: 8 }, (_, i) => i)
+    const strips = Array.from({ length: 9 }, (_, i) => i)
 
     return (
       <HTMLContainer id={shape.id} style={{ pointerEvents: 'all' }}>
@@ -17,31 +17,45 @@ export class TearoffShapeUtil extends BaseBoxShapeUtil {
           width: w,
           height: h,
           background: '#fff',
-          borderRadius: '2px',
-          boxShadow: '1px 2px 8px rgba(0,0,0,0.08)',
-          padding: '16px 12px 8px',
+          borderRadius: '1px',
+          boxShadow: '1px 2px 10px rgba(0,0,0,0.07)',
+          padding: '14px 10px 6px',
           display: 'flex',
           flexDirection: 'column',
           cursor: 'pointer',
-          fontFamily: 'var(--body-font)',
         }}>
-          <div style={{ fontSize: '11px', color: '#666', textAlign: 'center', marginBottom: '8px' }}>
+          <div style={{
+            fontSize: '11px',
+            color: '#666',
+            textAlign: 'center',
+            marginBottom: '6px',
+            fontFamily: "'Special Elite', cursive",
+          }}>
             ✂ Grab a strip for your agent
           </div>
-          <div style={{ flex: 1, display: 'flex', gap: '2px' }}>
+          <div style={{
+            fontSize: '9px',
+            color: '#999',
+            textAlign: 'center',
+            marginBottom: '10px',
+            fontFamily: "'Red Hat Mono', monospace",
+          }}>
+            jesselai.com/api
+          </div>
+          <div style={{ flex: 1, display: 'flex', gap: '1px', borderTop: '1px dashed #ddd', paddingTop: '6px' }}>
             {strips.map(i => (
               <div key={i} style={{
                 flex: 1,
-                background: '#f8f6f2',
-                borderBottom: '1px dashed #ccc',
-                borderRadius: '1px',
+                background: i % 2 === 0 ? '#fafaf8' : '#f5f5f2',
+                borderRight: i < strips.length - 1 ? '1px dashed #e0ddd8' : 'none',
                 writingMode: 'vertical-lr',
-                fontSize: '9px',
-                color: '#888',
+                fontSize: '8px',
+                color: '#aaa',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 padding: '4px 0',
+                fontFamily: "'Red Hat Mono', monospace",
               }}>
                 jesselai.com
               </div>
