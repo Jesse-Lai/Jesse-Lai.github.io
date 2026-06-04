@@ -553,11 +553,10 @@ import { WallArticle } from "./wall-article.js?v=151";
 
     // ── Time-of-day color: top & bottom per period, lerp between periods + scroll ──
     const timeColorStops = [
-      [6,  '#F6F3EE', '#F8F3E3'],  // morning 6-12
-      [12, '#FFFAF2', '#E8CDA3'],  // afternoon 12-18
-      [18, '#FCCC83', '#E79648'],  // dusk 18-20
-      [20, '#241F44', '#040B24'],  // night 20-6
-      [30, '#241F44', '#040B24'],  // night wrap
+      [6,  '#F6F3EE', '#E79648'],  // day 6-18
+      [18, '#F6F3EE', '#E79648'],  // day end
+      [20, '#1D183B', '#02091D'],  // night 20-6
+      [30, '#1D183B', '#02091D'],  // night wrap
     ];
     const lerpHex = (hexA, hexB, t) => {
       const a = hexToRgb(hexA), b = hexToRgb(hexB);
@@ -583,7 +582,7 @@ import { WallArticle } from "./wall-article.js?v=151";
     };
 
     // Default to current hour's time period
-    const autoHour = (() => { const h = new Date().getHours(); return h >= 20 || h < 6 ? 22 : h >= 18 ? 18 : h >= 12 ? 15 : 9; })();
+    const autoHour = (() => { const h = new Date().getHours(); return h >= 20 || h < 6 ? 22 : 9; })();
     let timeOverride = autoHour;
     let currentBgColors = getTimeColors(timeOverride);
 
@@ -618,7 +617,7 @@ import { WallArticle } from "./wall-article.js?v=151";
       // Perspective: opacity + angle shift with scroll
       if (perspective) {
         const isNight = brightness < 80;
-        perspective.style.opacity = isNight ? lerp(0.16, 0.4, p) : lerp(0.12, 0.3, p);
+        perspective.style.opacity = isNight ? lerp(0.16, 0.5, p) : lerp(0.12, 0.4, p);
         perspective.style.mixBlendMode = isNight ? 'multiply' : 'soft-light';
         const m00 = lerp(0.75, 0.8333, p);
         const m01 = lerp(-0.0625, 0.0833, p);
@@ -671,7 +670,7 @@ import { WallArticle } from "./wall-article.js?v=151";
       const btnColor = brightness > 160 ? 'rgba(0,0,0,0.4)' : 'rgba(255,255,255,0.5)';
       const btnHover = brightness > 160 ? 'rgba(0,0,0,0.7)' : 'rgba(255,255,255,0.8)';
       const atomsBtn = document.getElementById('atoms-btn');
-      const timeBtn = document.getElementById('time-preview');
+      const timeBtn = document.getElementById('time-toggle');
       const langBtn = document.getElementById('lang-toggle');
       [atomsBtn, timeBtn, langBtn].forEach(el => {
         if (el) { el.style.color = btnColor; el.onmouseenter = () => el.style.color = btnHover; el.onmouseleave = () => el.style.color = btnColor; }
@@ -682,10 +681,15 @@ import { WallArticle } from "./wall-article.js?v=151";
     updateSunProgress();
 
     // Expose time preview control
-    window._setTimePreview = (hour) => {
-      timeOverride = hour;
+    window._toggleTime = () => {
+      const isNight = timeOverride >= 20 || (timeOverride < 6);
+      timeOverride = isNight ? 9 : 22;
       currentBgColors = getTimeColors(timeOverride);
       updateSunProgress();
+      const sun = document.getElementById('time-icon-sun');
+      const moon = document.getElementById('time-icon-moon');
+      if (sun) sun.style.display = timeOverride === 9 ? '' : 'none';
+      if (moon) moon.style.display = timeOverride === 22 ? '' : 'none';
     };
   }
 

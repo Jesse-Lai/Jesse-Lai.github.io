@@ -14,11 +14,7 @@
   (function(){
     var h = new Date().getHours() + new Date().getMinutes() / 60;
     var t = h < 6 ? h + 24 : h;
-    var bg = '#FFFDFA';
-    if (t >= 20 || t < 6) bg = '#241F44';
-    else if (t >= 18) bg = '#FCCC83';
-    else if (t >= 12) bg = '#FFFAF2';
-    else bg = '#F6F3EE';
+    var bg = (t >= 20 || t < 6) ? '#1D183B' : '#F6F3EE';
     document.documentElement.style.backgroundColor = bg;
     var meta = document.createElement('meta');
     meta.name = 'theme-color';
@@ -64,9 +60,9 @@
       --text-muted: #565d72;
       --border-divider: rgba(180,190,220,0.1);
       --overlay-bg: #0d0c1a;
-      background-color: #241F44;
+      background-color: #1D183B;
     }
-    html.night-mode body { background-color: #241F44; }
+    html.night-mode body { background-color: #1D183B; }
     canvas { display: block; margin-top: calc(-1 * env(safe-area-inset-top, 0px)); }
 
     /* ── Sunlight overlay ── */
@@ -80,6 +76,13 @@
     #night-gradient > .gradient-bg {
       position: absolute; inset: 0;
       background: linear-gradient(to left, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0) 50%);
+    }
+    #sunlight-highlight {
+      pointer-events: none;
+      position: fixed; inset: 0;
+      z-index: 1;
+      background: radial-gradient(ellipse at 0% 0%, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0) 30%);
+      transition: opacity 0.4s ease;
     }
     #sunlight-overlay {
       pointer-events: none;
@@ -97,8 +100,8 @@
       transform-style: preserve-3d;
       transform: matrix3d(0.75,-0.0625,0,0.0008, 0,1,0,0, 0,0,1,0, 0,0,0,1);
       transition: opacity 0.3s, transform 0.3s;
-      -webkit-mask-image: linear-gradient(to left, black 30vw, transparent 55vw);
-      mask-image: linear-gradient(to left, black 30vw, transparent 55vw);
+      -webkit-mask-image: linear-gradient(to left, black 30vw, transparent 65vw);
+      mask-image: linear-gradient(to left, black 30vw, transparent 65vw);
       filter: blur(3px);
     }
     @media (max-width: 768px) {
@@ -115,7 +118,6 @@
       top: 50%; right: -160px;
       transform-origin: center center;
       margin-top: -375px;
-      clip-path: inset(0 30% 0 0);
       width: 864px; height: 749px;
       background-image: url('docs/leaves.png');
       filter: url(#wind);
@@ -186,15 +188,22 @@
     }
     #top-bar button, #top-bar select, #top-bar div {
       background: none; border: none;
-      color: rgba(255,255,255,0.5); cursor: pointer; font-size: 13px; padding: 6px 0;
+      color: rgba(255,255,255,0.9) !important; cursor: pointer; font-size: 13px; padding: 6px 0;
       font-family: 'Red Hat Mono', monospace; letter-spacing: 1px;
-      transition: color 0.2s; user-select: none;
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); user-select: none;
+      -webkit-text-fill-color: rgba(255,255,255,0.9);
     }
-    #top-bar button:hover, #top-bar select:hover, #top-bar div:hover { color: rgba(255,255,255,0.8); }
-    #time-preview {
-      appearance: none; -webkit-appearance: none; outline: none;
+    #top-bar button:hover, #top-bar select:hover, #top-bar div:hover { transform: scale(1.12); }
+    #time-toggle {
+      background: none; border: none; cursor: pointer; padding: 0;
+      color: rgba(255,255,255,0.9); user-select: none;
+      display: flex; align-items: center; justify-content: center;
+      filter: none; box-shadow: none; text-shadow: none;
+      transform: scale(1);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
-    #time-preview option { color: #333; background: #fff; }
+    #time-toggle svg { display: block; filter: drop-shadow(0 0 0 transparent); }
+    #time-toggle:hover { transform: scale(1.12); }
 
     /* Focus overlay */
     canvas.focus-active {
@@ -216,12 +225,15 @@
     body:has(#focus-overlay.visible:not(.article-open)) #top-bar { display: none; }
     body:has(#focus-overlay.article-open) #top-bar,
     body:has(#wall-article.visible) #top-bar { z-index: 10001; right: 64px; }
-    body:has(#focus-overlay.article-open) #time-preview,
-    body:has(#wall-article.visible) #time-preview { display: none; }
+    body:has(#focus-overlay.article-open) #time-toggle,
+    body:has(#wall-article.visible) #time-toggle { display: none; }
     body.focus-active #sunlight-overlay,
     body.focus-active #night-gradient,
     body:has(#wall-article.visible) #sunlight-overlay,
     body:has(#wall-article.visible) #night-gradient { opacity: 0; }
+    body.focus-active #sunlight-highlight,
+    body:has(#wall-article.visible) #sunlight-highlight { opacity: 0; }
+    html.night-mode #sunlight-highlight { opacity: 0; }
     #focus-backdrop {
       position: absolute; inset: 0;
       cursor: pointer;
@@ -461,6 +473,7 @@
     /* Per-composer overrides */
     #article-composer { z-index: 10001; display: none; }
     #wall-composer { z-index: 9998; }
+    body:has(#wall-article.visible) #wall-composer { z-index: 10001; }
     /* Nested focus overlay (on top of article) */
     #nested-overlay {
       position: fixed; inset: 0; z-index: 10003;
@@ -698,13 +711,14 @@
       var h = new Date().getHours();
       if (h >= 20 || h < 6) {
         document.documentElement.classList.add('night-mode');
-        document.documentElement.style.backgroundColor = '#241F44';
+        document.documentElement.style.backgroundColor = '#1D183B';
       }
     })();
   </script>
 </head>
 <body>
   <div id="night-gradient"><div class="gradient-bg"></div></div>
+  <div id="sunlight-highlight"></div>
   <!-- Sunlight overlay: perspective + blinds -->
   <div id="sunlight-overlay">
     <div class="perspective">
@@ -756,18 +770,16 @@
   <div id="top-bar">
     <div id="atoms-btn" style="display:none" onclick="location.href='atoms.html'">Atoms</div>
     <button id="lang-toggle" onclick="window._toggleLang && window._toggleLang()">中</button>
-    <select id="time-preview" onchange="window._setTimePreview && window._setTimePreview(Number(this.value))">
-      <option value="9">Morning</option>
-      <option value="15">Afternoon</option>
-      <option value="18">Dusk</option>
-      <option value="22">Night</option>
-    </select>
+    <button id="time-toggle" onclick="window._toggleTime && window._toggleTime()">
+      <svg id="time-icon-sun" width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="5"/></svg>
+      <svg id="time-icon-moon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style="display:none"><mask id="moon-mask"><rect width="16" height="16" fill="white"/><circle cx="11" cy="5" r="3" fill="black"/></mask><circle cx="8" cy="8" r="5" mask="url(#moon-mask)"/></svg>
+    </button>
     <script>
-      // Auto-select time period based on current hour
       (function() {
         var h = new Date().getHours();
-        var v = h >= 20 || h < 6 ? '22' : h >= 18 ? '18' : h >= 12 ? '15' : '9';
-        document.getElementById('time-preview').value = v;
+        var isNight = h >= 20 || h < 6;
+        document.getElementById('time-icon-sun').style.display = isNight ? 'none' : '';
+        document.getElementById('time-icon-moon').style.display = isNight ? '' : 'none';
       })();
     </script>
   </div>
