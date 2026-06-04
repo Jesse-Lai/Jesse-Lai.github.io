@@ -24,7 +24,7 @@ export function FocusPanel({ data, lang, onClose }) {
             } else if (section.type === 'text') {
               return <p key={i} className="focus-text" dangerouslySetInnerHTML={{ __html: section.text }} />
             } else if (section.type === 'image') {
-              return <img key={i} className="focus-image" src={section.src} alt={section.caption || ''} />
+              return <img key={i} className="focus-image" src={'./' + section.src} alt={section.caption || ''} />
             } else if (section.type === 'video') {
               return (
                 <div key={i} className="focus-video">

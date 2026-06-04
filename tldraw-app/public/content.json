@@ -1,0 +1,1682 @@
+[
+  {
+    "id": "116400ee-0cf5-8029-ba88-e9288932ff8d",
+    "title": "Hello I’m Jesse Lai",
+    "category": "who_i_am",
+    "atom": "photo",
+    "body": "嗨👋 我是微软的一个 AI Builder，一边设计 AI Native 产品，一边把我的设计在生产环境coding出来，直接交付产品的线上体验。 过去5年我先后在阿里巴巴和微软工作，并且在生成式AI的早期，就开始为 ToC 和 ToB 用户设计各种 AI Native产品。",
+    "cover_image": "photo_portrait.webp",
+    "focus": {
+      "title": "Hello I'm Jesse Lai",
+      "description": "I’m a product designer at Microsoft AI, exploring how people will naturally interact with AI in the future. I have experience designing AI products fo",
+      "link": "#",
+      "linkText": "Read more",
+      "article": {
+        "title": "Hello I'm Jesse Lai",
+        "sections": [
+          {
+            "type": "text",
+            "text": "嗨👋 我是微软的一个 AI Builder，一边设计 AI Native 产品，一边把我的设计在生产环境coding出来，直接交付产品的线上体验。"
+          },
+          {
+            "type": "text",
+            "text": "过去5年，我先后在阿里巴巴和微软工作，并且在生成式AI的早期，就开始为 ToC 和 ToB 用户设计各种 AI Native产品。"
+          },
+          {
+            "type": "text",
+            "text": "幸运的是，我曾多次被 <a href=\"https://mp.weixin.qq.com/s/5FFKYeLy22Bx1S-b4z8UKw\">公司官方媒体</a>作为优秀案例报道。在工作之余，我偶尔也会在 <a href=\"https://mp.weixin.qq.com/s/hbqhQS9mMXhLmtFRbWKDEQ\">微信公众号</a>和 <a href=\"https://medium.com/@laijianxun123\">Medium</a> 上写一些关于 AI 时代产品设计的思考。"
+          },
+          {
+            "type": "text",
+            "text": "对了，如果我不在做设计和Vibe coding，那大概率是在创作<a href=\"/146400ee0cf5808f87e8d536e92e21ee\">脱口秀</a> 🤣"
+          },
+          {
+            "type": "subtitle",
+            "text": "教育经历"
+          },
+          {
+            "type": "text",
+            "text": "• 以专业排名第一保送研究生"
+          },
+          {
+            "type": "text",
+            "text": "• 连续获得4次国家一等奖学金"
+          },
+          {
+            "type": "subtitle",
+            "text": "工作经历"
+          },
+          {
+            "type": "text",
+            "text": "阿里巴巴："
+          },
+          {
+            "type": "text",
+            "text": "• 23年初大模型刚刚兴起时，作为主设计师负责商家端生成式 AI 产品体验，从0-1搭建 AI 产品框架"
+          },
+          {
+            "type": "text",
+            "text": "• 连续4年优秀绩效"
+          },
+          {
+            "type": "text",
+            "text": "• 作为mentor指导团队新成员"
+          },
+          {
+            "type": "text",
+            "text": "微软："
+          },
+          {
+            "type": "text",
+            "text": "• 与global团队一起，设计 To C/B 两端的 Copilot 产品体验，专注于 GenUI 和 Agent 体验"
+          },
+          {
+            "type": "text",
+            "text": "• 将 Vibe Coding 工作流融入产品开发，交付从设计到前端开发的全链路体验"
+          },
+          {
+            "type": "text",
+            "text": "• 25年完成了10+个 Vibe Coding 产品插件和原型"
+          },
+          {
+            "type": "subtitle",
+            "text": "技能"
+          },
+          {
+            "type": "subtitle",
+            "text": "Media"
+          }
+        ],
+        "sections_en": [
+          {
+            "type": "text",
+            "text": "Hi 👋 I'm an AI Builder at Microsoft — I design AI-native products and code my designs into production, delivering live product experiences end-to-end."
+          },
+          {
+            "type": "text",
+            "text": "Over the past 5 years, I've worked at Alibaba and Microsoft. Since the early days of generative AI, I've been designing AI-native products for both consumer and enterprise users."
+          },
+          {
+            "type": "text",
+            "text": "Fortunately, I've been recognised multiple times by company official media as an \"outstanding employee\". Outside of work, I occasionally write about product design in the AI era on <a href=\"https://mp.weixin.qq.com/s/5FFKYeLy22Bx1S-b4z8UKw\">WeChat Blog</a> and <a href=\"https://medium.com/@jesselai\">Medium</a>."
+          },
+          {
+            "type": "text",
+            "text": "Oh, and if I'm not designing or vibe coding, I'm probably doing <a href=\"/146400ee0cf5808f87e8d536e92e21ee\">stand-up comedy</a> 🤣"
+          },
+          {
+            "type": "subtitle",
+            "text": "Education"
+          },
+          {
+            "type": "text",
+            "text": "• Admitted to graduate school ranked #1 in major"
+          },
+          {
+            "type": "text",
+            "text": "• 4-time National First-Class Scholarship recipient"
+          },
+          {
+            "type": "subtitle",
+            "text": "Work Experience"
+          },
+          {
+            "type": "text",
+            "text": "Alibaba:"
+          },
+          {
+            "type": "text",
+            "text": "• Led generative AI product experience for merchant-side from 0 to 1 when LLMs first emerged in early 2023"
+          },
+          {
+            "type": "text",
+            "text": "• Consistently excellent performance for 5 years"
+          },
+          {
+            "type": "text",
+            "text": "• Mentored new team members"
+          },
+          {
+            "type": "text",
+            "text": "Microsoft:"
+          },
+          {
+            "type": "text",
+            "text": "• Designing Copilot experiences for both C-end and B-end with global team, focusing on GenUI and Agent experiences"
+          },
+          {
+            "type": "text",
+            "text": "• Integrating Vibe Coding workflow into product development, delivering full-chain experiences from design to front-end code"
+          },
+          {
+            "type": "text",
+            "text": "• Completed 10+ Vibe Coding product plugins and prototypes in 2025"
+          },
+          {
+            "type": "subtitle",
+            "text": "Skills"
+          },
+          {
+            "type": "subtitle",
+            "text": "Media"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "copilot-bc-001",
+    "title": "Microsoft",
+    "category": "design_projects",
+    "atom": "sticky",
+    "body": "Building AI products at Microsoft, designing next-gen human-AI interaction experiences.",
+    "cover_image": "Microsoft.webp",
+    "keywords": "microsoft copilot ai design",
+    "focus": {
+      "title": "Microsoft",
+      "description": "Microsoft Copilot",
+      "link": "#",
+      "linkText": "Read more",
+      "article": {
+        "title": "Microsoft",
+        "sections": [
+          {
+            "type": "subtitle",
+            "text": "Microsoft Copilot"
+          },
+          {
+            "type": "text",
+            "text": "我作为微软Copilot产品设计师，有幸与global团队合作，参与了CopilotC/B两端的产品体验设计，经验主要集中于AI chat 产品中的 Generative UI 体验。"
+          },
+          {
+            "type": "subtitle",
+            "text": "To C: Copilot消费者端"
+          },
+          {
+            "type": "text",
+            "text": "• 设计 Copilot consumer 的 answer card 和 consumption page，用户会在对话中触发这些体验，进行进一步交互"
+          },
+          {
+            "type": "subtitle",
+            "text": "To B: Copilot企业端"
+          },
+          {
+            "type": "text",
+            "text": "• 设计和开发 To B copilot 中的 GenUX 组件"
+          },
+          {
+            "type": "subtitle",
+            "text": "Microsoft MSN"
+          },
+          {
+            "type": "text",
+            "text": "• 参与微软内容产品的设计，为微软生态内如 Edge, Bing, Copilot 等产品提供内容服务"
+          }
+        ],
+        "sections_en": [
+          {
+            "type": "subtitle",
+            "text": "Microsoft Copilot"
+          },
+          {
+            "type": "text",
+            "text": "As a product designer on Microsoft Copilot, I've had the privilege of collaborating with our global team on both consumer and enterprise Copilot experiences. My expertise focuses on Generative UX and Agent experience design within AI chat products."
+          },
+          {
+            "type": "subtitle",
+            "text": "To C: Copilot Consumer"
+          },
+          {
+            "type": "text",
+            "text": "• Designed Copilot consumer answer cards and consumption pages — users trigger these experiences during conversations for further interaction"
+          },
+          {
+            "type": "subtitle",
+            "text": "To B: Copilot Enterprise"
+          },
+          {
+            "type": "text",
+            "text": "• Designed and developed GenUX components in enterprise Copilot"
+          },
+          {
+            "type": "subtitle",
+            "text": "Microsoft MSN"
+          },
+          {
+            "type": "text",
+            "text": "• Contributing to Microsoft's content product design, providing content services for products across the Microsoft ecosystem including Edge, Bing, and Copilot"
+          }
+        ]
+      }
+    },
+    "body_en": "Building AI products at Microsoft, designing next-gen human-AI interaction experiences.",
+    "title_en": "Microsoft"
+  },
+  {
+    "id": "116400ee-0cf5-8156-9ca8-fbc4ded84bda",
+    "title": "Alibaba",
+    "category": "design_projects",
+    "atom": "sticky",
+    "body": "Building AI products to help local service users get better experiences.",
+    "cover_image": "alibaba.webp",
+    "focus": {
+      "title": "Alibaba",
+      "description": "<a href=\"https://www.notion.so/116400ee0cf581569ca8fbc4ded84bda\">Untitled</a>",
+      "link": "#",
+      "linkText": "Read more",
+      "article": {
+        "title": "Alibaba",
+        "sections": [
+          {
+            "type": "subtitle",
+            "text": "🍔 外卖配送服务：商家入驻体验优化"
+          },
+          {
+            "type": "text",
+            "text": "饿了么是中国知名的外卖配送平台。通过设计研究，我发现用户在开店前试图处理复杂流程导致流失。我缩短了开店前流程以提高入驻效率，并改进了任务奖励系统帮助商家运营在线店铺、提高存活率。"
+          },
+          {
+            "type": "subtitle",
+            "text": "🤖 AI 商家助手"
+          },
+          {
+            "type": "text",
+            "text": "在这个项目中，我分析了生成式 AI 对饿了么商家在线咨询服务的影响。我设计了合适的交互模型，并从零开始为 App 和 PC 端搭建了对话式助手，旨在提升商家咨询体验并降低人力成本。"
+          },
+          {
+            "type": "subtitle",
+            "text": "🔍 评价分析"
+          },
+          {
+            "type": "text",
+            "text": "\"评价分析\"对外卖在线店铺运营至关重要，帮助用户了解顾客反馈并改进服务质量。我发现用户很少使用该功能，通过设计研究找到原因并提出创新方案。"
+          }
+        ],
+        "sections_en": [
+          {
+            "type": "subtitle",
+            "text": "🍔 Food Delivery Service: Restaurant Owner's Onboarding Experience"
+          },
+          {
+            "type": "text",
+            "text": "Eleme (饿了么) is a renowned food delivery service in China, it means “Are you hungry?”\nThrough the design research, I found that our users tried to deal with the complexity before opening, which led to churn. Our users are also not familiar with online restaurant operations, which leads to a low survival rate. I shortened the pre-opening process to higher onboarding efficiency and improved the task-reward system to help our users operate their online restaurants and increase their survival rate."
+          },
+          {
+            "type": "subtitle",
+            "text": "🤖 AI Merchant Assistant"
+          },
+          {
+            "type": "text",
+            "text": "In this project, I analyzed the impact of generative AI on Eleme's merchant online consultation service. I designed suitable interaction models and built a conversational assistant for the app and PC from scratch, aiming to enhance merchants' consultation experience and reduce labour costs."
+          },
+          {
+            "type": "subtitle",
+            "text": "🔍 Review Analysis"
+          },
+          {
+            "type": "text",
+            "text": "\"Review analysis\" is essential for managing takeout online shops, helping users understand customer feedback to optimize their services and food. However, through research, I found that most users rarely access the review analysis page. This project identifies the reasons through design and user research, and offers innovative design solutions to meet diverse user needs, thereby increasing the number of users using the evaluation analysis feature."
+          }
+        ]
+      }
+    },
+    "keywords": "B2C ● Eleme ● Onboarding ● Survival Rate ● 2023",
+    "body_en": "Building AI products to help local service users get better experiences.",
+    "title_en": "Alibaba"
+  },
+  {
+    "id": "146400ee-0cf5-808f-87e8-d536e92e21ee",
+    "title": "Stand-up Comedian",
+    "category": "hobby",
+    "atom": "photo",
+    "body": "脱口秀是我一生的热爱。把生活的酸甜苦辣变成段子搬上舞台的过程，已经成为我生活中不可分割的一部分。我发现脱口秀和设计之间有很多共通之处： • 两者都需要对日常生活的敏锐观察力",
+    "cover_image": "content_images/146400ee_3.webp",
+    "focus": {
+      "title": "Stand-up Comedian",
+      "description": "Stand-up comedy is a lifelong passion of mine. The process of turning life's highs and lows into jokes and performing them on stage has become an inte",
+      "link": "#",
+      "linkText": "Read more",
+      "article": {
+        "title": "Stand-up Comedian",
+        "sections": [
+          {
+            "type": "text",
+            "text": "脱口秀是我一生的热爱。把生活的酸甜苦辣变成段子搬上舞台的过程，已经成为我生活中不可分割的一部分。我发现脱口秀和设计之间有很多共通之处："
+          },
+          {
+            "type": "text",
+            "text": "• 两者都需要对日常生活的敏锐观察力"
+          },
+          {
+            "type": "text",
+            "text": "• 两者都需要不断迭代和打磨素材"
+          },
+          {
+            "type": "text",
+            "text": "• 两者都是把日常痛点转化为有意义的东西——设计将其变为解决方案，喜剧将其变为笑声"
+          },
+          {
+            "type": "text",
+            "text": "• 开放麦本质上就是一种用户测试：你听取观众反馈，迭代，再改进"
+          },
+          {
+            "type": "text",
+            "text": "• 喜剧和设计都需要品味——能注意到大多数人忽略但又能引起共鸣的东西"
+          },
+          {
+            "type": "image",
+            "src": "content_images/comedy_zh_1.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "喜剧不仅提升了我的幽默感，也锻炼了我的演讲和沟通能力。在工作中用讲故事的方式推动想法，更容易获得认同。"
+          },
+          {
+            "type": "image",
+            "src": "content_images/comedy_zh_2.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "从2023年开始，我一直在用英文做脱口秀，跟随 Norah 和 Dave 等知名喜剧演员学习技巧。我的素材通常围绕文化差异、科技行业的趣事、以及个人生活的日常展开。"
+          },
+          {
+            "type": "image",
+            "src": "content_images/comedy_zh_3.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "虽然中国的英文脱口秀场景相对小众，但你偶尔可以在上海和北京的开放麦活动中看到我。"
+          },
+          {
+            "type": "image",
+            "src": "content_images/comedy_zh_4.png",
+            "caption": ""
+          }
+        ],
+        "sections_en": [
+          {
+            "type": "text",
+            "text": "Stand-up comedy is a lifelong passion of mine. The process of turning life's highs and lows into jokes and performing them on stage has become an integral part of my life. Comedy and design have many things in common."
+          },
+          {
+            "type": "text",
+            "text": "• Both require a sharp eye for observing everyday life."
+          },
+          {
+            "type": "text",
+            "text": "• Both involve constant iteration and refinement of ideas and materials."
+          },
+          {
+            "type": "text",
+            "text": "• Both turn everyday pain points into something meaningful — design turns them into solutions, comedy turns them into punchlines."
+          },
+          {
+            "type": "text",
+            "text": "• An open mic is essentially a form of user testing: you listen to audience feedback, iterate, and improve. Sometimes the feedback is so bad that the material never makes it to production 🤣"
+          },
+          {
+            "type": "text",
+            "text": "• Both comedy and design require taste—the ability to notice things that most people overlook but somehow feel off. This sensitivity is a talent shared by great comedians and great designers alike."
+          },
+          {
+            "type": "image",
+            "src": "content_images/comedy_en_1.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "Comedy not only enhances my sense of humor but also improves my public speaking and communication skills. It’s a great way to channel negative emotions into something positive, helping me stay optimistic. Bad day? Great-time to write a new joke!"
+          },
+          {
+            "type": "image",
+            "src": "content_images/comedy_en_2.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "Since 2023, I’ve been doing stand-up in English, learning from well-known comedians like Norah and Davy, popular faces on Rock & Roast."
+          },
+          {
+            "type": "image",
+            "src": "content_images/comedy_en_3.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "Although the English stand-up scene in China is relatively niche, you can catch my performances at some international comedy clubs."
+          },
+          {
+            "type": "image",
+            "src": "content_images/comedy_en_4.png",
+            "caption": ""
+          }
+        ]
+      }
+    },
+    "keywords": "Comedy ● Open Mic ● Storytelling ● Since 2024"
+  },
+  {
+    "id": "360400ee-0cf5-80e4-ae1c-ccb2760bb841",
+    "title": "Drawing",
+    "category": "hobby",
+    "atom": "photo",
+    "body": "我以前经常画画，这能让我感到心流的快乐，经常一不小心就发现已经天亮了。\n下面是我的一些古法绘画作品，绝不含AI，请欣赏 🙂",
+    "cover_image": "content_images/360400ee_1.webp",
+    "focus": {
+      "title": "Drawing",
+      "description": "Coming soon",
+      "link": "#",
+      "linkText": "Read more",
+      "article": {
+        "title": "Drawing",
+        "sections": [
+          {
+            "type": "text",
+            "text": "我以前经常画画，这能让我感到心流的快乐，经常一不小心就发现已经天亮了。\n下面是我的一些古法绘画作品，绝不含AI，请欣赏 🙂"
+          },
+          {
+            "type": "image",
+            "src": "content_images/drawing_zh_1.png",
+            "caption": ""
+          },
+          {
+            "type": "image",
+            "src": "content_images/drawing_zh_2.png",
+            "caption": ""
+          },
+          {
+            "type": "image",
+            "src": "content_images/drawing_zh_3.png",
+            "caption": ""
+          },
+          {
+            "type": "image",
+            "src": "content_images/drawing_zh_4.png",
+            "caption": ""
+          },
+          {
+            "type": "image",
+            "src": "content_images/drawing_zh_5.png",
+            "caption": ""
+          },
+          {
+            "type": "image",
+            "src": "content_images/drawing_zh_6.png",
+            "caption": ""
+          },
+          {
+            "type": "image",
+            "src": "content_images/drawing_zh_7.png",
+            "caption": ""
+          }
+        ],
+        "sections_en": [
+          {
+            "type": "text",
+            "text": "I used to draw a lot. It was one of the few things that could put me into a true flow state—I’d get so absorbed that I’d suddenly realize it was already morning."
+          },
+          {
+            "type": "text",
+            "text": "Here are some of my pre-AI-era artworks, created entirely by hand. Hope you enjoy them! 🙂"
+          },
+          {
+            "type": "image",
+            "src": "content_images/drawing_en_1.png",
+            "caption": ""
+          },
+          {
+            "type": "image",
+            "src": "content_images/drawing_en_2.png",
+            "caption": ""
+          },
+          {
+            "type": "image",
+            "src": "content_images/drawing_en_3.png",
+            "caption": ""
+          },
+          {
+            "type": "image",
+            "src": "content_images/drawing_en_4.png",
+            "caption": ""
+          },
+          {
+            "type": "image",
+            "src": "content_images/drawing_en_5.png",
+            "caption": ""
+          },
+          {
+            "type": "image",
+            "src": "content_images/drawing_en_6.png",
+            "caption": ""
+          },
+          {
+            "type": "image",
+            "src": "content_images/drawing_en_7.png",
+            "caption": ""
+          }
+        ]
+      }
+    },
+    "keywords": "Illustration ● Watercolor ● Coming Soon"
+  },
+  {
+    "id": "30d400ee-0cf5-805a-ab9d-cf4d576901da",
+    "title": "GenUI 设计指南",
+    "category": "design_thought",
+    "atom": "sticky",
+    "body": "在微软工作一年后，我决定重新开始写写AI native designer的转型过程，和AI design workflow的变化，希望能链接更多感兴趣的人。 这次聊的话题是因为前段时间参与了一些Generative UI的项目，因此分享一些总结和反思。看完本文你能获得：",
+    "cover_image": "content_images/30d400ee_1.png",
+    "focus": {
+      "title": "GenUI 设计指南",
+      "description": "在微软工作一年后，我决定重新开始写写AI native designer的转型过程，和AI design workflow的变化，希望能链接更多感兴趣的人。 这次聊的话题是因为前段时间参与了一些Generative UI的项目，因此分享一些总结和反思。看完本文你能获得：",
+      "link": "#",
+      "linkText": "Read more",
+      "article": {
+        "title": "GenUI",
+        "sections": [
+          {
+            "type": "text",
+            "text": "在微软工作一年后，我决定重新开始写写AI native designer的转型过程，和AI design workflow的变化，希望能链接更多感兴趣的人。"
+          },
+          {
+            "type": "text",
+            "text": "这次聊的话题是因为前段时间参与了一些Generative UI的项目，因此分享一些总结和反思。看完本文你能获得："
+          },
+          {
+            "type": "text",
+            "text": "✅ 为什么GenUI重要，明天就可以和同事侃侃而谈\n✅ GenUI的形态和行为，设计的重点是什么\n✅ 什么Figma不再能设计GenUI，以及我自己的工作流"
+          },
+          {
+            "type": "text",
+            "text": "看完本文你不能获得：\n❎ OpenAI的工作机会（但可以增加你获得的概率）\n❎ 一只会叫你名字的可爱小猫咪 🐱（但你可以自己vibe coding它）"
+          },
+          {
+            "type": "text",
+            "text": "如何打造一个AI native的GenUI产品呢？其实非常简单👇"
+          },
+          {
+            "type": "image",
+            "src": "content_images/30d400ee_1.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "正片从这里开始 ～"
+          },
+          {
+            "type": "subtitle",
+            "text": "AI时代，人机界面的体验倒退了"
+          },
+          {
+            "type": "text",
+            "text": "在AI这个时代，我们拥有了足够智能且持续进化的AI系统。讽刺的是，我们的人机交互体验在很多场景反而倒退了——从丰富的图形化界面体验退回到基于文本的对话聊天，能力强大，但表达原始，很多时候信息可读性很低，阅读效率也不高。"
+          },
+          {
+            "type": "image",
+            "src": "content_images/30d400ee_2.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "AI输出的Text-based界面创造了一种扁平的信息层级，但整段文字的回答非常overwhelming，难以阅读。特别是现在AI也被用在一些任务流的场景中，其实非常低效。用户在大段的文字中寻找相关的信息时，过高的认知负荷和跳跃的重点，会降低用户对AI 的回答的信任感。"
+          },
+          {
+            "type": "subtitle",
+            "text": "GenUI，是AI时代的人机界面"
+          },
+          {
+            "type": "text",
+            "text": "GenUI是由AI实时动态生成的用户界面。"
+          },
+          {
+            "type": "image",
+            "src": "content_images/30d400ee_3.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "总的来说支持GenUI的AI agent输出的是结构化和可交互的UI，对比当前的大部分Text-based回答："
+          },
+          {
+            "type": "text",
+            "text": "1. 回答不仅有内容，还有视觉结构和重点\n2. 可交互，用户有更高的互动意愿\n3. 用户对回答和agent都有更强的信任感"
+          },
+          {
+            "type": "subtitle",
+            "text": "GenUI 的形态"
+          },
+          {
+            "type": "text",
+            "text": "大多数真实世界的AI产品体验可以归为三种界面形态：Chat、Chat+、Chatless。GenUI在不同形态的产品中也有不同的表现。"
+          },
+          {
+            "type": "text",
+            "text": "Chat:"
+          },
+          {
+            "type": "text",
+            "text": "在对话中的交互，对话就是产品。"
+          },
+          {
+            "type": "text",
+            "text": "在这种模式下，GenUI 通常以内嵌形式出现，例如卡片、图表、摘要或工具的结构化区块。比如Open UI提供的开源GenUI能力"
+          },
+          {
+            "type": "image",
+            "src": "content_images/30d400ee_4.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "Chat+\n对话+产品界面共同协作，聊天依然存在，但它只是更大工作区域的一部分。用户通过对话，让AI在可操作的界面中生成GenUI，共同完成任务。比如 Google Stitch在画布种生成UI。"
+          },
+          {
+            "type": "image",
+            "src": "content_images/30d400ee_5.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "Chatless\n界面会在没有任何聊天窗口的情况下自动适配。用户几乎感觉不到“在和 AI 对话”，系统会根据用户的input直接输出新的GenUI更新界面。比如Copilot lab中根据用户的行为自动生成的地图和体验的游戏"
+          },
+          {
+            "type": "image",
+            "src": "content_images/30d400ee_6.png",
+            "caption": ""
+          },
+          {
+            "type": "subtitle",
+            "text": "GenUI 的形态"
+          },
+          {
+            "type": "text",
+            "text": "有2个影响 GenUI 行为的关键：表达自由度和谁来控制表达"
+          },
+          {
+            "type": "text",
+            "text": "表达自由度（Freedom of Expression）：\n决定了系统在视觉和结构上可以让AI “生成到什么程度”。一般来说有3种："
+          },
+          {
+            "type": "text",
+            "text": "1. 固定组件系统（Low Freedom）：\nAI 仅允许调用有限的系统预设组件（比如lists，widget，cards），AI 只能在固定卡片、列表或表单之间选择，不允许结构突破"
+          },
+          {
+            "type": "image",
+            "src": "content_images/30d400ee_7.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "2. 扩展组件系统（Medium Freedom）：\nAI 还是调用有限的系统预设组件，但允许不同组件的拼装，组合，Grouping"
+          },
+          {
+            "type": "image",
+            "src": "content_images/30d400ee_8.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "3. 开放生成系统（High Freedom）：\nAI 可以生成完整的HTML 或free-form布局（比如用design skills让AI自由生成UI）"
+          },
+          {
+            "type": "image",
+            "src": "content_images/30d400ee_9.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "谁来控制表达（Who Controls the Representation）："
+          },
+          {
+            "type": "text",
+            "text": "一些场景开发者会定义好应用引用GenUI的规则（比如只能用某 3 种卡片），这种情况下产品规定结构，模型只填数据。"
+          },
+          {
+            "type": "text",
+            "text": "另一些场景会让模型自己决定怎么呈现（如用表格，生成多个卡的Grouping，或输出完整 HTML）。产品不再规定结构，只负责渲染模型输出的内容"
+          },
+          {
+            "type": "text",
+            "text": "大多数现实世界的产品处于中间地带，由应用设定边界，而模型在这些边界内进行自适应。"
+          },
+          {
+            "type": "subtitle",
+            "text": "GenUI 时代，Figma 似乎不再可行"
+          },
+          {
+            "type": "text",
+            "text": "Gen UI的设计成为了一个难题，不像传统的静态UI，GenUI需要测试不同components千变万化的组合。这在Figma中几乎无法完成，因此我们需要打造新的工具，确保上线前就能充分测试GenUI的各种edge cases."
+          },
+          {
+            "type": "text",
+            "text": "理想的GenUI，和AI可能拼接出的奇怪UI👇"
+          },
+          {
+            "type": "image",
+            "src": "content_images/30d400ee_10.png",
+            "caption": ""
+          },
+          {
+            "type": "subtitle",
+            "text": "AI Workflow，打造 GenUI 工具"
+          },
+          {
+            "type": "text",
+            "text": "我一直希望让参与设计的 Copilot 能输出内容丰富的UI界面，而不只是text heavy的大段文案。在古法设计时期（1年多前），用Figma手搓很难穷尽所有的组合场景。而现在，只要有Claude code以及产品的Codebase，就可以搭建属于自己的GenUI设计工具。在产品上线之前就能看到自己搭建的GenUI系统在各种场景的表现。"
+          },
+          {
+            "type": "text",
+            "text": "经过调研，我找到一个开源的GenUI库，并理出了实现的技术架构："
+          },
+          {
+            "type": "text",
+            "text": "• 定义一个GenUI design system"
+          },
+          {
+            "type": "text",
+            "text": "• 和LLM约定好，返回的内容中带有表达GenUI的Tag"
+          },
+          {
+            "type": "text",
+            "text": "• 然后让agent根据规则，将带Tag的返回信息，在浏览器渲染成带有UI的回复内容"
+          },
+          {
+            "type": "text",
+            "text": "我把开源库clone到本地，把库中的GenUI样式调整得尽可能和Copilot相似，然后和Copilot代码库相结合，让我们看看效果！"
+          },
+          {
+            "type": "text",
+            "text": "我询问了一个日本的旅游计划，Copilot 的回答使用了多种GenUI，输出了图文并茂，且可以交互的详细计划👇"
+          },
+          {
+            "type": "image",
+            "src": "content_images/30d400ee_11.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "对比纯文本的AI回答，GenUI内容结构明显会更有重点，视觉上更有吸引力👇"
+          },
+          {
+            "type": "image",
+            "src": "content_images/30d400ee_12.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "甚至我输入申请信用卡相关的问题，AI直接生成了我一个可交互的申请流程，可以直接填写提交。"
+          },
+          {
+            "type": "image",
+            "src": "content_images/30d400ee_13.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "至此，以后要增加新的GenUI 组件和规则，不再需要Figma手搓，只需要向Claude code描述成新的components和规则，甚至让AI自动生成evals（评估系统）测试，就能快速判断新的设计表现是否符合预期。"
+          },
+          {
+            "type": "text",
+            "text": "好啦，虽然还有很多没说完，但是真的要去睡觉了😴 欢迎交流！"
+          }
+        ],
+        "sections_en": [
+          {
+            "type": "text",
+            "text": "After a year at Microsoft, I decided to start writing again about my transition as an AI-native designer and the evolution of AI design workflows, hoping to connect with more like-minded people."
+          },
+          {
+            "type": "text",
+            "text": "This time I'm sharing insights from recent Generative UI projects. After reading, you'll gain:"
+          },
+          {
+            "type": "text",
+            "text": "✅ Why GenUI matters — enough to discuss with colleagues tomorrow\n✅ GenUI forms and behaviors — what designers should focus on\n✅ Why Figma can no longer design GenUI, and my own workflow"
+          },
+          {
+            "type": "text",
+            "text": "What you won't get:\n❎ A job at OpenAI (but this might improve your chances)\n❎ A cute kitten that calls your name 🐱(but you can vibe-code one yourself)"
+          },
+          {
+            "type": "text",
+            "text": "How to build an AI-native GenUI product? It's actually quite simple 👇"
+          },
+          {
+            "type": "image",
+            "src": "content_images/30d400ee_en_1.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "The real content starts here ~"
+          },
+          {
+            "type": "subtitle",
+            "text": "In the AI Era, Human-Computer Interface Experience Has Regressed"
+          },
+          {
+            "type": "text",
+            "text": "In the AI era, we have sufficiently intelligent and continuously evolving AI systems. Ironically, our HCI experience has regressed — from rich graphical interfaces back to text-based chat. Powerful in capability, but primitive in expression, with low readability and poor efficiency."
+          },
+          {
+            "type": "image",
+            "src": "content_images/30d400ee_en_2.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "AI's text-based output creates a flat information hierarchy. Long text responses are overwhelming and hard to read. In task-flow scenarios it's very inefficient. High cognitive load and scattered key points reduce user trust in AI responses."
+          },
+          {
+            "type": "subtitle",
+            "text": "GenUI: The Human-Computer Interface of the AI Era"
+          },
+          {
+            "type": "text",
+            "text": "GenUI is user interface dynamically generated by AI in real-time."
+          },
+          {
+            "type": "image",
+            "src": "content_images/30d400ee_en_3.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "AI agents supporting GenUI output structured, interactive UI. Compared to current text-based responses:"
+          },
+          {
+            "type": "text",
+            "text": "1. Responses have content WITH visual structure and emphasis\n2. Interactive — higher engagement willingness\n3. Users have stronger trust in both response and agent"
+          },
+          {
+            "type": "subtitle",
+            "text": "Forms of GenUI"
+          },
+          {
+            "type": "text",
+            "text": "Most real-world AI product experiences fall into three interface forms: Chat, Chat+, and Chatless. GenUI manifests differently in each."
+          },
+          {
+            "type": "text",
+            "text": "Chat:"
+          },
+          {
+            "type": "text",
+            "text": "Interaction within conversation — the chat IS the product."
+          },
+          {
+            "type": "text",
+            "text": "In this mode, GenUI appears as embedded blocks — cards, charts, summaries, or structured tool outputs. For example, Open UI's open-source GenUI capabilities."
+          },
+          {
+            "type": "image",
+            "src": "content_images/30d400ee_en_4.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "Chat+\nConversation + product interface working together. Chat still exists, but as part of a larger workspace. Users have AI generate GenUI in an actionable canvas. E.g., Google Stitch generating UI in canvas."
+          },
+          {
+            "type": "image",
+            "src": "content_images/30d400ee_en_5.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "Chatless\nThe interface adapts automatically without any chat window. Users barely feel they're \"talking to AI\" — the system outputs new GenUI directly based on user input. E.g., Copilot Lab's auto-generated maps and games."
+          },
+          {
+            "type": "image",
+            "src": "content_images/30d400ee_en_6.png",
+            "caption": ""
+          },
+          {
+            "type": "subtitle",
+            "text": "Forms of GenUI"
+          },
+          {
+            "type": "text",
+            "text": "Two key factors influence GenUI behavior: Freedom of Expression and Who Controls the Representation."
+          },
+          {
+            "type": "text",
+            "text": "Freedom of Expression:\nDetermines how far the system allows AI to \"generate\" visually and structurally. Three levels:"
+          },
+          {
+            "type": "text",
+            "text": "1. Fixed Component System (Low Freedom):\nAI can only call limited preset components (lists, widgets, cards). No structural breakthroughs allowed."
+          },
+          {
+            "type": "image",
+            "src": "content_images/30d400ee_en_7.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "2. Extended Component System (Medium Freedom):\nAI still calls preset components but allows assembly, combination, and grouping."
+          },
+          {
+            "type": "image",
+            "src": "content_images/30d400ee_en_8.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "3. Open Generation System (High Freedom):\nAI can generate complete HTML or free-form layouts (e.g., using design skills for AI to freely generate UI)."
+          },
+          {
+            "type": "image",
+            "src": "content_images/30d400ee_en_9.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "Who Controls the Representation:"
+          },
+          {
+            "type": "text",
+            "text": "In some scenarios, developers define GenUI rules (e.g., only 3 card types). The product dictates structure, the model fills data."
+          },
+          {
+            "type": "text",
+            "text": "In other scenarios, the model decides presentation (tables, card groupings, or full HTML). The product no longer dictates structure, only renders model output."
+          },
+          {
+            "type": "text",
+            "text": "Most real-world products fall in between — the application sets boundaries, the model adapts within them."
+          },
+          {
+            "type": "subtitle",
+            "text": "In the GenUI Era, Figma Is No Longer Viable"
+          },
+          {
+            "type": "text",
+            "text": "Designing GenUI is a challenge. Unlike traditional static UI, GenUI requires testing ever-changing component combinations. Nearly impossible in Figma — we need new tools to test edge cases before launch."
+          },
+          {
+            "type": "text",
+            "text": "Ideal GenUI vs. the weird UI that AI might assemble 👇"
+          },
+          {
+            "type": "image",
+            "src": "content_images/30d400ee_en_10.png",
+            "caption": ""
+          },
+          {
+            "type": "subtitle",
+            "text": "AI Workflow: Building GenUI Tools"
+          },
+          {
+            "type": "text",
+            "text": "I've always wanted Copilot to output rich UI, not just text-heavy paragraphs. In the old-school design era (1+ year ago), Figma couldn't cover all scenarios. Now with Claude Code and the product codebase, you can build your own GenUI design tools and preview across scenarios before launch."
+          },
+          {
+            "type": "text",
+            "text": "After research, I found an open-source GenUI library and mapped out the technical architecture:"
+          },
+          {
+            "type": "text",
+            "text": "• Define a GenUI design system"
+          },
+          {
+            "type": "text",
+            "text": "• Agree with the LLM on a protocol where responses include GenUI tags"
+          },
+          {
+            "type": "text",
+            "text": "• Then have the agent render tagged responses as UI components in the browser based on the rules"
+          },
+          {
+            "type": "text",
+            "text": "I cloned the library locally, adjusted GenUI styles to match Copilot, then combined with the Copilot codebase. Let's see the results!"
+          },
+          {
+            "type": "text",
+            "text": "I asked for a Japan travel plan. Copilot used multiple GenUI components, outputting a detailed interactive plan with rich media 👇"
+          },
+          {
+            "type": "image",
+            "src": "content_images/30d400ee_en_11.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "Compared to pure text AI responses, GenUI clearly has better structure, focal points, and visual appeal 👇"
+          },
+          {
+            "type": "image",
+            "src": "content_images/30d400ee_en_12.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "I even asked about credit card applications — the AI generated an interactive application flow I could fill out and submit directly."
+          },
+          {
+            "type": "image",
+            "src": "content_images/30d400ee_en_13.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "From now on, adding new GenUI components no longer requires Figma. Just describe new components to Claude Code, even have AI auto-generate evals to validate designs."
+          },
+          {
+            "type": "text",
+            "text": "Alright, there's still much more to say, but I really need to sleep 😴 Feel free to reach out!"
+          }
+        ]
+      },
+      "title_en": "Designing for GenUI"
+    },
+    "keywords": "AI Native ● Generative UI ● Interaction Paradigm ● 2026",
+    "title_en": "Designing for GenUI",
+    "subtitle": "我对 GenUI 形态、系统与工作流的总结",
+    "subtitle_en": "A summary of my thoughts on GenUI systems and workflows."
+  },
+  {
+    "id": "358400ee-0cf5-81e1-aff1-ee6de5859ccd",
+    "title": "AI产品设计原则",
+    "category": "design_thought",
+    "atom": "sticky",
+    "body": "我在构思这个个人网站的时候，我希望网站本身就是一个 AI native 产品，符合我对 AI native 产品的设计原则，我觉得一个AI native 的产品应该符合以下原则： • 把AI能力从产品中拿走，这个产品就不成立了",
+    "cover_image": "content_images/358400ee_cover.webp",
+    "focus": {
+      "title": "AI产品设计原则",
+      "description": "📌 状态：积累中 | 素材越多文章越充实，Jesse觉得可以发了就进入定稿 • Jakob Nielsen — Intent by Discovery: Designing the AI User Experience (2026-03-26) 链接",
+      "link": "#",
+      "linkText": "Read more",
+      "article": {
+        "title": "AI产品设计原则",
+        "sections": [
+          {
+            "type": "text",
+            "text": "我在构思这个个人网站的时候，我希望网站本身就是一个 AI native 产品，符合我对 AI native 产品的设计原则，我觉得一个AI native 的产品应该符合以下原则："
+          },
+          {
+            "type": "text",
+            "text": "• 把AI能力从产品中拿走，这个产品就不成立了"
+          },
+          {
+            "type": "text",
+            "text": "• 产品会随着AI模型能力提升而变得更强"
+          },
+          {
+            "type": "text",
+            "text": "• 为Agent设计"
+          },
+          {
+            "type": "text",
+            "text": "在后续迭代中，我还希望我的AI产品："
+          },
+          {
+            "type": "text",
+            "text": "• Dynamic：行为从简单规则涌现，而不是处处写死规则"
+          },
+          {
+            "type": "text",
+            "text": "• Primitive：从最小单元组合出更大的无限可能"
+          },
+          {
+            "type": "text",
+            "text": "• Constraint: 了解模型能力的边界，在边界内选择最好的设计方案，提供最好的产品体验"
+          },
+          {
+            "type": "image",
+            "src": "content_images/358400ee_1.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "我觉得做AI产品和钓鱼很像（对的我也喜欢钓鱼），来得太早或太晚都没有收获（模型能力没达到，或已被模型能力覆盖），而是要判断潮汐趋势，在对的timing下竿。"
+          },
+          {
+            "type": "text",
+            "text": "做AI产品，要提前判断模型能力的发展，让产品能在模型能力的边界处发光。"
+          }
+        ],
+        "sections_en": [
+          {
+            "type": "text",
+            "text": "When conceiving this personal website, I wanted the site itself to be an AI-native product, aligning with my design principles for AI-native products. I believe an AI-native product should follow these principles:"
+          },
+          {
+            "type": "text",
+            "text": "• Remove AI capabilities from the product, and the product ceases to exist"
+          },
+          {
+            "type": "text",
+            "text": "• The product gets stronger as AI model capabilities improve"
+          },
+          {
+            "type": "text",
+            "text": "• Designing for Agents"
+          },
+          {
+            "type": "text",
+            "text": "In future iterations, I also want my AI product to be:"
+          },
+          {
+            "type": "text",
+            "text": "• Dynamic: Behaviors emerge from simple rules, rather than being hardcoded everywhere"
+          },
+          {
+            "type": "text",
+            "text": "• Primitive: Infinite possibilities composed from the smallest units"
+          },
+          {
+            "type": "text",
+            "text": "• Constraint: Understand the boundaries of model capabilities, choose the best design within those boundaries, and deliver the best product experience"
+          },
+          {
+            "type": "image",
+            "src": "content_images/358400ee_en_1.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "I think building AI products is like fishing (yes, I also love fishing) — arriving too early or too late yields nothing (model capabilities haven't reached the threshold, or have already surpassed it). The key is to anticipate where the boundary will be"
+          },
+          {
+            "type": "text",
+            "text": "Building AI products requires anticipating the development of model capabilities, so the product can shine right at the frontier of what's possible."
+          }
+        ]
+      }
+    },
+    "keywords": "Design Principles ● Intent-based UI ● Jakob Nielsen ● 2026"
+  },
+  {
+    "id": "vibe-coding-001",
+    "title": "Vibe Coding",
+    "category": "design_projects",
+    "atom": "photo",
+    "body": "A collection of vibe coding projects — building creative tools and interactive experiences with code.",
+    "cover_image": "webcoding.webp",
+    "keywords": "vibe coding creative",
+    "focus": {
+      "title": "Vibe Coding",
+      "description": "A collection of vibe coding projects — building creative tools and interactive experiences with code.",
+      "link": "#",
+      "linkText": "Read more",
+      "article": {
+        "title": "Vibe Coding",
+        "sections": [
+          {
+            "type": "subtitle",
+            "text": "Storyteller"
+          },
+          {
+            "type": "text",
+            "text": "时间：2025.9\n这个项目探索了提升生成式 AI 在垂直领域能力的最佳实践，几个月后，大家开始叫它Skill"
+          },
+          {
+            "type": "text",
+            "text": "从如何帮助非设计岗位的同事做出好看的、符合Microsoft 设计规范的PPT开始。最终做出的产品可以让文本在不同媒介之间自由转换——输入草稿，就可以生成一个丰富的可交互文档，也可以转换成PPT，还可以变成网页。核心是让数据在不同的媒体形态之间自由转化，最终探索的方案被 Anthropic 称做 Skill"
+          },
+          {
+            "type": "image",
+            "src": "content_images/vibe_zh_1.png",
+            "caption": ""
+          },
+          {
+            "type": "image",
+            "src": "content_images/vibe_zh_2.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "项目视频：<a href=\"https://youtu.be/RdJ2Dw87F2c\">https://youtu.be/RdJ2Dw87F2c</a>"
+          },
+          {
+            "type": "subtitle",
+            "text": "Mini games platform"
+          },
+          {
+            "type": "text",
+            "text": "时间：2025.8\n起因是团队里很多人各自做了自己的AI小游戏，于是我和另一个设计师一起做了这个platform。这不仅是一个展示平台，还能remix game：你可以通过自然语言的方式，调整和改造这些游戏，让它们符合你的期望、更加有创造力。"
+          },
+          {
+            "type": "image",
+            "src": "content_images/vibe_zh_3.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "项目视频：<a href=\"https://youtu.be/4u16DnN-QPU\">https://youtu.be/4u16DnN-QPU</a>"
+          },
+          {
+            "type": "subtitle",
+            "text": "Copilot Chatting games hub"
+          },
+          {
+            "type": "text",
+            "text": "时间：2025.7\n在2C的Copilot里增加游戏功能。在探索了很多文字游戏形式，最终选出了一个适合小朋友玩的教育类互动游戏，让Copilot不只是问答工具，也能成为有趣的玩伴。"
+          },
+          {
+            "type": "image",
+            "src": "content_images/vibe_zh_4.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "项目视频：<a href=\"https://youtu.be/yB3komUtcLQ\">https://youtu.be/yB3komUtcLQ</a>"
+          },
+          {
+            "type": "subtitle",
+            "text": "Insight finder"
+          },
+          {
+            "type": "text",
+            "text": "时间：2025.6\n这是我的第二个vibe coding项目（第一个是写笑话的小工具），能帮我重新利用在浏览器收藏夹里躺了很久的页面，比如项目数据复盘、用户研究报告、有一点印象但是忘记在哪里的某个文件，这个插件统统能帮你找到和总结！"
+          },
+          {
+            "type": "image",
+            "src": "content_images/vibe_zh_5.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "项目视频：<a href=\"https://youtu.be/LtoR1jSNiY4?si=dwoSOWZkAJPW56-X\">https://youtu.be/LtoR1jSNiY4?si=dwoSOWZkAJPW56-X</a>"
+          },
+          {
+            "type": "subtitle",
+            "text": "GenUI Lab"
+          },
+          {
+            "type": "text",
+            "text": "时间：2026.1\n创造了一个Generative UI的游乐场。可以在里面定义各种GenUI组件，再定义它们的组合方式（Guidelines），最后在Playground里让AI根据你给到的规则，把这些组件生成一个完整页面。"
+          },
+          {
+            "type": "image",
+            "src": "content_images/vibe_zh_6.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "项目视频：<a href=\"https://youtu.be/xxbWmWq5Z8Y\">https://youtu.be/xxbWmWq5Z8Y</a>"
+          },
+          {
+            "type": "subtitle",
+            "text": "MAI FY 2026 Kickoff presentation"
+          },
+          {
+            "type": "text",
+            "text": "时间：2025.10\n为设计团队在MAI年度大会vibe coding的交互式PPT，现场效果还是很震撼的！时间过得真快，现在人人都用html做PPT了～"
+          },
+          {
+            "type": "image",
+            "src": "content_images/vibe_zh_7.png",
+            "caption": ""
+          },
+          {
+            "type": "image",
+            "src": "content_images/vibe_zh_8.png",
+            "caption": ""
+          }
+        ],
+        "sections_en": [
+          {
+            "type": "subtitle",
+            "text": "Storyteller"
+          },
+          {
+            "type": "text",
+            "text": "Date: 2025.9\nThis project explored best practices for enhancing generative AI capabilities in vertical domains. A few months later, people started calling it Skills. I designed the interaction flow from scratch, built the front-end, and shipped it end-to-end."
+          },
+          {
+            "type": "text",
+            "text": "Starting from helping non-designer colleagues create good-looking, Microsoft-compliant PPTs. The final product could transform text across different media — from presentations to landing pages to social posts — all maintaining brand consistency."
+          },
+          {
+            "type": "image",
+            "src": "content_images/vibe_en_1.png",
+            "caption": ""
+          },
+          {
+            "type": "image",
+            "src": "content_images/vibe_en_2.png",
+            "caption": ""
+          },
+          {
+            "type": "video",
+            "src": "https://www.youtube.com/embed/RdJ2Dw87F2c"
+          },
+          {
+            "type": "subtitle",
+            "text": "Mini games platform"
+          },
+          {
+            "type": "text",
+            "text": "Date: 2025.8\nMany people on the team had individually built their own AI mini-games, so another designer and I created this platform together. It not only showcased everyone's creations but also became a playground for exploring AI game design patterns."
+          },
+          {
+            "type": "image",
+            "src": "content_images/vibe_en_3.png",
+            "caption": ""
+          },
+          {
+            "type": "video",
+            "src": "https://www.youtube.com/embed/4u16DnN-QPU"
+          },
+          {
+            "type": "subtitle",
+            "text": "Copilot Chatting games hub"
+          },
+          {
+            "type": "text",
+            "text": "Date: 2025.7\nAdding gaming features to consumer Copilot. After exploring many text-based game formats, we selected an educational interactive story game suitable for kids, and shipped it as a Copilot experience."
+          },
+          {
+            "type": "image",
+            "src": "content_images/vibe_en_4.png",
+            "caption": ""
+          },
+          {
+            "type": "video",
+            "src": "https://www.youtube.com/embed/yB3komUtcLQ"
+          },
+          {
+            "type": "subtitle",
+            "text": "Insight finder"
+          },
+          {
+            "type": "text",
+            "text": "Date: 2025.6\nThis was my second vibe coding project (the first was a joke-writing tool). It helps me rediscover and leverage bookmarks sitting idle in my browser — using AI to extract insights and connections across saved articles."
+          },
+          {
+            "type": "image",
+            "src": "content_images/vibe_en_5.png",
+            "caption": ""
+          },
+          {
+            "type": "video",
+            "src": "https://www.youtube.com/embed/LtoR1jSNiY4"
+          },
+          {
+            "type": "subtitle",
+            "text": "GenUI Lab"
+          },
+          {
+            "type": "text",
+            "text": "Date: 2026.1\nCreated a Generative UI playground where you can define various GenUI components, define how they combine, and let AI dynamically compose interfaces based on user intent."
+          },
+          {
+            "type": "image",
+            "src": "content_images/vibe_en_6.png",
+            "caption": ""
+          },
+          {
+            "type": "video",
+            "src": "https://www.youtube.com/embed/xxbWmWq5Z8Y"
+          },
+          {
+            "type": "subtitle",
+            "text": "MAI FY 2026 Kickoff presentation"
+          },
+          {
+            "type": "text",
+            "text": "Date: 2025.10\nVibe-coded an interactive presentation for the design team at the MAI annual kickoff. The live effect was quite stunning! Time flies — it's been almost a year since then."
+          },
+          {
+            "type": "image",
+            "src": "content_images/vibe_en_7.png",
+            "caption": ""
+          },
+          {
+            "type": "image",
+            "src": "content_images/vibe_en_8.png",
+            "caption": ""
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "arduino-light-001",
+    "title": "Arduino Light",
+    "category": "hobby",
+    "atom": "photo",
+    "body": "An interactive light built with Arduino — merging hardware and creativity.",
+    "cover_image": "Arduinolight.webp",
+    "keywords": "arduino hardware building",
+    "focus": {
+      "title": "Arduino Light",
+      "description": "An interactive light built with Arduino — merging hardware and creativity.",
+      "link": "#",
+      "linkText": "Read more",
+      "article": {
+        "title": "Arduino Light",
+        "sections": [
+          {
+            "type": "text",
+            "text": "这个项目是我还在上学时的一个课程作业，已经过去快10年了，但我还是很喜欢。\n因为它提醒我 —— 我是一个builder，不论在有没有AI的时代，把东西做出来，就会让我兴奋！"
+          },
+          {
+            "type": "text",
+            "text": "火焰是最原始的人与光的互动媒介，人们会用双手保护蜡烛的火苗，用嘴吹灭火苗，微微的风也能改变火苗方向。电灯的出现让人与光的交互变得更直接，这个项目尝试用人与火苗的互动方式去重新设计电灯。"
+          },
+          {
+            "type": "image",
+            "src": "content_images/builder_zh2_1.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "我用了不同的sensors，来让这个产品感知周围的温度，光线和大气压力，让后用一块Arduino来根据这些输入控制输出 —— 1个LED灯泡"
+          },
+          {
+            "type": "image",
+            "src": "content_images/builder_zh2_2.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "我希望这个产品是一个有温度的艺术品，而不是科技感满满的电子产品，所以我自己制作硅胶模具，用水泥作为材料，做了好几版不同的产品设计。"
+          },
+          {
+            "type": "image",
+            "src": "content_images/builder_zh2_3.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "这是其中最满意的一个造型，用户可以用火柴点亮它，用手和它互动，以及 —— 像吹生日蜡烛一样熄灭它！"
+          },
+          {
+            "type": "image",
+            "src": "content_images/builder_zh2_4.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "这里有一个来自“古代”的视频展示👇"
+          },
+          {
+            "type": "video",
+            "src": "https://www.youtube.com/embed/Gt6PV9eqL3g"
+          }
+        ],
+        "sections_en": [
+          {
+            "type": "text",
+            "text": "This project was a school assignment from nearly 10 years ago, but I still love it. Because it reminds me — I'm a builder. Whether or not we're in the AI era, making things come to life excites me!"
+          },
+          {
+            "type": "text",
+            "text": "Fire is the most primitive medium of interaction between humans and light. People cup their hands to protect a candle flame, blow to extinguish it, and even a gentle breeze can change its direction. The invention of electric light made human-light interaction more direct. This project attempts to redesign electric lighting using the interactive language of fire and flame."
+          },
+          {
+            "type": "image",
+            "src": "content_images/builder_en2_1.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "I used different sensors to let the product perceive surrounding temperature, light, and atmospheric pressure, then used an Arduino to control the output based on these inputs."
+          },
+          {
+            "type": "image",
+            "src": "content_images/builder_en2_2.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "I wanted this product to be a warm piece of art rather than a tech-heavy electronic device. So I made my own silicone molds and used cement as the material, going through several iterations of different forms."
+          },
+          {
+            "type": "image",
+            "src": "content_images/builder_en2_3.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "This is my favorite form among them. Users can light it with a match, interact with it by hand, and blow it out like a birthday candle!"
+          },
+          {
+            "type": "image",
+            "src": "content_images/builder_en2_4.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "Here is a video demo from the ancient times below"
+          },
+          {
+            "type": "video",
+            "src": "https://www.youtube.com/embed/Gt6PV9eqL3g"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "tearoff-agent-card",
+    "title": "Grab a strip for your agent",
+    "category": "who_i_am",
+    "atom": "tearoff"
+  },
+  {
+    "id": "36f400ee-0cf5-807e-9b7c-f87b177542ee",
+    "title": "Born Builder",
+    "title_en": "Born Builder",
+    "category": "hobby",
+    "atom": "photo",
+    "body": "这个项目是我还在上学时的一个课程作业，已经过去快10年了，但我还是很喜欢。\n因为它提醒我 —— 我是一个builder，不论在有没有AI的时代，把东西做出来，就会让我兴奋！ 火焰是最原始的人与光的互动媒介，人们会用双手保护蜡烛的火苗，用嘴吹灭火苗，微微的风也能改变火苗方向。电灯的出现让人与光的交互变",
+    "cover_image": "",
+    "focus": {
+      "title": "Born Builder",
+      "title_en": "Born Builder",
+      "description": "",
+      "link": "#",
+      "linkText": "Read more",
+      "article": {
+        "title": "Born Builder",
+        "sections": [
+          {
+            "type": "text",
+            "text": "这个项目是我还在上学时的一个课程作业，已经过去快10年了，但我还是很喜欢。\n因为它提醒我 —— 我是一个builder，不论在有没有AI的时代，把东西做出来，就会让我兴奋！"
+          },
+          {
+            "type": "text",
+            "text": "火焰是最原始的人与光的互动媒介，人们会用双手保护蜡烛的火苗，用嘴吹灭火苗，微微的风也能改变火苗方向。电灯的出现让人与光的交互变得更直接，这个项目尝试用人与火苗的互动方式去重新设计电灯。"
+          },
+          {
+            "type": "image",
+            "src": "content_images/builder_zh2_1.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "我用了不同的sensors，来让这个产品感知周围的温度，光线和大气压力，让后用一块Arduino来根据这些输入控制输出 —— 1个LED灯泡"
+          },
+          {
+            "type": "image",
+            "src": "content_images/builder_zh2_2.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "我希望这个产品是一个有温度的艺术品，而不是科技感满满的电子产品，所以我自己制作硅胶模具，用水泥作为材料，做了好几版不同的产品设计。"
+          },
+          {
+            "type": "image",
+            "src": "content_images/builder_zh2_3.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "这是其中最满意的一个造型，用户可以用火柴点亮它，用手和它互动，以及 —— 像吹生日蜡烛一样熄灭它！"
+          },
+          {
+            "type": "image",
+            "src": "content_images/builder_zh2_4.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "这里有一个来自“古代”的视频展示👇"
+          },
+          {
+            "type": "video",
+            "src": "https://www.youtube.com/embed/Gt6PV9eqL3g"
+          }
+        ],
+        "sections_en": [
+          {
+            "type": "text",
+            "text": "This project was a school assignment from nearly 10 years ago, but I still love it. Because it reminds me — I'm a builder. Whether or not we're in the AI era, making things come to life excites me!"
+          },
+          {
+            "type": "text",
+            "text": "Fire is the most primitive medium of interaction between humans and light. People cup their hands to protect a candle flame, blow to extinguish it, and even a gentle breeze can change its direction. The invention of electric light made human-light interaction more direct. This project attempts to redesign electric lighting using the interactive language of fire and flame."
+          },
+          {
+            "type": "image",
+            "src": "content_images/builder_en2_1.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "I used different sensors to let the product perceive surrounding temperature, light, and atmospheric pressure, then used an Arduino to control the output based on these inputs."
+          },
+          {
+            "type": "image",
+            "src": "content_images/builder_en2_2.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "I wanted this product to be a warm piece of art rather than a tech-heavy electronic device. So I made my own silicone molds and used cement as the material, going through several iterations of different forms."
+          },
+          {
+            "type": "image",
+            "src": "content_images/builder_en2_3.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "This is my favorite form among them. Users can light it with a match, interact with it by hand, and blow it out like a birthday candle!"
+          },
+          {
+            "type": "image",
+            "src": "content_images/builder_en2_4.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "Here is a video demo from the ancient times below"
+          },
+          {
+            "type": "video",
+            "src": "https://www.youtube.com/embed/Gt6PV9eqL3g"
+          }
+        ]
+      }
+    }
+  }
+]
