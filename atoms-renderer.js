@@ -3068,6 +3068,7 @@ export class FocusOverlay {
         this._articleWrap = articleWrap;
 
         this.overlay.classList.add('article-open');
+        document.body.style.overflow = 'hidden';
 
         // 先让 overlay 可滚动，再重置滚动位置（scrollTop 在非 auto 时无效）
         this.overlay.style.overflowY = 'auto';
@@ -3166,6 +3167,7 @@ export class FocusOverlay {
     this.overlay.appendChild(articleWrap);
     this._articleWrap = articleWrap;
     this.overlay.classList.add('article-open');
+    document.body.style.overflow = 'hidden';
     this.overlay.style.overflowY = 'auto';
     requestAnimationFrame(() => { articleWrap.style.opacity = '1'; articleWrap.style.transform = 'translateY(0)'; });
 
@@ -3328,6 +3330,7 @@ export class FocusOverlay {
     this.overlay.scrollTop = 0;
     this.overlay.style.overflowY = '';
     this.overlay.classList.remove('article-open');
+    document.body.style.overflow = '';
     this.closeBtn.style.position = '';
     document.getElementById('focus-content').style.display = '';
 

@@ -238,6 +238,7 @@
     body:has(#wall-article.visible) #top-bar { z-index: 10001; right: 72px; }
     body:has(#focus-overlay.article-open) #time-toggle,
     body:has(#wall-article.visible) #time-toggle { display: none; }
+    body:has(#focus-overlay.article-open) canvas { pointer-events: none; }
     body.focus-active #sunlight-overlay,
     body.focus-active #night-gradient,
     body:has(#wall-article.visible) #sunlight-overlay,
@@ -326,6 +327,7 @@
     /* Article mode — article content lives INSIDE the focus overlay */
     #focus-overlay.article-open {
       overflow-y: auto;
+      overscroll-behavior: contain;
     }
     #focus-overlay.article-open #focus-content {
       display: none;
