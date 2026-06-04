@@ -2304,7 +2304,7 @@ export class PhotoSystem {
 }
 
 // Returns the appropriate dim layer background color based on current time mode
-const getDimColor = () => document.documentElement.classList.contains('night-mode') ? 0x0d0c1a : 0x1a1917;
+const getDimColor = () => document.documentElement.classList.contains('night-mode') ? 0x0d0c1a : 0xFFFDFA;
 
 // ─── Focus Overlay — click-to-detail with paper curl effect ───
 export class FocusOverlay {

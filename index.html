@@ -215,8 +215,11 @@
 
     /* Focus overlay */
     canvas.focus-active {
-      filter: blur(6px) brightness(0.3);
+      filter: blur(6px) brightness(1.05);
       transition: filter 0.4s ease;
+    }
+    html.night-mode canvas.focus-active {
+      filter: blur(6px) brightness(0.3);
     }
     canvas { transition: filter 0.4s ease; }
     body.focus-active canvas {
