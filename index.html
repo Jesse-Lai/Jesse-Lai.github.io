@@ -260,24 +260,24 @@
     }
     #focus-title {
       font-family: var(--title-font, 'Red Hat Mono', monospace);
-      font-size: 15px; color: rgba(255,255,255,0.95); letter-spacing: 1px;
+      font-size: 15px; color: #1a1a1a; letter-spacing: 1px;
       margin-bottom: 6px;
     }
     #focus-desc {
       font-family: var(--body-font, 'Red Hat Mono', monospace);
-      font-size: 12px; color: rgba(255,255,255,0.6); line-height: 1.6;
+      font-size: 12px; color: #666; line-height: 1.6;
       max-width: 400px; text-align: center;
       margin-bottom: 16px;
     }
     #focus-link {
       pointer-events: auto;
       font-family: 'Red Hat Mono', monospace;
-      font-size: 12px; color: #0a0a0a; background: rgba(255,255,255,0.85);
+      font-size: 12px; color: #fff; background: rgba(0,0,0,0.7);
       padding: 8px 20px; border-radius: 4px;
       text-decoration: none; letter-spacing: 1px;
       transition: background 0.2s, color 0.2s;
     }
-    #focus-link:hover { background: #fff; }
+    #focus-link:hover { background: rgba(0,0,0,0.85); }
     /* Shared glass dismiss button */
     .glass-dismiss {
       pointer-events: auto;
@@ -319,7 +319,6 @@
     /* Article mode — article content lives INSIDE the focus overlay */
     #focus-overlay.article-open {
       overflow-y: auto;
-      background: var(--overlay-bg);
     }
     #focus-overlay.article-open #focus-content {
       display: none;
@@ -345,19 +344,19 @@
     }
     #focus-article .article-title {
       font-family: var(--title-font, 'Special Elite', cursive);
-      font-size: 28px; color: var(--text-primary); letter-spacing: 0.5px;
+      font-size: 28px; color: #1a1a1a; letter-spacing: 0.5px;
       margin-bottom: 32px; line-height: 1.4;
       padding-bottom: 24px;
-      border-bottom: 1px solid var(--border-divider);
+      border-bottom: 1px solid rgba(0,0,0,0.08);
     }
     #focus-article .article-subtitle {
       font-family: var(--title-font, 'Special Elite', cursive);
-      font-size: 20px; color: var(--text-secondary); letter-spacing: 0.3px;
+      font-size: 20px; color: #333; letter-spacing: 0.3px;
       margin: 48px 0 16px; line-height: 1.4;
     }
     #focus-article .article-text {
       font-family: var(--body-font, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif);
-      font-size: 16px; color: var(--text-body); line-height: 1.85;
+      font-size: 16px; color: #444; line-height: 1.85;
       margin-bottom: 24px; letter-spacing: 0.01em;
     }
     #focus-article .article-img {
@@ -366,27 +365,27 @@
     }
     #focus-article .article-caption {
       font-family: 'Red Hat Mono', monospace;
-      font-size: 11px; color: var(--text-caption); text-align: center;
+      font-size: 11px; color: #555; text-align: center;
       margin: 0 0 32px; letter-spacing: 0.5px;
     }
     /* Article chat */
-    .article-chat { margin-top: 48px; border-top: 1px solid var(--border-divider); padding-top: 32px; }
+    .article-chat { margin-top: 48px; border-top: 1px solid rgba(0,0,0,0.08); padding-top: 32px; }
     .chat-msg { margin-bottom: 32px; }
     .chat-msg.user { text-align: right; }
     .chat-msg.user .chat-bubble {
       font-family: 'Special Elite', cursive;
-      font-size: 28px; color: var(--text-primary); letter-spacing: 0.5px;
+      font-size: 28px; color: #1a1a1a; letter-spacing: 0.5px;
       line-height: 1.4;
     }
-    .chat-msg.ai .chat-bubble { color: var(--text-body); }
+    .chat-msg.ai .chat-bubble { color: #444; }
     .chat-msg.ai .chat-bubble h2 {
       font-family: var(--title-font, 'Special Elite', cursive);
-      font-size: 20px; color: var(--text-secondary); margin: 48px 0 16px; line-height: 1.4;
+      font-size: 20px; color: #333; margin: 48px 0 16px; line-height: 1.4;
     }
     .chat-msg.ai .chat-bubble h2:first-child { margin-top: 0; }
     .chat-msg.ai .chat-bubble p {
       font-family: var(--body-font, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
-      font-size: 16px; color: var(--text-body); line-height: 1.85; margin-bottom: 24px;
+      font-size: 16px; color: #444; line-height: 1.85; margin-bottom: 24px;
     }
     .chat-msg.ai .chat-bubble p:last-child { margin-bottom: 0; }
     .chat-msg.ai .chat-bubble img {
@@ -394,7 +393,7 @@
     }
     .chat-msg.ai .chat-bubble .img-caption {
       font-family: 'Red Hat Mono', monospace;
-      font-size: 11px; color: var(--text-caption); text-align: center; margin: 0 0 32px;
+      font-size: 11px; color: #555; text-align: center; margin: 0 0 32px;
     }
 
     /* Article TOC */
@@ -414,11 +413,11 @@
       cursor: pointer;
     }
     .article-toc-item .toc-text {
-      color: var(--text-muted);
+      color: #999;
       transition: color 0.2s;
     }
-    .article-toc-item:hover .toc-text { color: var(--text-caption); }
-    .article-toc-item.active .toc-text { color: var(--text-secondary); }
+    .article-toc-item:hover .toc-text { color: #666; }
+    .article-toc-item.active .toc-text { color: #333; }
     @media (max-width: 1100px) { .article-toc { display: none; } }
 
     /* Image lightbox */
@@ -490,11 +489,11 @@
     .composer-bar textarea {
       position: relative; z-index: 3;
       flex: 1; resize: none; border: none; background: none; outline: none;
-      color: var(--text-secondary); font-size: 15px; line-height: 1.5;
+      color: #333; font-size: 15px; line-height: 1.5;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       max-height: 120px; min-height: 22px; padding: 0;
     }
-    .composer-bar textarea::placeholder { color: var(--text-muted); }
+    .composer-bar textarea::placeholder { color: rgba(0,0,0,0.3); }
     .composer-bar .send-btn {
       position: relative; z-index: 3;
       flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%;
@@ -610,7 +609,7 @@
     /* ─── Wall Article ─── */
     #wall-article {
       position: fixed; inset: 0; z-index: 10000;
-      overflow-y: auto; background: var(--overlay-bg);
+      overflow-y: auto; background: #FFFDFA;
       display: none; opacity: 0;
       transition: opacity 0.4s ease;
     }
@@ -640,6 +639,35 @@
     }
 
     /* ── Night mode dark overrides ── */
+    /* Wall article */
+    html.night-mode #wall-article { background: var(--overlay-bg); }
+
+    /* Focus overlay — title / desc */
+    html.night-mode #focus-title { color: var(--text-primary); }
+    html.night-mode #focus-desc { color: var(--text-primary); }
+
+    /* Article content */
+    html.night-mode #focus-article .article-title { color: var(--text-primary); border-bottom-color: var(--border-divider); }
+    html.night-mode #focus-article .article-subtitle { color: var(--text-secondary); }
+    html.night-mode #focus-article .article-text { color: var(--text-body); }
+    html.night-mode #focus-article .article-caption { color: var(--text-caption); }
+
+    /* Chat messages */
+    html.night-mode .chat-msg.user .chat-bubble { color: var(--text-primary); }
+    html.night-mode .chat-msg.ai .chat-bubble { color: var(--text-body); }
+    html.night-mode .chat-msg.ai .chat-bubble h2 { color: var(--text-secondary); }
+    html.night-mode .chat-msg.ai .chat-bubble p { color: var(--text-body); }
+    html.night-mode .chat-msg.ai .chat-bubble .img-caption { color: var(--text-caption); }
+    html.night-mode .article-chat { border-top-color: var(--border-divider); }
+
+    /* Table of contents */
+    html.night-mode .article-toc-item .toc-text { color: #42485a; }
+    html.night-mode .article-toc-item:hover .toc-text { color: var(--text-caption); }
+    html.night-mode .article-toc-item.active .toc-text { color: var(--text-secondary); }
+
+    /* Composer textarea */
+    html.night-mode .composer-bar textarea { color: rgba(255,255,255,0.75); }
+    html.night-mode .composer-bar textarea::placeholder { color: rgba(255,255,255,0.28); }
 
     /* Composer night overrides */
     html.night-mode .composer-bar .send-btn {
