@@ -1,14 +1,15 @@
 [
   {
     "id": "116400ee-0cf5-8029-ba88-e9288932ff8d",
-    "title": "Hello I’m Jesse Lai",
+    "title": "Hello I'm Jesse Lai",
     "category": "who_i_am",
     "atom": "photo",
     "body": "嗨👋 我是微软的一个 AI Builder，一边设计 AI Native 产品，一边把我的设计在生产环境coding出来，直接交付产品的线上体验。 过去5年我先后在阿里巴巴和微软工作，并且在生成式AI的早期，就开始为 ToC 和 ToB 用户设计各种 AI Native产品。",
     "cover_image": "photo_portrait.webp",
     "focus": {
       "title": "Hello I'm Jesse Lai",
-      "description": "I’m a product designer at Microsoft AI, exploring how people will naturally interact with AI in the future. I have experience designing AI products fo",
+      "description": "嗨👋 我喜欢做各种好玩的东西！",
+      "description_en": "Hi 👋 I love making all kinds of fun things!",
       "link": "#",
       "linkText": "Read more",
       "article": {
@@ -174,7 +175,8 @@
     "keywords": "microsoft copilot ai design",
     "focus": {
       "title": "Microsoft",
-      "description": "Microsoft Copilot",
+      "description": "在微软，我做了各种Copilot，等等… 它们好像都长一个样！",
+      "description_en": "At Microsoft, I worked on various Copilots and so on... they all seem to look the same!",
       "link": "#",
       "linkText": "Read more",
       "article": {
@@ -186,7 +188,7 @@
           },
           {
             "type": "text",
-            "text": "我作为微软Copilot产品设计师，有幸与global团队合作，参与了CopilotC/B两端的产品体验设计，经验主要集中于AI chat 产品中的 Generative UI 体验。"
+            "text": "作为产品设计师，与global团队合作，一起设计了CopilotC/B两端的产品体验设计，经验主要集中于AI chat 产品中的 Generative UI 体验。"
           },
           {
             "type": "subtitle",
@@ -194,7 +196,7 @@
           },
           {
             "type": "text",
-            "text": "• 设计 Copilot consumer 的 answer card 和 consumption page，用户会在对话中触发这些体验，进行进一步交互"
+            "text": "设计 Copilot 消费者端的日常对话体验，通过 Generative UI 丰富用户获得的回答，用户可以与回答内容进行进一步交互，获取更深度和个性化的内容，提升用户对产品的信任感"
           },
           {
             "type": "subtitle",
@@ -202,7 +204,7 @@
           },
           {
             "type": "text",
-            "text": "• 设计和开发 To B copilot 中的 GenUX 组件"
+            "text": "设计和开发 To B copilot 的办公体验，不仅涉及对话场景，还需要串联微软生态内的不同应用的AI体验"
           },
           {
             "type": "subtitle",
@@ -210,7 +212,7 @@
           },
           {
             "type": "text",
-            "text": "• 参与微软内容产品的设计，为微软生态内如 Edge, Bing, Copilot 等产品提供内容服务"
+            "text": "参与微软内容产品的设计，为微软生态内如 Edge, Bing, Copilot 等产品提供内容服务"
           }
         ],
         "sections_en": [
@@ -220,7 +222,7 @@
           },
           {
             "type": "text",
-            "text": "As a product designer on Microsoft Copilot, I've had the privilege of collaborating with our global team on both consumer and enterprise Copilot experiences. My expertise focuses on Generative UX and Agent experience design within AI chat products."
+            "text": "As a product designer, I collaborated with our global team to design Copilot experiences for both consumer and enterprise, with expertise focused on Generative UI within AI chat products."
           },
           {
             "type": "subtitle",
@@ -228,7 +230,7 @@
           },
           {
             "type": "text",
-            "text": "• Designed Copilot consumer answer cards and consumption pages — users trigger these experiences during conversations for further interaction"
+            "text": "Designing everyday conversational experiences for Copilot consumer, enriching user responses through Generative UI. Users can interact further with the response content, accessing deeper and more personalized information, building trust in the product."
           },
           {
             "type": "subtitle",
@@ -236,7 +238,7 @@
           },
           {
             "type": "text",
-            "text": "• Designed and developed GenUX components in enterprise Copilot"
+            "text": "Designing and developing productivity experiences for enterprise Copilot, spanning beyond chat scenarios to connect AI experiences across different applications within the Microsoft ecosystem."
           },
           {
             "type": "subtitle",
@@ -244,7 +246,7 @@
           },
           {
             "type": "text",
-            "text": "• Contributing to Microsoft's content product design, providing content services for products across the Microsoft ecosystem including Edge, Bing, and Copilot"
+            "text": "Contributing to Microsoft's content product design, providing content services for products across the Microsoft ecosystem including Edge, Bing, and Copilot."
           }
         ]
       }
@@ -261,7 +263,8 @@
     "cover_image": "alibaba.webp",
     "focus": {
       "title": "Alibaba",
-      "description": "<a href=\"https://www.notion.so/116400ee0cf581569ca8fbc4ded84bda\">Untitled</a>",
+      "description": "在阿里，我除了送外卖，还观察骑手怎么送外卖…",
+      "description_en": "At Alibaba, besides delivering food, I also observe how couriers deliver food…",
       "link": "#",
       "linkText": "Read more",
       "article": {
@@ -333,7 +336,8 @@
     "cover_image": "content_images/146400ee_3.webp",
     "focus": {
       "title": "Stand-up Comedian",
-      "description": "Stand-up comedy is a lifelong passion of mine. The process of turning life's highs and lows into jokes and performing them on stage has become an inte",
+      "description": "脱口秀和设计有很多共通之处：都需要敏锐的观察力，都需要不断迭代打磨。",
+      "description_en": "Stand-up comedy and design share a lot in common: both demand keen observation, and both require constant iteration and refinement.",
       "link": "#",
       "linkText": "Read more",
       "article": {
@@ -467,7 +471,8 @@
     "cover_image": "content_images/360400ee_1.webp",
     "focus": {
       "title": "Drawing",
-      "description": "Coming soon",
+      "description": "画画让我进入心流，经常一不小心就发现已经天亮了。这些古法绘画作品，绝不含AI。",
+      "description_en": "Drawing puts me in a flow state — I'd often look up and realize it was already morning. These artworks are 100% hand-made, zero AI.",
       "link": "#",
       "linkText": "Read more",
       "article": {
@@ -571,11 +576,11 @@
     "cover_image": "content_images/30d400ee_1.png",
     "focus": {
       "title": "GenUI 设计指南",
-      "description": "在微软工作一年后，我决定重新开始写写AI native designer的转型过程，和AI design workflow的变化，希望能链接更多感兴趣的人。 这次聊的话题是因为前段时间参与了一些Generative UI的项目，因此分享一些总结和反思。看完本文你能获得：",
+      "description": "为什么Figma不再能设计GenUI？这篇聊聊生成式UI的形态、行为，以及我自己的工作流。",
       "link": "#",
       "linkText": "Read more",
       "article": {
-        "title": "GenUI",
+        "title": "GenUI 设计指南",
         "sections": [
           {
             "type": "text",
@@ -633,7 +638,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/30d400ee_3.png",
+            "src": "GenUI是由AI实时动态生成的用户界面.gif",
             "caption": ""
           },
           {
@@ -793,7 +798,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/30d400ee_11.png",
+            "src": "日本的旅游计划.gif",
             "caption": ""
           },
           {
@@ -802,7 +807,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/30d400ee_12.png",
+            "src": "GenUI内容结构.gif",
             "caption": ""
           },
           {
@@ -811,7 +816,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/30d400ee_13.png",
+            "src": "可交互的申请流程.gif",
             "caption": ""
           },
           {
@@ -880,7 +885,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/30d400ee_en_3.png",
+            "src": "GenUI是由AI实时动态生成的用户界面.gif",
             "caption": ""
           },
           {
@@ -1040,7 +1045,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/30d400ee_en_11.png",
+            "src": "日本的旅游计划.gif",
             "caption": ""
           },
           {
@@ -1049,7 +1054,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/30d400ee_en_12.png",
+            "src": "GenUI内容结构.gif",
             "caption": ""
           },
           {
@@ -1058,7 +1063,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/30d400ee_en_13.png",
+            "src": "可交互的申请流程.gif",
             "caption": ""
           },
           {
@@ -1071,7 +1076,8 @@
           }
         ]
       },
-      "title_en": "Designing for GenUI"
+      "title_en": "Designing for GenUI",
+      "description_en": "Why can't Figma design GenUI anymore? This article explores the forms and behaviors of generative UI, plus my own workflow."
     },
     "keywords": "AI Native ● Generative UI ● Interaction Paradigm ● 2026",
     "title_en": "Designing for GenUI",
@@ -1087,7 +1093,7 @@
     "cover_image": "content_images/358400ee_cover.webp",
     "focus": {
       "title": "AI产品设计原则",
-      "description": "📌 状态：积累中 | 素材越多文章越充实，Jesse觉得可以发了就进入定稿 • Jakob Nielsen — Intent by Discovery: Designing the AI User Experience (2026-03-26) 链接",
+      "description": "做AI产品就像钓鱼——来太早或太晚都没有收获，要在模型能力的边界处让产品发光。",
       "link": "#",
       "linkText": "Read more",
       "article": {
@@ -1186,7 +1192,8 @@
             "text": "Building AI products requires anticipating the development of model capabilities, so the product can shine right at the frontier of what's possible."
           }
         ]
-      }
+      },
+      "description_en": "Building AI products is like fishing — timing is everything. The product should shine right at the frontier of what models can do."
     },
     "keywords": "Design Principles ● Intent-based UI ● Jakob Nielsen ● 2026"
   },
@@ -1200,7 +1207,7 @@
     "keywords": "vibe coding creative",
     "focus": {
       "title": "Vibe Coding",
-      "description": "A collection of vibe coding projects — building creative tools and interactive experiences with code.",
+      "description": "Vibe coding一年来，感觉找回了9岁那个下午，自己做了艘电动玩具船，在水上跑起来的兴奋感",
       "link": "#",
       "linkText": "Read more",
       "article": {
@@ -1433,7 +1440,8 @@
             "caption": ""
           }
         ]
-      }
+      },
+      "description_en": "After a year of vibe coding, it feels like I've rediscovered that afternoon when I was nine, the excitement of building an electric toy boat and watching it run across the water."
     }
   },
   {
@@ -1445,133 +1453,8 @@
     "cover_image": "Arduinolight.webp",
     "keywords": "arduino hardware building",
     "focus": {
-      "title": "Arduino Light",
-      "description": "An interactive light built with Arduino — merging hardware and creativity.",
-      "link": "#",
-      "linkText": "Read more",
-      "article": {
-        "title": "Arduino Light",
-        "sections": [
-          {
-            "type": "text",
-            "text": "这个项目是我还在上学时的一个课程作业，已经过去快10年了，但我还是很喜欢。\n因为它提醒我 —— 我是一个builder，不论在有没有AI的时代，把东西做出来，就会让我兴奋！"
-          },
-          {
-            "type": "text",
-            "text": "火焰是最原始的人与光的互动媒介，人们会用双手保护蜡烛的火苗，用嘴吹灭火苗，微微的风也能改变火苗方向。电灯的出现让人与光的交互变得更直接，这个项目尝试用人与火苗的互动方式去重新设计电灯。"
-          },
-          {
-            "type": "image",
-            "src": "content_images/builder_zh2_1.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "我用了不同的sensors，来让这个产品感知周围的温度，光线和大气压力，让后用一块Arduino来根据这些输入控制输出 —— 1个LED灯泡"
-          },
-          {
-            "type": "image",
-            "src": "content_images/builder_zh2_2.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "我希望这个产品是一个有温度的艺术品，而不是科技感满满的电子产品，所以我自己制作硅胶模具，用水泥作为材料，做了好几版不同的产品设计。"
-          },
-          {
-            "type": "image",
-            "src": "content_images/builder_zh2_3.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "这是其中最满意的一个造型，用户可以用火柴点亮它，用手和它互动，以及 —— 像吹生日蜡烛一样熄灭它！"
-          },
-          {
-            "type": "image",
-            "src": "content_images/builder_zh2_4.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "这里有一个来自“古代”的视频展示👇"
-          },
-          {
-            "type": "video",
-            "src": "https://www.youtube.com/embed/Gt6PV9eqL3g"
-          }
-        ],
-        "sections_en": [
-          {
-            "type": "text",
-            "text": "This project was a school assignment from nearly 10 years ago, but I still love it. Because it reminds me — I'm a builder. Whether or not we're in the AI era, making things come to life excites me!"
-          },
-          {
-            "type": "text",
-            "text": "Fire is the most primitive medium of interaction between humans and light. People cup their hands to protect a candle flame, blow to extinguish it, and even a gentle breeze can change its direction. The invention of electric light made human-light interaction more direct. This project attempts to redesign electric lighting using the interactive language of fire and flame."
-          },
-          {
-            "type": "image",
-            "src": "content_images/builder_en2_1.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "I used different sensors to let the product perceive surrounding temperature, light, and atmospheric pressure, then used an Arduino to control the output based on these inputs."
-          },
-          {
-            "type": "image",
-            "src": "content_images/builder_en2_2.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "I wanted this product to be a warm piece of art rather than a tech-heavy electronic device. So I made my own silicone molds and used cement as the material, going through several iterations of different forms."
-          },
-          {
-            "type": "image",
-            "src": "content_images/builder_en2_3.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "This is my favorite form among them. Users can light it with a match, interact with it by hand, and blow it out like a birthday candle!"
-          },
-          {
-            "type": "image",
-            "src": "content_images/builder_en2_4.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "Here is a video demo from the ancient times below"
-          },
-          {
-            "type": "video",
-            "src": "https://www.youtube.com/embed/Gt6PV9eqL3g"
-          }
-        ]
-      }
-    }
-  },
-  {
-    "id": "tearoff-agent-card",
-    "title": "Grab a strip for your agent",
-    "category": "who_i_am",
-    "atom": "tearoff"
-  },
-  {
-    "id": "36f400ee-0cf5-807e-9b7c-f87b177542ee",
-    "title": "Born Builder",
-    "title_en": "Born Builder",
-    "category": "hobby",
-    "atom": "photo",
-    "body": "这个项目是我还在上学时的一个课程作业，已经过去快10年了，但我还是很喜欢。\n因为它提醒我 —— 我是一个builder，不论在有没有AI的时代，把东西做出来，就会让我兴奋！ 火焰是最原始的人与光的互动媒介，人们会用双手保护蜡烛的火苗，用嘴吹灭火苗，微微的风也能改变火苗方向。电灯的出现让人与光的交互变",
-    "cover_image": "",
-    "focus": {
       "title": "Born Builder",
-      "title_en": "Born Builder",
-      "description": "",
+      "description": "快10年前的课程作业，但它提醒我——我是一个builder，把东西做出来就让我兴奋。",
       "link": "#",
       "linkText": "Read more",
       "article": {
@@ -1676,7 +1559,135 @@
             "src": "https://www.youtube.com/embed/Gt6PV9eqL3g"
           }
         ]
-      }
+      },
+      "description_en": "A school project from nearly 10 years ago, but it reminds me — I'm a builder. Making things come to life is what excites me.",
+      "title_en": "Born Builder"
+    }
+  },
+  {
+    "id": "tearoff-agent-card",
+    "title": "Grab a strip for your agent",
+    "category": "who_i_am",
+    "atom": "tearoff"
+  },
+  {
+    "id": "36f400ee-0cf5-807e-9b7c-f87b177542ee",
+    "title": "Born Builder",
+    "title_en": "Born Builder",
+    "category": "hobby",
+    "atom": "photo",
+    "body": "这个项目是我还在上学时的一个课程作业，已经过去快10年了，但我还是很喜欢。\n因为它提醒我 —— 我是一个builder，不论在有没有AI的时代，把东西做出来，就会让我兴奋！ 火焰是最原始的人与光的互动媒介，人们会用双手保护蜡烛的火苗，用嘴吹灭火苗，微微的风也能改变火苗方向。电灯的出现让人与光的交互变",
+    "cover_image": "",
+    "focus": {
+      "title": "Born Builder",
+      "title_en": "Born Builder",
+      "description": "快10年前的课程作业，但它提醒我——我是一个builder，把东西做出来就让我兴奋。",
+      "link": "#",
+      "linkText": "Read more",
+      "article": {
+        "title": "Born Builder",
+        "sections": [
+          {
+            "type": "text",
+            "text": "这个项目是我还在上学时的一个课程作业，已经过去快10年了，但我还是很喜欢。\n因为它提醒我 —— 我是一个builder，不论在有没有AI的时代，把东西做出来，就会让我兴奋！"
+          },
+          {
+            "type": "text",
+            "text": "火焰是最原始的人与光的互动媒介，人们会用双手保护蜡烛的火苗，用嘴吹灭火苗，微微的风也能改变火苗方向。电灯的出现让人与光的交互变得更直接，这个项目尝试用人与火苗的互动方式去重新设计电灯。"
+          },
+          {
+            "type": "image",
+            "src": "content_images/builder_zh2_1.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "我用了不同的sensors，来让这个产品感知周围的温度，光线和大气压力，让后用一块Arduino来根据这些输入控制输出 —— 1个LED灯泡"
+          },
+          {
+            "type": "image",
+            "src": "content_images/builder_zh2_2.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "我希望这个产品是一个有温度的艺术品，而不是科技感满满的电子产品，所以我自己制作硅胶模具，用水泥作为材料，做了好几版不同的产品设计。"
+          },
+          {
+            "type": "image",
+            "src": "content_images/builder_zh2_3.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "这是其中最满意的一个造型，用户可以用火柴点亮它，用手和它互动，以及 —— 像吹生日蜡烛一样熄灭它！"
+          },
+          {
+            "type": "image",
+            "src": "content_images/builder_zh2_4.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "这里有一个来自“古代”的视频展示👇"
+          },
+          {
+            "type": "video",
+            "src": "https://www.youtube.com/embed/Gt6PV9eqL3g"
+          }
+        ],
+        "sections_en": [
+          {
+            "type": "text",
+            "text": "This project was a school assignment from nearly 10 years ago, but I still love it. Because it reminds me — I'm a builder. Whether or not we're in the AI era, making things come to life excites me!"
+          },
+          {
+            "type": "text",
+            "text": "Fire is the most primitive medium of interaction between humans and light. People cup their hands to protect a candle flame, blow to extinguish it, and even a gentle breeze can change its direction. The invention of electric light made human-light interaction more direct. This project attempts to redesign electric lighting using the interactive language of fire and flame."
+          },
+          {
+            "type": "image",
+            "src": "content_images/builder_en2_1.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "I used different sensors to let the product perceive surrounding temperature, light, and atmospheric pressure, then used an Arduino to control the output based on these inputs."
+          },
+          {
+            "type": "image",
+            "src": "content_images/builder_en2_2.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "I wanted this product to be a warm piece of art rather than a tech-heavy electronic device. So I made my own silicone molds and used cement as the material, going through several iterations of different forms."
+          },
+          {
+            "type": "image",
+            "src": "content_images/builder_en2_3.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "This is my favorite form among them. Users can light it with a match, interact with it by hand, and blow it out like a birthday candle!"
+          },
+          {
+            "type": "image",
+            "src": "content_images/builder_en2_4.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "Here is a video demo from the ancient times below"
+          },
+          {
+            "type": "video",
+            "src": "https://www.youtube.com/embed/Gt6PV9eqL3g"
+          }
+        ]
+      },
+      "description_en": "A school project from nearly 10 years ago, but it reminds me — I'm a builder. Making things come to life is what excites me."
     }
   }
 ]

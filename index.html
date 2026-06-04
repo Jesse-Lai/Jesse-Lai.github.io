@@ -6,6 +6,7 @@
   <link rel="icon" type="image/png" href="favicon.png">
   <script defer src="https://cloud.umami.is/script.js" data-website-id="0511feb5-f981-4761-84f3-2aca16b5f66c"></script>
   <title>JesseOS</title>
+  <link rel="preload" href="fonts/PF频凡胡涂体.ttf" as="font" type="font/ttf" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Schoolbell&family=Special+Elite&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1/style.css" rel="stylesheet">
@@ -29,6 +30,11 @@
     @font-face {
       font-family: 'Red Hat Mono';
       src: url('fonts/RedHatMono-Regular.woff2') format('woff2');
+      font-weight: 400;
+    }
+    @font-face {
+      font-family: 'PF HuTu';
+      src: url('fonts/PF频凡胡涂体.ttf') format('truetype');
       font-weight: 400;
     }
     * { margin: 0; padding: 0; }
@@ -185,13 +191,15 @@
     #top-bar {
       position: fixed; top: 20px; right: 20px; z-index: 9999;
       display: flex; align-items: center; gap: 16px;
+      height: 36px;
     }
     #top-bar button, #top-bar select, #top-bar div {
       background: none; border: none;
-      color: rgba(255,255,255,0.9) !important; cursor: pointer; font-size: 13px; padding: 6px 0;
+      color: rgba(255,255,255,0.9) !important; cursor: pointer; font-size: 13px; padding: 0;
       font-family: 'Red Hat Mono', monospace; letter-spacing: 1px;
       transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); user-select: none;
       -webkit-text-fill-color: rgba(255,255,255,0.9);
+      height: 36px; display: flex; align-items: center;
     }
     #top-bar button:hover, #top-bar select:hover, #top-bar div:hover { transform: scale(1.12); }
     #time-toggle {
@@ -224,7 +232,7 @@
     #focus-overlay.visible { pointer-events: auto; }
     body:has(#focus-overlay.visible:not(.article-open)) #top-bar { display: none; }
     body:has(#focus-overlay.article-open) #top-bar,
-    body:has(#wall-article.visible) #top-bar { z-index: 10001; right: 64px; }
+    body:has(#wall-article.visible) #top-bar { z-index: 10001; right: 72px; }
     body:has(#focus-overlay.article-open) #time-toggle,
     body:has(#wall-article.visible) #time-toggle { display: none; }
     body.focus-active #sunlight-overlay,
@@ -252,38 +260,66 @@
     }
     #focus-title {
       font-family: var(--title-font, 'Red Hat Mono', monospace);
-      font-size: 15px; color: #1a1a1a; letter-spacing: 1px;
+      font-size: 15px; color: rgba(255,255,255,0.95); letter-spacing: 1px;
       margin-bottom: 6px;
     }
     #focus-desc {
       font-family: var(--body-font, 'Red Hat Mono', monospace);
-      font-size: 12px; color: #666; line-height: 1.6;
+      font-size: 12px; color: rgba(255,255,255,0.6); line-height: 1.6;
       max-width: 400px; text-align: center;
       margin-bottom: 16px;
     }
     #focus-link {
       pointer-events: auto;
       font-family: 'Red Hat Mono', monospace;
-      font-size: 12px; color: #fff; background: rgba(0,0,0,0.7);
+      font-size: 12px; color: #0a0a0a; background: rgba(255,255,255,0.85);
       padding: 8px 20px; border-radius: 4px;
       text-decoration: none; letter-spacing: 1px;
       transition: background 0.2s, color 0.2s;
     }
-    #focus-link:hover { background: rgba(0,0,0,0.85); }
-    #focus-close {
-      position: absolute; top: 20px; right: 20px;
+    #focus-link:hover { background: #fff; }
+    /* Shared glass dismiss button */
+    .glass-dismiss {
       pointer-events: auto;
-      background: none; border: 1px solid rgba(0,0,0,0.2);
-      color: #666; width: 36px; height: 36px;
+      position: relative; overflow: hidden;
+      background: none; border: none;
+      color: rgba(255,255,255,0.7); width: 36px; height: 36px;
       border-radius: 50%; cursor: pointer;
       font-size: 16px; display: flex; align-items: center; justify-content: center;
-      transition: all 0.2s;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08), 0 0 20px rgba(0, 0, 0, 0.04);
     }
-    #focus-close:hover { border-color: #333; color: #333; }
+    .glass-dismiss:hover { transform: scale(1.12); color: rgba(255,255,255,0.95); }
+    .glass-dismiss .glass-effect {
+      position: absolute; inset: 0; z-index: 0;
+      backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
+      filter: url(#glass-distortion);
+      overflow: hidden; isolation: isolate;
+      border-radius: 50%;
+    }
+    .glass-dismiss .glass-tint {
+      position: absolute; inset: 0; z-index: 1;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 50%;
+    }
+    .glass-dismiss .glass-shine {
+      position: absolute; inset: 0; z-index: 2;
+      box-shadow: inset 1px 1px 1px 0 rgba(255, 255, 255, 0.2),
+        inset -1px -1px 1px 0 rgba(255, 255, 255, 0.15);
+      border-radius: 50%;
+    }
+    .glass-dismiss svg { position: relative; z-index: 3; }
+    html.night-mode .glass-dismiss .glass-tint {
+      background: rgba(10, 8, 24, 0.35);
+    }
+    #focus-close {
+      position: absolute; top: 20px; right: 20px;
+    }
 
     /* Article mode — article content lives INSIDE the focus overlay */
     #focus-overlay.article-mode {
       overflow-y: auto;
+      background: var(--overlay-bg);
     }
     #focus-overlay.article-mode #focus-content {
       display: none;
@@ -309,19 +345,19 @@
     }
     #focus-article .article-title {
       font-family: var(--title-font, 'Special Elite', cursive);
-      font-size: 28px; color: #1a1a1a; letter-spacing: 0.5px;
+      font-size: 28px; color: var(--text-primary); letter-spacing: 0.5px;
       margin-bottom: 32px; line-height: 1.4;
       padding-bottom: 24px;
-      border-bottom: 1px solid rgba(0,0,0,0.08);
+      border-bottom: 1px solid var(--border-divider);
     }
     #focus-article .article-subtitle {
       font-family: var(--title-font, 'Special Elite', cursive);
-      font-size: 20px; color: #333; letter-spacing: 0.3px;
+      font-size: 20px; color: var(--text-secondary); letter-spacing: 0.3px;
       margin: 48px 0 16px; line-height: 1.4;
     }
     #focus-article .article-text {
       font-family: var(--body-font, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif);
-      font-size: 16px; color: #444; line-height: 1.85;
+      font-size: 16px; color: var(--text-body); line-height: 1.85;
       margin-bottom: 24px; letter-spacing: 0.01em;
     }
     #focus-article .article-img {
@@ -330,27 +366,27 @@
     }
     #focus-article .article-caption {
       font-family: 'Red Hat Mono', monospace;
-      font-size: 11px; color: #555; text-align: center;
+      font-size: 11px; color: var(--text-caption); text-align: center;
       margin: 0 0 32px; letter-spacing: 0.5px;
     }
     /* Article chat */
-    .article-chat { margin-top: 48px; border-top: 1px solid rgba(0,0,0,0.08); padding-top: 32px; }
+    .article-chat { margin-top: 48px; border-top: 1px solid var(--border-divider); padding-top: 32px; }
     .chat-msg { margin-bottom: 32px; }
     .chat-msg.user { text-align: right; }
     .chat-msg.user .chat-bubble {
       font-family: 'Special Elite', cursive;
-      font-size: 28px; color: #1a1a1a; letter-spacing: 0.5px;
+      font-size: 28px; color: var(--text-primary); letter-spacing: 0.5px;
       line-height: 1.4;
     }
-    .chat-msg.ai .chat-bubble { color: #444; }
+    .chat-msg.ai .chat-bubble { color: var(--text-body); }
     .chat-msg.ai .chat-bubble h2 {
       font-family: var(--title-font, 'Special Elite', cursive);
-      font-size: 20px; color: #333; margin: 48px 0 16px; line-height: 1.4;
+      font-size: 20px; color: var(--text-secondary); margin: 48px 0 16px; line-height: 1.4;
     }
     .chat-msg.ai .chat-bubble h2:first-child { margin-top: 0; }
     .chat-msg.ai .chat-bubble p {
       font-family: var(--body-font, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
-      font-size: 16px; color: #444; line-height: 1.85; margin-bottom: 24px;
+      font-size: 16px; color: var(--text-body); line-height: 1.85; margin-bottom: 24px;
     }
     .chat-msg.ai .chat-bubble p:last-child { margin-bottom: 0; }
     .chat-msg.ai .chat-bubble img {
@@ -358,7 +394,7 @@
     }
     .chat-msg.ai .chat-bubble .img-caption {
       font-family: 'Red Hat Mono', monospace;
-      font-size: 11px; color: #555; text-align: center; margin: 0 0 32px;
+      font-size: 11px; color: var(--text-caption); text-align: center; margin: 0 0 32px;
     }
 
     /* Article TOC */
@@ -378,11 +414,11 @@
       cursor: pointer;
     }
     .article-toc-item .toc-text {
-      color: #999;
+      color: var(--text-muted);
       transition: color 0.2s;
     }
-    .article-toc-item:hover .toc-text { color: #666; }
-    .article-toc-item.active .toc-text { color: #333; }
+    .article-toc-item:hover .toc-text { color: var(--text-caption); }
+    .article-toc-item.active .toc-text { color: var(--text-secondary); }
     @media (max-width: 1100px) { .article-toc { display: none; } }
 
     /* Image lightbox */
@@ -454,11 +490,11 @@
     .composer-bar textarea {
       position: relative; z-index: 3;
       flex: 1; resize: none; border: none; background: none; outline: none;
-      color: #333; font-size: 15px; line-height: 1.5;
+      color: var(--text-secondary); font-size: 15px; line-height: 1.5;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       max-height: 120px; min-height: 22px; padding: 0;
     }
-    .composer-bar textarea::placeholder { color: rgba(0,0,0,0.3); }
+    .composer-bar textarea::placeholder { color: var(--text-muted); }
     .composer-bar .send-btn {
       position: relative; z-index: 3;
       flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%;
@@ -510,14 +546,7 @@
     #nested-link:hover { background: #ddd; }
     #nested-close {
       position: absolute; top: 20px; right: 20px; z-index: 10004;
-      pointer-events: auto;
-      background: none; border: 1px solid #555;
-      color: #999; width: 36px; height: 36px;
-      border-radius: 50%; cursor: pointer;
-      font-size: 16px; display: flex; align-items: center; justify-content: center;
-      transition: all 0.2s;
     }
-    #nested-close:hover { border-color: #fff; color: #fff; }
 
     /* ─── Composer Row (button + input) ─── */
     .composer-row {
@@ -581,7 +610,7 @@
     /* ─── Wall Article ─── */
     #wall-article {
       position: fixed; inset: 0; z-index: 10000;
-      overflow-y: auto; background: #FFFDFA;
+      overflow-y: auto; background: var(--overlay-bg);
       display: none; opacity: 0;
       transition: opacity 0.4s ease;
     }
@@ -592,13 +621,7 @@
     }
     #wall-article-close {
       position: fixed; top: 20px; right: 20px; z-index: 10000;
-      background: none; border: 1px solid #555;
-      color: #999; width: 36px; height: 36px;
-      border-radius: 50%; cursor: pointer;
-      font-size: 16px; display: flex; align-items: center; justify-content: center;
-      transition: all 0.2s;
     }
-    #wall-article-close:hover { border-color: #fff; color: #fff; }
 
     /* Canvas fade transition */
     canvas { transition: opacity 0.5s ease, transform 0.5s ease; }
@@ -617,70 +640,8 @@
     }
 
     /* ── Night mode dark overrides ── */
-    /* Wall article (AI chat overlay) */
-    html.night-mode #wall-article {
-      background: var(--overlay-bg);
-    }
-    html.night-mode #wall-article-close {
-      border-color: rgba(180,190,220,0.2);
-      color: rgba(180,190,220,0.5);
-    }
-    html.night-mode #wall-article-close:hover {
-      border-color: rgba(180,190,220,0.6);
-      color: rgba(180,190,220,0.95);
-    }
 
-    /* Focus overlay — title / desc / close */
-    html.night-mode #focus-title { color: var(--text-primary); }
-    html.night-mode #focus-desc { color: var(--text-primary); }
-    html.night-mode #focus-close {
-      border-color: rgba(180,190,220,0.2);
-      color: rgba(180,190,220,0.5);
-    }
-    html.night-mode #focus-close:hover {
-      border-color: rgba(180,190,220,0.6);
-      color: rgba(180,190,220,0.95);
-    }
-
-    /* Nested overlay close button */
-    html.night-mode #nested-close {
-      border-color: rgba(180,190,220,0.2);
-      color: rgba(180,190,220,0.5);
-    }
-    html.night-mode #nested-close:hover {
-      border-color: rgba(180,190,220,0.6);
-      color: rgba(180,190,220,0.95);
-    }
-
-    /* Article content (CSS-class-based) */
-    html.night-mode #focus-article .article-title {
-      color: var(--text-primary);
-      border-bottom-color: var(--border-divider);
-    }
-    html.night-mode #focus-article .article-subtitle { color: var(--text-secondary); }
-    html.night-mode #focus-article .article-text { color: var(--text-body); }
-    html.night-mode #focus-article .article-caption { color: var(--text-caption); }
-
-    /* Chat messages */
-    html.night-mode .chat-msg.user .chat-bubble { color: var(--text-primary); }
-    html.night-mode .chat-msg.ai .chat-bubble { color: var(--text-body); }
-    html.night-mode .chat-msg.ai .chat-bubble h2 { color: var(--text-secondary); }
-    html.night-mode .chat-msg.ai .chat-bubble p { color: var(--text-body); }
-    html.night-mode .chat-msg.ai .chat-bubble .img-caption { color: var(--text-caption); }
-    html.night-mode .article-chat { border-top-color: var(--border-divider); }
-
-    /* Table of contents */
-    html.night-mode .article-toc-item .toc-text { color: #42485a; }
-    html.night-mode .article-toc-item:hover .toc-text { color: var(--text-caption); }
-    html.night-mode .article-toc-item.active .toc-text { color: var(--text-secondary); }
-
-    /* Composer textarea */
-    html.night-mode .composer-bar textarea {
-      color: rgba(255,255,255,0.75);
-    }
-    html.night-mode .composer-bar textarea::placeholder {
-      color: rgba(255,255,255,0.28);
-    }
+    /* Composer night overrides */
     html.night-mode .composer-bar .send-btn {
       background: rgba(255,255,255,0.12);
     }
@@ -786,7 +747,7 @@
   <script>if(location.hostname==='localhost'||location.hostname==='127.0.0.1'||location.search.includes('dev'))document.getElementById('atoms-btn').style.display='';</script>
   <div id="focus-overlay">
     <div id="focus-backdrop"></div>
-    <button id="focus-close"><svg width="16" height="16" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m4.397 4.554.073-.084a.75.75 0 0 1 .976-.073l.084.073L12 10.939l6.47-6.47a.75.75 0 1 1 1.06 1.061L13.061 12l6.47 6.47a.75.75 0 0 1 .072.976l-.073.084a.75.75 0 0 1-.976.073l-.084-.073L12 13.061l-6.47 6.47a.75.75 0 0 1-1.06-1.061L10.939 12l-6.47-6.47a.75.75 0 0 1-.072-.976l.073-.084-.073.084Z" fill="currentColor"/></svg></button>
+    <button id="focus-close" class="glass-dismiss"><div class="glass-effect"></div><div class="glass-tint"></div><div class="glass-shine"></div><svg width="16" height="16" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m4.397 4.554.073-.084a.75.75 0 0 1 .976-.073l.084.073L12 10.939l6.47-6.47a.75.75 0 1 1 1.06 1.061L13.061 12l6.47 6.47a.75.75 0 0 1 .072.976l-.073.084a.75.75 0 0 1-.976.073l-.084-.073L12 13.061l-6.47 6.47a.75.75 0 0 1-1.06-1.061L10.939 12l-6.47-6.47a.75.75 0 0 1-.072-.976l.073-.084-.073.084Z" fill="currentColor"/></svg></button>
     <div id="focus-content">
       <div id="focus-title"></div>
       <div id="focus-desc"></div>
@@ -803,7 +764,7 @@
     </div>
   </div>
   <div id="nested-overlay">
-    <button id="nested-close"><svg width="16" height="16" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m4.397 4.554.073-.084a.75.75 0 0 1 .976-.073l.084.073L12 10.939l6.47-6.47a.75.75 0 1 1 1.06 1.061L13.061 12l6.47 6.47a.75.75 0 0 1 .072.976l-.073.084a.75.75 0 0 1-.976.073l-.084-.073L12 13.061l-6.47 6.47a.75.75 0 0 1-1.06-1.061L10.939 12l-6.47-6.47a.75.75 0 0 1-.072-.976l.073-.084-.073.084Z" fill="currentColor"/></svg></button>
+    <button id="nested-close" class="glass-dismiss"><div class="glass-effect"></div><div class="glass-tint"></div><div class="glass-shine"></div><svg width="16" height="16" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m4.397 4.554.073-.084a.75.75 0 0 1 .976-.073l.084.073L12 10.939l6.47-6.47a.75.75 0 1 1 1.06 1.061L13.061 12l6.47 6.47a.75.75 0 0 1 .072.976l-.073.084a.75.75 0 0 1-.976.073l-.084-.073L12 13.061l-6.47 6.47a.75.75 0 0 1-1.06-1.061L10.939 12l-6.47-6.47a.75.75 0 0 1-.072-.976l.073-.084-.073.084Z" fill="currentColor"/></svg></button>
     <div id="nested-content">
       <div id="nested-title"></div>
       <div id="nested-desc"></div>
@@ -837,7 +798,7 @@
     </div>
   </div>
   <div id="wall-article">
-    <button id="wall-article-close"><svg width="16" height="16" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m4.397 4.554.073-.084a.75.75 0 0 1 .976-.073l.084.073L12 10.939l6.47-6.47a.75.75 0 1 1 1.06 1.061L13.061 12l6.47 6.47a.75.75 0 0 1 .072.976l-.073.084a.75.75 0 0 1-.976.073l-.084-.073L12 13.061l-6.47 6.47a.75.75 0 0 1-1.06-1.061L10.939 12l-6.47-6.47a.75.75 0 0 1-.072-.976l.073-.084-.073.084Z" fill="currentColor"/></svg></button>
+    <button id="wall-article-close" class="glass-dismiss"><div class="glass-effect"></div><div class="glass-tint"></div><div class="glass-shine"></div><svg width="16" height="16" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m4.397 4.554.073-.084a.75.75 0 0 1 .976-.073l.084.073L12 10.939l6.47-6.47a.75.75 0 1 1 1.06 1.061L13.061 12l6.47 6.47a.75.75 0 0 1 .072.976l-.073.084a.75.75 0 0 1-.976.073l-.084-.073L12 13.061l-6.47 6.47a.75.75 0 0 1-1.06-1.061L10.939 12l-6.47-6.47a.75.75 0 0 1-.072-.976l.073-.084-.073.084Z" fill="currentColor"/></svg></button>
     <div id="wall-article-content"></div>
   </div>
   <!-- SVG Filter for Liquid Glass -->

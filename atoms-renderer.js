@@ -3,7 +3,7 @@
 import { streamChat, chatSync, buildSystemPrompt } from './ai-client.js?v=166';
 
 const getCSSFont = (varName, fallback) =>
-  getComputedStyle(document.documentElement).getPropertyValue(varName).trim() || fallback;
+  (getComputedStyle(document.documentElement).getPropertyValue(varName).trim().replace(/"/g, '') || fallback);
 
 // ─── Paper texture generation (matches SVG #paper-texture filter) ───
 function generatePaperTexture(w, h) {
@@ -1391,7 +1391,8 @@ export async function renderTearoffCard(app, x, y, cfg) {
   }
 
   // ── Title text ──
-  const titleText = new PIXI.Text({ text: 'Grab a strip\nfor your agent', style: {
+  const _tearLang = (localStorage.getItem('wall-lang') || 'en');
+  const titleText = new PIXI.Text({ text: _tearLang === 'zh' ? '撕一张，\n带给你的agent！' : 'Grab a strip\nfor your agent', style: {
     fontFamily: getCSSFont('--atom-font', 'Special Elite'), fontSize: 28, fill: 0x1a1a1a,
     align: 'center', wordWrap: true, wordWrapWidth: cardW - 40, padding: 8,
   }});
@@ -1401,7 +1402,7 @@ export async function renderTearoffCard(app, x, y, cfg) {
   wrapper.addChild(titleText);
 
   // ── Subtitle text ──
-  const subtitleText = new PIXI.Text({ text: 'A secret key designed for agents', style: {
+  const subtitleText = new PIXI.Text({ text: _tearLang === 'zh' ? '你的agent就能知道我所有的秘密' : 'A secret key designed for agents', style: {
     fontFamily: getCSSFont('--atom-font', 'Special Elite'), fontSize: 12, fill: 0x999999,
     align: 'center', wordWrap: true, wordWrapWidth: cardW - 40, padding: 4,
   }});
@@ -1818,15 +1819,17 @@ export class PhotoSystem {
     if (this._isFocusOpen()) return;
     if (photo._hoverLabel) return;
     const cfg = photo.config || {};
+    const isZh = (localStorage.getItem('wall-lang') || 'en') === 'zh';
     const categoryMap = {
-      who_i_am: 'About Me',
-      design_projects: 'Design Project',
-      design_thought: 'Design Thought',
-      hobby: 'Hobby',
+      who_i_am: isZh ? '关于我' : 'About Me',
+      design_projects: isZh ? '设计项目' : 'Design Project',
+      design_thought: isZh ? '设计思考' : 'Design thinking',
+      hobby: isZh ? '爱好' : 'Hobby',
       vibe_coding: 'Vibe Coding',
     };
     const catText = categoryMap[cfg.category] || '';
-    const titleText = (photo.focusData?.title || cfg.caption || cfg.title || '').slice(0, 24);
+    const rawTitle = (photo.focusData?.title || cfg.caption || cfg.title || '');
+    const titleText = rawTitle.slice(0, 30);
     if (!catText && !titleText) return;
 
     const displayText = catText ? `${catText} · ${titleText}` : titleText;
@@ -2301,7 +2304,7 @@ export class PhotoSystem {
 }
 
 // Returns the appropriate dim layer background color based on current time mode
-const getDimColor = () => document.documentElement.classList.contains('night-mode') ? 0x0d0c1a : getDimColor();
+const getDimColor = () => document.documentElement.classList.contains('night-mode') ? 0x0d0c1a : 0x1a1917;
 
 // ─── Focus Overlay — click-to-detail with paper curl effect ───
 export class FocusOverlay {
@@ -2463,7 +2466,7 @@ export class FocusOverlay {
   }
 
   open(item) {
-    if (this.activeItem) return;
+    if (this.activeItem || this._closing) return;
     this.activeItem = item;
     this._photoSystem?.hideAllHoverUI();
     this._focusOpenTime = Date.now();
@@ -2828,6 +2831,7 @@ export class FocusOverlay {
 
   close() {
     if (!this.activeItem) return;
+    this._closing = true;
     // Track focus duration
     if (this._focusOpenTime && window.umami) {
       const seconds = Math.round((Date.now() - this._focusOpenTime) / 1000);
@@ -2895,6 +2899,7 @@ export class FocusOverlay {
         }
         const wallComposer = document.getElementById('wall-composer');
         if (wallComposer) wallComposer.style.display = '';
+        this._closing = false;
       }, 650);
       return;
     }
@@ -2961,6 +2966,7 @@ export class FocusOverlay {
       // Restore wall composer
       const wallComposer = document.getElementById('wall-composer');
       if (wallComposer) wallComposer.style.display = '';
+      this._closing = false;
     }, 1050);
   }
 

@@ -75,10 +75,12 @@ import { WallArticle } from "./wall-article.js?v=151";
       document.documentElement.style.setProperty('--title-font', '"Optima", "PingFang SC", sans-serif');
       document.documentElement.style.setProperty('--body-font', '"Optima", "PingFangTC-light", sans-serif');
       document.documentElement.style.setProperty('--atom-font', '"Optima", "PingFangTC-light", sans-serif');
+      document.documentElement.style.setProperty('--tearoff-font', '"PF HuTu", sans-serif');
     } else {
       document.documentElement.style.setProperty('--title-font', '"Special Elite", cursive');
       document.documentElement.style.setProperty('--body-font', '"Red Hat Mono", monospace');
       document.documentElement.style.setProperty('--atom-font', '"Special Elite", cursive');
+      document.documentElement.style.setProperty('--tearoff-font', '"Special Elite", cursive');
     }
   }
 
@@ -101,12 +103,12 @@ import { WallArticle } from "./wall-article.js?v=151";
       en: { title: 'Hello I\'m Jesse Lai', body: 'AI Product Designer at Microsoft, exploring the future of natural human-AI interaction.' }
     },
     'Microsoft': {
-      zh: { title: 'Microsoft', body: '在微软构建AI产品，设计下一代人机交互体验。' },
-      en: { title: 'Microsoft', body: 'Building AI products at Microsoft, designing next-gen human-AI interaction experiences.' }
+      zh: { title: 'Microsoft', body: 'AI builder，与全球的团队一起设计 ToC 和 ToB 的Copilot' },
+      en: { title: 'Microsoft', body: 'AI-native builder, shaping consumer and enterprise Copilot experiences with global teams.' }
     },
     'Alibaba': {
-      zh: { title: 'Alibaba', body: '构建AI产品，帮助本地生活服务用户获得更好的体验。' },
-      en: { title: 'Alibaba', body: 'Building AI products to help local service users get better experiences.' }
+      zh: { title: 'Alibaba', body: '在大语言模型兴起的早期，设计服务本地生活小商家的 AI 产品' },
+      en: { title: 'Alibaba', body: 'Building AI product to help local service users' }
     },
     'Stand-up Comedian': {
       zh: { title: '脱口秀演员', body: '脱口秀是我一生的热爱。把生活的酸甜苦辣变成段子搬上舞台，已经成为我生活不可分割的一部分。' },
@@ -121,16 +123,16 @@ import { WallArticle } from "./wall-article.js?v=151";
       en: { title: 'Vibe Coding', body: 'A collection of vibe coding projects — building creative tools and interactive experiences with code.' }
     },
     'Arduino Light': {
-      zh: { title: 'Arduino交互灯', body: '用Arduino打造的交互灯——硬件与创意的融合。' },
-      en: { title: 'Arduino Light', body: 'An interactive light built with Arduino — merging hardware and creativity.' }
+      zh: { title: '天生创造者', body: '用Arduino打造的交互灯——硬件与创意的融合。' },
+      en: { title: 'Born Builder', body: 'An interactive light built with Arduino — merging hardware and creativity.' }
     },
     'GenUI 设计指南': {
-      zh: { title: 'GenUI 设计指南', body: '在AI时代，我们的交互体验反而倒退了——从丰富的GUI退回到纯文字聊天。GenUI探索AI生成的界面，让信息回归应有的形态。' },
-      en: { title: 'GenUI', body: 'In the AI era, our interaction experiences have regressed — from rich GUIs back to text-based chat. GenUI explores AI-generated interfaces that match the shape of information.' }
+      zh: { title: 'GenUI 设计指南', body: '关于生成式UI，我的个人思考和总结，写得挺生动的' },
+      en: { title: 'Designing for GenUI', body: 'My personal take on Generative UI—an engaging summary of ideas, observations, and lessons learned.' }
     },
     'AI产品设计原则': {
-      zh: { title: 'AI产品设计原则', body: '我对AI产品设计原则的思考与实践总结。' },
-      en: { title: 'AI Design Principles', body: 'A growing collection of AI product design principles, drawing from industry leaders and my own practice.' }
+      zh: { title: 'AI产品设计原则', body: 'AI产品设计原则，以及这个网站会如何跟着模型迭代' },
+      en: { title: 'My AI Design Principles', body: 'My AI product design principles, and how this website will evolve with model iterations.' }
     },
     'Born Builder': {
       zh: { title: '天生创造者', body: '这个项目提醒我——我是一个创造者。无论是否在AI时代，让东西活起来都让我兴奋！' },
@@ -146,11 +148,25 @@ import { WallArticle } from "./wall-article.js?v=151";
 
   // Photo captions (Schoolbell font, always English) + dates
   const photoCaptions = {
-    'Hello I\'m Jesse Lai': { caption: 'Hello I\'m Jesse Lai', date: "'25 03 20" },
-    'Stand-up Comedian':    { caption: 'Stand-up Comedian', date: "'26 01 15" },
-    'Drawing':              { caption: 'Drawing', date: "'25 08 10" },
-    'Vibe Coding':          { caption: 'Vibe Coding', date: "'26 05 01" },
-    'Arduino Light':        { caption: 'Arduino Light', date: "'26 04 15" },
+    'Hello I\'m Jesse Lai': { caption: 'Hello I\'m Jesse Lai', date: "" },
+    'Stand-up Comedian':    { caption: 'Stand-up Comedian', date: "'23 06 28" },
+    'Drawing':              { caption: 'Drawing', date: "'15 12 20" },
+    'Vibe Coding':          { caption: 'Vibe Coding', date: "'25 05 26" },
+    'Arduino Light':        { caption: 'Born Builder', date: "'16 09 20" },
+  };
+
+  // Focus overlay description overrides (bilingual)
+  const focusDesc = {
+    'Hello I\'m Jesse Lai': { zh: '嗨👋 我喜欢做各种好玩的东西！', en: 'Hi 👋 I love making all kinds of fun things!' },
+    'Microsoft': { zh: '在微软，我做了各种Copilot，等等… 它们好像都长一个样！', en: 'At Microsoft, I worked on various Copilots and so on... they all seem to look the same!' },
+    'Alibaba': { zh: '在阿里，我除了送外卖，还观察骑手怎么送外卖…', en: 'At Alibaba, besides delivering food, I also observe how couriers deliver food…' },
+    'Vibe Coding': { zh: 'Vibe coding一年来，感觉找回了9岁那个下午，自己做了艘电动玩具船，在水上跑起来的兴奋感', en: 'After a year of vibe coding, it feels like I\'ve rediscovered that afternoon when I was nine, the excitement of building an electric toy boat and watching it run across the water.' },
+    'Arduino Light': { zh: '快10年前的课程作业，但它提醒我——我是一个builder，把东西做出来就让我兴奋。', en: 'A school project from nearly 10 years ago, but it reminds me — I\'m a builder. Making things come to life is what excites me.' },
+    'Born Builder': { zh: '快10年前的课程作业，但它提醒我——我是一个builder，把东西做出来就让我兴奋。', en: 'A school project from nearly 10 years ago, but it reminds me — I\'m a builder. Making things come to life is what excites me.' },
+    'Stand-up Comedian': { zh: '脱口秀和设计有很多共通之处：都需要敏锐的观察力，都需要不断迭代打磨。', en: 'Stand-up comedy and design share a lot in common: both demand keen observation, and both require constant iteration and refinement.' },
+    'Drawing': { zh: '画画让我进入心流，经常一不小心就发现已经天亮了。这些古法绘画作品，绝不含AI。', en: 'Drawing puts me in a flow state — I\'d often look up and realize it was already morning. These artworks are 100% hand-made, zero AI.' },
+    'GenUI 设计指南': { zh: '为什么Figma不再能设计GenUI？这篇聊聊生成式UI的形态、行为，以及我自己的工作流。', en: 'Why can\'t Figma design GenUI anymore? This article explores the forms and behaviors of generative UI, plus my own workflow.' },
+    'AI产品设计原则': { zh: '做AI产品就像钓鱼——来太早或太晚都没有收获，要在模型能力的边界处让产品发光。', en: 'Building AI products is like fishing — timing is everything. The product should shine right at the frontier of what models can do.' },
   };
 
   // Stamp image overrides
@@ -181,10 +197,10 @@ import { WallArticle } from "./wall-article.js?v=151";
         category: entry.category,
         title: t(entry, 'title') || entry.title,
         body: t(entry, 'body') || entry.body || '',
-        date: entry.title === 'GenUI 设计指南' ? "'26 04 20" : entry.title === 'AI产品设计原则' ? "'26 03 15" : "'26 05 01",
+        date: ({ 'GenUI 设计指南': "'25 11 20", 'AI产品设计原则': "'26 05 20", 'Microsoft': "'25 02 27", 'Alibaba': "'20 06 29" })[entry.title] || "'26 05 01",
         stampSrc: stampOverrides[entry.title] || entry.cover_image || 'stamp1.webp',
         colorScheme: coolStickies.includes(entry.title) ? 'cool' : 'warm',
-        keywords: entry.keywords, focus: entry.focus || { title: entry.title, description: entry.body || entry.title, link: '#', linkText: 'Read more', article: { title: entry.title, sections: (entry.full_text || []).map(t => ({type:'text',text:t})) } },
+        _origTitle: entry.title, keywords: entry.keywords, focus: entry.focus || { title: entry.title, description: entry.body || entry.title, link: '#', linkText: 'Read more', article: { title: entry.title, sections: (entry.full_text || []).map(t => ({type:'text',text:t})) } },
       });
     } else if (entry.atom === 'tearoff') {
       wallItems.push({ type: 'tearoff', category: entry.category });
@@ -246,7 +262,7 @@ import { WallArticle } from "./wall-article.js?v=151";
           window._firstVideoBlob = { src: photoItem.videoSrc, url: URL.createObjectURL(blob) };
         }).catch(() => {});
       }
-      if (item.focus) { photoItem.focusData = item.focus; if (item.keywords) photoItem.focusData.description = item.keywords; }
+      if (item.focus) { photoItem.focusData = item.focus; const fd = focusDesc[item.caption] || focusDesc[item.title]; photoItem.focusData.description = fd ? fd[LANG] : (item.keywords || item.focus.description); }
       const b = photoItem.group.getBounds();
       rendered.push({ group: photoItem.group, bounds: b, wallItem: item, focusableItem: photoItem });
     } else if (item.type === 'sticky') {
@@ -254,7 +270,7 @@ import { WallArticle } from "./wall-article.js?v=151";
       stickyResult.group.scale.set(atomScale);
       const b = stickyResult.group.getBounds();
       const stickyItem = photoSystem.addItem(stickyResult.group, b.width / atomScale, b.height / atomScale);
-      if (item.focus) { stickyItem.focusData = item.focus; if (item.keywords) stickyItem.focusData.description = item.keywords; }
+      if (item.focus) { stickyItem.focusData = item.focus; stickyItem.focusData.title = item.title; const fd = focusDesc[item._origTitle] || focusDesc[item.title]; stickyItem.focusData.description = fd ? fd[LANG] : (item.keywords || item.focus.description); }
       stickyItem._stickyTitle = { tx: stickyResult.titleX, ty: stickyResult.titleY, tw: stickyResult.titleW, th: stickyResult.titleH };
       // Stamp video: swap stamp sprite texture on hover
       if (stickyResult.stampSprite && item.stampSrc) {
@@ -608,9 +624,11 @@ import { WallArticle } from "./wall-article.js?v=151";
       const [cr,cg,cb] = hexToRgb(currentBgColors.top);
       const brightness = (cr + cg + cb) / 3;
 
-      // Right-to-left gradient overlay — stronger at night
+      // Right-to-left gradient overlay — deepens on scroll
       if (nightGradient) {
-        const gradAlpha = brightness < 80 ? 0.3 : 0.25;
+        const gradAlpha = brightness < 80
+          ? 0.2 + 0.15 * p    // night: 0.2 → 0.35
+          : 0.1 + 0.2 * p;    // day:  0.1 → 0.3
         nightGradient.style.background = `linear-gradient(to left, rgba(0,0,0,${gradAlpha}) 0%, rgba(0,0,0,0) 50%)`;
       }
 
@@ -685,6 +703,8 @@ import { WallArticle } from "./wall-article.js?v=151";
       const isNight = timeOverride >= 20 || (timeOverride < 6);
       timeOverride = isNight ? 9 : 22;
       currentBgColors = getTimeColors(timeOverride);
+      // Force night-mode class to match new time immediately
+      document.documentElement.classList.toggle('night-mode', timeOverride >= 20 || timeOverride < 6);
       updateSunProgress();
       const sun = document.getElementById('time-icon-sun');
       const moon = document.getElementById('time-icon-moon');
