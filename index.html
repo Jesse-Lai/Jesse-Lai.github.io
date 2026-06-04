@@ -317,17 +317,17 @@
     }
 
     /* Article mode — article content lives INSIDE the focus overlay */
-    #focus-overlay.article-mode {
+    #focus-overlay.article-open {
       overflow-y: auto;
       background: var(--overlay-bg);
     }
-    #focus-overlay.article-mode #focus-content {
+    #focus-overlay.article-open #focus-content {
       display: none;
     }
-    #focus-overlay.article-mode #focus-backdrop {
+    #focus-overlay.article-open #focus-backdrop {
       position: sticky; top: 0; height: 0;
     }
-    #focus-overlay.article-mode #focus-close {
+    #focus-overlay.article-open #focus-close {
       position: fixed;
     }
     #focus-article {
@@ -337,10 +337,10 @@
       opacity: 0; transform: translateY(30px);
       transition: opacity 0.5s ease, transform 0.5s ease;
     }
-    #focus-overlay.article-mode #focus-article {
+    #focus-overlay.article-open #focus-article {
       display: block;
     }
-    #focus-overlay.article-mode #focus-article.visible {
+    #focus-overlay.article-open #focus-article.visible {
       opacity: 1; transform: translateY(0);
     }
     #focus-article .article-title {
