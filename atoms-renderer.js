@@ -33,92 +33,42 @@ function generatePaperTexture(w, h) {
 }
 
 // ─── Scribble loading animation (Canvas, for AI waiting state) ───
+// Draws 3 dots sequentially with the same hand-drawn teardrop style, then loops
 export function createScribbleLoader(container) {
-  const W = 640, ROW_H = 32, ROWS = 5, PAD = 14;
-  const H = ROWS * ROW_H + PAD * 2;
+  const W = 120, H = 32;
   const STROKE_COLOR = '#ccc';
+  const DOT_COUNT = 3;
+  const DOT_SPACING = 28;
+  const DOT_R = 6;
+  const LOOP_STEPS = 48;
 
   const canvas = document.createElement('canvas');
   canvas.width = W;
   canvas.height = H;
-  canvas.style.cssText = 'display:block;max-width:640px;width:100%;margin:0 auto;';
+  canvas.style.cssText = 'display:block;width:60px;margin:0;';
   container.appendChild(canvas);
   const ctx = canvas.getContext('2d');
 
-  // Pre-generate path with organic loops
+  // Pre-generate points for 3 dots
   const points = [];
-  for (let row = 0; row < ROWS; row++) {
-    const baseY = PAD + row * ROW_H + 8;
-    const leftX = Math.random() * 5;
-    const rightX = W - 20 - Math.random() * 20;
-    const rowW = rightX - leftX;
-    const goRight = row % 2 === 0;
-
-    // 3-5 loops per row, with varied sizes
-    const loopCount = 10 + Math.floor(Math.random() * 5);
-    const loops = [];
-    for (let i = 0; i < loopCount; i++) {
-      const t = (i + 0.3 + Math.random() * 0.4) / loopCount;
-      const r = 8 + Math.random() * 10; // bigger loops (8-18px)
-      const squash = 0.5 + Math.random() * 0.6; // x-squash for teardrop shape
-      const tilt = (Math.random() - 0.5) * 0.4; // random tilt
-      loops.push({ t, r, squash, tilt });
-    }
-    loops.sort((a, b) => a.t - b.t);
-
-    let curX = goRight ? leftX : rightX;
-    const dir = goRight ? 1 : -1;
-
-    for (let li = 0; li < loops.length; li++) {
-      const lp = loops[li];
-      const loopCX = goRight ? leftX + lp.t * rowW : rightX - lp.t * rowW;
-
-      // --- Baseline segment: gentle curve to loop start ---
-      const segSteps = 30;
-      const drift = (Math.random() - 0.5) * 6; // baseline isn't perfectly straight
-      for (let s = 0; s <= segSteps; s++) {
-        const frac = s / segSteps;
-        const x = curX + (loopCX - curX) * frac;
-        // Organic curve: ease into loop with slight arc
-        const arch = Math.sin(frac * Math.PI) * drift;
-        points.push({ x: x , y: baseY + arch  });
-      }
-
-      // --- Loop: teardrop/organic circle ---
-      // The pen enters from the travel direction, swings down into a full loop
-      const loopSteps = 48; // more steps = smoother
-      const { r, squash, tilt } = lp;
-      for (let s = 0; s <= loopSteps; s++) {
-        const theta = (s / loopSteps) * Math.PI * 2;
-        // Teardrop: x-radius varies with theta (narrower at top, wider at bottom)
-        const teardropX = Math.sin(theta) * (r * squash) * (1 + 0.3 * Math.sin(theta));
-        const teardropY = r * (1 - Math.cos(theta));
-        // Apply tilt rotation
-        const rx = teardropX * Math.cos(tilt) - teardropY * Math.sin(tilt);
-        const ry = teardropX * Math.sin(tilt) + teardropY * Math.cos(tilt);
-        points.push({
-          x: loopCX + rx * dir ,
-          y: baseY + ry        });
-      }
-
-      curX = loopCX;
-    }
-
-    // Final baseline to row end
-    const endX = goRight ? rightX : leftX;
-    const finalSteps = 25;
-    const finalDrift = (Math.random() - 0.5) * 4;
-    for (let s = 0; s <= finalSteps; s++) {
-      const frac = s / finalSteps;
-      const x = curX + (endX - curX) * frac;
-      const arch = Math.sin(frac * Math.PI) * finalDrift;
-      points.push({ x: x , y: baseY + arch  });
+  const startX = (W - (DOT_COUNT - 1) * DOT_SPACING) / 2;
+  for (let d = 0; d < DOT_COUNT; d++) {
+    const cx = startX + d * DOT_SPACING;
+    const cy = H / 2 - DOT_R * 0.3;
+    const squash = 0.6 + Math.random() * 0.3;
+    const tilt = (Math.random() - 0.5) * 0.3;
+    for (let s = 0; s <= LOOP_STEPS; s++) {
+      const theta = (s / LOOP_STEPS) * Math.PI * 2;
+      const tx = Math.sin(theta) * (DOT_R * squash) * (1 + 0.25 * Math.sin(theta));
+      const ty = DOT_R * (1 - Math.cos(theta));
+      const rx = tx * Math.cos(tilt) - ty * Math.sin(tilt);
+      const ry = tx * Math.sin(tilt) + ty * Math.cos(tilt);
+      points.push({ x: cx + rx, y: cy + ry });
     }
   }
 
   const totalPoints = points.length;
   let drawIdx = 0;
-  // Slow: ~2-3 points per frame (was 5)
   const POINTS_PER_FRAME = 2;
   let animId = null;
   let destroyed = false;
@@ -132,7 +82,6 @@ export function createScribbleLoader(container) {
   function loop() {
     if (destroyed) return;
     frameCount++;
-    // Draw every other frame for 50% slowdown
     if (frameCount % 2 === 0) {
       animId = requestAnimationFrame(loop);
       return;
@@ -141,6 +90,8 @@ export function createScribbleLoader(container) {
     const end = Math.min(drawIdx + POINTS_PER_FRAME, totalPoints);
     for (let i = drawIdx; i < end; i++) {
       if (i === 0) continue;
+      // Skip line between dots (don't connect last point of prev dot to first of next)
+      if (i % (LOOP_STEPS + 1) === 0) continue;
       ctx.beginPath();
       ctx.moveTo(points[i - 1].x, points[i - 1].y);
       ctx.lineTo(points[i].x, points[i].y);
@@ -1490,7 +1441,7 @@ export async function renderTearoffCard(app, x, y, cfg) {
     lctx.fillStyle = '#555';
     lctx.textAlign = 'center';
     lctx.textBaseline = 'middle';
-    lctx.fillText(_tearLang === 'zh' && strips[i].label_zh ? strips[i].label_zh : strips[i].label, 0, 0);
+    lctx.fillText(strips[i].label, 0, 0);
     lctx.restore();
     const labelSprite = new PIXI.Sprite(PIXI.Texture.from(labelCanvas));
     labelSprite.x = 0;
