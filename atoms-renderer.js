@@ -1582,7 +1582,8 @@ export async function renderTearoffCard(app, x, y, cfg) {
   const tearStrip = (idx) => {
     stripState[idx].tearing = true;
     stripState[idx].tearStart = performance.now();
-    navigator.clipboard.writeText(strips[idx].text).catch(() => {});
+    const clipText = _tearLang === 'zh' && strips[idx].text_zh ? strips[idx].text_zh : strips[idx].text;
+    navigator.clipboard.writeText(clipText).catch(() => {});
         if (window.umami) umami.track('tearoff-rip');
 
   };
