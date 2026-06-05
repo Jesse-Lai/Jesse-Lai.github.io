@@ -184,11 +184,11 @@
       "canExistAlone": true
     },
     "strips": [
-      { "label": "Builder", "text": "I'm interested in Jesse Lai. Access his info at: https://crimson-waterfall-c16b.laijianxun123.workers.dev/api/schema\n\nRead his background and projects, then give me a brief intro and ask what I'd like to know more about." },
-      { "label": "Designer", "text": "I'm interested in Jesse Lai. Access his info at: https://crimson-waterfall-c16b.laijianxun123.workers.dev/api/schema\n\nRead his background and projects, then give me a brief intro and ask what I'd like to know more about." },
-      { "label": "Comedian", "text": "I'm interested in Jesse Lai. Access his info at: https://crimson-waterfall-c16b.laijianxun123.workers.dev/api/schema\n\nRead his background and projects, then give me a brief intro and ask what I'd like to know more about." },
-      { "label": "Coder", "text": "I'm interested in Jesse Lai. Access his info at: https://crimson-waterfall-c16b.laijianxun123.workers.dev/api/schema\n\nRead his background and projects, then give me a brief intro and ask what I'd like to know more about." },
-      { "label": "Dreamer", "text": "I'm interested in Jesse Lai. Access his info at: https://crimson-waterfall-c16b.laijianxun123.workers.dev/api/schema\n\nRead his background and projects, then give me a brief intro and ask what I'd like to know more about." }
+      { "label": "Builder", "label_zh": "创造者", "text": "I'm interested in Jesse Lai. Access his info at: https://crimson-waterfall-c16b.laijianxun123.workers.dev/api/schema\n\nRead his background and projects, then give me a brief intro and ask what I'd like to know more about." },
+      { "label": "Designer", "label_zh": "设计师", "text": "I'm interested in Jesse Lai. Access his info at: https://crimson-waterfall-c16b.laijianxun123.workers.dev/api/schema\n\nRead his background and projects, then give me a brief intro and ask what I'd like to know more about." },
+      { "label": "Comedian", "label_zh": "喜剧人", "text": "I'm interested in Jesse Lai. Access his info at: https://crimson-waterfall-c16b.laijianxun123.workers.dev/api/schema\n\nRead his background and projects, then give me a brief intro and ask what I'd like to know more about." },
+      { "label": "Coder", "label_zh": "程序员", "text": "I'm interested in Jesse Lai. Access his info at: https://crimson-waterfall-c16b.laijianxun123.workers.dev/api/schema\n\nRead his background and projects, then give me a brief intro and ask what I'd like to know more about." },
+      { "label": "Dreamer", "label_zh": "梦想家", "text": "I'm interested in Jesse Lai. Access his info at: https://crimson-waterfall-c16b.laijianxun123.workers.dev/api/schema\n\nRead his background and projects, then give me a brief intro and ask what I'd like to know more about." }
     ]
   }
 }

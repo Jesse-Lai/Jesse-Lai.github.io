@@ -1490,7 +1490,7 @@ export async function renderTearoffCard(app, x, y, cfg) {
     lctx.fillStyle = '#555';
     lctx.textAlign = 'center';
     lctx.textBaseline = 'middle';
-    lctx.fillText(strips[i].label, 0, 0);
+    lctx.fillText(_tearLang === 'zh' && strips[i].label_zh ? strips[i].label_zh : strips[i].label, 0, 0);
     lctx.restore();
     const labelSprite = new PIXI.Sprite(PIXI.Texture.from(labelCanvas));
     labelSprite.x = 0;
