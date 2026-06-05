@@ -258,7 +258,7 @@ import { WallArticle } from "./wall-article.js?v=151";
       // Mobile: prefetch first video as blob so it can play without user interaction
       if (isMobile && !window._firstVideoPrefetched) {
         window._firstVideoPrefetched = true;
-        fetch(photoItem.videoSrc).then(r => r.blob()).then(blob => {
+        window._firstVideoPrefetchPromise = fetch(photoItem.videoSrc).then(r => r.blob()).then(blob => {
           window._firstVideoBlob = { src: photoItem.videoSrc, url: URL.createObjectURL(blob) };
         }).catch(() => {});
       }
@@ -793,7 +793,23 @@ import { WallArticle } from "./wall-article.js?v=151";
               }
             });
           }
-        }).catch(() => {});
+        }).catch(() => {
+          // Video not ready yet — retry once canplay fires
+          if (!entry.ready) {
+            entry.video.addEventListener('canplay', () => {
+              entry.video.play().then(() => {
+                if (!entry.texture) {
+                  entry.texture = PIXI.Texture.from(entry.video, { resourceOptions: { autoPlay: false } });
+                  entry.ready = true;
+                }
+                if (cur.sprite) {
+                  cur._staticTex = cur._staticTex || cur.sprite.texture;
+                  cur.sprite.texture = entry.texture;
+                }
+              }).catch(() => {});
+            }, { once: true });
+          }
+        });
       }
     };
 
@@ -806,8 +822,13 @@ import { WallArticle } from "./wall-article.js?v=151";
       setTimeout(() => { isAnimating = false; }, 500);
     };
 
-    // Initial snap (no video on first load — iOS requires user interaction)
-    scrollToIdx(0);
+    // Initial snap — wait for first video blob so it can play immediately
+    const startSnap = () => scrollToIdx(0);
+    if (window._firstVideoPrefetchPromise) {
+      window._firstVideoPrefetchPromise.then(startSnap).catch(startSnap);
+    } else {
+      startSnap();
+    }
     
 
 
