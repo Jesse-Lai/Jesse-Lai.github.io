@@ -1099,15 +1099,15 @@
           },
           {
             "type": "text",
-            "text": "• 把AI能力从产品中拿走，这个产品就不成立了"
+            "text": "• 产品围绕AI能力为核心设计"
           },
           {
             "type": "text",
-            "text": "• 产品会随着AI模型能力提升而变得更强"
+            "text": "• 产品能力会随着AI模型能力提升而变得更强"
           },
           {
             "type": "text",
-            "text": "• 为Agent设计"
+            "text": "• 为Agent使用设计"
           },
           {
             "type": "text",
@@ -1115,75 +1115,71 @@
           },
           {
             "type": "text",
-            "text": "• Dynamic：行为从简单规则涌现，而不是处处写死规则"
+            "text": "• AI行为从简单规则涌现，少写规则，多写原则"
           },
           {
             "type": "text",
-            "text": "• Primitive：从最小单元组合出更大的无限可能"
+            "text": "• 将产品拆分到最小单元，定义这些基本单元，剩下的一切都是它们的组合"
           },
           {
             "type": "text",
-            "text": "• Constraint: 了解模型能力的边界，在边界内选择最好的设计方案，提供最好的产品体验"
+            "text": "• 了解模型能力的边界，在边界内通过harness达到更好的产品效果"
+          },
+          {
+            "type": "text",
+            "text": "• AI 会犯错，产品要优雅处理不确定性"
           },
           {
             "type": "image",
             "src": "content_images/358400ee_1.png",
             "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "我觉得做AI产品和钓鱼很像（对的我也喜欢钓鱼），来得太早或太晚都没有收获（模型能力没达到，或已被模型能力覆盖），而是要判断潮汐趋势，在对的timing下竿。"
-          },
-          {
-            "type": "text",
-            "text": "做AI产品，要提前判断模型能力的发展，让产品能在模型能力的边界处发光。"
           }
         ],
         "sections_en": [
           {
             "type": "text",
-            "text": "When conceiving this personal website, I wanted the site itself to be an AI-native product, aligning with my design principles for AI-native products. I believe an AI-native product should follow these principles:"
+            "text": "When I started designing this personal website, I wanted the website itself to be an AI-native product—one that reflects my own principles for AI-native product design."
           },
           {
             "type": "text",
-            "text": "• Remove AI capabilities from the product, and the product ceases to exist"
+            "text": "I believe an AI-native product should follow these principles:"
           },
           {
             "type": "text",
-            "text": "• The product gets stronger as AI model capabilities improve"
+            "text": "• The product is designed around AI capabilities as its core."
           },
           {
             "type": "text",
-            "text": "• Designing for Agents"
+            "text": "• The product becomes more powerful as AI models improve."
           },
           {
             "type": "text",
-            "text": "In future iterations, I also want my AI product to be:"
+            "text": "• The product is designed not only for humans, but also for agents."
           },
           {
             "type": "text",
-            "text": "• Dynamic: Behaviors emerge from simple rules, rather than being hardcoded everywhere"
+            "text": "In future iterations, I want this AI product to further embrace the following ideas:"
           },
           {
             "type": "text",
-            "text": "• Primitive: Infinite possibilities composed from the smallest units"
+            "text": "• AI behavior should emerge from simple principles rather than complex rules. Write fewer rules, define better principles."
           },
           {
             "type": "text",
-            "text": "• Constraint: Understand the boundaries of model capabilities, choose the best design within those boundaries, and deliver the best product experience"
+            "text": "• Break the product down into its smallest building blocks, clearly define those primitives, and let everything else emerge from their combinations."
+          },
+          {
+            "type": "text",
+            "text": "• Understand the boundaries of model capabilities, and use harnesses and system design to maximize product quality within those boundaries."
+          },
+          {
+            "type": "text",
+            "text": "• AI will make mistakes. Products should handle uncertainty gracefully rather than pretending certainty."
           },
           {
             "type": "image",
             "src": "content_images/358400ee_en_1.png",
             "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "I think building AI products is like fishing (yes, I also love fishing) — arriving too early or too late yields nothing (model capabilities haven't reached the threshold, or have already surpassed it). The key is to anticipate where the boundary will be"
-          },
-          {
-            "type": "text",
-            "text": "Building AI products requires anticipating the development of model capabilities, so the product can shine right at the frontier of what's possible."
           }
         ]
       }
