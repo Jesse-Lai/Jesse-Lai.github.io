@@ -824,7 +824,10 @@ import { WallArticle } from "./wall-article.js?v=151";
 
 
     // Block native scroll completely — JS controls position
+    // But allow scrolling inside article overlay
     document.addEventListener('touchmove', (e) => {
+      const articleEl = document.getElementById('wall-article');
+      if (articleEl && articleEl.classList.contains('visible')) return;
       e.preventDefault();
     }, { passive: false });
 
