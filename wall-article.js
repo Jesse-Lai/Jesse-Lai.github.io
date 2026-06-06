@@ -2,6 +2,9 @@
 import { streamChat, buildSystemPrompt } from './ai-client.js?v=166';
 import { createScribbleLoader } from './atoms-renderer.js?v=204';
 
+const SEND_SVG = '<svg width="14" height="14" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4.284 10.296A1 1 0 0 0 5.709 11.7L11 6.33V20a1 1 0 1 0 2 0V6.336l5.285 5.364a1 1 0 0 0 1.425-1.404l-6.823-6.924a1.25 1.25 0 0 0-1.78 0l-6.823 6.924Z" fill="currentColor"/></svg>';
+const STOP_SVG = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>';
+
 export class WallArticle {
   constructor(focusOverlay, contentData, lang) {
     this.focusOverlay = focusOverlay;
@@ -35,11 +38,16 @@ export class WallArticle {
     textarea.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
-        if (textarea.value.trim()) this._send(textarea, sendBtn);
+        if (textarea.value.trim() && !sendBtn.classList.contains('streaming')) this._send(textarea, sendBtn);
       }
     });
 
     sendBtn.addEventListener('click', () => {
+      if (sendBtn.classList.contains('streaming')) {
+        if (this._abortController) { this._abortController.abort(); this._abortController = null; }
+        this._restoreComposer(textarea, sendBtn);
+        return;
+      }
       if (textarea.value.trim()) this._send(textarea, sendBtn);
     });
   }
@@ -49,7 +57,7 @@ export class WallArticle {
     if (!query) return;
     textarea.value = '';
     textarea.style.height = 'auto';
-    sendBtn.disabled = true;
+    this._setStreaming(sendBtn, true);
     if (this.isOpen) {
       // Follow-up question in existing conversation
       const userMsg = document.createElement('div');
@@ -81,6 +89,22 @@ export class WallArticle {
     this.content.appendChild(userMsg);
 
     this._callAI(query);
+  }
+
+  _setStreaming(sendBtn, streaming) {
+    if (streaming) {
+      sendBtn.classList.add('streaming');
+      sendBtn.disabled = false;
+      sendBtn.innerHTML = STOP_SVG;
+    } else {
+      sendBtn.classList.remove('streaming');
+      sendBtn.innerHTML = SEND_SVG;
+    }
+  }
+
+  _restoreComposer(textarea, sendBtn) {
+    this._setStreaming(sendBtn, false);
+    sendBtn.disabled = !textarea.value.trim();
   }
 
   close() {
@@ -221,6 +245,9 @@ export class WallArticle {
         flushAtomBuffer();
         this._abortController = null;
         this._chatHistory.push({ role: 'assistant', content: fullResponse });
+        const sb = this.composerEl.querySelector('.send-btn');
+        const ta = this.composerEl.querySelector('textarea');
+        if (sb && ta) this._restoreComposer(ta, sb);
       },
       this._abortController.signal,
     );

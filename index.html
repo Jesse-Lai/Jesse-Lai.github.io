@@ -461,7 +461,7 @@
     /* Shared composer bar */
     .composer-bar {
       position: fixed; bottom: 24px; left: 0; right: 0;
-      padding: 0 24px; pointer-events: none;
+      width: 100%; padding: 0 24px; pointer-events: none;
       box-sizing: border-box;
     }
     .composer-bar .composer-box {
@@ -512,6 +512,7 @@
       transition: background 0.2s;
     }
     .composer-bar .send-btn:disabled { background: rgba(0,0,0,0.08); cursor: default; }
+    .composer-bar .send-btn.streaming { background: rgba(0,0,0,0.12); cursor: pointer; }
     .composer-bar .send-btn { color: rgba(255,255,255,0.9); }
     .composer-bar .send-btn svg { width: 14px; height: 14px; }
     .composer-bar .send-btn:disabled { color: rgba(0,0,0,0.15); }
@@ -619,7 +620,7 @@
     /* ─── Wall Article ─── */
     #wall-article {
       position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 10000;
-      overflow-y: auto; background: #FFFDFA;
+      overflow-y: auto; overflow-x: hidden; width: 100%; background: #FFFDFA;
       display: none; opacity: 0;
       transition: opacity 0.4s ease;
     }
@@ -689,6 +690,9 @@
     html.night-mode .composer-bar .send-btn:disabled {
       background: rgba(255,255,255,0.06);
       color: rgba(255,255,255,0.2);
+    }
+    html.night-mode .composer-bar .send-btn.streaming {
+      background: rgba(255,255,255,0.1);
     }
 
     /* Glass tint — darker in night mode */

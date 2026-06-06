@@ -2,6 +2,9 @@
 // All atom types are rendered from here. Both atoms.html and wall.js import this.
 import { streamChat, chatSync, buildSystemPrompt } from './ai-client.js?v=166';
 
+const _SEND_SVG = '<svg width="14" height="14" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4.284 10.296A1 1 0 0 0 5.709 11.7L11 6.33V20a1 1 0 1 0 2 0V6.336l5.285 5.364a1 1 0 0 0 1.425-1.404l-6.823-6.924a1.25 1.25 0 0 0-1.78 0l-6.823 6.924Z" fill="currentColor"/></svg>';
+const _STOP_SVG = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>';
+
 const getCSSFont = (varName, fallback) =>
   (getComputedStyle(document.documentElement).getPropertyValue(varName).trim().replace(/"/g, '') || fallback);
 
@@ -3357,10 +3360,15 @@ export class FocusOverlay {
       keydown: (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
           e.preventDefault();
-          if (textarea.value.trim()) this._sendChatMessage(textarea, sendBtn);
+          if (textarea.value.trim() && !sendBtn.classList.contains('streaming')) this._sendChatMessage(textarea, sendBtn);
         }
       },
       click: () => {
+        if (sendBtn.classList.contains('streaming')) {
+          if (this._chatAbort) { this._chatAbort.abort(); this._chatAbort = null; }
+          this._restoreArticleComposer(textarea, sendBtn);
+          return;
+        }
         if (textarea.value.trim()) this._sendChatMessage(textarea, sendBtn);
       }
     };
@@ -3382,6 +3390,7 @@ export class FocusOverlay {
       sendBtn.removeEventListener('click', this._composerHandlers.click);
       this._composerHandlers = null;
     }
+    this._restoreArticleComposer(textarea, sendBtn);
 
     // 停止正在进行的 streaming
     if (this._chatAbort) {
@@ -3400,6 +3409,12 @@ export class FocusOverlay {
     }
   }
 
+  _restoreArticleComposer(textarea, sendBtn) {
+    sendBtn.classList.remove('streaming');
+    sendBtn.innerHTML = _SEND_SVG;
+    sendBtn.disabled = !textarea.value.trim();
+  }
+
   _sendChatMessage(textarea, sendBtn) {
     this._chatRounds = (this._chatRounds || 0) + 1;
     if (window.umami) umami.track('chat-send', { title: this.activeItem?.focusData?.title || 'wall', round: this._chatRounds });
@@ -3408,7 +3423,9 @@ export class FocusOverlay {
 
     textarea.value = '';
     textarea.style.height = 'auto';
-    sendBtn.disabled = true;
+    sendBtn.classList.add('streaming');
+    sendBtn.disabled = false;
+    sendBtn.innerHTML = _STOP_SVG;
 
     // 显示 chat 容器
     this._chatContainer.style.display = '';
@@ -3538,6 +3555,10 @@ export class FocusOverlay {
         if (buffer.trim()) flushText(buffer.trim());
         flushAtomBuffer();
         this._chatAbort = null;
+        const composer = document.getElementById('article-composer');
+        const ta = composer.querySelector('textarea');
+        const sb = composer.querySelector('.send-btn');
+        this._restoreArticleComposer(ta, sb);
       },
       this._chatAbort.signal,
     );
