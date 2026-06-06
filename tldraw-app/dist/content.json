@@ -257,7 +257,7 @@
     "title": "Alibaba",
     "category": "design_projects",
     "atom": "sticky",
-    "body": "在大语言模型兴起的早期，设计帮助小商家做好\u201c吃\u201d的 AI 产品",
+    "body": "Building AI products to help local service users get better experiences.",
     "cover_image": "alibaba.webp",
     "focus": {
       "title": "Alibaba",
@@ -321,7 +321,7 @@
       }
     },
     "keywords": "B2C ● Eleme ● Onboarding ● Survival Rate ● 2023",
-    "body_en": "In the early days of LLMs, I designed AI products behind every better bite.",
+    "body_en": "Building AI products to help local service users get better experiences.",
     "title_en": "Alibaba"
   },
   {
@@ -583,35 +583,15 @@
           },
           {
             "type": "text",
-            "text": "这次聊的话题是因为前段时间参与了一些Generative UI的项目，因此分享一些总结和反思。"
+            "text": "这次聊的话题是因为前段时间参与了一些Generative UI的项目，因此分享一些总结和反思。看完本文你能获得："
           },
           {
             "type": "text",
-            "text": "看完本文你能获得："
+            "text": "✅ 为什么GenUI重要，明天就可以和同事侃侃而谈\n✅ GenUI的形态和行为，设计的重点是什么\n✅ 什么Figma不再能设计GenUI，以及我自己的工作流"
           },
           {
             "type": "text",
-            "text": "✅ 为什么GenUI重要，明天就可以和同事侃侃而谈"
-          },
-          {
-            "type": "text",
-            "text": "✅ GenUI的形态和行为，设计的重点是什么"
-          },
-          {
-            "type": "text",
-            "text": "✅ 什么Figma不再能设计GenUI，以及我自己的工作流"
-          },
-          {
-            "type": "text",
-            "text": "看完本文你不能获得："
-          },
-          {
-            "type": "text",
-            "text": "❎ OpenAI的工作机会（但可以增加你获得的概率）"
-          },
-          {
-            "type": "text",
-            "text": "❎ 一只会叫你名字的可爱小猫咪 🐱（但你可以自己vibe coding它）"
+            "text": "看完本文你不能获得：\n❎ OpenAI的工作机会（但可以增加你获得的概率）\n❎ 一只会叫你名字的可爱小猫咪 🐱（但你可以自己vibe coding它）"
           },
           {
             "type": "text",
@@ -619,7 +599,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/genui_zh2_1.png",
+            "src": "content_images/30d400ee_1.png",
             "caption": ""
           },
           {
@@ -636,7 +616,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/genui_zh2_2.png",
+            "src": "content_images/30d400ee_2.png",
             "caption": ""
           },
           {
@@ -653,7 +633,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/genui_zh2_3.png",
+            "src": "content_images/30d400ee_3.png",
             "caption": ""
           },
           {
@@ -662,15 +642,7 @@
           },
           {
             "type": "text",
-            "text": "1. 回答不仅有内容，还有视觉结构和重点"
-          },
-          {
-            "type": "text",
-            "text": "2. 可交互，用户有更高的互动意愿"
-          },
-          {
-            "type": "text",
-            "text": "3. 用户对回答和agent都有更强的信任感"
+            "text": "1. 回答不仅有内容，还有视觉结构和重点\n2. 可交互，用户有更高的互动意愿\n3. 用户对回答和agent都有更强的信任感"
           },
           {
             "type": "subtitle",
@@ -694,33 +666,25 @@
           },
           {
             "type": "image",
-            "src": "content_images/genui_zh2_4.png",
+            "src": "content_images/30d400ee_4.png",
             "caption": ""
           },
           {
             "type": "text",
-            "text": "Chat+"
-          },
-          {
-            "type": "text",
-            "text": "对话+产品界面共同协作，聊天依然存在，但它只是更大工作区域的一部分。用户通过对话，让AI在可操作的界面中生成GenUI，共同完成任务。比如 Google Stitch在画布种生成UI。"
+            "text": "Chat+\n对话+产品界面共同协作，聊天依然存在，但它只是更大工作区域的一部分。用户通过对话，让AI在可操作的界面中生成GenUI，共同完成任务。比如 Google Stitch在画布种生成UI。"
           },
           {
             "type": "image",
-            "src": "content_images/genui_zh2_5.png",
+            "src": "content_images/30d400ee_5.png",
             "caption": ""
           },
           {
             "type": "text",
-            "text": "Chatless"
-          },
-          {
-            "type": "text",
-            "text": "界面会在没有任何聊天窗口的情况下自动适配。用户几乎感觉不到“在和 AI 对话”，系统会根据用户的input直接输出新的GenUI更新界面。比如Copilot lab中根据用户的行为自动生成的地图和体验的游戏"
+            "text": "Chatless\n界面会在没有任何聊天窗口的情况下自动适配。用户几乎感觉不到“在和 AI 对话”，系统会根据用户的input直接输出新的GenUI更新界面。比如Copilot lab中根据用户的行为自动生成的地图和体验的游戏"
           },
           {
             "type": "image",
-            "src": "content_images/genui_zh2_6.png",
+            "src": "content_images/30d400ee_6.png",
             "caption": ""
           },
           {
@@ -733,49 +697,33 @@
           },
           {
             "type": "text",
-            "text": "表达自由度（Freedom of Expression）："
+            "text": "表达自由度（Freedom of Expression）：\n决定了系统在视觉和结构上可以让AI “生成到什么程度”。一般来说有3种："
           },
           {
             "type": "text",
-            "text": "决定了系统在视觉和结构上可以让AI “生成到什么程度”。一般来说有3种："
-          },
-          {
-            "type": "text",
-            "text": "1. 固定组件系统（Low Freedom）："
-          },
-          {
-            "type": "text",
-            "text": "AI 仅允许调用有限的系统预设组件（比如lists，widget，cards），AI 只能在固定卡片、列表或表单之间选择，不允许结构突破"
+            "text": "1. 固定组件系统（Low Freedom）：\nAI 仅允许调用有限的系统预设组件（比如lists，widget，cards），AI 只能在固定卡片、列表或表单之间选择，不允许结构突破"
           },
           {
             "type": "image",
-            "src": "content_images/genui_zh2_7.png",
+            "src": "content_images/30d400ee_7.png",
             "caption": ""
           },
           {
             "type": "text",
-            "text": "2. 扩展组件系统（Medium Freedom）："
-          },
-          {
-            "type": "text",
-            "text": "AI 还是调用有限的系统预设组件，但允许不同组件的拼装，组合，Grouping"
+            "text": "2. 扩展组件系统（Medium Freedom）：\nAI 还是调用有限的系统预设组件，但允许不同组件的拼装，组合，Grouping"
           },
           {
             "type": "image",
-            "src": "content_images/genui_zh2_8.png",
+            "src": "content_images/30d400ee_8.png",
             "caption": ""
           },
           {
             "type": "text",
-            "text": "3. 开放生成系统（High Freedom）："
-          },
-          {
-            "type": "text",
-            "text": "AI 可以生成完整的HTML 或free-form布局（比如用design skills让AI自由生成UI）"
+            "text": "3. 开放生成系统（High Freedom）：\nAI 可以生成完整的HTML 或free-form布局（比如用design skills让AI自由生成UI）"
           },
           {
             "type": "image",
-            "src": "content_images/genui_zh2_9.png",
+            "src": "content_images/30d400ee_9.png",
             "caption": ""
           },
           {
@@ -808,7 +756,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/genui_zh2_10.png",
+            "src": "content_images/30d400ee_10.png",
             "caption": ""
           },
           {
@@ -845,7 +793,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/genui_zh2_11.png",
+            "src": "content_images/30d400ee_11.png",
             "caption": ""
           },
           {
@@ -854,7 +802,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/genui_zh2_12.png",
+            "src": "content_images/30d400ee_12.png",
             "caption": ""
           },
           {
@@ -863,7 +811,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/genui_zh2_13.png",
+            "src": "content_images/30d400ee_13.png",
             "caption": ""
           },
           {
@@ -886,27 +834,11 @@
           },
           {
             "type": "text",
-            "text": "✅ Why GenUI matters — enough to discuss with colleagues tomorrow"
+            "text": "✅ Why GenUI matters — enough to discuss with colleagues tomorrow\n✅ GenUI forms and behaviors — what designers should focus on\n✅ Why Figma can no longer design GenUI, and my own workflow"
           },
           {
             "type": "text",
-            "text": "✅ GenUI forms and behaviors — what designers should focus on"
-          },
-          {
-            "type": "text",
-            "text": "✅ Why Figma can no longer design GenUI, and my own workflow"
-          },
-          {
-            "type": "text",
-            "text": "What you won't get:"
-          },
-          {
-            "type": "text",
-            "text": "❎ A job at OpenAI (but this might improve your chances)"
-          },
-          {
-            "type": "text",
-            "text": "❎ A cute kitten that calls your name 🐱(but you can vibe-code one yourself)"
+            "text": "What you won't get:\n❎ A job at OpenAI (but this might improve your chances)\n❎ A cute kitten that calls your name 🐱(but you can vibe-code one yourself)"
           },
           {
             "type": "text",
@@ -957,15 +889,7 @@
           },
           {
             "type": "text",
-            "text": "1. Responses have content WITH visual structure and emphasis"
-          },
-          {
-            "type": "text",
-            "text": "2. Interactive — higher engagement willingness"
-          },
-          {
-            "type": "text",
-            "text": "3. Users have stronger trust in both response and agent"
+            "text": "1. Responses have content WITH visual structure and emphasis\n2. Interactive — higher engagement willingness\n3. Users have stronger trust in both response and agent"
           },
           {
             "type": "subtitle",
@@ -994,11 +918,7 @@
           },
           {
             "type": "text",
-            "text": "Chat+"
-          },
-          {
-            "type": "text",
-            "text": "Conversation + product interface working together. Chat still exists, but as part of a larger workspace. Users have AI generate GenUI in an actionable canvas. E.g., Google Stitch generating UI in canvas."
+            "text": "Chat+\nConversation + product interface working together. Chat still exists, but as part of a larger workspace. Users have AI generate GenUI in an actionable canvas. E.g., Google Stitch generating UI in canvas."
           },
           {
             "type": "image",
@@ -1007,11 +927,7 @@
           },
           {
             "type": "text",
-            "text": "Chatless"
-          },
-          {
-            "type": "text",
-            "text": "The interface adapts automatically without any chat window. Users barely feel they're \"talking to AI\" — the system outputs new GenUI directly based on user input. E.g., Copilot Lab's auto-generated maps and games."
+            "text": "Chatless\nThe interface adapts automatically without any chat window. Users barely feel they're \"talking to AI\" — the system outputs new GenUI directly based on user input. E.g., Copilot Lab's auto-generated maps and games."
           },
           {
             "type": "image",
@@ -1028,19 +944,11 @@
           },
           {
             "type": "text",
-            "text": "Freedom of Expression:"
+            "text": "Freedom of Expression:\nDetermines how far the system allows AI to \"generate\" visually and structurally. Three levels:"
           },
           {
             "type": "text",
-            "text": "Determines how far the system allows AI to \"generate\" visually and structurally. Three levels:"
-          },
-          {
-            "type": "text",
-            "text": "1. Fixed Component System (Low Freedom):"
-          },
-          {
-            "type": "text",
-            "text": "AI can only call limited preset components (lists, widgets, cards). No structural breakthroughs allowed."
+            "text": "1. Fixed Component System (Low Freedom):\nAI can only call limited preset components (lists, widgets, cards). No structural breakthroughs allowed."
           },
           {
             "type": "image",
@@ -1049,11 +957,7 @@
           },
           {
             "type": "text",
-            "text": "2. Extended Component System (Medium Freedom):"
-          },
-          {
-            "type": "text",
-            "text": "AI still calls preset components but allows assembly, combination, and grouping."
+            "text": "2. Extended Component System (Medium Freedom):\nAI still calls preset components but allows assembly, combination, and grouping."
           },
           {
             "type": "image",
@@ -1062,11 +966,7 @@
           },
           {
             "type": "text",
-            "text": "3. Open Generation System (High Freedom):"
-          },
-          {
-            "type": "text",
-            "text": "AI can generate complete HTML or free-form layouts (e.g., using design skills for AI to freely generate UI)."
+            "text": "3. Open Generation System (High Freedom):\nAI can generate complete HTML or free-form layouts (e.g., using design skills for AI to freely generate UI)."
           },
           {
             "type": "image",
@@ -1199,15 +1099,15 @@
           },
           {
             "type": "text",
-            "text": "• 产品围绕AI能力为核心设计"
+            "text": "• 把AI能力从产品中拿走，这个产品就不成立了"
           },
           {
             "type": "text",
-            "text": "• 产品能力会随着AI模型能力提升而变得更强"
+            "text": "• 产品会随着AI模型能力提升而变得更强"
           },
           {
             "type": "text",
-            "text": "• 为Agent使用设计"
+            "text": "• 为Agent设计"
           },
           {
             "type": "text",
@@ -1215,71 +1115,75 @@
           },
           {
             "type": "text",
-            "text": "• AI行为从简单规则涌现，少写规则，多写原则"
+            "text": "• Dynamic：行为从简单规则涌现，而不是处处写死规则"
           },
           {
             "type": "text",
-            "text": "• 将产品拆分到最小单元，定义这些基本单元，剩下的一切都是它们的组合"
+            "text": "• Primitive：从最小单元组合出更大的无限可能"
           },
           {
             "type": "text",
-            "text": "• 了解模型能力的边界，在边界内通过harness达到更好的产品效果"
-          },
-          {
-            "type": "text",
-            "text": "• AI 会犯错，产品要优雅处理不确定性"
+            "text": "• Constraint: 了解模型能力的边界，在边界内选择最好的设计方案，提供最好的产品体验"
           },
           {
             "type": "image",
             "src": "content_images/358400ee_1.png",
             "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "我觉得做AI产品和钓鱼很像（对的我也喜欢钓鱼），来得太早或太晚都没有收获（模型能力没达到，或已被模型能力覆盖），而是要判断潮汐趋势，在对的timing下竿。"
+          },
+          {
+            "type": "text",
+            "text": "做AI产品，要提前判断模型能力的发展，让产品能在模型能力的边界处发光。"
           }
         ],
         "sections_en": [
           {
             "type": "text",
-            "text": "When I started designing this personal website, I wanted the website itself to be an AI-native product—one that reflects my own principles for AI-native product design."
+            "text": "When conceiving this personal website, I wanted the site itself to be an AI-native product, aligning with my design principles for AI-native products. I believe an AI-native product should follow these principles:"
           },
           {
             "type": "text",
-            "text": "I believe an AI-native product should follow these principles:"
+            "text": "• Remove AI capabilities from the product, and the product ceases to exist"
           },
           {
             "type": "text",
-            "text": "• The product is designed around AI capabilities as its core."
+            "text": "• The product gets stronger as AI model capabilities improve"
           },
           {
             "type": "text",
-            "text": "• The product becomes more powerful as AI models improve."
+            "text": "• Designing for Agents"
           },
           {
             "type": "text",
-            "text": "• The product is designed not only for humans, but also for agents."
+            "text": "In future iterations, I also want my AI product to be:"
           },
           {
             "type": "text",
-            "text": "In future iterations, I want this AI product to further embrace the following ideas:"
+            "text": "• Dynamic: Behaviors emerge from simple rules, rather than being hardcoded everywhere"
           },
           {
             "type": "text",
-            "text": "• AI behavior should emerge from simple principles rather than complex rules. Write fewer rules, define better principles."
+            "text": "• Primitive: Infinite possibilities composed from the smallest units"
           },
           {
             "type": "text",
-            "text": "• Break the product down into its smallest building blocks, clearly define those primitives, and let everything else emerge from their combinations."
-          },
-          {
-            "type": "text",
-            "text": "• Understand the boundaries of model capabilities, and use harnesses and system design to maximize product quality within those boundaries."
-          },
-          {
-            "type": "text",
-            "text": "• AI will make mistakes. Products should handle uncertainty gracefully rather than pretending certainty."
+            "text": "• Constraint: Understand the boundaries of model capabilities, choose the best design within those boundaries, and deliver the best product experience"
           },
           {
             "type": "image",
             "src": "content_images/358400ee_en_1.png",
             "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "I think building AI products is like fishing (yes, I also love fishing) — arriving too early or too late yields nothing (model capabilities haven't reached the threshold, or have already surpassed it). The key is to anticipate where the boundary will be"
+          },
+          {
+            "type": "text",
+            "text": "Building AI products requires anticipating the development of model capabilities, so the product can shine right at the frontier of what's possible."
           }
         ]
       }
@@ -1308,11 +1212,7 @@
           },
           {
             "type": "text",
-            "text": "时间：2025.9"
-          },
-          {
-            "type": "text",
-            "text": "这个项目探索了提升生成式 AI 在垂直领域能力的最佳实践，几个月后，大家开始叫它Skill"
+            "text": "时间：2025.9\n这个项目探索了提升生成式 AI 在垂直领域能力的最佳实践，几个月后，大家开始叫它Skill"
           },
           {
             "type": "text",
@@ -1338,11 +1238,7 @@
           },
           {
             "type": "text",
-            "text": "时间：2025.8"
-          },
-          {
-            "type": "text",
-            "text": "起因是团队里很多人各自做了自己的AI小游戏，于是我和另一个设计师一起做了这个platform。这不仅是一个展示平台，还能remix game：你可以通过自然语言的方式，调整和改造这些游戏，让它们符合你的期望、更加有创造力。"
+            "text": "时间：2025.8\n起因是团队里很多人各自做了自己的AI小游戏，于是我和另一个设计师一起做了这个platform。这不仅是一个展示平台，还能remix game：你可以通过自然语言的方式，调整和改造这些游戏，让它们符合你的期望、更加有创造力。"
           },
           {
             "type": "image",
@@ -1359,11 +1255,7 @@
           },
           {
             "type": "text",
-            "text": "时间：2025.7"
-          },
-          {
-            "type": "text",
-            "text": "在2C的Copilot里增加游戏功能。在探索了很多文字游戏形式，最终选出了一个适合小朋友玩的教育类互动游戏，让Copilot不只是问答工具，也能成为有趣的玩伴。"
+            "text": "时间：2025.7\n在2C的Copilot里增加游戏功能。在探索了很多文字游戏形式，最终选出了一个适合小朋友玩的教育类互动游戏，让Copilot不只是问答工具，也能成为有趣的玩伴。"
           },
           {
             "type": "image",
@@ -1380,11 +1272,7 @@
           },
           {
             "type": "text",
-            "text": "时间：2025.6"
-          },
-          {
-            "type": "text",
-            "text": "这是我的第二个vibe coding项目（第一个是写笑话的小工具），能帮我重新利用在浏览器收藏夹里躺了很久的页面，比如项目数据复盘、用户研究报告、有一点印象但是忘记在哪里的某个文件，这个插件统统能帮你找到和总结！"
+            "text": "时间：2025.6\n这是我的第二个vibe coding项目（第一个是写笑话的小工具），能帮我重新利用在浏览器收藏夹里躺了很久的页面，比如项目数据复盘、用户研究报告、有一点印象但是忘记在哪里的某个文件，这个插件统统能帮你找到和总结！"
           },
           {
             "type": "image",
@@ -1401,11 +1289,7 @@
           },
           {
             "type": "text",
-            "text": "时间：2026.1"
-          },
-          {
-            "type": "text",
-            "text": "创造了一个Generative UI的游乐场。可以在里面定义各种GenUI组件，再定义它们的组合方式（Guidelines），最后在Playground里让AI根据你给到的规则，把这些组件生成一个完整页面。"
+            "text": "时间：2026.1\n创造了一个Generative UI的游乐场。可以在里面定义各种GenUI组件，再定义它们的组合方式（Guidelines），最后在Playground里让AI根据你给到的规则，把这些组件生成一个完整页面。"
           },
           {
             "type": "image",
@@ -1422,11 +1306,7 @@
           },
           {
             "type": "text",
-            "text": "时间：2025.10"
-          },
-          {
-            "type": "text",
-            "text": "为设计团队在MAI年度大会vibe coding的交互式PPT，现场效果还是很震撼的！时间过得真快，现在人人都用html做PPT了～"
+            "text": "时间：2025.10\n为设计团队在MAI年度大会vibe coding的交互式PPT，现场效果还是很震撼的！时间过得真快，现在人人都用html做PPT了～"
           },
           {
             "type": "image",
@@ -1446,11 +1326,7 @@
           },
           {
             "type": "text",
-            "text": "Date: 2025.9"
-          },
-          {
-            "type": "text",
-            "text": "This project explored best practices for enhancing generative AI capabilities in vertical domains. A few months later, people started calling it Skills. I designed the interaction flow from scratch, built the front-end, and shipped it end-to-end."
+            "text": "Date: 2025.9\nThis project explored best practices for enhancing generative AI capabilities in vertical domains. A few months later, people started calling it Skills. I designed the interaction flow from scratch, built the front-end, and shipped it end-to-end."
           },
           {
             "type": "text",
@@ -1476,11 +1352,7 @@
           },
           {
             "type": "text",
-            "text": "Date: 2025.8"
-          },
-          {
-            "type": "text",
-            "text": "Many people on the team had individually built their own AI mini-games, so another designer and I created this platform together. It not only showcased everyone's creations but also became a playground for exploring AI game design patterns."
+            "text": "Date: 2025.8\nMany people on the team had individually built their own AI mini-games, so another designer and I created this platform together. It not only showcased everyone's creations but also became a playground for exploring AI game design patterns."
           },
           {
             "type": "image",
@@ -1497,11 +1369,7 @@
           },
           {
             "type": "text",
-            "text": "Date: 2025.7"
-          },
-          {
-            "type": "text",
-            "text": "Adding gaming features to consumer Copilot. After exploring many text-based game formats, we selected an educational interactive story game suitable for kids, and shipped it as a Copilot experience."
+            "text": "Date: 2025.7\nAdding gaming features to consumer Copilot. After exploring many text-based game formats, we selected an educational interactive story game suitable for kids, and shipped it as a Copilot experience."
           },
           {
             "type": "image",
@@ -1518,11 +1386,7 @@
           },
           {
             "type": "text",
-            "text": "Date: 2025.6"
-          },
-          {
-            "type": "text",
-            "text": "This was my second vibe coding project (the first was a joke-writing tool). It helps me rediscover and leverage bookmarks sitting idle in my browser — using AI to extract insights and connections across saved articles."
+            "text": "Date: 2025.6\nThis was my second vibe coding project (the first was a joke-writing tool). It helps me rediscover and leverage bookmarks sitting idle in my browser — using AI to extract insights and connections across saved articles."
           },
           {
             "type": "image",
@@ -1539,11 +1403,7 @@
           },
           {
             "type": "text",
-            "text": "Date: 2026.1"
-          },
-          {
-            "type": "text",
-            "text": "Created a Generative UI playground where you can define various GenUI components, define how they combine, and let AI dynamically compose interfaces based on user intent."
+            "text": "Date: 2026.1\nCreated a Generative UI playground where you can define various GenUI components, define how they combine, and let AI dynamically compose interfaces based on user intent."
           },
           {
             "type": "image",
@@ -1560,11 +1420,7 @@
           },
           {
             "type": "text",
-            "text": "Date: 2025.10"
-          },
-          {
-            "type": "text",
-            "text": "Vibe-coded an interactive presentation for the design team at the MAI annual kickoff. The live effect was quite stunning! Time flies — it's been almost a year since then."
+            "text": "Date: 2025.10\nVibe-coded an interactive presentation for the design team at the MAI annual kickoff. The live effect was quite stunning! Time flies — it's been almost a year since then."
           },
           {
             "type": "image",
@@ -1582,19 +1438,19 @@
   },
   {
     "id": "arduino-light-001",
-    "title": "Born Builder",
+    "title": "Arduino Light",
     "category": "hobby",
     "atom": "photo",
     "body": "An interactive light built with Arduino — merging hardware and creativity.",
     "cover_image": "Arduinolight.webp",
     "keywords": "arduino hardware building",
     "focus": {
-      "title": "Born Builder",
+      "title": "Arduino Light",
       "description": "An interactive light built with Arduino — merging hardware and creativity.",
       "link": "#",
       "linkText": "Read more",
       "article": {
-        "title": "Born Builder",
+        "title": "Arduino Light",
         "sections": [
           {
             "type": "text",
@@ -1695,10 +1551,8 @@
             "src": "https://www.youtube.com/embed/Gt6PV9eqL3g"
           }
         ]
-      },
-      "title_en": "Born Builder"
-    },
-    "title_en": "Born Builder"
+      }
+    }
   },
   {
     "id": "tearoff-agent-card",

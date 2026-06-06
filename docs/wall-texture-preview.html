@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Wall Texture Options</title>
+<style>
+body { margin: 0; font-family: system-ui; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; height: 100vh; }
+.panel { position: relative; display: flex; align-items: center; justify-content: center; }
+.panel::after { position: absolute; inset: 0; pointer-events: none; content: ''; }
+.label { position: absolute; bottom: 20px; left: 20px; background: rgba(0,0,0,0.6); color: #fff; padding: 8px 16px; border-radius: 4px; font-size: 14px; z-index: 10; }
+
+/* 1. Fine grain noise */
+.texture-1 { background-color: #FFFDFA; }
+.texture-1::after {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.035;
+}
+
+/* 2. Coarse plaster */
+.texture-2 { background-color: #FFFDFA; }
+.texture-2::after {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.4' numOctaves='5' seed='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.05;
+}
+
+/* 3. Concrete subtle */
+.texture-3 { background-color: #FFFDFA; }
+.texture-3::after {
+  background-image: 
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.55' numOctaves='3' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.04;
+}
+
+/* 4. Very fine sand paper */
+.texture-4 { background-color: #FFFDFA; }
+.texture-4::after {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.8' numOctaves='2' seed='10' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.03;
+}
+
+/* Fake polaroid for context */
+.polaroid {
+  width: 160px; height: 200px; background: #fff; box-shadow: 2px 3px 12px rgba(0,0,0,0.15);
+  border-radius: 2px; padding: 10px 10px 40px;
+}
+.polaroid-img { width: 100%; height: 120px; background: linear-gradient(135deg, #e8d5b7, #f0e2cc); border-radius: 1px; }
+</style>
+</head>
+<body>
+<div class="grid">
+  <div class="panel texture-1">
+    <div class="polaroid"><div class="polaroid-img"></div></div>
+    <span class="label">1. Fine Grain (推荐 — 微颗粒，最自然)</span>
+  </div>
+  <div class="panel texture-2">
+    <div class="polaroid"><div class="polaroid-img"></div></div>
+    <span class="label">2. Coarse Plaster (粗石膏，更有质感)</span>
+  </div>
+  <div class="panel texture-3">
+    <div class="polaroid"><div class="polaroid-img"></div></div>
+    <span class="label">3. Concrete (水泥质感，偏工业)</span>
+  </div>
+  <div class="panel texture-4">
+    <div class="polaroid"><div class="polaroid-img"></div></div>
+    <span class="label">4. Sandpaper (细砂纸，极细腻)</span>
+  </div>
+</div>
+</body>
+</html>
