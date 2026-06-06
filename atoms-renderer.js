@@ -284,6 +284,10 @@ export function getOrCreateVideo(videoSrc) {
   video.muted = true;
   video.playsInline = true;
   video.preload = 'auto';
+  // WeChat browser compatibility
+  video.setAttribute('webkit-playsinline', '');
+  video.setAttribute('x5-playsinline', '');
+  video.setAttribute('x5-video-player-type', 'h5');
   const entry = { video, texture: null, ready: false };
   video.addEventListener('canplay', () => {
     entry.texture = PIXI.Texture.from(video, { resourceOptions: { autoPlay: false } });
@@ -292,6 +296,23 @@ export function getOrCreateVideo(videoSrc) {
   _videoCache.set(videoSrc, entry);
   return entry;
 }
+
+// Unlock all cached videos on first user touch (needed for WeChat browser)
+let _videosUnlocked = false;
+function _unlockVideos() {
+  if (_videosUnlocked) return;
+  _videosUnlocked = true;
+  for (const entry of _videoCache.values()) {
+    entry.video.play().then(() => entry.video.pause()).catch(() => {});
+  }
+  document.removeEventListener('touchstart', _unlockVideos, true);
+  document.removeEventListener('click', _unlockVideos, true);
+}
+document.addEventListener('touchstart', _unlockVideos, true);
+document.addEventListener('click', _unlockVideos, true);
+// WeChat-specific: unlock after WeixinJSBridge is ready
+if (typeof WeixinJSBridge !== 'undefined') { _unlockVideos(); }
+else { document.addEventListener('WeixinJSBridgeReady', _unlockVideos, { once: true }); }
 
 export function sampleDominantColor(imgData) {
   const px = imgData.data.data;

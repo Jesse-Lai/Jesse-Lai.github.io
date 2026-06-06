@@ -107,8 +107,8 @@ import { WallArticle } from "./wall-article.js?v=151";
       en: { title: 'Microsoft', body: 'AI-native builder, shaping consumer and enterprise Copilot experiences with global teams.' }
     },
     'Alibaba': {
-      zh: { title: 'Alibaba', body: '在大语言模型兴起的早期，设计服务本地生活小商家的 AI 产品' },
-      en: { title: 'Alibaba', body: 'Building AI product to help local service users' }
+      zh: { title: 'Alibaba', body: '在大语言模型兴起的早期，设计帮助小商家做好\u201c吃\u201d的 AI 产品' },
+      en: { title: 'Alibaba', body: 'In the early days of LLMs, I designed AI products behind every better bite.' }
     },
     'Stand-up Comedian': {
       zh: { title: '脱口秀演员', body: '脱口秀是我一生的热爱。把生活的酸甜苦辣变成段子搬上舞台，已经成为我生活不可分割的一部分。' },
