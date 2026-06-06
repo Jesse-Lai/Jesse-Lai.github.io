@@ -120,10 +120,6 @@ import { WallArticle } from "./wall-article.js?v=151";
       zh: { title: 'Vibe Coding', body: 'Vibe Coding项目合集——用代码构建创意工具和交互体验。' },
       en: { title: 'Vibe Coding', body: 'A collection of vibe coding projects — building creative tools and interactive experiences with code.' }
     },
-    'Arduino Light': {
-      zh: { title: 'Arduino交互灯', body: '用Arduino打造的交互灯——硬件与创意的融合。' },
-      en: { title: 'Arduino Light', body: 'An interactive light built with Arduino — merging hardware and creativity.' }
-    },
     'GenUI 设计指南': {
       zh: { title: 'GenUI 设计指南', body: '在AI时代，我们的交互体验反而倒退了——从丰富的GUI退回到纯文字聊天。GenUI探索AI生成的界面，让信息回归应有的形态。' },
       en: { title: 'GenUI', body: 'In the AI era, our interaction experiences have regressed — from rich GUIs back to text-based chat. GenUI explores AI-generated interfaces that match the shape of information.' }
@@ -150,7 +146,7 @@ import { WallArticle } from "./wall-article.js?v=151";
     'Stand-up Comedian':    { caption: 'Stand-up Comedian', date: "'26 01 15" },
     'Drawing':              { caption: 'Drawing', date: "'25 08 10" },
     'Vibe Coding':          { caption: 'Vibe Coding', date: "'26 05 01" },
-    'Arduino Light':        { caption: 'Arduino Light', date: "'26 04 15" },
+    'Born Builder':         { caption: 'Born Builder', date: "'16 09 20" },
   };
 
   // Stamp image overrides

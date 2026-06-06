@@ -599,7 +599,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/genui_zh2_1.png",
+            "src": "content_images/30d400ee_1.png",
             "caption": ""
           },
           {
@@ -616,7 +616,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/genui_zh2_2.png",
+            "src": "content_images/30d400ee_2.png",
             "caption": ""
           },
           {
@@ -633,7 +633,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/genui_zh2_3.png",
+            "src": "content_images/30d400ee_3.png",
             "caption": ""
           },
           {
@@ -666,7 +666,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/genui_zh2_4.png",
+            "src": "content_images/30d400ee_4.png",
             "caption": ""
           },
           {
@@ -675,7 +675,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/genui_zh2_5.png",
+            "src": "content_images/30d400ee_5.png",
             "caption": ""
           },
           {
@@ -684,7 +684,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/genui_zh2_6.png",
+            "src": "content_images/30d400ee_6.png",
             "caption": ""
           },
           {
@@ -705,7 +705,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/genui_zh2_7.png",
+            "src": "content_images/30d400ee_7.png",
             "caption": ""
           },
           {
@@ -714,7 +714,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/genui_zh2_8.png",
+            "src": "content_images/30d400ee_8.png",
             "caption": ""
           },
           {
@@ -723,7 +723,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/genui_zh2_9.png",
+            "src": "content_images/30d400ee_9.png",
             "caption": ""
           },
           {
@@ -756,7 +756,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/genui_zh2_10.png",
+            "src": "content_images/30d400ee_10.png",
             "caption": ""
           },
           {
@@ -793,7 +793,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/genui_zh2_11.png",
+            "src": "content_images/30d400ee_11.png",
             "caption": ""
           },
           {
@@ -802,7 +802,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/genui_zh2_12.png",
+            "src": "content_images/30d400ee_12.png",
             "caption": ""
           },
           {
@@ -811,7 +811,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/genui_zh2_13.png",
+            "src": "content_images/30d400ee_13.png",
             "caption": ""
           },
           {
@@ -1099,15 +1099,15 @@
           },
           {
             "type": "text",
-            "text": "• 产品围绕AI能力为核心设计"
+            "text": "• 把AI能力从产品中拿走，这个产品就不成立了"
           },
           {
             "type": "text",
-            "text": "• 产品能力会随着AI模型能力提升而变得更强"
+            "text": "• 产品会随着AI模型能力提升而变得更强"
           },
           {
             "type": "text",
-            "text": "• 为Agent使用设计"
+            "text": "• 为Agent设计"
           },
           {
             "type": "text",
@@ -1115,71 +1115,75 @@
           },
           {
             "type": "text",
-            "text": "• AI行为从简单规则涌现，少写规则，多写原则"
+            "text": "• Dynamic：行为从简单规则涌现，而不是处处写死规则"
           },
           {
             "type": "text",
-            "text": "• 将产品拆分到最小单元，定义这些基本单元，剩下的一切都是它们的组合"
+            "text": "• Primitive：从最小单元组合出更大的无限可能"
           },
           {
             "type": "text",
-            "text": "• 了解模型能力的边界，在边界内通过harness达到更好的产品效果"
-          },
-          {
-            "type": "text",
-            "text": "• AI 会犯错，产品要优雅处理不确定性"
+            "text": "• Constraint: 了解模型能力的边界，在边界内选择最好的设计方案，提供最好的产品体验"
           },
           {
             "type": "image",
             "src": "content_images/358400ee_1.png",
             "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "我觉得做AI产品和钓鱼很像（对的我也喜欢钓鱼），来得太早或太晚都没有收获（模型能力没达到，或已被模型能力覆盖），而是要判断潮汐趋势，在对的timing下竿。"
+          },
+          {
+            "type": "text",
+            "text": "做AI产品，要提前判断模型能力的发展，让产品能在模型能力的边界处发光。"
           }
         ],
         "sections_en": [
           {
             "type": "text",
-            "text": "When I started designing this personal website, I wanted the website itself to be an AI-native product—one that reflects my own principles for AI-native product design."
+            "text": "When conceiving this personal website, I wanted the site itself to be an AI-native product, aligning with my design principles for AI-native products. I believe an AI-native product should follow these principles:"
           },
           {
             "type": "text",
-            "text": "I believe an AI-native product should follow these principles:"
+            "text": "• Remove AI capabilities from the product, and the product ceases to exist"
           },
           {
             "type": "text",
-            "text": "• The product is designed around AI capabilities as its core."
+            "text": "• The product gets stronger as AI model capabilities improve"
           },
           {
             "type": "text",
-            "text": "• The product becomes more powerful as AI models improve."
+            "text": "• Designing for Agents"
           },
           {
             "type": "text",
-            "text": "• The product is designed not only for humans, but also for agents."
+            "text": "In future iterations, I also want my AI product to be:"
           },
           {
             "type": "text",
-            "text": "In future iterations, I want this AI product to further embrace the following ideas:"
+            "text": "• Dynamic: Behaviors emerge from simple rules, rather than being hardcoded everywhere"
           },
           {
             "type": "text",
-            "text": "• AI behavior should emerge from simple principles rather than complex rules. Write fewer rules, define better principles."
+            "text": "• Primitive: Infinite possibilities composed from the smallest units"
           },
           {
             "type": "text",
-            "text": "• Break the product down into its smallest building blocks, clearly define those primitives, and let everything else emerge from their combinations."
-          },
-          {
-            "type": "text",
-            "text": "• Understand the boundaries of model capabilities, and use harnesses and system design to maximize product quality within those boundaries."
-          },
-          {
-            "type": "text",
-            "text": "• AI will make mistakes. Products should handle uncertainty gracefully rather than pretending certainty."
+            "text": "• Constraint: Understand the boundaries of model capabilities, choose the best design within those boundaries, and deliver the best product experience"
           },
           {
             "type": "image",
             "src": "content_images/358400ee_en_1.png",
             "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "I think building AI products is like fishing (yes, I also love fishing) — arriving too early or too late yields nothing (model capabilities haven't reached the threshold, or have already surpassed it). The key is to anticipate where the boundary will be"
+          },
+          {
+            "type": "text",
+            "text": "Building AI products requires anticipating the development of model capabilities, so the product can shine right at the frontier of what's possible."
           }
         ]
       }
@@ -1434,19 +1438,19 @@
   },
   {
     "id": "arduino-light-001",
-    "title": "Born Builder",
+    "title": "Arduino Light",
     "category": "hobby",
     "atom": "photo",
     "body": "An interactive light built with Arduino — merging hardware and creativity.",
     "cover_image": "Arduinolight.webp",
     "keywords": "arduino hardware building",
     "focus": {
-      "title": "Born Builder",
+      "title": "Arduino Light",
       "description": "An interactive light built with Arduino — merging hardware and creativity.",
       "link": "#",
       "linkText": "Read more",
       "article": {
-        "title": "Born Builder",
+        "title": "Arduino Light",
         "sections": [
           {
             "type": "text",
@@ -1547,10 +1551,8 @@
             "src": "https://www.youtube.com/embed/Gt6PV9eqL3g"
           }
         ]
-      },
-      "title_en": "Born Builder"
-    },
-    "title_en": "Born Builder"
+      }
+    }
   },
   {
     "id": "tearoff-agent-card",
