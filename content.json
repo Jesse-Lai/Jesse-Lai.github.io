@@ -1308,7 +1308,11 @@
           },
           {
             "type": "text",
-            "text": "时间：2025.9\n这个项目探索了提升生成式 AI 在垂直领域能力的最佳实践，几个月后，大家开始叫它Skill"
+            "text": "时间：2025.9"
+          },
+          {
+            "type": "text",
+            "text": "这个项目探索了提升生成式 AI 在垂直领域能力的最佳实践，几个月后，大家开始叫它Skill"
           },
           {
             "type": "text",
@@ -1334,7 +1338,11 @@
           },
           {
             "type": "text",
-            "text": "时间：2025.8\n起因是团队里很多人各自做了自己的AI小游戏，于是我和另一个设计师一起做了这个platform。这不仅是一个展示平台，还能remix game：你可以通过自然语言的方式，调整和改造这些游戏，让它们符合你的期望、更加有创造力。"
+            "text": "时间：2025.8"
+          },
+          {
+            "type": "text",
+            "text": "起因是团队里很多人各自做了自己的AI小游戏，于是我和另一个设计师一起做了这个platform。这不仅是一个展示平台，还能remix game：你可以通过自然语言的方式，调整和改造这些游戏，让它们符合你的期望、更加有创造力。"
           },
           {
             "type": "image",
@@ -1351,7 +1359,11 @@
           },
           {
             "type": "text",
-            "text": "时间：2025.7\n在2C的Copilot里增加游戏功能。在探索了很多文字游戏形式，最终选出了一个适合小朋友玩的教育类互动游戏，让Copilot不只是问答工具，也能成为有趣的玩伴。"
+            "text": "时间：2025.7"
+          },
+          {
+            "type": "text",
+            "text": "在2C的Copilot里增加游戏功能。在探索了很多文字游戏形式，最终选出了一个适合小朋友玩的教育类互动游戏，让Copilot不只是问答工具，也能成为有趣的玩伴。"
           },
           {
             "type": "image",
@@ -1368,7 +1380,11 @@
           },
           {
             "type": "text",
-            "text": "时间：2025.6\n这是我的第二个vibe coding项目（第一个是写笑话的小工具），能帮我重新利用在浏览器收藏夹里躺了很久的页面，比如项目数据复盘、用户研究报告、有一点印象但是忘记在哪里的某个文件，这个插件统统能帮你找到和总结！"
+            "text": "时间：2025.6"
+          },
+          {
+            "type": "text",
+            "text": "这是我的第二个vibe coding项目（第一个是写笑话的小工具），能帮我重新利用在浏览器收藏夹里躺了很久的页面，比如项目数据复盘、用户研究报告、有一点印象但是忘记在哪里的某个文件，这个插件统统能帮你找到和总结！"
           },
           {
             "type": "image",
@@ -1385,7 +1401,11 @@
           },
           {
             "type": "text",
-            "text": "时间：2026.1\n创造了一个Generative UI的游乐场。可以在里面定义各种GenUI组件，再定义它们的组合方式（Guidelines），最后在Playground里让AI根据你给到的规则，把这些组件生成一个完整页面。"
+            "text": "时间：2026.1"
+          },
+          {
+            "type": "text",
+            "text": "创造了一个Generative UI的游乐场。可以在里面定义各种GenUI组件，再定义它们的组合方式（Guidelines），最后在Playground里让AI根据你给到的规则，把这些组件生成一个完整页面。"
           },
           {
             "type": "image",
@@ -1402,7 +1422,11 @@
           },
           {
             "type": "text",
-            "text": "时间：2025.10\n为设计团队在MAI年度大会vibe coding的交互式PPT，现场效果还是很震撼的！时间过得真快，现在人人都用html做PPT了～"
+            "text": "时间：2025.10"
+          },
+          {
+            "type": "text",
+            "text": "为设计团队在MAI年度大会vibe coding的交互式PPT，现场效果还是很震撼的！时间过得真快，现在人人都用html做PPT了～"
           },
           {
             "type": "image",
@@ -1422,7 +1446,11 @@
           },
           {
             "type": "text",
-            "text": "Date: 2025.9\nThis project explored best practices for enhancing generative AI capabilities in vertical domains. A few months later, people started calling it Skills. I designed the interaction flow from scratch, built the front-end, and shipped it end-to-end."
+            "text": "Date: 2025.9"
+          },
+          {
+            "type": "text",
+            "text": "This project explored best practices for enhancing generative AI capabilities in vertical domains. A few months later, people started calling it Skills. I designed the interaction flow from scratch, built the front-end, and shipped it end-to-end."
           },
           {
             "type": "text",
@@ -1448,7 +1476,11 @@
           },
           {
             "type": "text",
-            "text": "Date: 2025.8\nMany people on the team had individually built their own AI mini-games, so another designer and I created this platform together. It not only showcased everyone's creations but also became a playground for exploring AI game design patterns."
+            "text": "Date: 2025.8"
+          },
+          {
+            "type": "text",
+            "text": "Many people on the team had individually built their own AI mini-games, so another designer and I created this platform together. It not only showcased everyone's creations but also became a playground for exploring AI game design patterns."
           },
           {
             "type": "image",
@@ -1465,7 +1497,11 @@
           },
           {
             "type": "text",
-            "text": "Date: 2025.7\nAdding gaming features to consumer Copilot. After exploring many text-based game formats, we selected an educational interactive story game suitable for kids, and shipped it as a Copilot experience."
+            "text": "Date: 2025.7"
+          },
+          {
+            "type": "text",
+            "text": "Adding gaming features to consumer Copilot. After exploring many text-based game formats, we selected an educational interactive story game suitable for kids, and shipped it as a Copilot experience."
           },
           {
             "type": "image",
@@ -1482,7 +1518,11 @@
           },
           {
             "type": "text",
-            "text": "Date: 2025.6\nThis was my second vibe coding project (the first was a joke-writing tool). It helps me rediscover and leverage bookmarks sitting idle in my browser — using AI to extract insights and connections across saved articles."
+            "text": "Date: 2025.6"
+          },
+          {
+            "type": "text",
+            "text": "This was my second vibe coding project (the first was a joke-writing tool). It helps me rediscover and leverage bookmarks sitting idle in my browser — using AI to extract insights and connections across saved articles."
           },
           {
             "type": "image",
@@ -1499,7 +1539,11 @@
           },
           {
             "type": "text",
-            "text": "Date: 2026.1\nCreated a Generative UI playground where you can define various GenUI components, define how they combine, and let AI dynamically compose interfaces based on user intent."
+            "text": "Date: 2026.1"
+          },
+          {
+            "type": "text",
+            "text": "Created a Generative UI playground where you can define various GenUI components, define how they combine, and let AI dynamically compose interfaces based on user intent."
           },
           {
             "type": "image",
@@ -1516,7 +1560,11 @@
           },
           {
             "type": "text",
-            "text": "Date: 2025.10\nVibe-coded an interactive presentation for the design team at the MAI annual kickoff. The live effect was quite stunning! Time flies — it's been almost a year since then."
+            "text": "Date: 2025.10"
+          },
+          {
+            "type": "text",
+            "text": "Vibe-coded an interactive presentation for the design team at the MAI annual kickoff. The live effect was quite stunning! Time flies — it's been almost a year since then."
           },
           {
             "type": "image",
