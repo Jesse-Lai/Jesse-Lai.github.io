@@ -824,10 +824,13 @@ import { WallArticle } from "./wall-article.js?v=151";
 
 
     // Block native scroll completely — JS controls position
-    // But allow scrolling inside article overlay
+    // But allow scrolling inside focus overlay (article mode) or wall-article
+    const _isOverlayOpen = () =>
+      document.body.classList.contains('focus-active') ||
+      document.getElementById('wall-article')?.classList.contains('visible');
+
     document.addEventListener('touchmove', (e) => {
-      const articleEl = document.getElementById('wall-article');
-      if (articleEl && articleEl.classList.contains('visible')) return;
+      if (_isOverlayOpen()) return;
       e.preventDefault();
     }, { passive: false });
 
@@ -837,6 +840,7 @@ import { WallArticle } from "./wall-article.js?v=151";
     }, { passive: true });
 
     document.addEventListener('touchend', (e) => {
+      if (_isOverlayOpen()) return;
       const dy = touchStartY - e.changedTouches[0].clientY;
       const threshold = 30;
       if (Math.abs(dy) < threshold) return;
