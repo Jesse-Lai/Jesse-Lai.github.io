@@ -1,15 +1,14 @@
 [
   {
     "id": "116400ee-0cf5-8029-ba88-e9288932ff8d",
-    "title": "Hello I'm Jesse Lai",
+    "title": "Hello I’m Jesse Lai",
     "category": "who_i_am",
     "atom": "photo",
     "body": "嗨👋 我是微软的一个 AI Builder，一边设计 AI Native 产品，一边把我的设计在生产环境coding出来，直接交付产品的线上体验。 过去5年我先后在阿里巴巴和微软工作，并且在生成式AI的早期，就开始为 ToC 和 ToB 用户设计各种 AI Native产品。",
     "cover_image": "photo_portrait.webp",
     "focus": {
       "title": "Hello I'm Jesse Lai",
-      "description": "嗨👋 我喜欢做各种好玩的东西！",
-      "description_en": "Hi 👋 I love making all kinds of fun things!",
+      "description": "I’m a product designer at Microsoft AI, exploring how people will naturally interact with AI in the future. I have experience designing AI products fo",
       "link": "#",
       "linkText": "Read more",
       "article": {
@@ -175,8 +174,7 @@
     "keywords": "microsoft copilot ai design",
     "focus": {
       "title": "Microsoft",
-      "description": "在微软，我做了各种Copilot，等等… 它们好像都长一个样！",
-      "description_en": "At Microsoft, I worked on various Copilots and so on... they all seem to look the same!",
+      "description": "Microsoft Copilot",
       "link": "#",
       "linkText": "Read more",
       "article": {
@@ -188,7 +186,7 @@
           },
           {
             "type": "text",
-            "text": "作为产品设计师，与global团队合作，一起设计了CopilotC/B两端的产品体验设计，经验主要集中于AI chat 产品中的 Generative UI 体验。"
+            "text": "我作为微软Copilot产品设计师，有幸与global团队合作，参与了CopilotC/B两端的产品体验设计，经验主要集中于AI chat 产品中的 Generative UI 体验。"
           },
           {
             "type": "subtitle",
@@ -196,7 +194,7 @@
           },
           {
             "type": "text",
-            "text": "设计 Copilot 消费者端的日常对话体验，通过 Generative UI 丰富用户获得的回答，用户可以与回答内容进行进一步交互，获取更深度和个性化的内容，提升用户对产品的信任感"
+            "text": "• 设计 Copilot consumer 的 answer card 和 consumption page，用户会在对话中触发这些体验，进行进一步交互"
           },
           {
             "type": "subtitle",
@@ -204,7 +202,7 @@
           },
           {
             "type": "text",
-            "text": "设计和开发 To B copilot 的办公体验，不仅涉及对话场景，还需要串联微软生态内的不同应用的AI体验"
+            "text": "• 设计和开发 To B copilot 中的 GenUX 组件"
           },
           {
             "type": "subtitle",
@@ -212,7 +210,7 @@
           },
           {
             "type": "text",
-            "text": "参与微软内容产品的设计，为微软生态内如 Edge, Bing, Copilot 等产品提供内容服务"
+            "text": "• 参与微软内容产品的设计，为微软生态内如 Edge, Bing, Copilot 等产品提供内容服务"
           }
         ],
         "sections_en": [
@@ -222,7 +220,7 @@
           },
           {
             "type": "text",
-            "text": "As a product designer, I collaborated with our global team to design Copilot experiences for both consumer and enterprise, with expertise focused on Generative UI within AI chat products."
+            "text": "As a product designer on Microsoft Copilot, I've had the privilege of collaborating with our global team on both consumer and enterprise Copilot experiences. My expertise focuses on Generative UX and Agent experience design within AI chat products."
           },
           {
             "type": "subtitle",
@@ -230,7 +228,7 @@
           },
           {
             "type": "text",
-            "text": "Designing everyday conversational experiences for Copilot consumer, enriching user responses through Generative UI. Users can interact further with the response content, accessing deeper and more personalized information, building trust in the product."
+            "text": "• Designed Copilot consumer answer cards and consumption pages — users trigger these experiences during conversations for further interaction"
           },
           {
             "type": "subtitle",
@@ -238,7 +236,7 @@
           },
           {
             "type": "text",
-            "text": "Designing and developing productivity experiences for enterprise Copilot, spanning beyond chat scenarios to connect AI experiences across different applications within the Microsoft ecosystem."
+            "text": "• Designed and developed GenUX components in enterprise Copilot"
           },
           {
             "type": "subtitle",
@@ -246,7 +244,7 @@
           },
           {
             "type": "text",
-            "text": "Contributing to Microsoft's content product design, providing content services for products across the Microsoft ecosystem including Edge, Bing, and Copilot."
+            "text": "• Contributing to Microsoft's content product design, providing content services for products across the Microsoft ecosystem including Edge, Bing, and Copilot"
           }
         ]
       }
@@ -263,8 +261,7 @@
     "cover_image": "alibaba.webp",
     "focus": {
       "title": "Alibaba",
-      "description": "在阿里，我除了送外卖，还观察骑手怎么送外卖…",
-      "description_en": "At Alibaba, besides delivering food, I also observe how couriers deliver food…",
+      "description": "<a href=\"https://www.notion.so/116400ee0cf581569ca8fbc4ded84bda\">Untitled</a>",
       "link": "#",
       "linkText": "Read more",
       "article": {
@@ -336,8 +333,7 @@
     "cover_image": "content_images/146400ee_3.webp",
     "focus": {
       "title": "Stand-up Comedian",
-      "description": "脱口秀和设计有很多共通之处：都需要敏锐的观察力，都需要不断迭代打磨。",
-      "description_en": "Stand-up comedy and design share a lot in common: both demand keen observation, and both require constant iteration and refinement.",
+      "description": "Stand-up comedy is a lifelong passion of mine. The process of turning life's highs and lows into jokes and performing them on stage has become an inte",
       "link": "#",
       "linkText": "Read more",
       "article": {
@@ -471,8 +467,7 @@
     "cover_image": "content_images/360400ee_1.webp",
     "focus": {
       "title": "Drawing",
-      "description": "画画让我进入心流，经常一不小心就发现已经天亮了。这些古法绘画作品，绝不含AI。",
-      "description_en": "Drawing puts me in a flow state — I'd often look up and realize it was already morning. These artworks are 100% hand-made, zero AI.",
+      "description": "Coming soon",
       "link": "#",
       "linkText": "Read more",
       "article": {
@@ -576,11 +571,11 @@
     "cover_image": "content_images/30d400ee_1.png",
     "focus": {
       "title": "GenUI 设计指南",
-      "description": "为什么Figma不再能设计GenUI？这篇聊聊生成式UI的形态、行为，以及我自己的工作流。",
+      "description": "在微软工作一年后，我决定重新开始写写AI native designer的转型过程，和AI design workflow的变化，希望能链接更多感兴趣的人。 这次聊的话题是因为前段时间参与了一些Generative UI的项目，因此分享一些总结和反思。看完本文你能获得：",
       "link": "#",
       "linkText": "Read more",
       "article": {
-        "title": "GenUI 设计指南",
+        "title": "GenUI",
         "sections": [
           {
             "type": "text",
@@ -604,7 +599,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/30d400ee_1.png",
+            "src": "content_images/genui_zh2_1.png",
             "caption": ""
           },
           {
@@ -621,7 +616,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/30d400ee_2.png",
+            "src": "content_images/genui_zh2_2.png",
             "caption": ""
           },
           {
@@ -638,7 +633,7 @@
           },
           {
             "type": "image",
-            "src": "GenUI是由AI实时动态生成的用户界面.gif",
+            "src": "content_images/genui_zh2_3.png",
             "caption": ""
           },
           {
@@ -671,7 +666,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/30d400ee_4.png",
+            "src": "content_images/genui_zh2_4.png",
             "caption": ""
           },
           {
@@ -680,7 +675,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/30d400ee_5.png",
+            "src": "content_images/genui_zh2_5.png",
             "caption": ""
           },
           {
@@ -689,7 +684,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/30d400ee_6.png",
+            "src": "content_images/genui_zh2_6.png",
             "caption": ""
           },
           {
@@ -710,7 +705,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/30d400ee_7.png",
+            "src": "content_images/genui_zh2_7.png",
             "caption": ""
           },
           {
@@ -719,7 +714,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/30d400ee_8.png",
+            "src": "content_images/genui_zh2_8.png",
             "caption": ""
           },
           {
@@ -728,7 +723,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/30d400ee_9.png",
+            "src": "content_images/genui_zh2_9.png",
             "caption": ""
           },
           {
@@ -761,7 +756,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/30d400ee_10.png",
+            "src": "content_images/genui_zh2_10.png",
             "caption": ""
           },
           {
@@ -798,7 +793,7 @@
           },
           {
             "type": "image",
-            "src": "日本的旅游计划.gif",
+            "src": "content_images/genui_zh2_11.png",
             "caption": ""
           },
           {
@@ -807,7 +802,7 @@
           },
           {
             "type": "image",
-            "src": "GenUI内容结构.gif",
+            "src": "content_images/genui_zh2_12.png",
             "caption": ""
           },
           {
@@ -816,7 +811,7 @@
           },
           {
             "type": "image",
-            "src": "可交互的申请流程.gif",
+            "src": "content_images/genui_zh2_13.png",
             "caption": ""
           },
           {
@@ -885,7 +880,7 @@
           },
           {
             "type": "image",
-            "src": "GenUI是由AI实时动态生成的用户界面.gif",
+            "src": "content_images/30d400ee_en_3.png",
             "caption": ""
           },
           {
@@ -1045,7 +1040,7 @@
           },
           {
             "type": "image",
-            "src": "日本的旅游计划.gif",
+            "src": "content_images/30d400ee_en_11.png",
             "caption": ""
           },
           {
@@ -1054,7 +1049,7 @@
           },
           {
             "type": "image",
-            "src": "GenUI内容结构.gif",
+            "src": "content_images/30d400ee_en_12.png",
             "caption": ""
           },
           {
@@ -1063,7 +1058,7 @@
           },
           {
             "type": "image",
-            "src": "可交互的申请流程.gif",
+            "src": "content_images/30d400ee_en_13.png",
             "caption": ""
           },
           {
@@ -1076,8 +1071,7 @@
           }
         ]
       },
-      "title_en": "Designing for GenUI",
-      "description_en": "Why can't Figma design GenUI anymore? This article explores the forms and behaviors of generative UI, plus my own workflow."
+      "title_en": "Designing for GenUI"
     },
     "keywords": "AI Native ● Generative UI ● Interaction Paradigm ● 2026",
     "title_en": "Designing for GenUI",
@@ -1093,7 +1087,7 @@
     "cover_image": "content_images/358400ee_cover.webp",
     "focus": {
       "title": "AI产品设计原则",
-      "description": "做AI产品就像钓鱼——来太早或太晚都没有收获，要在模型能力的边界处让产品发光。",
+      "description": "📌 状态：积累中 | 素材越多文章越充实，Jesse觉得可以发了就进入定稿 • Jakob Nielsen — Intent by Discovery: Designing the AI User Experience (2026-03-26) 链接",
       "link": "#",
       "linkText": "Read more",
       "article": {
@@ -1105,15 +1099,15 @@
           },
           {
             "type": "text",
-            "text": "• 把AI能力从产品中拿走，这个产品就不成立了"
+            "text": "• 产品围绕AI能力为核心设计"
           },
           {
             "type": "text",
-            "text": "• 产品会随着AI模型能力提升而变得更强"
+            "text": "• 产品能力会随着AI模型能力提升而变得更强"
           },
           {
             "type": "text",
-            "text": "• 为Agent设计"
+            "text": "• 为Agent使用设计"
           },
           {
             "type": "text",
@@ -1121,79 +1115,74 @@
           },
           {
             "type": "text",
-            "text": "• Dynamic：行为从简单规则涌现，而不是处处写死规则"
+            "text": "• AI行为从简单规则涌现，少写规则，多写原则"
           },
           {
             "type": "text",
-            "text": "• Primitive：从最小单元组合出更大的无限可能"
+            "text": "• 将产品拆分到最小单元，定义这些基本单元，剩下的一切都是它们的组合"
           },
           {
             "type": "text",
-            "text": "• Constraint: 了解模型能力的边界，在边界内选择最好的设计方案，提供最好的产品体验"
+            "text": "• 了解模型能力的边界，在边界内通过harness达到更好的产品效果"
+          },
+          {
+            "type": "text",
+            "text": "• AI 会犯错，产品要优雅处理不确定性"
           },
           {
             "type": "image",
             "src": "content_images/358400ee_1.png",
             "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "我觉得做AI产品和钓鱼很像（对的我也喜欢钓鱼），来得太早或太晚都没有收获（模型能力没达到，或已被模型能力覆盖），而是要判断潮汐趋势，在对的timing下竿。"
-          },
-          {
-            "type": "text",
-            "text": "做AI产品，要提前判断模型能力的发展，让产品能在模型能力的边界处发光。"
           }
         ],
         "sections_en": [
           {
             "type": "text",
-            "text": "When conceiving this personal website, I wanted the site itself to be an AI-native product, aligning with my design principles for AI-native products. I believe an AI-native product should follow these principles:"
+            "text": "When I started designing this personal website, I wanted the website itself to be an AI-native product—one that reflects my own principles for AI-native product design."
           },
           {
             "type": "text",
-            "text": "• Remove AI capabilities from the product, and the product ceases to exist"
+            "text": "I believe an AI-native product should follow these principles:"
           },
           {
             "type": "text",
-            "text": "• The product gets stronger as AI model capabilities improve"
+            "text": "• The product is designed around AI capabilities as its core."
           },
           {
             "type": "text",
-            "text": "• Designing for Agents"
+            "text": "• The product becomes more powerful as AI models improve."
           },
           {
             "type": "text",
-            "text": "In future iterations, I also want my AI product to be:"
+            "text": "• The product is designed not only for humans, but also for agents."
           },
           {
             "type": "text",
-            "text": "• Dynamic: Behaviors emerge from simple rules, rather than being hardcoded everywhere"
+            "text": "In future iterations, I want this AI product to further embrace the following ideas:"
           },
           {
             "type": "text",
-            "text": "• Primitive: Infinite possibilities composed from the smallest units"
+            "text": "• AI behavior should emerge from simple principles rather than complex rules. Write fewer rules, define better principles."
           },
           {
             "type": "text",
-            "text": "• Constraint: Understand the boundaries of model capabilities, choose the best design within those boundaries, and deliver the best product experience"
+            "text": "• Break the product down into its smallest building blocks, clearly define those primitives, and let everything else emerge from their combinations."
+          },
+          {
+            "type": "text",
+            "text": "• Understand the boundaries of model capabilities, and use harnesses and system design to maximize product quality within those boundaries."
+          },
+          {
+            "type": "text",
+            "text": "• AI will make mistakes. Products should handle uncertainty gracefully rather than pretending certainty."
           },
           {
             "type": "image",
             "src": "content_images/358400ee_en_1.png",
             "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "I think building AI products is like fishing (yes, I also love fishing) — arriving too early or too late yields nothing (model capabilities haven't reached the threshold, or have already surpassed it). The key is to anticipate where the boundary will be"
-          },
-          {
-            "type": "text",
-            "text": "Building AI products requires anticipating the development of model capabilities, so the product can shine right at the frontier of what's possible."
           }
         ]
-      },
-      "description_en": "Building AI products is like fishing — timing is everything. The product should shine right at the frontier of what models can do."
+      }
     },
     "keywords": "Design Principles ● Intent-based UI ● Jakob Nielsen ● 2026"
   },
@@ -1207,7 +1196,7 @@
     "keywords": "vibe coding creative",
     "focus": {
       "title": "Vibe Coding",
-      "description": "Vibe coding一年来，感觉找回了9岁那个下午，自己做了艘电动玩具船，在水上跑起来的兴奋感",
+      "description": "A collection of vibe coding projects — building creative tools and interactive experiences with code.",
       "link": "#",
       "linkText": "Read more",
       "article": {
@@ -1440,8 +1429,7 @@
             "caption": ""
           }
         ]
-      },
-      "description_en": "After a year of vibe coding, it feels like I've rediscovered that afternoon when I was nine, the excitement of building an electric toy boat and watching it run across the water."
+      }
     }
   },
   {
@@ -1453,12 +1441,12 @@
     "cover_image": "Arduinolight.webp",
     "keywords": "arduino hardware building",
     "focus": {
-      "title": "Born Builder",
-      "description": "快10年前的课程作业，但它提醒我——我是一个builder，把东西做出来就让我兴奋。",
+      "title": "Arduino Light",
+      "description": "An interactive light built with Arduino — merging hardware and creativity.",
       "link": "#",
       "linkText": "Read more",
       "article": {
-        "title": "Born Builder",
+        "title": "Arduino Light",
         "sections": [
           {
             "type": "text",
@@ -1559,9 +1547,7 @@
             "src": "https://www.youtube.com/embed/Gt6PV9eqL3g"
           }
         ]
-      },
-      "description_en": "A school project from nearly 10 years ago, but it reminds me — I'm a builder. Making things come to life is what excites me.",
-      "title_en": "Born Builder"
+      }
     }
   },
   {
@@ -1581,7 +1567,7 @@
     "focus": {
       "title": "Born Builder",
       "title_en": "Born Builder",
-      "description": "快10年前的课程作业，但它提醒我——我是一个builder，把东西做出来就让我兴奋。",
+      "description": "",
       "link": "#",
       "linkText": "Read more",
       "article": {
@@ -1686,8 +1672,7 @@
             "src": "https://www.youtube.com/embed/Gt6PV9eqL3g"
           }
         ]
-      },
-      "description_en": "A school project from nearly 10 years ago, but it reminds me — I'm a builder. Making things come to life is what excites me."
+      }
     }
   }
 ]
