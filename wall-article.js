@@ -1,6 +1,6 @@
 // wall-article.js — Wall-level composer + AI-generated JesseOS article
 import { streamChat, buildSystemPrompt } from './ai-client.js?v=166';
-import { createScribbleLoader } from './atoms-renderer.js?v=199';
+import { createScribbleLoader } from './atoms-renderer.js?v=204';
 
 export class WallArticle {
   constructor(focusOverlay, contentData, lang) {

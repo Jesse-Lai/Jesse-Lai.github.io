@@ -1616,8 +1616,8 @@ export class PhotoSystem {
     this._setupClickHandler();
   }
 
-  async addPhoto(imgSrc, x, y, scale, meta) {
-    const imgData = await loadImagePixels(imgSrc);
+  async addPhoto(imgSrc, x, y, scale, meta, preloadedImgData) {
+    const imgData = preloadedImgData || await loadImagePixels(imgSrc);
     const sc = scale || Math.min(200/imgData.w, 300/imgData.h);
     const { group, sprite, shadow, frame } = await renderPhoto(this.app, imgData, x, y, sc, meta, this.config?.photo);
     this.app.stage.addChild(group);

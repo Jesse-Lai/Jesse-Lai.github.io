@@ -233,8 +233,6 @@ import { WallArticle } from "./wall-article.js?v=151";
   const totalItems = wallItems.length;
 
   // Phase 1: Preload all images in parallel
-  // Note: photos don't use maxWidth here — addPhoto loads its own texture internally,
-  // we only need the original dimensions to calculate photoScale correctly.
   const preloads = wallItems.map(item => {
     if (item.type === 'photo') return loadImagePixels(item.src);
     if (item.type === 'sticky' && item.stampSrc) return loadImagePixels(item.stampSrc, isMobile ? 400 : undefined);
@@ -252,7 +250,7 @@ import { WallArticle } from "./wall-article.js?v=151";
     if (item.type === 'photo') {
       const targetW = colW * 0.6;
       const photoScale = targetW / imgData.w;
-      const photoItem = await photoSystem.addPhoto(item.src, 0, 0, photoScale, item);
+      const photoItem = await photoSystem.addPhoto(item.src, 0, 0, photoScale, item, imgData);
       photoItem.videoSrc = item.src.replace(/\.(png|jpg|jpeg|webp)$/i, '.mp4');
       getOrCreateVideo(photoItem.videoSrc);
       // Mobile: prefetch first video as blob so it can play without user interaction
