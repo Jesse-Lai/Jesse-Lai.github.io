@@ -2355,7 +2355,7 @@ export class FocusOverlay {
         if (section.type === 'subtitle') {
           html += `<h2 style="font-family:var(--title-font, Special Elite);font-size:20px;color:var(--text-secondary, #333);margin:48px 0 16px;line-height:1.4;">${section.text}</h2>`;
         } else if (section.type === 'text') {
-          html += `<p style="font-family:var(--body-font, -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif);font-size:16px;color:var(--text-body, #444);line-height:1.85;margin-bottom:24px;">${section.text}</p>`;
+          html += `<p style="font-family:var(--body-font, -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif);font-size:16px;color:var(--text-body, #444);line-height:1.85;margin-bottom:24px;">${section.text.replace(/\n/g, '<br>')}</p>`;
         } else if (section.type === 'image') {
           html += `<img src="${section.src}" alt="${section.alt || ''}" style="width:100%;border-radius:6px;margin:32px 0 8px;">`;
           if (section.caption) {
@@ -3011,7 +3011,7 @@ export class FocusOverlay {
             if (section.type === 'subtitle') {
               html += `<h2 style="font-family:var(--title-font, Special Elite);font-size:20px;color:var(--text-secondary, #333);margin:48px 0 16px;line-height:1.4;">${section.text}</h2>`;
             } else if (section.type === 'text') {
-              html += `<p style="font-family:var(--body-font, -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif);font-size:16px;color:var(--text-body, #444);line-height:1.85;margin-bottom:24px;">${section.text}</p>`;
+              html += `<p style="font-family:var(--body-font, -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif);font-size:16px;color:var(--text-body, #444);line-height:1.85;margin-bottom:24px;">${section.text.replace(/\n/g, '<br>')}</p>`;
             } else if (section.type === 'image') {
               html += `<img src="${section.src}" alt="${section.alt || ''}" style="width:100%;border-radius:6px;margin:32px 0 8px;">`;
               if (section.caption) {
