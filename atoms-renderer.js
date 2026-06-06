@@ -283,6 +283,7 @@ export function getOrCreateVideo(videoSrc) {
   video.loop = true;
   video.muted = true;
   video.playsInline = true;
+  video.autoplay = true;
   video.preload = 'auto';
   // WeChat browser compatibility
   video.setAttribute('webkit-playsinline', '');
