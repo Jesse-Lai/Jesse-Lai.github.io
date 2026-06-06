@@ -85,7 +85,8 @@
     }
     #sunlight-overlay {
       pointer-events: none;
-      position: fixed; inset: 0;
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      width: 100%;
       z-index: 2;
       transform: scaleX(-1);
       transition: opacity 1.5s;
@@ -106,10 +107,10 @@
     }
     @media (max-width: 768px) {
       #sunlight-overlay .perspective {
-        width: 120vw; height: 150vh;
-        top: -20vh; right: -20vw;
-        -webkit-mask-image: linear-gradient(to left, black 60vw, transparent 110vw);
-        mask-image: linear-gradient(to left, black 60vw, transparent 110vw);
+        width: 100vw; height: 150vh;
+        top: -20vh; right: 0;
+        -webkit-mask-image: linear-gradient(to left, black 40vw, transparent 90vw);
+        mask-image: linear-gradient(to left, black 40vw, transparent 90vw);
       }
     }
     #sunlight-overlay #leaves {
