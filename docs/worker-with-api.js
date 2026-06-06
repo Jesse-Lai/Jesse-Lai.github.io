@@ -29,8 +29,8 @@ export default {
         name: "Jesse Lai",
         title: "AI Product Designer at Microsoft",
         bio: "6+ years designing AI-native experiences — conversational AI, generative UI, and merchant tools across B2C and B2B. Also a stand-up comedian, angler, and basketball player.",
-        portfolio_url: "https://highlightttt.github.io/portfolio/",
-        contact: { github: "highlightttt" },
+        portfolio_url: "https://jesse-lai.github.io/",
+        contact: { github: "Jesse-Lai" },
         categories: ["who_i_am", "design_projects", "design_thought", "hobby"],
       };
       return Response.json(about, { headers: cors });
@@ -140,7 +140,7 @@ export default {
       return Response.json({
         service: "Jesse Lai Portfolio API + AI Proxy",
         docs: "/api/schema",
-        portfolio: "https://highlightttt.github.io/portfolio/",
+        portfolio: "https://jesse-lai.github.io/",
       }, { headers: cors });
     }
 

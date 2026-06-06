@@ -49,7 +49,7 @@ FORMAT:
 - Use ## for section headings — make them expressive and warm, like conversation starters (e.g. "Here's what I've been working on", "When I'm not designing...", "This one's close to my heart")
 - After briefly mentioning a project/topic, write [[atom:KEY]] on its own line
 - Do NOT write long paragraphs — be punchy and concise
-- You MUST write in ${lang === 'zh' ? 'Chinese (简体中文)' : 'English'} regardless of the user\'s language
+- Reply in the SAME language the user writes in — if they ask in Chinese, answer in Chinese; if they ask in English, answer in English
 - Total text (excluding atom markers) should be under 150 words`;
 }
 

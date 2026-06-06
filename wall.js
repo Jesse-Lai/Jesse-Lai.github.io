@@ -1,6 +1,6 @@
 // wall.js — Main view, uses atoms-renderer.js
-import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, renderTearoffCard, makeDraggable, FocusOverlay, getOrCreateVideo, animateTo, fadeIn } from "./atoms-renderer.js?v=205";
-import { WallArticle } from "./wall-article.js?v=152";
+import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, renderTearoffCard, makeDraggable, FocusOverlay, getOrCreateVideo, animateTo, fadeIn } from "./atoms-renderer.js?v=204";
+import { WallArticle } from "./wall-article.js?v=151";
 
 (async () => {
   const sat = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sat')) || 0;
@@ -75,10 +75,12 @@ import { WallArticle } from "./wall-article.js?v=152";
       document.documentElement.style.setProperty('--title-font', '"Optima", "PingFang SC", sans-serif');
       document.documentElement.style.setProperty('--body-font', '"Optima", "PingFangTC-light", sans-serif');
       document.documentElement.style.setProperty('--atom-font', '"Optima", "PingFangTC-light", sans-serif');
+      document.documentElement.style.setProperty('--tearoff-font', '"PF HuTu", sans-serif');
     } else {
       document.documentElement.style.setProperty('--title-font', '"Special Elite", cursive');
       document.documentElement.style.setProperty('--body-font', '"Red Hat Mono", monospace');
       document.documentElement.style.setProperty('--atom-font', '"Special Elite", cursive');
+      document.documentElement.style.setProperty('--tearoff-font', '"Special Elite", cursive');
     }
   }
 
@@ -101,12 +103,12 @@ import { WallArticle } from "./wall-article.js?v=152";
       en: { title: 'Hello I\'m Jesse Lai', body: 'AI Product Designer at Microsoft, exploring the future of natural human-AI interaction.' }
     },
     'Microsoft': {
-      zh: { title: 'Microsoft', body: '在微软构建AI产品，设计下一代人机交互体验。' },
-      en: { title: 'Microsoft', body: 'Building AI products at Microsoft, designing next-gen human-AI interaction experiences.' }
+      zh: { title: 'Microsoft', body: 'AI builder，与全球的团队一起设计 ToC 和 ToB 的Copilot' },
+      en: { title: 'Microsoft', body: 'AI-native builder, shaping consumer and enterprise Copilot experiences with global teams.' }
     },
     'Alibaba': {
-      zh: { title: 'Alibaba', body: '构建AI产品，帮助本地生活服务用户获得更好的体验。' },
-      en: { title: 'Alibaba', body: 'Building AI products to help local service users get better experiences.' }
+      zh: { title: 'Alibaba', body: '在大语言模型兴起的早期，设计帮助小商家做好\u201c吃\u201d的 AI 产品' },
+      en: { title: 'Alibaba', body: 'In the early days of LLMs, I designed AI products behind every better bite.' }
     },
     'Stand-up Comedian': {
       zh: { title: '脱口秀演员', body: '脱口秀是我一生的热爱。把生活的酸甜苦辣变成段子搬上舞台，已经成为我生活不可分割的一部分。' },
@@ -120,13 +122,17 @@ import { WallArticle } from "./wall-article.js?v=152";
       zh: { title: 'Vibe Coding', body: 'Vibe Coding项目合集——用代码构建创意工具和交互体验。' },
       en: { title: 'Vibe Coding', body: 'A collection of vibe coding projects — building creative tools and interactive experiences with code.' }
     },
+    'Arduino Light': {
+      zh: { title: '天生创造者', body: '用Arduino打造的交互灯——硬件与创意的融合。' },
+      en: { title: 'Born Builder', body: 'An interactive light built with Arduino — merging hardware and creativity.' }
+    },
     'GenUI 设计指南': {
-      zh: { title: 'GenUI 设计指南', body: '在AI时代，我们的交互体验反而倒退了——从丰富的GUI退回到纯文字聊天。GenUI探索AI生成的界面，让信息回归应有的形态。' },
-      en: { title: 'GenUI', body: 'In the AI era, our interaction experiences have regressed — from rich GUIs back to text-based chat. GenUI explores AI-generated interfaces that match the shape of information.' }
+      zh: { title: 'GenUI 设计指南', body: '关于生成式UI，我的个人思考和总结，写得挺生动的' },
+      en: { title: 'Designing for GenUI', body: 'My personal take on Generative UI—an engaging summary of ideas, observations, and lessons learned.' }
     },
     'AI产品设计原则': {
-      zh: { title: 'AI产品设计原则', body: '我对AI产品设计原则的思考与实践总结。' },
-      en: { title: 'AI Design Principles', body: 'A growing collection of AI product design principles, drawing from industry leaders and my own practice.' }
+      zh: { title: 'AI产品设计原则', body: 'AI产品设计原则，以及这个网站会如何跟着模型迭代' },
+      en: { title: 'My AI Design Principles', body: 'My AI product design principles, and how this website will evolve with model iterations.' }
     },
     'Born Builder': {
       zh: { title: '天生创造者', body: '这个项目提醒我——我是一个创造者。无论是否在AI时代，让东西活起来都让我兴奋！' },
@@ -142,11 +148,25 @@ import { WallArticle } from "./wall-article.js?v=152";
 
   // Photo captions (Schoolbell font, always English) + dates
   const photoCaptions = {
-    'Hello I\'m Jesse Lai': { caption: 'Hello I\'m Jesse Lai', date: "'25 03 20" },
-    'Stand-up Comedian':    { caption: 'Stand-up Comedian', date: "'26 01 15" },
-    'Drawing':              { caption: 'Drawing', date: "'25 08 10" },
-    'Vibe Coding':          { caption: 'Vibe Coding', date: "'26 05 01" },
-    'Born Builder':         { caption: 'Born Builder', date: "'16 09 20" },
+    'Hello I\'m Jesse Lai': { caption: 'Hello I\'m Jesse Lai', date: "" },
+    'Stand-up Comedian':    { caption: 'Stand-up Comedian', date: "'23 06 28" },
+    'Drawing':              { caption: 'Drawing', date: "'15 12 20" },
+    'Vibe Coding':          { caption: 'Vibe Coding', date: "'25 05 26" },
+    'Arduino Light':        { caption: 'Born Builder', date: "'16 09 20" },
+  };
+
+  // Focus overlay description overrides (bilingual)
+  const focusDesc = {
+    'Hello I\'m Jesse Lai': { zh: '嗨👋 我喜欢做各种好玩的东西！', en: 'Hi 👋 I love making all kinds of fun things!' },
+    'Microsoft': { zh: '在微软，我做了各种Copilot，等等… 它们好像都长一个样！', en: 'At Microsoft, I worked on various Copilots and so on... they all seem to look the same!' },
+    'Alibaba': { zh: '在阿里，我除了送外卖，还观察骑手怎么送外卖…', en: 'At Alibaba, besides delivering food, I also observe how couriers deliver food…' },
+    'Vibe Coding': { zh: 'Vibe coding一年来，感觉找回了9岁那个下午，自己做了艘电动玩具船，在水上跑起来的兴奋感', en: 'After a year of vibe coding, it feels like I\'ve rediscovered that afternoon when I was nine, the excitement of building an electric toy boat and watching it run across the water.' },
+    'Arduino Light': { zh: '快10年前的课程作业，但它提醒我——我是一个builder，把东西做出来就让我兴奋。', en: 'A school project from nearly 10 years ago, but it reminds me — I\'m a builder. Making things come to life is what excites me.' },
+    'Born Builder': { zh: '快10年前的课程作业，但它提醒我——我是一个builder，把东西做出来就让我兴奋。', en: 'A school project from nearly 10 years ago, but it reminds me — I\'m a builder. Making things come to life is what excites me.' },
+    'Stand-up Comedian': { zh: '脱口秀和设计有很多共通之处：都需要敏锐的观察力，都需要不断迭代打磨。', en: 'Stand-up comedy and design share a lot in common: both demand keen observation, and both require constant iteration and refinement.' },
+    'Drawing': { zh: '画画让我进入心流，经常一不小心就发现已经天亮了。这些古法绘画作品，绝不含AI。', en: 'Drawing puts me in a flow state — I\'d often look up and realize it was already morning. These artworks are 100% hand-made, zero AI.' },
+    'GenUI 设计指南': { zh: '为什么Figma不再能设计GenUI？这篇聊聊生成式UI的形态、行为，以及我自己的工作流。', en: 'Why can\'t Figma design GenUI anymore? This article explores the forms and behaviors of generative UI, plus my own workflow.' },
+    'AI产品设计原则': { zh: '做AI产品就像钓鱼——来太早或太晚都没有收获，要在模型能力的边界处让产品发光。', en: 'Building AI products is like fishing — timing is everything. The product should shine right at the frontier of what models can do.' },
   };
 
   // Stamp image overrides
@@ -177,10 +197,10 @@ import { WallArticle } from "./wall-article.js?v=152";
         category: entry.category,
         title: t(entry, 'title') || entry.title,
         body: t(entry, 'body') || entry.body || '',
-        date: entry.title === 'GenUI 设计指南' ? "'26 04 20" : entry.title === 'AI产品设计原则' ? "'26 03 15" : "'26 05 01",
+        date: ({ 'GenUI 设计指南': "'25 11 20", 'AI产品设计原则': "'26 05 20", 'Microsoft': "'25 02 27", 'Alibaba': "'20 06 29" })[entry.title] || "'26 05 01",
         stampSrc: stampOverrides[entry.title] || entry.cover_image || 'stamp1.webp',
         colorScheme: coolStickies.includes(entry.title) ? 'cool' : 'warm',
-        keywords: entry.keywords, focus: entry.focus || { title: entry.title, description: entry.body || entry.title, link: '#', linkText: 'Read more', article: { title: entry.title, sections: (entry.full_text || []).map(t => ({type:'text',text:t})) } },
+        _origTitle: entry.title, keywords: entry.keywords, focus: entry.focus || { title: entry.title, description: entry.body || entry.title, link: '#', linkText: 'Read more', article: { title: entry.title, sections: (entry.full_text || []).map(t => ({type:'text',text:t})) } },
       });
     } else if (entry.atom === 'tearoff') {
       wallItems.push({ type: 'tearoff', category: entry.category });
@@ -213,8 +233,6 @@ import { WallArticle } from "./wall-article.js?v=152";
   const totalItems = wallItems.length;
 
   // Phase 1: Preload all images in parallel
-  // Note: photos don't use maxWidth here — addPhoto loads its own texture internally,
-  // we only need the original dimensions to calculate photoScale correctly.
   const preloads = wallItems.map(item => {
     if (item.type === 'photo') return loadImagePixels(item.src);
     if (item.type === 'sticky' && item.stampSrc) return loadImagePixels(item.stampSrc, isMobile ? 400 : undefined);
@@ -232,17 +250,17 @@ import { WallArticle } from "./wall-article.js?v=152";
     if (item.type === 'photo') {
       const targetW = colW * 0.6;
       const photoScale = targetW / imgData.w;
-      const photoItem = await photoSystem.addPhoto(item.src, 0, 0, photoScale, item);
+      const photoItem = await photoSystem.addPhoto(item.src, 0, 0, photoScale, item, imgData);
       photoItem.videoSrc = item.src.replace(/\.(png|jpg|jpeg|webp)$/i, '.mp4');
       getOrCreateVideo(photoItem.videoSrc);
       // Mobile: prefetch first video as blob so it can play without user interaction
       if (isMobile && !window._firstVideoPrefetched) {
         window._firstVideoPrefetched = true;
-        fetch(photoItem.videoSrc).then(r => r.blob()).then(blob => {
+        window._firstVideoPrefetchPromise = fetch(photoItem.videoSrc).then(r => r.blob()).then(blob => {
           window._firstVideoBlob = { src: photoItem.videoSrc, url: URL.createObjectURL(blob) };
         }).catch(() => {});
       }
-      if (item.focus) { photoItem.focusData = item.focus; if (item.keywords) photoItem.focusData.description = item.keywords; }
+      if (item.focus) { photoItem.focusData = item.focus; const fd = focusDesc[item.caption] || focusDesc[item.title]; photoItem.focusData.description = fd ? fd[LANG] : (item.keywords || item.focus.description); }
       const b = photoItem.group.getBounds();
       rendered.push({ group: photoItem.group, bounds: b, wallItem: item, focusableItem: photoItem });
     } else if (item.type === 'sticky') {
@@ -250,7 +268,7 @@ import { WallArticle } from "./wall-article.js?v=152";
       stickyResult.group.scale.set(atomScale);
       const b = stickyResult.group.getBounds();
       const stickyItem = photoSystem.addItem(stickyResult.group, b.width / atomScale, b.height / atomScale);
-      if (item.focus) { stickyItem.focusData = item.focus; if (item.keywords) stickyItem.focusData.description = item.keywords; }
+      if (item.focus) { stickyItem.focusData = item.focus; stickyItem.focusData.title = item.title; const fd = focusDesc[item._origTitle] || focusDesc[item.title]; stickyItem.focusData.description = fd ? fd[LANG] : (item.keywords || item.focus.description); }
       stickyItem._stickyTitle = { tx: stickyResult.titleX, ty: stickyResult.titleY, tw: stickyResult.titleW, th: stickyResult.titleH };
       // Stamp video: swap stamp sprite texture on hover
       if (stickyResult.stampSprite && item.stampSrc) {
@@ -397,41 +415,22 @@ import { WallArticle } from "./wall-article.js?v=152";
     await Promise.all([...photoSystem.clipGroups].map(cg => photoSystem._splitPhotos(cg)));
     await new Promise(r => setTimeout(r, 300));
 
-    // Group items by category
+    // Group items by category (only mergeable items with focusableItem)
+    // Non-mergeable items (tearoff, stamp) stay as standalone masonry entries
     const categories = ['who_i_am', 'design_projects', 'design_thought', 'hobby'];
     const groups = {};
+    const standalone = [];
     for (const cat of categories) groups[cat] = [];
     for (const r of rendered) {
       const cat = r.wallItem.category;
-      if (groups[cat]) groups[cat].push(r);
-    }
-
-    // Refresh bounds (items may have been moved by masonry or dragged)
-    for (const r of rendered) r.bounds = r.group.getBounds();
-
-    // Pre-compute final masonry positions for each category group / single
-    const colTopsNew = new Array(cols).fill(gridPad);
-    const catLayout = {}; // cat -> { targetX, targetY } for the first item's top-left
-
-    // First pass: compute each group's bounding size and assign masonry slot
-    for (const cat of categories) {
-      const items = groups[cat];
-      if (!items.length) continue;
-      // Use first item's bounds as representative size
-      const b0 = items[0].group.getBounds();
-      const col = colTopsNew.indexOf(Math.min(...colTopsNew));
-      const colCenterX = gridOffsetX + (col + 0.5) * colW;
-      catLayout[cat] = {
-        targetX: colCenterX - b0.width / 2,
-        targetY: colTopsNew[col],
-        boundsOffX: b0.x - items[0].group.x,
-        boundsOffY: b0.y - items[0].group.y,
-      };
-      colTopsNew[col] += b0.height + gridPad;
+      if (!r.focusableItem) {
+        standalone.push(r);
+      } else if (groups[cat]) {
+        groups[cat].push(r);
+      }
     }
 
     // Sort each category: largest item area first (bottom of stack), smallest on top
-    // Use itemW * itemH (photo = frame size, sticky = note body) not getBounds (includes shadow/stamp overflow)
     for (const cat of categories) {
       groups[cat].sort((a, b) => {
         const areaA = (a.focusableItem?.itemW || 0) * (a.focusableItem?.itemH || 0);
@@ -449,44 +448,56 @@ import { WallArticle } from "./wall-article.js?v=152";
       }
     }
 
-    // Fly ALL items directly to final position
-    const allFlyAnims = [];
+    // Build masonry entries: category groups + standalone items
+    for (const r of rendered) r.bounds = r.group.getBounds();
+    const masonryEntries = [];
     for (const cat of categories) {
       const items = groups[cat];
-      if (!items.length || !catLayout[cat]) continue;
-      const layout = catLayout[cat];
-      // First item (largest) flies to the masonry slot
-      const target0 = items[0];
-      const tx0 = layout.targetX - layout.boundsOffX;
-      const ty0 = layout.targetY - layout.boundsOffY;
-      allFlyAnims.push(animateTo(target0.group, tx0, ty0, 600));
-      // Other items (progressively smaller) fly to same position
-      for (let i = 1; i < items.length; i++) {
-        const r = items[i];
-        const tx = layout.targetX - (r.bounds.x - r.group.x);
-        const ty = layout.targetY - (r.bounds.y - r.group.y);
+      if (!items.length) continue;
+      masonryEntries.push({ type: 'group', cat, items, bounds: items[0].bounds });
+    }
+    for (const r of standalone) {
+      masonryEntries.push({ type: 'standalone', items: [r], bounds: r.bounds });
+    }
+
+    // Pre-compute masonry target positions
+    const colTopsNew = new Array(cols).fill(gridPad);
+    for (const entry of masonryEntries) {
+      const b = entry.bounds;
+      const col = colTopsNew.indexOf(Math.min(...colTopsNew));
+      const colCenterX = gridOffsetX + (col + 0.5) * colW;
+      entry.targetX = colCenterX - b.width / 2;
+      entry.targetY = colTopsNew[col];
+      colTopsNew[col] += b.height + gridPad;
+    }
+
+    // Fly ALL items to their masonry target position
+    const allFlyAnims = [];
+    for (const entry of masonryEntries) {
+      for (const r of entry.items) {
+        const tx = entry.targetX - (r.bounds.x - r.group.x);
+        const ty = entry.targetY - (r.bounds.y - r.group.y);
         allFlyAnims.push(animateTo(r.group, tx, ty, 600));
       }
     }
     await Promise.all(allFlyAnims);
 
-    // Merge groups and assign predefined labels
+    // Merge category groups and assign predefined labels
     const categoryLabels = {
       who_i_am: 'About Me',
       design_projects: 'Design Work',
       design_thought: 'Design Thinking',
       hobby: 'Life & Hobbies',
     };
-    await Promise.all(categories.map(async cat => {
-      const items = groups[cat];
+    await Promise.all(masonryEntries.filter(e => e.type === 'group').map(async entry => {
+      const items = entry.items;
       if (items.length < 2) return;
       const target = items[0];
       for (let i = 1; i < items.length; i++) {
         await photoSystem._mergePhotos(items[i].focusableItem, target.focusableItem);
       }
-      // Set predefined label on the newly created clip group
       const cg = photoSystem.clipGroups.find(c => c.photos.includes(target.focusableItem));
-      if (cg) cg.label = categoryLabels[cat] || cat;
+      if (cg) cg.label = categoryLabels[entry.cat] || entry.cat;
     }));
 
     // Resize canvas if needed
@@ -549,11 +560,10 @@ import { WallArticle } from "./wall-article.js?v=152";
 
     // ── Time-of-day color: top & bottom per period, lerp between periods + scroll ──
     const timeColorStops = [
-      [6,  '#F6F3EE', '#F8F3E3'],  // morning 6-12
-      [12, '#FFFAF2', '#E8CDA3'],  // afternoon 12-18
-      [18, '#FCCC83', '#E79648'],  // dusk 18-20
-      [20, '#241F44', '#040B24'],  // night 20-6
-      [30, '#241F44', '#040B24'],  // night wrap
+      [6,  '#F6F3EE', '#E79648'],  // day 6-18
+      [18, '#F6F3EE', '#E79648'],  // day end
+      [20, '#1D183B', '#02091D'],  // night 20-6
+      [30, '#1D183B', '#02091D'],  // night wrap
     ];
     const lerpHex = (hexA, hexB, t) => {
       const a = hexToRgb(hexA), b = hexToRgb(hexB);
@@ -579,7 +589,7 @@ import { WallArticle } from "./wall-article.js?v=152";
     };
 
     // Default to current hour's time period
-    const autoHour = (() => { const h = new Date().getHours(); return h >= 20 || h < 6 ? 22 : h >= 18 ? 18 : h >= 12 ? 15 : 9; })();
+    const autoHour = (() => { const h = new Date().getHours(); return h >= 20 || h < 6 ? 22 : 9; })();
     let timeOverride = autoHour;
     let currentBgColors = getTimeColors(timeOverride);
 
@@ -605,16 +615,18 @@ import { WallArticle } from "./wall-article.js?v=152";
       const [cr,cg,cb] = hexToRgb(currentBgColors.top);
       const brightness = (cr + cg + cb) / 3;
 
-      // Right-to-left gradient overlay — stronger at night
+      // Right-to-left gradient overlay — deepens on scroll
       if (nightGradient) {
-        const gradAlpha = brightness < 80 ? 0.3 : 0.25;
+        const gradAlpha = brightness < 80
+          ? 0.2 + 0.15 * p    // night: 0.2 → 0.35
+          : 0.1 + 0.2 * p;    // day:  0.1 → 0.3
         nightGradient.style.background = `linear-gradient(to left, rgba(0,0,0,${gradAlpha}) 0%, rgba(0,0,0,0) 50%)`;
       }
 
       // Perspective: opacity + angle shift with scroll
       if (perspective) {
         const isNight = brightness < 80;
-        perspective.style.opacity = isNight ? lerp(0.16, 0.4, p) : lerp(0.12, 0.3, p);
+        perspective.style.opacity = isNight ? lerp(0.16, 0.5, p) : lerp(0.12, 0.4, p);
         perspective.style.mixBlendMode = isNight ? 'multiply' : 'soft-light';
         const m00 = lerp(0.75, 0.8333, p);
         const m01 = lerp(-0.0625, 0.0833, p);
@@ -667,7 +679,7 @@ import { WallArticle } from "./wall-article.js?v=152";
       const btnColor = brightness > 160 ? 'rgba(0,0,0,0.4)' : 'rgba(255,255,255,0.5)';
       const btnHover = brightness > 160 ? 'rgba(0,0,0,0.7)' : 'rgba(255,255,255,0.8)';
       const atomsBtn = document.getElementById('atoms-btn');
-      const timeBtn = document.getElementById('time-preview');
+      const timeBtn = document.getElementById('time-toggle');
       const langBtn = document.getElementById('lang-toggle');
       [atomsBtn, timeBtn, langBtn].forEach(el => {
         if (el) { el.style.color = btnColor; el.onmouseenter = () => el.style.color = btnHover; el.onmouseleave = () => el.style.color = btnColor; }
@@ -678,10 +690,17 @@ import { WallArticle } from "./wall-article.js?v=152";
     updateSunProgress();
 
     // Expose time preview control
-    window._setTimePreview = (hour) => {
-      timeOverride = hour;
+    window._toggleTime = () => {
+      const isNight = timeOverride >= 20 || (timeOverride < 6);
+      timeOverride = isNight ? 9 : 22;
       currentBgColors = getTimeColors(timeOverride);
+      // Force night-mode class to match new time immediately
+      document.documentElement.classList.toggle('night-mode', timeOverride >= 20 || timeOverride < 6);
       updateSunProgress();
+      const sun = document.getElementById('time-icon-sun');
+      const moon = document.getElementById('time-icon-moon');
+      if (sun) sun.style.display = timeOverride === 9 ? '' : 'none';
+      if (moon) moon.style.display = timeOverride === 22 ? '' : 'none';
     };
   }
 
@@ -765,7 +784,23 @@ import { WallArticle } from "./wall-article.js?v=152";
               }
             });
           }
-        }).catch(() => {});
+        }).catch(() => {
+          // Video not ready yet — retry once canplay fires
+          if (!entry.ready) {
+            entry.video.addEventListener('canplay', () => {
+              entry.video.play().then(() => {
+                if (!entry.texture) {
+                  entry.texture = PIXI.Texture.from(entry.video, { resourceOptions: { autoPlay: false } });
+                  entry.ready = true;
+                }
+                if (cur.sprite) {
+                  cur._staticTex = cur._staticTex || cur.sprite.texture;
+                  cur.sprite.texture = entry.texture;
+                }
+              }).catch(() => {});
+            }, { once: true });
+          }
+        });
       }
     };
 
@@ -778,13 +813,24 @@ import { WallArticle } from "./wall-article.js?v=152";
       setTimeout(() => { isAnimating = false; }, 500);
     };
 
-    // Initial snap (no video on first load — iOS requires user interaction)
-    scrollToIdx(0);
+    // Initial snap — wait for first video blob so it can play immediately
+    const startSnap = () => scrollToIdx(0);
+    if (window._firstVideoPrefetchPromise) {
+      window._firstVideoPrefetchPromise.then(startSnap).catch(startSnap);
+    } else {
+      startSnap();
+    }
     
 
 
     // Block native scroll completely — JS controls position
+    // But allow scrolling inside focus overlay (article mode) or wall-article
+    const _isOverlayOpen = () =>
+      document.body.classList.contains('focus-active') ||
+      document.getElementById('wall-article')?.classList.contains('visible');
+
     document.addEventListener('touchmove', (e) => {
+      if (_isOverlayOpen()) return;
       e.preventDefault();
     }, { passive: false });
 
@@ -794,6 +840,7 @@ import { WallArticle } from "./wall-article.js?v=152";
     }, { passive: true });
 
     document.addEventListener('touchend', (e) => {
+      if (_isOverlayOpen()) return;
       const dy = touchStartY - e.changedTouches[0].clientY;
       const threshold = 30;
       if (Math.abs(dy) < threshold) return;

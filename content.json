@@ -257,7 +257,7 @@
     "title": "Alibaba",
     "category": "design_projects",
     "atom": "sticky",
-    "body": "Building AI products to help local service users get better experiences.",
+    "body": "在大语言模型兴起的早期，设计帮助小商家做好\u201c吃\u201d的 AI 产品",
     "cover_image": "alibaba.webp",
     "focus": {
       "title": "Alibaba",
@@ -321,7 +321,7 @@
       }
     },
     "keywords": "B2C ● Eleme ● Onboarding ● Survival Rate ● 2023",
-    "body_en": "Building AI products to help local service users get better experiences.",
+    "body_en": "In the early days of LLMs, I designed AI products behind every better bite.",
     "title_en": "Alibaba"
   },
   {

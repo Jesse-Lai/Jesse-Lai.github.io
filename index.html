@@ -8,17 +8,12 @@
   <title>JesseOS</title>
   <link href="https://fonts.googleapis.com/css2?family=Schoolbell&family=Special+Elite&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1/style.css" rel="stylesheet">
   <script>
   // Set initial background + theme-color based on time, before first paint
   (function(){
     var h = new Date().getHours() + new Date().getMinutes() / 60;
     var t = h < 6 ? h + 24 : h;
-    var bg = '#FFFDFA';
-    if (t >= 20 || t < 6) bg = '#241F44';
-    else if (t >= 18) bg = '#FCCC83';
-    else if (t >= 12) bg = '#FFFAF2';
-    else bg = '#F6F3EE';
+    var bg = (t >= 20 || t < 6) ? '#1D183B' : '#F6F3EE';
     document.documentElement.style.backgroundColor = bg;
     var meta = document.createElement('meta');
     meta.name = 'theme-color';
@@ -35,7 +30,7 @@
       src: url('fonts/RedHatMono-Regular.woff2') format('woff2');
       font-weight: 400;
     }
-    * { margin: 0; padding: 0; }
+* { margin: 0; padding: 0; }
     html { overflow-x: hidden; --shadow: #1a1917; background-color: #FFFDFA; }
     body { background-color: #FFFDFA; overflow-x: hidden; }
     body { min-height: 100vh; }
@@ -64,9 +59,9 @@
       --text-muted: #565d72;
       --border-divider: rgba(180,190,220,0.1);
       --overlay-bg: #0d0c1a;
-      background-color: #241F44;
+      background-color: #1D183B;
     }
-    html.night-mode body { background-color: #241F44; }
+    html.night-mode body { background-color: #1D183B; }
     canvas { display: block; margin-top: calc(-1 * env(safe-area-inset-top, 0px)); }
 
     /* ── Sunlight overlay ── */
@@ -81,12 +76,22 @@
       position: absolute; inset: 0;
       background: linear-gradient(to left, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0) 50%);
     }
-    #sunlight-overlay {
+    #sunlight-highlight {
       pointer-events: none;
       position: fixed; inset: 0;
+      z-index: 1;
+      background: radial-gradient(ellipse at 0% 0%, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0) 30%);
+      transition: opacity 0.4s ease;
+    }
+    #sunlight-overlay {
+      pointer-events: none;
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      width: 100%;
       z-index: 2;
       transform: scaleX(-1);
       transition: opacity 1.5s;
+      overflow: hidden;
+      clip-path: inset(0);
     }
     #sunlight-overlay .perspective {
       position: absolute;
@@ -97,16 +102,16 @@
       transform-style: preserve-3d;
       transform: matrix3d(0.75,-0.0625,0,0.0008, 0,1,0,0, 0,0,1,0, 0,0,0,1);
       transition: opacity 0.3s, transform 0.3s;
-      -webkit-mask-image: linear-gradient(to left, black 30vw, transparent 55vw);
-      mask-image: linear-gradient(to left, black 30vw, transparent 55vw);
+      -webkit-mask-image: linear-gradient(to left, black 30vw, transparent 65vw);
+      mask-image: linear-gradient(to left, black 30vw, transparent 65vw);
       filter: blur(3px);
     }
     @media (max-width: 768px) {
       #sunlight-overlay .perspective {
-        width: 120vw; height: 150vh;
-        top: -20vh; right: -20vw;
-        -webkit-mask-image: linear-gradient(to left, black 60vw, transparent 110vw);
-        mask-image: linear-gradient(to left, black 60vw, transparent 110vw);
+        width: 100vw; height: 150vh;
+        top: -20vh; right: 0;
+        -webkit-mask-image: linear-gradient(to left, black 40vw, transparent 90vw);
+        mask-image: linear-gradient(to left, black 40vw, transparent 90vw);
       }
     }
     #sunlight-overlay #leaves {
@@ -115,7 +120,6 @@
       top: 50%; right: -160px;
       transform-origin: center center;
       margin-top: -375px;
-      clip-path: inset(0 30% 0 0);
       width: 864px; height: 749px;
       background-image: url('docs/leaves.png');
       filter: url(#wind);
@@ -183,28 +187,46 @@
     #top-bar {
       position: fixed; top: 20px; right: 20px; z-index: 9999;
       display: flex; align-items: center; gap: 16px;
+      height: 36px;
     }
     #top-bar button, #top-bar select, #top-bar div {
       background: none; border: none;
-      color: rgba(255,255,255,0.5); cursor: pointer; font-size: 13px; padding: 6px 0;
+      color: rgba(255,255,255,0.9) !important; cursor: pointer; font-size: 13px; padding: 0;
       font-family: 'Red Hat Mono', monospace; letter-spacing: 1px;
-      transition: color 0.2s; user-select: none;
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); user-select: none;
+      -webkit-text-fill-color: rgba(255,255,255,0.9);
+      height: 36px; display: flex; align-items: center;
     }
-    #top-bar button:hover, #top-bar select:hover, #top-bar div:hover { color: rgba(255,255,255,0.8); }
-    #time-preview {
-      appearance: none; -webkit-appearance: none; outline: none;
+    #top-bar button:hover, #top-bar select:hover, #top-bar div:hover { transform: scale(1.12); }
+    #time-toggle {
+      background: none; border: none; cursor: pointer; padding: 0;
+      color: rgba(255,255,255,0.9); user-select: none;
+      display: flex; align-items: center; justify-content: center;
+      filter: none; box-shadow: none; text-shadow: none;
+      transform: scale(1);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
-    #time-preview option { color: #333; background: #fff; }
+    #time-toggle svg { display: block; filter: drop-shadow(0 0 0 transparent); }
+    #time-toggle:hover { transform: scale(1.12); }
 
     /* Focus overlay */
     canvas.focus-active {
-      filter: blur(6px) brightness(0.3);
+      filter: blur(6px) brightness(1.05);
       transition: filter 0.4s ease;
+    }
+    html.night-mode canvas.focus-active {
+      filter: blur(6px) brightness(0.3);
     }
     canvas { transition: filter 0.4s ease; }
     body.focus-active canvas {
       position: relative;
       z-index: 3;
+    }
+    /* Nested focus (from chat/article) — blur underlying content */
+    body.nested-focus-active #wall-article,
+    body.nested-focus-active #focus-overlay {
+      filter: blur(6px);
+      transition: filter 0.4s ease;
     }
     #focus-overlay {
       position: fixed; inset: 0; z-index: 10000;
@@ -215,13 +237,17 @@
     #focus-overlay.visible { pointer-events: auto; }
     body:has(#focus-overlay.visible:not(.article-open)) #top-bar { display: none; }
     body:has(#focus-overlay.article-open) #top-bar,
-    body:has(#wall-article.visible) #top-bar { z-index: 10001; right: 64px; }
-    body:has(#focus-overlay.article-open) #time-preview,
-    body:has(#wall-article.visible) #time-preview { display: none; }
+    body:has(#wall-article.visible) #top-bar { z-index: 10001; right: 72px; }
+    body:has(#focus-overlay.article-open) #time-toggle,
+    body:has(#wall-article.visible) #time-toggle { display: none; }
+    body:has(#focus-overlay.article-open) canvas { pointer-events: none; }
     body.focus-active #sunlight-overlay,
     body.focus-active #night-gradient,
     body:has(#wall-article.visible) #sunlight-overlay,
     body:has(#wall-article.visible) #night-gradient { opacity: 0; }
+    body.focus-active #sunlight-highlight,
+    body:has(#wall-article.visible) #sunlight-highlight { opacity: 0; }
+    html.night-mode #sunlight-highlight { opacity: 0; }
     #focus-backdrop {
       position: absolute; inset: 0;
       cursor: pointer;
@@ -258,28 +284,60 @@
       transition: background 0.2s, color 0.2s;
     }
     #focus-link:hover { background: rgba(0,0,0,0.85); }
-    #focus-close {
-      position: absolute; top: 20px; right: 20px;
+    /* Shared glass dismiss button */
+    .glass-dismiss {
       pointer-events: auto;
-      background: none; border: 1px solid rgba(0,0,0,0.2);
-      color: #666; width: 36px; height: 36px;
+      position: relative; overflow: hidden;
+      background: none; border: none;
+      color: rgba(0,0,0,0.3); width: 36px; height: 36px;
       border-radius: 50%; cursor: pointer;
       font-size: 16px; display: flex; align-items: center; justify-content: center;
-      transition: all 0.2s;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06), 0 0 40px rgba(0, 0, 0, 0.03);
     }
-    #focus-close:hover { border-color: #333; color: #333; }
+    .glass-dismiss:hover { transform: scale(1.12); color: rgba(0,0,0,0.6); }
+    .glass-dismiss .glass-effect {
+      position: absolute; inset: 0; z-index: 0;
+      backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
+      filter: url(#glass-distortion);
+      overflow: hidden; isolation: isolate;
+      border-radius: 50%;
+    }
+    .glass-dismiss .glass-tint {
+      position: absolute; inset: 0; z-index: 1;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+    }
+    .glass-dismiss .glass-shine {
+      position: absolute; inset: 0; z-index: 2;
+      box-shadow: inset 2px 2px 1px 0 rgba(255, 255, 255, 0.25),
+        inset -1px -1px 1px 1px rgba(255, 255, 255, 0.25);
+      border-radius: 50%;
+    }
+    .glass-dismiss svg { position: relative; z-index: 3; }
+    html.night-mode .glass-dismiss {
+      color: rgba(255,255,255,0.7);
+    }
+    html.night-mode .glass-dismiss:hover { color: rgba(255,255,255,0.95); }
+    html.night-mode .glass-dismiss .glass-tint {
+      background: rgba(10, 8, 24, 0.45);
+    }
+    #focus-close {
+      position: absolute; top: 20px; right: 20px;
+    }
 
     /* Article mode — article content lives INSIDE the focus overlay */
-    #focus-overlay.article-mode {
+    #focus-overlay.article-open {
       overflow-y: auto;
+      overscroll-behavior: contain;
     }
-    #focus-overlay.article-mode #focus-content {
+    #focus-overlay.article-open #focus-content {
       display: none;
     }
-    #focus-overlay.article-mode #focus-backdrop {
+    #focus-overlay.article-open #focus-backdrop {
       position: sticky; top: 0; height: 0;
     }
-    #focus-overlay.article-mode #focus-close {
+    #focus-overlay.article-open #focus-close {
       position: fixed;
     }
     #focus-article {
@@ -289,10 +347,10 @@
       opacity: 0; transform: translateY(30px);
       transition: opacity 0.5s ease, transform 0.5s ease;
     }
-    #focus-overlay.article-mode #focus-article {
+    #focus-overlay.article-open #focus-article {
       display: block;
     }
-    #focus-overlay.article-mode #focus-article.visible {
+    #focus-overlay.article-open #focus-article.visible {
       opacity: 1; transform: translateY(0);
     }
     #focus-article .article-title {
@@ -405,14 +463,15 @@
     /* Shared composer bar */
     .composer-bar {
       position: fixed; bottom: 24px; left: 0; right: 0;
-      padding: 0 24px; pointer-events: none;
+      width: 100%; padding: 0 24px; pointer-events: none;
+      box-sizing: border-box;
     }
     .composer-bar .composer-box {
       pointer-events: auto;
       position: relative;
       flex: 1; max-width: 640px; margin: 0 auto; box-sizing: border-box;
       display: flex; align-items: center; gap: 8px;
-      border-radius: 999px;
+      border-radius: 36px;
       padding: 10px 12px 10px 16px;
       overflow: hidden;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06), 0 0 40px rgba(0, 0, 0, 0.03);
@@ -433,7 +492,7 @@
       position: absolute; inset: 0; z-index: 2;
       box-shadow: inset 2px 2px 1px 0 rgba(255, 255, 255, 0.25),
         inset -1px -1px 1px 1px rgba(255, 255, 255, 0.25);
-      border-radius: 999px;
+      border-radius: 36px;
     }
     .composer-bar .composer-box:focus-within .glass-shine {
       box-shadow: inset 2px 2px 1px 0 rgba(255, 255, 255, 0.7),
@@ -461,12 +520,14 @@
       transition: background 0.2s;
     }
     .composer-bar .send-btn:disabled { background: rgba(0,0,0,0.08); cursor: default; }
+    .composer-bar .send-btn.streaming { background: rgba(0,0,0,0.12); cursor: pointer; }
     .composer-bar .send-btn { color: rgba(255,255,255,0.9); }
     .composer-bar .send-btn svg { width: 14px; height: 14px; }
     .composer-bar .send-btn:disabled { color: rgba(0,0,0,0.15); }
     /* Per-composer overrides */
     #article-composer { z-index: 10001; display: none; }
     #wall-composer { z-index: 9998; }
+    body:has(#wall-article.visible) #wall-composer { z-index: 10001; }
     /* Nested focus overlay (on top of article) */
     #nested-overlay {
       position: fixed; inset: 0; z-index: 10003;
@@ -503,14 +564,7 @@
     #nested-link:hover { background: #ddd; }
     #nested-close {
       position: absolute; top: 20px; right: 20px; z-index: 10004;
-      pointer-events: auto;
-      background: none; border: 1px solid #555;
-      color: #999; width: 36px; height: 36px;
-      border-radius: 50%; cursor: pointer;
-      font-size: 16px; display: flex; align-items: center; justify-content: center;
-      transition: all 0.2s;
     }
-    #nested-close:hover { border-color: #fff; color: #fff; }
 
     /* ─── Composer Row (button + input) ─── */
     .composer-row {
@@ -573,8 +627,8 @@
 
     /* ─── Wall Article ─── */
     #wall-article {
-      position: fixed; inset: 0; z-index: 10000;
-      overflow-y: auto; background: #FFFDFA;
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 10000;
+      overflow-y: auto; overflow-x: hidden; width: 100%; background: #FFFDFA;
       display: none; opacity: 0;
       transition: opacity 0.4s ease;
     }
@@ -582,16 +636,11 @@
     #wall-article-content {
       max-width: 640px; margin: 0 auto;
       padding: 80px 24px 160px;
+      box-sizing: border-box;
     }
     #wall-article-close {
       position: fixed; top: 20px; right: 20px; z-index: 10000;
-      background: none; border: 1px solid #555;
-      color: #999; width: 36px; height: 36px;
-      border-radius: 50%; cursor: pointer;
-      font-size: 16px; display: flex; align-items: center; justify-content: center;
-      transition: all 0.2s;
     }
-    #wall-article-close:hover { border-color: #fff; color: #fff; }
 
     /* Canvas fade transition */
     canvas { transition: opacity 0.5s ease, transform 0.5s ease; }
@@ -610,46 +659,17 @@
     }
 
     /* ── Night mode dark overrides ── */
-    /* Wall article (AI chat overlay) */
-    html.night-mode #wall-article {
-      background: var(--overlay-bg);
-    }
-    html.night-mode #wall-article-close {
-      border-color: rgba(180,190,220,0.2);
-      color: rgba(180,190,220,0.5);
-    }
-    html.night-mode #wall-article-close:hover {
-      border-color: rgba(180,190,220,0.6);
-      color: rgba(180,190,220,0.95);
-    }
+    /* Wall article */
+    html.night-mode #wall-article { background: var(--overlay-bg); }
 
-    /* Focus overlay — title / desc / close */
+    /* Focus overlay — title / desc / button */
     html.night-mode #focus-title { color: var(--text-primary); }
     html.night-mode #focus-desc { color: var(--text-primary); }
-    html.night-mode #focus-close {
-      border-color: rgba(180,190,220,0.2);
-      color: rgba(180,190,220,0.5);
-    }
-    html.night-mode #focus-close:hover {
-      border-color: rgba(180,190,220,0.6);
-      color: rgba(180,190,220,0.95);
-    }
+    html.night-mode #focus-link { background: rgba(255,255,255,0.85); color: #0a0a0a; }
+    html.night-mode #focus-link:hover { background: rgba(255,255,255,1); }
 
-    /* Nested overlay close button */
-    html.night-mode #nested-close {
-      border-color: rgba(180,190,220,0.2);
-      color: rgba(180,190,220,0.5);
-    }
-    html.night-mode #nested-close:hover {
-      border-color: rgba(180,190,220,0.6);
-      color: rgba(180,190,220,0.95);
-    }
-
-    /* Article content (CSS-class-based) */
-    html.night-mode #focus-article .article-title {
-      color: var(--text-primary);
-      border-bottom-color: var(--border-divider);
-    }
+    /* Article content */
+    html.night-mode #focus-article .article-title { color: var(--text-primary); border-bottom-color: var(--border-divider); }
     html.night-mode #focus-article .article-subtitle { color: var(--text-secondary); }
     html.night-mode #focus-article .article-text { color: var(--text-body); }
     html.night-mode #focus-article .article-caption { color: var(--text-caption); }
@@ -667,19 +687,20 @@
     html.night-mode .article-toc-item:hover .toc-text { color: var(--text-caption); }
     html.night-mode .article-toc-item.active .toc-text { color: var(--text-secondary); }
 
-    /* Composer textarea */
-    html.night-mode .composer-bar .composer-input {
-      color: rgba(255,255,255,0.75);
-    }
-    html.night-mode .composer-bar .composer-input:empty::before {
-      color: rgba(255,255,255,0.28);
-    }
+    /* Composer input */
+    html.night-mode .composer-bar .composer-input { color: rgba(255,255,255,0.75); }
+    html.night-mode .composer-bar .composer-input:empty::before { color: rgba(255,255,255,0.28); }
+
+    /* Composer night overrides */
     html.night-mode .composer-bar .send-btn {
       background: rgba(255,255,255,0.12);
     }
     html.night-mode .composer-bar .send-btn:disabled {
       background: rgba(255,255,255,0.06);
       color: rgba(255,255,255,0.2);
+    }
+    html.night-mode .composer-bar .send-btn.streaming {
+      background: rgba(255,255,255,0.1);
     }
 
     /* Glass tint — darker in night mode */
@@ -704,13 +725,14 @@
       var h = new Date().getHours();
       if (h >= 20 || h < 6) {
         document.documentElement.classList.add('night-mode');
-        document.documentElement.style.backgroundColor = '#241F44';
+        document.documentElement.style.backgroundColor = '#1D183B';
       }
     })();
   </script>
 </head>
 <body>
   <div id="night-gradient"><div class="gradient-bg"></div></div>
+  <div id="sunlight-highlight"></div>
   <!-- Sunlight overlay: perspective + blinds -->
   <div id="sunlight-overlay">
     <div class="perspective">
@@ -762,25 +784,23 @@
   <div id="top-bar">
     <div id="atoms-btn" style="display:none" onclick="location.href='atoms.html'">Atoms</div>
     <button id="lang-toggle" onclick="window._toggleLang && window._toggleLang()">中</button>
-    <select id="time-preview" onchange="window._setTimePreview && window._setTimePreview(Number(this.value))">
-      <option value="9">Morning</option>
-      <option value="15">Afternoon</option>
-      <option value="18">Dusk</option>
-      <option value="22">Night</option>
-    </select>
+    <button id="time-toggle" onclick="window._toggleTime && window._toggleTime()">
+      <svg id="time-icon-sun" width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="5"/></svg>
+      <svg id="time-icon-moon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style="display:none"><mask id="moon-mask"><rect width="16" height="16" fill="white"/><circle cx="11" cy="5" r="3" fill="black"/></mask><circle cx="8" cy="8" r="5" mask="url(#moon-mask)"/></svg>
+    </button>
     <script>
-      // Auto-select time period based on current hour
       (function() {
         var h = new Date().getHours();
-        var v = h >= 20 || h < 6 ? '22' : h >= 18 ? '18' : h >= 12 ? '15' : '9';
-        document.getElementById('time-preview').value = v;
+        var isNight = h >= 20 || h < 6;
+        document.getElementById('time-icon-sun').style.display = isNight ? 'none' : '';
+        document.getElementById('time-icon-moon').style.display = isNight ? '' : 'none';
       })();
     </script>
   </div>
   <script>if(location.hostname==='localhost'||location.hostname==='127.0.0.1'||location.search.includes('dev'))document.getElementById('atoms-btn').style.display='';</script>
   <div id="focus-overlay">
     <div id="focus-backdrop"></div>
-    <button id="focus-close"><svg width="16" height="16" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m4.397 4.554.073-.084a.75.75 0 0 1 .976-.073l.084.073L12 10.939l6.47-6.47a.75.75 0 1 1 1.06 1.061L13.061 12l6.47 6.47a.75.75 0 0 1 .072.976l-.073.084a.75.75 0 0 1-.976.073l-.084-.073L12 13.061l-6.47 6.47a.75.75 0 0 1-1.06-1.061L10.939 12l-6.47-6.47a.75.75 0 0 1-.072-.976l.073-.084-.073.084Z" fill="currentColor"/></svg></button>
+    <button id="focus-close" class="glass-dismiss"><div class="glass-effect"></div><div class="glass-tint"></div><div class="glass-shine"></div><svg width="16" height="16" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m4.397 4.554.073-.084a.75.75 0 0 1 .976-.073l.084.073L12 10.939l6.47-6.47a.75.75 0 1 1 1.06 1.061L13.061 12l6.47 6.47a.75.75 0 0 1 .072.976l-.073.084a.75.75 0 0 1-.976.073l-.084-.073L12 13.061l-6.47 6.47a.75.75 0 0 1-1.06-1.061L10.939 12l-6.47-6.47a.75.75 0 0 1-.072-.976l.073-.084-.073.084Z" fill="currentColor"/></svg></button>
     <div id="focus-content">
       <div id="focus-title"></div>
       <div id="focus-desc"></div>
@@ -797,7 +817,7 @@
     </div>
   </div>
   <div id="nested-overlay">
-    <button id="nested-close"><svg width="16" height="16" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m4.397 4.554.073-.084a.75.75 0 0 1 .976-.073l.084.073L12 10.939l6.47-6.47a.75.75 0 1 1 1.06 1.061L13.061 12l6.47 6.47a.75.75 0 0 1 .072.976l-.073.084a.75.75 0 0 1-.976.073l-.084-.073L12 13.061l-6.47 6.47a.75.75 0 0 1-1.06-1.061L10.939 12l-6.47-6.47a.75.75 0 0 1-.072-.976l.073-.084-.073.084Z" fill="currentColor"/></svg></button>
+    <button id="nested-close" class="glass-dismiss"><div class="glass-effect"></div><div class="glass-tint"></div><div class="glass-shine"></div><svg width="16" height="16" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m4.397 4.554.073-.084a.75.75 0 0 1 .976-.073l.084.073L12 10.939l6.47-6.47a.75.75 0 1 1 1.06 1.061L13.061 12l6.47 6.47a.75.75 0 0 1 .072.976l-.073.084a.75.75 0 0 1-.976.073l-.084-.073L12 13.061l-6.47 6.47a.75.75 0 0 1-1.06-1.061L10.939 12l-6.47-6.47a.75.75 0 0 1-.072-.976l.073-.084-.073.084Z" fill="currentColor"/></svg></button>
     <div id="nested-content">
       <div id="nested-title"></div>
       <div id="nested-desc"></div>
@@ -831,7 +851,7 @@
     </div>
   </div>
   <div id="wall-article">
-    <button id="wall-article-close"><svg width="16" height="16" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m4.397 4.554.073-.084a.75.75 0 0 1 .976-.073l.084.073L12 10.939l6.47-6.47a.75.75 0 1 1 1.06 1.061L13.061 12l6.47 6.47a.75.75 0 0 1 .072.976l-.073.084a.75.75 0 0 1-.976.073l-.084-.073L12 13.061l-6.47 6.47a.75.75 0 0 1-1.06-1.061L10.939 12l-6.47-6.47a.75.75 0 0 1-.072-.976l.073-.084-.073.084Z" fill="currentColor"/></svg></button>
+    <button id="wall-article-close" class="glass-dismiss"><div class="glass-effect"></div><div class="glass-tint"></div><div class="glass-shine"></div><svg width="16" height="16" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m4.397 4.554.073-.084a.75.75 0 0 1 .976-.073l.084.073L12 10.939l6.47-6.47a.75.75 0 1 1 1.06 1.061L13.061 12l6.47 6.47a.75.75 0 0 1 .072.976l-.073.084a.75.75 0 0 1-.976.073l-.084-.073L12 13.061l-6.47 6.47a.75.75 0 0 1-1.06-1.061L10.939 12l-6.47-6.47a.75.75 0 0 1-.072-.976l.073-.084-.073.084Z" fill="currentColor"/></svg></button>
     <div id="wall-article-content"></div>
   </div>
   <!-- SVG Filter for Liquid Glass -->
@@ -866,6 +886,6 @@
   <script src="lib/pixi.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/roughjs@4.6.6/bundled/rough.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/rough-notation@0.5.1/lib/rough-notation.iife.min.js"></script>
-  <script type="module" src="wall.js?v=201"></script>
+  <script type="module" src="wall.js?v=200"></script>
 </body>
 </html>

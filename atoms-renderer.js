@@ -2,8 +2,11 @@
 // All atom types are rendered from here. Both atoms.html and wall.js import this.
 import { streamChat, chatSync, buildSystemPrompt } from './ai-client.js?v=166';
 
+const _SEND_SVG = '<svg width="14" height="14" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4.284 10.296A1 1 0 0 0 5.709 11.7L11 6.33V20a1 1 0 1 0 2 0V6.336l5.285 5.364a1 1 0 0 0 1.425-1.404l-6.823-6.924a1.25 1.25 0 0 0-1.78 0l-6.823 6.924Z" fill="currentColor"/></svg>';
+const _STOP_SVG = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>';
+
 const getCSSFont = (varName, fallback) =>
-  getComputedStyle(document.documentElement).getPropertyValue(varName).trim() || fallback;
+  (getComputedStyle(document.documentElement).getPropertyValue(varName).trim().replace(/"/g, '') || fallback);
 
 // ─── Paper texture generation (matches SVG #paper-texture filter) ───
 function generatePaperTexture(w, h) {
@@ -33,92 +36,42 @@ function generatePaperTexture(w, h) {
 }
 
 // ─── Scribble loading animation (Canvas, for AI waiting state) ───
+// Draws 3 dots sequentially with the same hand-drawn teardrop style, then loops
 export function createScribbleLoader(container) {
-  const W = 640, ROW_H = 32, ROWS = 5, PAD = 14;
-  const H = ROWS * ROW_H + PAD * 2;
+  const W = 120, H = 32;
   const STROKE_COLOR = '#ccc';
+  const DOT_COUNT = 3;
+  const DOT_SPACING = 28;
+  const DOT_R = 6;
+  const LOOP_STEPS = 48;
 
   const canvas = document.createElement('canvas');
   canvas.width = W;
   canvas.height = H;
-  canvas.style.cssText = 'display:block;max-width:640px;width:100%;margin:0 auto;';
+  canvas.style.cssText = 'display:block;width:60px;margin:0;';
   container.appendChild(canvas);
   const ctx = canvas.getContext('2d');
 
-  // Pre-generate path with organic loops
+  // Pre-generate points for 3 dots
   const points = [];
-  for (let row = 0; row < ROWS; row++) {
-    const baseY = PAD + row * ROW_H + 8;
-    const leftX = Math.random() * 5;
-    const rightX = W - 20 - Math.random() * 20;
-    const rowW = rightX - leftX;
-    const goRight = row % 2 === 0;
-
-    // 3-5 loops per row, with varied sizes
-    const loopCount = 10 + Math.floor(Math.random() * 5);
-    const loops = [];
-    for (let i = 0; i < loopCount; i++) {
-      const t = (i + 0.3 + Math.random() * 0.4) / loopCount;
-      const r = 8 + Math.random() * 10; // bigger loops (8-18px)
-      const squash = 0.5 + Math.random() * 0.6; // x-squash for teardrop shape
-      const tilt = (Math.random() - 0.5) * 0.4; // random tilt
-      loops.push({ t, r, squash, tilt });
-    }
-    loops.sort((a, b) => a.t - b.t);
-
-    let curX = goRight ? leftX : rightX;
-    const dir = goRight ? 1 : -1;
-
-    for (let li = 0; li < loops.length; li++) {
-      const lp = loops[li];
-      const loopCX = goRight ? leftX + lp.t * rowW : rightX - lp.t * rowW;
-
-      // --- Baseline segment: gentle curve to loop start ---
-      const segSteps = 30;
-      const drift = (Math.random() - 0.5) * 6; // baseline isn't perfectly straight
-      for (let s = 0; s <= segSteps; s++) {
-        const frac = s / segSteps;
-        const x = curX + (loopCX - curX) * frac;
-        // Organic curve: ease into loop with slight arc
-        const arch = Math.sin(frac * Math.PI) * drift;
-        points.push({ x: x , y: baseY + arch  });
-      }
-
-      // --- Loop: teardrop/organic circle ---
-      // The pen enters from the travel direction, swings down into a full loop
-      const loopSteps = 48; // more steps = smoother
-      const { r, squash, tilt } = lp;
-      for (let s = 0; s <= loopSteps; s++) {
-        const theta = (s / loopSteps) * Math.PI * 2;
-        // Teardrop: x-radius varies with theta (narrower at top, wider at bottom)
-        const teardropX = Math.sin(theta) * (r * squash) * (1 + 0.3 * Math.sin(theta));
-        const teardropY = r * (1 - Math.cos(theta));
-        // Apply tilt rotation
-        const rx = teardropX * Math.cos(tilt) - teardropY * Math.sin(tilt);
-        const ry = teardropX * Math.sin(tilt) + teardropY * Math.cos(tilt);
-        points.push({
-          x: loopCX + rx * dir ,
-          y: baseY + ry        });
-      }
-
-      curX = loopCX;
-    }
-
-    // Final baseline to row end
-    const endX = goRight ? rightX : leftX;
-    const finalSteps = 25;
-    const finalDrift = (Math.random() - 0.5) * 4;
-    for (let s = 0; s <= finalSteps; s++) {
-      const frac = s / finalSteps;
-      const x = curX + (endX - curX) * frac;
-      const arch = Math.sin(frac * Math.PI) * finalDrift;
-      points.push({ x: x , y: baseY + arch  });
+  const startX = (W - (DOT_COUNT - 1) * DOT_SPACING) / 2;
+  for (let d = 0; d < DOT_COUNT; d++) {
+    const cx = startX + d * DOT_SPACING;
+    const cy = H / 2 - DOT_R * 0.3;
+    const squash = 0.6 + Math.random() * 0.3;
+    const tilt = (Math.random() - 0.5) * 0.3;
+    for (let s = 0; s <= LOOP_STEPS; s++) {
+      const theta = (s / LOOP_STEPS) * Math.PI * 2;
+      const tx = Math.sin(theta) * (DOT_R * squash) * (1 + 0.25 * Math.sin(theta));
+      const ty = DOT_R * (1 - Math.cos(theta));
+      const rx = tx * Math.cos(tilt) - ty * Math.sin(tilt);
+      const ry = tx * Math.sin(tilt) + ty * Math.cos(tilt);
+      points.push({ x: cx + rx, y: cy + ry });
     }
   }
 
   const totalPoints = points.length;
   let drawIdx = 0;
-  // Slow: ~2-3 points per frame (was 5)
   const POINTS_PER_FRAME = 2;
   let animId = null;
   let destroyed = false;
@@ -132,7 +85,6 @@ export function createScribbleLoader(container) {
   function loop() {
     if (destroyed) return;
     frameCount++;
-    // Draw every other frame for 50% slowdown
     if (frameCount % 2 === 0) {
       animId = requestAnimationFrame(loop);
       return;
@@ -141,6 +93,8 @@ export function createScribbleLoader(container) {
     const end = Math.min(drawIdx + POINTS_PER_FRAME, totalPoints);
     for (let i = drawIdx; i < end; i++) {
       if (i === 0) continue;
+      // Skip line between dots (don't connect last point of prev dot to first of next)
+      if (i % (LOOP_STEPS + 1) === 0) continue;
       ctx.beginPath();
       ctx.moveTo(points[i - 1].x, points[i - 1].y);
       ctx.lineTo(points[i].x, points[i].y);
@@ -332,15 +286,50 @@ export function getOrCreateVideo(videoSrc) {
   video.loop = true;
   video.muted = true;
   video.playsInline = true;
+  video.autoplay = true;
   video.preload = 'auto';
+  // WeChat browser compatibility
+  video.setAttribute('webkit-playsinline', '');
+  video.setAttribute('x5-playsinline', '');
+  video.setAttribute('x5-video-player-type', 'h5');
   const entry = { video, texture: null, ready: false };
   video.addEventListener('canplay', () => {
     entry.texture = PIXI.Texture.from(video, { resourceOptions: { autoPlay: false } });
     entry.ready = true;
   }, { once: true });
   _videoCache.set(videoSrc, entry);
+  // WeChat: if bridge was ready before this video was created, unlock it now
+  if (_wechatBridgeReady && !_videosUnlocked) {
+    _unlockSingleVideo(video);
+  }
   return entry;
 }
+
+// Unlock all cached videos on first user touch (needed for WeChat browser)
+let _videosUnlocked = false;
+let _wechatBridgeReady = false;
+function _unlockVideos() {
+  if (_videosUnlocked) return;
+  _videosUnlocked = true;
+  for (const entry of _videoCache.values()) {
+    entry.video.play().then(() => entry.video.pause()).catch(() => {});
+  }
+  document.removeEventListener('touchstart', _unlockVideos, true);
+  document.removeEventListener('click', _unlockVideos, true);
+}
+// Unlock a single video (called when WeixinJSBridge was ready before video was created)
+function _unlockSingleVideo(video) {
+  video.play().then(() => video.pause()).catch(() => {});
+}
+document.addEventListener('touchstart', _unlockVideos, true);
+document.addEventListener('click', _unlockVideos, true);
+// WeChat-specific: mark bridge ready, unlock existing + future videos
+function _onWechatReady() {
+  _wechatBridgeReady = true;
+  _unlockVideos();
+}
+if (typeof WeixinJSBridge !== 'undefined') { _onWechatReady(); }
+else { document.addEventListener('WeixinJSBridgeReady', _onWechatReady, { once: true }); }
 
 export function sampleDominantColor(imgData) {
   const px = imgData.data.data;
@@ -1391,7 +1380,8 @@ export async function renderTearoffCard(app, x, y, cfg) {
   }
 
   // ── Title text ──
-  const titleText = new PIXI.Text({ text: 'Grab a strip\nfor your agent', style: {
+  const _tearLang = (localStorage.getItem('wall-lang') || 'en');
+  const titleText = new PIXI.Text({ text: _tearLang === 'zh' ? '撕一张，\n带给你的agent！' : 'Grab a strip\nfor your agent', style: {
     fontFamily: getCSSFont('--atom-font', 'Special Elite'), fontSize: 28, fill: 0x1a1a1a,
     align: 'center', wordWrap: true, wordWrapWidth: cardW - 40, padding: 8,
   }});
@@ -1401,7 +1391,7 @@ export async function renderTearoffCard(app, x, y, cfg) {
   wrapper.addChild(titleText);
 
   // ── Subtitle text ──
-  const subtitleText = new PIXI.Text({ text: 'A secret key designed for agents', style: {
+  const subtitleText = new PIXI.Text({ text: _tearLang === 'zh' ? '给Agent设计的API小礼物\n支持小龙虾, Codex, Claude Code ...' : 'An API key designed for your AI Agents\nOpenClaw, Codex, Claude Code, etc...', style: {
     fontFamily: getCSSFont('--atom-font', 'Special Elite'), fontSize: 12, fill: 0x999999,
     align: 'center', wordWrap: true, wordWrapWidth: cardW - 40, padding: 4,
   }});
@@ -1581,7 +1571,8 @@ export async function renderTearoffCard(app, x, y, cfg) {
   const tearStrip = (idx) => {
     stripState[idx].tearing = true;
     stripState[idx].tearStart = performance.now();
-    navigator.clipboard.writeText(strips[idx].text).catch(() => {});
+    const clipText = _tearLang === 'zh' && strips[idx].text_zh ? strips[idx].text_zh : strips[idx].text;
+    navigator.clipboard.writeText(clipText).catch(() => {});
         if (window.umami) umami.track('tearoff-rip');
 
   };
@@ -1663,8 +1654,8 @@ export class PhotoSystem {
     this._setupClickHandler();
   }
 
-  async addPhoto(imgSrc, x, y, scale, meta) {
-    const imgData = await loadImagePixels(imgSrc);
+  async addPhoto(imgSrc, x, y, scale, meta, preloadedImgData) {
+    const imgData = preloadedImgData || await loadImagePixels(imgSrc);
     const sc = scale || Math.min(200/imgData.w, 300/imgData.h);
     const { group, sprite, shadow, frame } = await renderPhoto(this.app, imgData, x, y, sc, meta, this.config?.photo);
     this.app.stage.addChild(group);
@@ -1818,15 +1809,17 @@ export class PhotoSystem {
     if (this._isFocusOpen()) return;
     if (photo._hoverLabel) return;
     const cfg = photo.config || {};
+    const isZh = (localStorage.getItem('wall-lang') || 'en') === 'zh';
     const categoryMap = {
-      who_i_am: 'About Me',
-      design_projects: 'Design Project',
-      design_thought: 'Design Thought',
-      hobby: 'Hobby',
+      who_i_am: isZh ? '关于我' : 'About Me',
+      design_projects: isZh ? '设计项目' : 'Design Project',
+      design_thought: isZh ? '设计思考' : 'Design thinking',
+      hobby: isZh ? '爱好' : 'Hobby',
       vibe_coding: 'Vibe Coding',
     };
     const catText = categoryMap[cfg.category] || '';
-    const titleText = (photo.focusData?.title || cfg.caption || cfg.title || '').slice(0, 24);
+    const rawTitle = (photo.focusData?.title || cfg.caption || cfg.title || '');
+    const titleText = rawTitle.slice(0, 30);
     if (!catText && !titleText) return;
 
     const displayText = catText ? `${catText} · ${titleText}` : titleText;
@@ -2203,7 +2196,7 @@ export class PhotoSystem {
           const b = this._getPhotoBounds(p);
           if (mx>b.x && mx<b.x+b.w && my>b.y && my<b.y+b.h) {
             groupDrag = cg;
-            groupOffX = mx; groupOffY = my;
+            groupOffX = e.clientX; groupOffY = e.clientY;
             groupDownTime = Date.now(); groupMoved = false;
             this._hideClipHoverLabelImmediate(cg);
             for (const gp of cg.photos) gp.group.scale.set(gp.baseScale * 1.05);
@@ -2262,6 +2255,24 @@ export class PhotoSystem {
         }
         for (const p of cg.photos) { const ts = (groupHovered || groupDrag===cg ? 1.05 : 1.0) * p.baseScale; const c=p.group.scale.x; p.group.scale.set(c+(ts-c)*0.15); }
 
+        // Video hover: play top photo's (last in array = highest z) video on group hover
+        if (groupHovered && !cg._wasGroupHovered) {
+          const topPhoto = cg.photos[cg.photos.length - 1];
+          if (topPhoto && topPhoto.videoSrc && topPhoto.sprite) {
+            const entry = getOrCreateVideo(topPhoto.videoSrc);
+            if (entry.ready && entry.texture) {
+              topPhoto._staticTex = topPhoto._staticTex || topPhoto.sprite.texture;
+              topPhoto.sprite.texture = entry.texture;
+              entry.video.currentTime = 0;
+              entry.video.play().catch(() => {});
+            }
+          }
+        } else if (!groupHovered && cg._wasGroupHovered) {
+          const topPhoto = cg.photos[cg.photos.length - 1];
+          if (topPhoto) this._stopPhotoVideo(topPhoto);
+        }
+        cg._wasGroupHovered = groupHovered;
+
         // Hover label: show on enter, hide on leave
         if (!this._isFocusOpen()) {
           if (groupHovered && !cg._hoverArrow) {
@@ -2301,7 +2312,7 @@ export class PhotoSystem {
 }
 
 // Returns the appropriate dim layer background color based on current time mode
-const getDimColor = () => document.documentElement.classList.contains('night-mode') ? 0x0d0c1a : getDimColor();
+const getDimColor = () => document.documentElement.classList.contains('night-mode') ? 0x0d0c1a : 0xFFFDFA;
 
 // ─── Focus Overlay — click-to-detail with paper curl effect ───
 export class FocusOverlay {
@@ -2382,7 +2393,7 @@ export class FocusOverlay {
         if (section.type === 'subtitle') {
           html += `<h2 style="font-family:var(--title-font, Special Elite);font-size:20px;color:var(--text-secondary, #333);margin:48px 0 16px;line-height:1.4;">${section.text}</h2>`;
         } else if (section.type === 'text') {
-          html += `<p style="font-family:var(--body-font, -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif);font-size:16px;color:var(--text-body, #444);line-height:1.85;margin-bottom:24px;">${section.text}</p>`;
+          html += `<p style="font-family:var(--body-font, -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif);font-size:16px;color:var(--text-body, #444);line-height:1.85;margin-bottom:24px;">${section.text.replace(/\n/g, '<br>')}</p>`;
         } else if (section.type === 'image') {
           html += `<img src="${section.src}" alt="${section.alt || ''}" style="width:100%;border-radius:6px;margin:32px 0 8px;">`;
           if (section.caption) {
@@ -2463,7 +2474,7 @@ export class FocusOverlay {
   }
 
   open(item) {
-    if (this.activeItem) return;
+    if (this.activeItem || this._closing) return;
     this.activeItem = item;
     this._photoSystem?.hideAllHoverUI();
     this._focusOpenTime = Date.now();
@@ -2828,6 +2839,7 @@ export class FocusOverlay {
 
   close() {
     if (!this.activeItem) return;
+    this._closing = true;
     // Track focus duration
     if (this._focusOpenTime && window.umami) {
       const seconds = Math.round((Date.now() - this._focusOpenTime) / 1000);
@@ -2895,6 +2907,7 @@ export class FocusOverlay {
         }
         const wallComposer = document.getElementById('wall-composer');
         if (wallComposer) wallComposer.style.display = '';
+        this._closing = false;
       }, 650);
       return;
     }
@@ -2961,6 +2974,7 @@ export class FocusOverlay {
       // Restore wall composer
       const wallComposer = document.getElementById('wall-composer');
       if (wallComposer) wallComposer.style.display = '';
+      this._closing = false;
     }, 1050);
   }
 
@@ -3035,7 +3049,7 @@ export class FocusOverlay {
             if (section.type === 'subtitle') {
               html += `<h2 style="font-family:var(--title-font, Special Elite);font-size:20px;color:var(--text-secondary, #333);margin:48px 0 16px;line-height:1.4;">${section.text}</h2>`;
             } else if (section.type === 'text') {
-              html += `<p style="font-family:var(--body-font, -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif);font-size:16px;color:var(--text-body, #444);line-height:1.85;margin-bottom:24px;">${section.text}</p>`;
+              html += `<p style="font-family:var(--body-font, -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif);font-size:16px;color:var(--text-body, #444);line-height:1.85;margin-bottom:24px;">${section.text.replace(/\n/g, '<br>')}</p>`;
             } else if (section.type === 'image') {
               html += `<img src="${section.src}" alt="${section.alt || ''}" style="width:100%;border-radius:6px;margin:32px 0 8px;">`;
               if (section.caption) {
@@ -3062,6 +3076,8 @@ export class FocusOverlay {
         this._articleWrap = articleWrap;
 
         this.overlay.classList.add('article-open');
+        document.body.style.overflow = 'hidden';
+        document.documentElement.style.overflow = 'hidden';
 
         // 先让 overlay 可滚动，再重置滚动位置（scrollTop 在非 auto 时无效）
         this.overlay.style.overflowY = 'auto';
@@ -3160,6 +3176,7 @@ export class FocusOverlay {
     this.overlay.appendChild(articleWrap);
     this._articleWrap = articleWrap;
     this.overlay.classList.add('article-open');
+    document.body.style.overflow = 'hidden';
     this.overlay.style.overflowY = 'auto';
     requestAnimationFrame(() => { articleWrap.style.opacity = '1'; articleWrap.style.transform = 'translateY(0)'; });
 
@@ -3322,6 +3339,8 @@ export class FocusOverlay {
     this.overlay.scrollTop = 0;
     this.overlay.style.overflowY = '';
     this.overlay.classList.remove('article-open');
+    document.body.style.overflow = '';
+    document.documentElement.style.overflow = '';
     this.closeBtn.style.position = '';
     document.getElementById('focus-content').style.display = '';
 
@@ -3354,10 +3373,15 @@ export class FocusOverlay {
       keydown: (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
           e.preventDefault();
-          if (input.textContent.trim()) this._sendChatMessage(input, sendBtn);
+          if (input.textContent.trim() && !sendBtn.classList.contains('streaming')) this._sendChatMessage(input, sendBtn);
         }
       },
       click: () => {
+        if (sendBtn.classList.contains('streaming')) {
+          if (this._chatAbort) { this._chatAbort.abort(); this._chatAbort = null; }
+          this._restoreArticleComposer(input, sendBtn);
+          return;
+        }
         if (input.textContent.trim()) this._sendChatMessage(input, sendBtn);
       }
     };
@@ -3379,6 +3403,7 @@ export class FocusOverlay {
       sendBtn.removeEventListener('click', this._composerHandlers.click);
       this._composerHandlers = null;
     }
+    this._restoreArticleComposer(input, sendBtn);
 
     // 停止正在进行的 streaming
     if (this._chatAbort) {
@@ -3397,6 +3422,12 @@ export class FocusOverlay {
     }
   }
 
+  _restoreArticleComposer(input, sendBtn) {
+    sendBtn.classList.remove('streaming');
+    sendBtn.innerHTML = _SEND_SVG;
+    sendBtn.disabled = !input.textContent.trim();
+  }
+
   _sendChatMessage(input, sendBtn) {
     this._chatRounds = (this._chatRounds || 0) + 1;
     if (window.umami) umami.track('chat-send', { title: this.activeItem?.focusData?.title || 'wall', round: this._chatRounds });
@@ -3405,7 +3436,9 @@ export class FocusOverlay {
 
     input.textContent = '';
     input.style.height = 'auto';
-    sendBtn.disabled = true;
+    sendBtn.classList.add('streaming');
+    sendBtn.disabled = false;
+    sendBtn.innerHTML = _STOP_SVG;
 
     // 显示 chat 容器
     this._chatContainer.style.display = '';
@@ -3535,6 +3568,10 @@ export class FocusOverlay {
         if (buffer.trim()) flushText(buffer.trim());
         flushAtomBuffer();
         this._chatAbort = null;
+        const composer = document.getElementById('article-composer');
+        const ta = composer.querySelector('.composer-input');
+        const sb = composer.querySelector('.send-btn');
+        this._restoreArticleComposer(ta, sb);
       },
       this._chatAbort.signal,
     );
@@ -3566,6 +3603,7 @@ export class FocusOverlay {
   async _openNestedFocus(meta, miniApp, result) {
     if (this._nestedActive) return;
     this._nestedActive = true;
+    document.body.classList.add('nested-focus-active');
     const focusData = meta;
     const dpr = window.devicePixelRatio || 1;
     const VW = window.innerWidth, VH = window.innerHeight;
@@ -3831,6 +3869,7 @@ export class FocusOverlay {
 
       this._nestedActive = false;
       this._nestedState = null;
+      document.body.classList.remove('nested-focus-active');
     }, 1050);
   }
 
@@ -4027,6 +4066,7 @@ export class FocusOverlay {
       });
       toc.appendChild(item);
     }
+    toc.addEventListener('wheel', e => e.stopPropagation(), { passive: true });
     document.body.appendChild(toc);
     this._tocEl = toc;
     this._updateTOCPosition();
@@ -4037,6 +4077,7 @@ export class FocusOverlay {
       this._tocHeadings = [];
       const toc = document.createElement('div');
       toc.className = 'article-toc';
+      toc.addEventListener('wheel', e => e.stopPropagation(), { passive: true });
       document.body.appendChild(toc);
       this._tocEl = toc;
     }

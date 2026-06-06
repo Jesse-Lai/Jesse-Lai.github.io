@@ -1,6 +1,9 @@
 // wall-article.js — Wall-level composer + AI-generated JesseOS article
 import { streamChat, buildSystemPrompt } from './ai-client.js?v=166';
-import { createScribbleLoader } from './atoms-renderer.js?v=199';
+import { createScribbleLoader } from './atoms-renderer.js?v=204';
+
+const SEND_SVG = '<svg width="14" height="14" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4.284 10.296A1 1 0 0 0 5.709 11.7L11 6.33V20a1 1 0 1 0 2 0V6.336l5.285 5.364a1 1 0 0 0 1.425-1.404l-6.823-6.924a1.25 1.25 0 0 0-1.78 0l-6.823 6.924Z" fill="currentColor"/></svg>';
+const STOP_SVG = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>';
 
 export class WallArticle {
   constructor(focusOverlay, contentData, lang) {
@@ -16,6 +19,7 @@ export class WallArticle {
     this._abortController = null;
     this._atomApps = [];
     this._pendingAtoms = []; // atom insertions queued during streaming
+    this._chatHistory = [];
     this.isOpen = false;
 
     this.closeBtn.addEventListener('click', () => this.close());
@@ -34,11 +38,16 @@ export class WallArticle {
     input.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
-        if (input.textContent.trim()) this._send(input, sendBtn);
+        if (input.textContent.trim() && !sendBtn.classList.contains('streaming')) this._send(input, sendBtn);
       }
     });
 
     sendBtn.addEventListener('click', () => {
+      if (sendBtn.classList.contains('streaming')) {
+        if (this._abortController) { this._abortController.abort(); this._abortController = null; }
+        this._restoreComposer(input, sendBtn);
+        return;
+      }
       if (input.textContent.trim()) this._send(input, sendBtn);
     });
   }
@@ -48,14 +57,24 @@ export class WallArticle {
     if (!query) return;
     input.textContent = '';
     input.style.height = 'auto';
-    sendBtn.disabled = true;
-    this.open(query);
+    this._setStreaming(sendBtn, true);
+    if (this.isOpen) {
+      // Follow-up question in existing conversation
+      const userMsg = document.createElement('div');
+      userMsg.className = 'chat-msg user';
+      userMsg.innerHTML = `<div class="chat-bubble">${this._escapeHtml(query)}</div>`;
+      this.content.appendChild(userMsg);
+      this._scrollToBottom(true);
+      this._callAI(query);
+    } else {
+      this.open(query);
+    }
   }
 
   open(query) {
     this.isOpen = true;
+    this._chatHistory = [];
     this.canvas.classList.add('faded');
-    this.composerEl.style.display = 'none';
     if (this.atomsBtn) this.atomsBtn.style.display = 'none';
     this.overlay.style.display = 'block';
     requestAnimationFrame(() => {
@@ -72,9 +91,26 @@ export class WallArticle {
     this._callAI(query);
   }
 
+  _setStreaming(sendBtn, streaming) {
+    if (streaming) {
+      sendBtn.classList.add('streaming');
+      sendBtn.disabled = false;
+      sendBtn.innerHTML = STOP_SVG;
+    } else {
+      sendBtn.classList.remove('streaming');
+      sendBtn.innerHTML = SEND_SVG;
+    }
+  }
+
+  _restoreComposer(input, sendBtn) {
+    this._setStreaming(sendBtn, false);
+    sendBtn.disabled = !input.textContent.trim();
+  }
+
   close() {
     if (!this.isOpen) return;
     this.isOpen = false;
+    this._chatHistory = [];
     if (this._abortController) { this._abortController.abort(); this._abortController = null; }
     for (const a of this._atomApps) a.destroy();
     this._atomApps = [];
@@ -102,6 +138,7 @@ export class WallArticle {
     let loaderRemoved = false;
     let currentEl = null;
     let buffer = '';
+    let fullResponse = '';
     let atomBuffer = [];
     const insertedAtoms = new Set();
 
@@ -149,15 +186,17 @@ export class WallArticle {
       this._scrollToBottom();
     };
 
+    this._chatHistory.push({ role: 'user', content: query });
     const messages = [
       { role: 'system', content: buildSystemPrompt(this.contentData, this.focusOverlay._wallItemRegistry, this.lang) },
-      { role: 'user', content: query },
+      ...this._chatHistory,
     ];
 
     await streamChat(
       messages,
       (token) => {
         if (!loaderRemoved) { removeLoader(); loaderRemoved = true; }
+        fullResponse += token;
         buffer += token;
         while (buffer.length > 0) {
           const headingMatch = buffer.match(/^## (.+?)\n/);
@@ -205,17 +244,22 @@ export class WallArticle {
         if (buffer.trim()) flushText(buffer.trim());
         flushAtomBuffer();
         this._abortController = null;
+        this._chatHistory.push({ role: 'assistant', content: fullResponse });
+        const sb = this.composerEl.querySelector('.send-btn');
+        const ta = this.composerEl.querySelector('.composer-input');
+        if (sb && ta) this._restoreComposer(ta, sb);
       },
       this._abortController.signal,
     );
   }
 
 
-  _scrollToBottom() {
+  _scrollToBottom(force) {
     requestAnimationFrame(() => {
       const el = this.overlay;
-      const nearBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 150;
-      if (nearBottom) el.scrollTop = el.scrollHeight;
+      if (force || el.scrollHeight - el.scrollTop - el.clientHeight < 150) {
+        el.scrollTop = el.scrollHeight;
+      }
     });
   }
 
