@@ -1,5 +1,5 @@
 // wall.js — Main view, uses atoms-renderer.js
-import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, renderTearoffCard, makeDraggable, FocusOverlay, getOrCreateVideo, _startAnimLoop, _stopAnimLoop, animateTo, fadeIn } from "./atoms-renderer.js?v=204";
+import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, renderTearoffCard, makeDraggable, FocusOverlay, getOrCreateVideo, animateTo, fadeIn } from "./atoms-renderer.js?v=204";
 import { WallArticle } from "./wall-article.js?v=151";
 
 (async () => {
@@ -251,8 +251,15 @@ import { WallArticle } from "./wall-article.js?v=151";
       const targetW = colW * 0.6;
       const photoScale = targetW / imgData.w;
       const photoItem = await photoSystem.addPhoto(item.src, 0, 0, photoScale, item, imgData);
-      photoItem.videoSrc = item.src.replace(/\.(png|jpg|jpeg|webp)$/i, '_anim.webp');
+      photoItem.videoSrc = item.src.replace(/\.(png|jpg|jpeg|webp)$/i, '.mp4');
       getOrCreateVideo(photoItem.videoSrc);
+      // Mobile: prefetch first video as blob so it can play without user interaction
+      if (isMobile && !window._firstVideoPrefetched) {
+        window._firstVideoPrefetched = true;
+        window._firstVideoPrefetchPromise = fetch(photoItem.videoSrc).then(r => r.blob()).then(blob => {
+          window._firstVideoBlob = { src: photoItem.videoSrc, url: URL.createObjectURL(blob) };
+        }).catch(() => {});
+      }
       if (item.focus) { photoItem.focusData = item.focus; const fd = focusDesc[item.caption] || focusDesc[item.title]; photoItem.focusData.description = fd ? fd[LANG] : (item.keywords || item.focus.description); }
       const b = photoItem.group.getBounds();
       rendered.push({ group: photoItem.group, bounds: b, wallItem: item, focusableItem: photoItem });
@@ -265,7 +272,7 @@ import { WallArticle } from "./wall-article.js?v=151";
       stickyItem._stickyTitle = { tx: stickyResult.titleX, ty: stickyResult.titleY, tw: stickyResult.titleW, th: stickyResult.titleH };
       // Stamp video: swap stamp sprite texture on hover
       if (stickyResult.stampSprite && item.stampSrc) {
-        const videoSrc = item.stampSrc.replace(/\.(png|jpg|jpeg|webp)$/i, '_anim.webp');
+        const videoSrc = item.stampSrc.replace(/\.(png|jpg|jpeg|webp)$/i, '.mp4');
         stickyItem.videoSrc = videoSrc;
         stickyItem.sprite = stickyResult.stampSprite;
         getOrCreateVideo(videoSrc);
@@ -749,21 +756,51 @@ import { WallArticle } from "./wall-article.js?v=151";
       requestAnimationFrame(animScale);
       if (cur && cur.videoSrc && cur.sprite) {
         const entry = getOrCreateVideo(cur.videoSrc);
-        if (entry.ready && entry.texture) {
+        // Use blob URL for first video if available
+        const blob = window._firstVideoBlob && window._firstVideoBlob.src === cur.videoSrc ? window._firstVideoBlob : null;
+        if (blob && !entry.ready) entry.video.src = blob.url;
+        // Try to play (works after first user touch on iOS)
+        entry.video.currentTime = 0;
+        entry.video.play().then(() => {
+          if (!entry.texture) {
+          if (window.umami) umami.track("video-play", { src: cur.videoSrc });
+            entry.texture = PIXI.Texture.from(entry.video, { resourceOptions: { autoPlay: false } });
+            entry.ready = true;
+          }
           cur._staticTex = cur._staticTex || cur.sprite.texture;
           cur.sprite.texture = entry.texture;
-          _startAnimLoop(entry);
-          if (window.umami) umami.track("video-play", { src: cur.videoSrc });
-        } else {
-          // Not loaded yet — wait for image load
-          entry.video.addEventListener('load', () => {
-            if (cur.sprite) {
-              cur._staticTex = cur._staticTex || cur.sprite.texture;
-              cur.sprite.texture = entry.texture;
-              _startAnimLoop(entry);
-            }
-          }, { once: true });
-        }
+          // After first successful play, fetch all other videos as blobs
+          if (!window._videosLoading) {
+            window._videosLoading = true;
+            snapTargets.forEach(t => {
+              if (t.item && t.item.videoSrc && t.item !== cur) {
+                const e = getOrCreateVideo(t.item.videoSrc);
+                if (!e.ready) {
+                  fetch(t.item.videoSrc).then(r => r.blob()).then(blob => {
+                    e.video.src = URL.createObjectURL(blob);
+                    e.video.load();
+                  }).catch(() => {});
+                }
+              }
+            });
+          }
+        }).catch(() => {
+          // Video not ready yet — retry once canplay fires
+          if (!entry.ready) {
+            entry.video.addEventListener('canplay', () => {
+              entry.video.play().then(() => {
+                if (!entry.texture) {
+                  entry.texture = PIXI.Texture.from(entry.video, { resourceOptions: { autoPlay: false } });
+                  entry.ready = true;
+                }
+                if (cur.sprite) {
+                  cur._staticTex = cur._staticTex || cur.sprite.texture;
+                  cur.sprite.texture = entry.texture;
+                }
+              }).catch(() => {});
+            }, { once: true });
+          }
+        });
       }
     };
 
@@ -776,8 +813,13 @@ import { WallArticle } from "./wall-article.js?v=151";
       setTimeout(() => { isAnimating = false; }, 500);
     };
 
-    // Initial snap
-    scrollToIdx(0);
+    // Initial snap — wait for first video blob so it can play immediately
+    const startSnap = () => scrollToIdx(0);
+    if (window._firstVideoPrefetchPromise) {
+      window._firstVideoPrefetchPromise.then(startSnap).catch(startSnap);
+    } else {
+      startSnap();
+    }
     
 
 
