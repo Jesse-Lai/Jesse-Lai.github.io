@@ -417,41 +417,22 @@ import { WallArticle } from "./wall-article.js?v=151";
     await Promise.all([...photoSystem.clipGroups].map(cg => photoSystem._splitPhotos(cg)));
     await new Promise(r => setTimeout(r, 300));
 
-    // Group items by category
+    // Group items by category (only mergeable items with focusableItem)
+    // Non-mergeable items (tearoff, stamp) stay as standalone masonry entries
     const categories = ['who_i_am', 'design_projects', 'design_thought', 'hobby'];
     const groups = {};
+    const standalone = [];
     for (const cat of categories) groups[cat] = [];
     for (const r of rendered) {
       const cat = r.wallItem.category;
-      if (groups[cat]) groups[cat].push(r);
-    }
-
-    // Refresh bounds (items may have been moved by masonry or dragged)
-    for (const r of rendered) r.bounds = r.group.getBounds();
-
-    // Pre-compute final masonry positions for each category group / single
-    const colTopsNew = new Array(cols).fill(gridPad);
-    const catLayout = {}; // cat -> { targetX, targetY } for the first item's top-left
-
-    // First pass: compute each group's bounding size and assign masonry slot
-    for (const cat of categories) {
-      const items = groups[cat];
-      if (!items.length) continue;
-      // Use first item's bounds as representative size
-      const b0 = items[0].group.getBounds();
-      const col = colTopsNew.indexOf(Math.min(...colTopsNew));
-      const colCenterX = gridOffsetX + (col + 0.5) * colW;
-      catLayout[cat] = {
-        targetX: colCenterX - b0.width / 2,
-        targetY: colTopsNew[col],
-        boundsOffX: b0.x - items[0].group.x,
-        boundsOffY: b0.y - items[0].group.y,
-      };
-      colTopsNew[col] += b0.height + gridPad;
+      if (!r.focusableItem) {
+        standalone.push(r);
+      } else if (groups[cat]) {
+        groups[cat].push(r);
+      }
     }
 
     // Sort each category: largest item area first (bottom of stack), smallest on top
-    // Use itemW * itemH (photo = frame size, sticky = note body) not getBounds (includes shadow/stamp overflow)
     for (const cat of categories) {
       groups[cat].sort((a, b) => {
         const areaA = (a.focusableItem?.itemW || 0) * (a.focusableItem?.itemH || 0);
@@ -469,44 +450,56 @@ import { WallArticle } from "./wall-article.js?v=151";
       }
     }
 
-    // Fly ALL items directly to final position
-    const allFlyAnims = [];
+    // Build masonry entries: category groups + standalone items
+    for (const r of rendered) r.bounds = r.group.getBounds();
+    const masonryEntries = [];
     for (const cat of categories) {
       const items = groups[cat];
-      if (!items.length || !catLayout[cat]) continue;
-      const layout = catLayout[cat];
-      // First item (largest) flies to the masonry slot
-      const target0 = items[0];
-      const tx0 = layout.targetX - layout.boundsOffX;
-      const ty0 = layout.targetY - layout.boundsOffY;
-      allFlyAnims.push(animateTo(target0.group, tx0, ty0, 600));
-      // Other items (progressively smaller) fly to same position
-      for (let i = 1; i < items.length; i++) {
-        const r = items[i];
-        const tx = layout.targetX - (r.bounds.x - r.group.x);
-        const ty = layout.targetY - (r.bounds.y - r.group.y);
+      if (!items.length) continue;
+      masonryEntries.push({ type: 'group', cat, items, bounds: items[0].bounds });
+    }
+    for (const r of standalone) {
+      masonryEntries.push({ type: 'standalone', items: [r], bounds: r.bounds });
+    }
+
+    // Pre-compute masonry target positions
+    const colTopsNew = new Array(cols).fill(gridPad);
+    for (const entry of masonryEntries) {
+      const b = entry.bounds;
+      const col = colTopsNew.indexOf(Math.min(...colTopsNew));
+      const colCenterX = gridOffsetX + (col + 0.5) * colW;
+      entry.targetX = colCenterX - b.width / 2;
+      entry.targetY = colTopsNew[col];
+      colTopsNew[col] += b.height + gridPad;
+    }
+
+    // Fly ALL items to their masonry target position
+    const allFlyAnims = [];
+    for (const entry of masonryEntries) {
+      for (const r of entry.items) {
+        const tx = entry.targetX - (r.bounds.x - r.group.x);
+        const ty = entry.targetY - (r.bounds.y - r.group.y);
         allFlyAnims.push(animateTo(r.group, tx, ty, 600));
       }
     }
     await Promise.all(allFlyAnims);
 
-    // Merge groups and assign predefined labels
+    // Merge category groups and assign predefined labels
     const categoryLabels = {
       who_i_am: 'About Me',
       design_projects: 'Design Work',
       design_thought: 'Design Thinking',
       hobby: 'Life & Hobbies',
     };
-    await Promise.all(categories.map(async cat => {
-      const items = groups[cat];
+    await Promise.all(masonryEntries.filter(e => e.type === 'group').map(async entry => {
+      const items = entry.items;
       if (items.length < 2) return;
       const target = items[0];
       for (let i = 1; i < items.length; i++) {
         await photoSystem._mergePhotos(items[i].focusableItem, target.focusableItem);
       }
-      // Set predefined label on the newly created clip group
       const cg = photoSystem.clipGroups.find(c => c.photos.includes(target.focusableItem));
-      if (cg) cg.label = categoryLabels[cat] || cat;
+      if (cg) cg.label = categoryLabels[entry.cat] || entry.cat;
     }));
 
     // Resize canvas if needed

@@ -226,6 +226,12 @@
       position: relative;
       z-index: 3;
     }
+    /* Nested focus (from chat/article) — blur underlying content */
+    body.nested-focus-active #wall-article,
+    body.nested-focus-active #focus-overlay {
+      filter: blur(6px);
+      transition: filter 0.4s ease;
+    }
     #focus-overlay {
       position: fixed; inset: 0; z-index: 10000;
       display: none;
@@ -651,9 +657,11 @@
     /* Wall article */
     html.night-mode #wall-article { background: var(--overlay-bg); }
 
-    /* Focus overlay — title / desc */
+    /* Focus overlay — title / desc / button */
     html.night-mode #focus-title { color: var(--text-primary); }
     html.night-mode #focus-desc { color: var(--text-primary); }
+    html.night-mode #focus-link { background: rgba(255,255,255,0.85); color: #0a0a0a; }
+    html.night-mode #focus-link:hover { background: rgba(255,255,255,1); }
 
     /* Article content */
     html.night-mode #focus-article .article-title { color: var(--text-primary); border-bottom-color: var(--border-divider); }

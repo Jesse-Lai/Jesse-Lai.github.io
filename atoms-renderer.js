@@ -1353,7 +1353,7 @@ export async function renderTearoffCard(app, x, y, cfg) {
   wrapper.addChild(titleText);
 
   // ── Subtitle text ──
-  const subtitleText = new PIXI.Text({ text: _tearLang === 'zh' ? '你的agent就能知道我所有的秘密' : 'A secret key designed for agents', style: {
+  const subtitleText = new PIXI.Text({ text: _tearLang === 'zh' ? '给Agent设计的API小礼物\n支持小龙虾, Codex, Claude Code ...' : 'An API key designed for your AI Agents\nOpenClaw, Codex, Claude Code, etc...', style: {
     fontFamily: getCSSFont('--atom-font', 'Special Elite'), fontSize: 12, fill: 0x999999,
     align: 'center', wordWrap: true, wordWrapWidth: cardW - 40, padding: 4,
   }});
@@ -2158,7 +2158,7 @@ export class PhotoSystem {
           const b = this._getPhotoBounds(p);
           if (mx>b.x && mx<b.x+b.w && my>b.y && my<b.y+b.h) {
             groupDrag = cg;
-            groupOffX = mx; groupOffY = my;
+            groupOffX = e.clientX; groupOffY = e.clientY;
             groupDownTime = Date.now(); groupMoved = false;
             this._hideClipHoverLabelImmediate(cg);
             for (const gp of cg.photos) gp.group.scale.set(gp.baseScale * 1.05);
@@ -2216,6 +2216,24 @@ export class PhotoSystem {
           }
         }
         for (const p of cg.photos) { const ts = (groupHovered || groupDrag===cg ? 1.05 : 1.0) * p.baseScale; const c=p.group.scale.x; p.group.scale.set(c+(ts-c)*0.15); }
+
+        // Video hover: play top photo's (last in array = highest z) video on group hover
+        if (groupHovered && !cg._wasGroupHovered) {
+          const topPhoto = cg.photos[cg.photos.length - 1];
+          if (topPhoto && topPhoto.videoSrc && topPhoto.sprite) {
+            const entry = getOrCreateVideo(topPhoto.videoSrc);
+            if (entry.ready && entry.texture) {
+              topPhoto._staticTex = topPhoto._staticTex || topPhoto.sprite.texture;
+              topPhoto.sprite.texture = entry.texture;
+              entry.video.currentTime = 0;
+              entry.video.play().catch(() => {});
+            }
+          }
+        } else if (!groupHovered && cg._wasGroupHovered) {
+          const topPhoto = cg.photos[cg.photos.length - 1];
+          if (topPhoto) this._stopPhotoVideo(topPhoto);
+        }
+        cg._wasGroupHovered = groupHovered;
 
         // Hover label: show on enter, hide on leave
         if (!this._isFocusOpen()) {
@@ -3021,6 +3039,7 @@ export class FocusOverlay {
 
         this.overlay.classList.add('article-open');
         document.body.style.overflow = 'hidden';
+        document.documentElement.style.overflow = 'hidden';
 
         // 先让 overlay 可滚动，再重置滚动位置（scrollTop 在非 auto 时无效）
         this.overlay.style.overflowY = 'auto';
@@ -3283,6 +3302,7 @@ export class FocusOverlay {
     this.overlay.style.overflowY = '';
     this.overlay.classList.remove('article-open');
     document.body.style.overflow = '';
+    document.documentElement.style.overflow = '';
     this.closeBtn.style.position = '';
     document.getElementById('focus-content').style.display = '';
 
@@ -3527,6 +3547,7 @@ export class FocusOverlay {
   async _openNestedFocus(meta, miniApp, result) {
     if (this._nestedActive) return;
     this._nestedActive = true;
+    document.body.classList.add('nested-focus-active');
     const focusData = meta;
     const dpr = window.devicePixelRatio || 1;
     const VW = window.innerWidth, VH = window.innerHeight;
@@ -3792,6 +3813,7 @@ export class FocusOverlay {
 
       this._nestedActive = false;
       this._nestedState = null;
+      document.body.classList.remove('nested-focus-active');
     }, 1050);
   }
 
@@ -3988,6 +4010,7 @@ export class FocusOverlay {
       });
       toc.appendChild(item);
     }
+    toc.addEventListener('wheel', e => e.stopPropagation(), { passive: true });
     document.body.appendChild(toc);
     this._tocEl = toc;
     this._updateTOCPosition();
@@ -3998,6 +4021,7 @@ export class FocusOverlay {
       this._tocHeadings = [];
       const toc = document.createElement('div');
       toc.className = 'article-toc';
+      toc.addEventListener('wheel', e => e.stopPropagation(), { passive: true });
       document.body.appendChild(toc);
       this._tocEl = toc;
     }
