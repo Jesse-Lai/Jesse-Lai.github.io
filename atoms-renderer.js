@@ -274,45 +274,39 @@ export async function loadImagePixels(src, maxWidth) {
   return { data: ctx.getImageData(0,0,w,h), w, h, tex: PIXI.Texture.from(c) };
 }
 
-// ─── Video Texture (lazy, cached) ───
+// ─── Animated WebP Texture (replaces video system) ───
 const _videoCache = new Map();
-export function getOrCreateVideo(videoSrc) {
-  if (_videoCache.has(videoSrc)) return _videoCache.get(videoSrc);
-  const video = document.createElement('video');
-  video.src = videoSrc;
-  video.loop = true;
-  video.muted = true;
-  video.playsInline = true;
-  video.preload = 'auto';
-  // WeChat browser compatibility
-  video.setAttribute('webkit-playsinline', '');
-  video.setAttribute('x5-playsinline', '');
-  video.setAttribute('x5-video-player-type', 'h5');
-  const entry = { video, texture: null, ready: false };
-  video.addEventListener('canplay', () => {
-    entry.texture = PIXI.Texture.from(video, { resourceOptions: { autoPlay: false } });
+export function getOrCreateVideo(animSrc) {
+  if (_videoCache.has(animSrc)) return _videoCache.get(animSrc);
+  const img = new Image();
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  const entry = { video: img, texture: null, ready: false, _canvas: canvas, _ctx: ctx, _rafId: null };
+  img.onload = () => {
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    entry.texture = PIXI.Texture.from(canvas);
     entry.ready = true;
-  }, { once: true });
-  _videoCache.set(videoSrc, entry);
+  };
+  img.src = animSrc;
+  _videoCache.set(animSrc, entry);
   return entry;
 }
 
-// Unlock all cached videos on first user touch (needed for WeChat browser)
-let _videosUnlocked = false;
-function _unlockVideos() {
-  if (_videosUnlocked) return;
-  _videosUnlocked = true;
-  for (const entry of _videoCache.values()) {
-    entry.video.play().then(() => entry.video.pause()).catch(() => {});
-  }
-  document.removeEventListener('touchstart', _unlockVideos, true);
-  document.removeEventListener('click', _unlockVideos, true);
+// Start pumping animated WebP frames into the canvas texture
+export function _startAnimLoop(entry) {
+  if (entry._rafId) return;
+  const pump = () => {
+    if (!entry.ready) { entry._rafId = requestAnimationFrame(pump); return; }
+    entry._ctx.drawImage(entry.video, 0, 0);
+    entry.texture.source.update();
+    entry._rafId = requestAnimationFrame(pump);
+  };
+  entry._rafId = requestAnimationFrame(pump);
 }
-document.addEventListener('touchstart', _unlockVideos, true);
-document.addEventListener('click', _unlockVideos, true);
-// WeChat-specific: unlock after WeixinJSBridge is ready
-if (typeof WeixinJSBridge !== 'undefined') { _unlockVideos(); }
-else { document.addEventListener('WeixinJSBridgeReady', _unlockVideos, { once: true }); }
+export function _stopAnimLoop(entry) {
+  if (entry._rafId) { cancelAnimationFrame(entry._rafId); entry._rafId = null; }
+}
 
 export function sampleDominantColor(imgData) {
   const px = imgData.data.data;
@@ -1764,7 +1758,7 @@ export class PhotoSystem {
   _stopPhotoVideo(photo) {
     if (!photo._staticTex || !photo.sprite) return;
     const entry = _videoCache.get(photo.videoSrc);
-    if (entry) { entry.video.pause(); entry.video.currentTime = 0; }
+    if (entry) _stopAnimLoop(entry);
     photo.sprite.texture = photo._staticTex;
     photo._staticTex = null;
   }
@@ -1903,8 +1897,7 @@ export class PhotoSystem {
         if (entry.ready && entry.texture) {
           photo._staticTex = photo.sprite.texture;
           photo.sprite.texture = entry.texture;
-          entry.video.currentTime = 0;
-          entry.video.play().catch(() => {});
+          _startAnimLoop(entry);
           if (window.umami) umami.track('video-play', { src: photo.videoSrc });
         }
       } else if (!hovering && wasHovering) {
@@ -2246,8 +2239,7 @@ export class PhotoSystem {
             if (entry.ready && entry.texture) {
               topPhoto._staticTex = topPhoto._staticTex || topPhoto.sprite.texture;
               topPhoto.sprite.texture = entry.texture;
-              entry.video.currentTime = 0;
-              entry.video.play().catch(() => {});
+              _startAnimLoop(entry);
             }
           }
         } else if (!groupHovered && cg._wasGroupHovered) {
@@ -2720,9 +2712,7 @@ export class FocusOverlay {
 
             item._staticTex = item.sprite.texture;
             item.sprite.texture = entry.texture;
-            entry.video.loop = false;
-            entry.video.currentTime = 0;
-            entry.video.play().catch(() => {});
+            _startAnimLoop(entry);
             this._videoPlaying = true;
 
             // Fade in stamp overlay
@@ -2745,30 +2735,25 @@ export class FocusOverlay {
 
             item._staticTex = item.sprite.texture;
             item.sprite.texture = entry.texture;
-            entry.video.loop = false;
-            entry.video.currentTime = 0;
-            entry.video.play().catch(() => {});
+            _startAnimLoop(entry);
             this._videoPlaying = true;
           }
 
-          const onEnded = () => {
-            entry.video.loop = true;
+          // Auto-dismiss after ~5s (animated WebP loops, so use timeout)
+          this._animEndTimer = setTimeout(() => {
             if (!this._videoPlaying) return;
             this._cleanupFocusVideo();
-          };
-          entry.video.addEventListener('ended', onEnded, { once: true });
+          }, 5000);
           this._videoEndedCleanup = () => {
-            entry.video.removeEventListener('ended', onEnded);
-            entry.video.pause();
-            entry.video.currentTime = 0;
-            entry.video.loop = true;
+            clearTimeout(this._animEndTimer);
+            _stopAnimLoop(entry);
           };
         };
 
         if (entry.ready && entry.texture) {
           startPlayback();
         } else {
-          entry.video.addEventListener('canplay', startPlayback, { once: true });
+          entry.video.addEventListener('load', startPlayback, { once: true });
         }
       }, duration);
     }
@@ -3906,20 +3891,19 @@ export class FocusOverlay {
 
     // Video hover for photo atoms
     if (meta.atomType === 'photo' && meta.src && result.sprite) {
-      const videoSrc = meta.src.replace(/\.(png|jpg|jpeg|webp)$/i, '.mp4');
+      const videoSrc = meta.src.replace(/\.(png|jpg|jpeg|webp)$/i, '_anim.webp');
       const vEntry = getOrCreateVideo(videoSrc);
       let vHover = false, staticTex = null;
       app.canvas.addEventListener('mouseenter', () => {
         if (vEntry.ready && vEntry.texture && !vHover) {
           vHover = true; staticTex = result.sprite.texture;
           result.sprite.texture = vEntry.texture;
-          vEntry.video.currentTime = 0;
-          vEntry.video.play().catch(() => {});
+          _startAnimLoop(vEntry);
         }
       });
       app.canvas.addEventListener('mouseleave', () => {
         if (vHover && staticTex) {
-          vHover = false; vEntry.video.pause(); vEntry.video.currentTime = 0;
+          vHover = false; _stopAnimLoop(vEntry);
           result.sprite.texture = staticTex; staticTex = null;
         }
       });
