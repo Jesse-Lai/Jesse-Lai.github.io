@@ -583,15 +583,35 @@
           },
           {
             "type": "text",
-            "text": "这次聊的话题是因为前段时间参与了一些Generative UI的项目，因此分享一些总结和反思。看完本文你能获得："
+            "text": "这次聊的话题是因为前段时间参与了一些Generative UI的项目，因此分享一些总结和反思。"
           },
           {
             "type": "text",
-            "text": "✅ 为什么GenUI重要，明天就可以和同事侃侃而谈\n✅ GenUI的形态和行为，设计的重点是什么\n✅ 什么Figma不再能设计GenUI，以及我自己的工作流"
+            "text": "看完本文你能获得："
           },
           {
             "type": "text",
-            "text": "看完本文你不能获得：\n❎ OpenAI的工作机会（但可以增加你获得的概率）\n❎ 一只会叫你名字的可爱小猫咪 🐱（但你可以自己vibe coding它）"
+            "text": "✅ 为什么GenUI重要，明天就可以和同事侃侃而谈"
+          },
+          {
+            "type": "text",
+            "text": "✅ GenUI的形态和行为，设计的重点是什么"
+          },
+          {
+            "type": "text",
+            "text": "✅ 什么Figma不再能设计GenUI，以及我自己的工作流"
+          },
+          {
+            "type": "text",
+            "text": "看完本文你不能获得："
+          },
+          {
+            "type": "text",
+            "text": "❎ OpenAI的工作机会（但可以增加你获得的概率）"
+          },
+          {
+            "type": "text",
+            "text": "❎ 一只会叫你名字的可爱小猫咪 🐱（但你可以自己vibe coding它）"
           },
           {
             "type": "text",
@@ -642,7 +662,15 @@
           },
           {
             "type": "text",
-            "text": "1. 回答不仅有内容，还有视觉结构和重点\n2. 可交互，用户有更高的互动意愿\n3. 用户对回答和agent都有更强的信任感"
+            "text": "1. 回答不仅有内容，还有视觉结构和重点"
+          },
+          {
+            "type": "text",
+            "text": "2. 可交互，用户有更高的互动意愿"
+          },
+          {
+            "type": "text",
+            "text": "3. 用户对回答和agent都有更强的信任感"
           },
           {
             "type": "subtitle",
@@ -671,7 +699,11 @@
           },
           {
             "type": "text",
-            "text": "Chat+\n对话+产品界面共同协作，聊天依然存在，但它只是更大工作区域的一部分。用户通过对话，让AI在可操作的界面中生成GenUI，共同完成任务。比如 Google Stitch在画布种生成UI。"
+            "text": "Chat+"
+          },
+          {
+            "type": "text",
+            "text": "对话+产品界面共同协作，聊天依然存在，但它只是更大工作区域的一部分。用户通过对话，让AI在可操作的界面中生成GenUI，共同完成任务。比如 Google Stitch在画布种生成UI。"
           },
           {
             "type": "image",
@@ -680,7 +712,11 @@
           },
           {
             "type": "text",
-            "text": "Chatless\n界面会在没有任何聊天窗口的情况下自动适配。用户几乎感觉不到“在和 AI 对话”，系统会根据用户的input直接输出新的GenUI更新界面。比如Copilot lab中根据用户的行为自动生成的地图和体验的游戏"
+            "text": "Chatless"
+          },
+          {
+            "type": "text",
+            "text": "界面会在没有任何聊天窗口的情况下自动适配。用户几乎感觉不到“在和 AI 对话”，系统会根据用户的input直接输出新的GenUI更新界面。比如Copilot lab中根据用户的行为自动生成的地图和体验的游戏"
           },
           {
             "type": "image",
@@ -697,11 +733,19 @@
           },
           {
             "type": "text",
-            "text": "表达自由度（Freedom of Expression）：\n决定了系统在视觉和结构上可以让AI “生成到什么程度”。一般来说有3种："
+            "text": "表达自由度（Freedom of Expression）："
           },
           {
             "type": "text",
-            "text": "1. 固定组件系统（Low Freedom）：\nAI 仅允许调用有限的系统预设组件（比如lists，widget，cards），AI 只能在固定卡片、列表或表单之间选择，不允许结构突破"
+            "text": "决定了系统在视觉和结构上可以让AI “生成到什么程度”。一般来说有3种："
+          },
+          {
+            "type": "text",
+            "text": "1. 固定组件系统（Low Freedom）："
+          },
+          {
+            "type": "text",
+            "text": "AI 仅允许调用有限的系统预设组件（比如lists，widget，cards），AI 只能在固定卡片、列表或表单之间选择，不允许结构突破"
           },
           {
             "type": "image",
@@ -710,7 +754,11 @@
           },
           {
             "type": "text",
-            "text": "2. 扩展组件系统（Medium Freedom）：\nAI 还是调用有限的系统预设组件，但允许不同组件的拼装，组合，Grouping"
+            "text": "2. 扩展组件系统（Medium Freedom）："
+          },
+          {
+            "type": "text",
+            "text": "AI 还是调用有限的系统预设组件，但允许不同组件的拼装，组合，Grouping"
           },
           {
             "type": "image",
@@ -719,7 +767,11 @@
           },
           {
             "type": "text",
-            "text": "3. 开放生成系统（High Freedom）：\nAI 可以生成完整的HTML 或free-form布局（比如用design skills让AI自由生成UI）"
+            "text": "3. 开放生成系统（High Freedom）："
+          },
+          {
+            "type": "text",
+            "text": "AI 可以生成完整的HTML 或free-form布局（比如用design skills让AI自由生成UI）"
           },
           {
             "type": "image",
@@ -834,11 +886,27 @@
           },
           {
             "type": "text",
-            "text": "✅ Why GenUI matters — enough to discuss with colleagues tomorrow\n✅ GenUI forms and behaviors — what designers should focus on\n✅ Why Figma can no longer design GenUI, and my own workflow"
+            "text": "✅ Why GenUI matters — enough to discuss with colleagues tomorrow"
           },
           {
             "type": "text",
-            "text": "What you won't get:\n❎ A job at OpenAI (but this might improve your chances)\n❎ A cute kitten that calls your name 🐱(but you can vibe-code one yourself)"
+            "text": "✅ GenUI forms and behaviors — what designers should focus on"
+          },
+          {
+            "type": "text",
+            "text": "✅ Why Figma can no longer design GenUI, and my own workflow"
+          },
+          {
+            "type": "text",
+            "text": "What you won't get:"
+          },
+          {
+            "type": "text",
+            "text": "❎ A job at OpenAI (but this might improve your chances)"
+          },
+          {
+            "type": "text",
+            "text": "❎ A cute kitten that calls your name 🐱(but you can vibe-code one yourself)"
           },
           {
             "type": "text",
@@ -889,7 +957,15 @@
           },
           {
             "type": "text",
-            "text": "1. Responses have content WITH visual structure and emphasis\n2. Interactive — higher engagement willingness\n3. Users have stronger trust in both response and agent"
+            "text": "1. Responses have content WITH visual structure and emphasis"
+          },
+          {
+            "type": "text",
+            "text": "2. Interactive — higher engagement willingness"
+          },
+          {
+            "type": "text",
+            "text": "3. Users have stronger trust in both response and agent"
           },
           {
             "type": "subtitle",
@@ -918,7 +994,11 @@
           },
           {
             "type": "text",
-            "text": "Chat+\nConversation + product interface working together. Chat still exists, but as part of a larger workspace. Users have AI generate GenUI in an actionable canvas. E.g., Google Stitch generating UI in canvas."
+            "text": "Chat+"
+          },
+          {
+            "type": "text",
+            "text": "Conversation + product interface working together. Chat still exists, but as part of a larger workspace. Users have AI generate GenUI in an actionable canvas. E.g., Google Stitch generating UI in canvas."
           },
           {
             "type": "image",
@@ -927,7 +1007,11 @@
           },
           {
             "type": "text",
-            "text": "Chatless\nThe interface adapts automatically without any chat window. Users barely feel they're \"talking to AI\" — the system outputs new GenUI directly based on user input. E.g., Copilot Lab's auto-generated maps and games."
+            "text": "Chatless"
+          },
+          {
+            "type": "text",
+            "text": "The interface adapts automatically without any chat window. Users barely feel they're \"talking to AI\" — the system outputs new GenUI directly based on user input. E.g., Copilot Lab's auto-generated maps and games."
           },
           {
             "type": "image",
@@ -944,11 +1028,19 @@
           },
           {
             "type": "text",
-            "text": "Freedom of Expression:\nDetermines how far the system allows AI to \"generate\" visually and structurally. Three levels:"
+            "text": "Freedom of Expression:"
           },
           {
             "type": "text",
-            "text": "1. Fixed Component System (Low Freedom):\nAI can only call limited preset components (lists, widgets, cards). No structural breakthroughs allowed."
+            "text": "Determines how far the system allows AI to \"generate\" visually and structurally. Three levels:"
+          },
+          {
+            "type": "text",
+            "text": "1. Fixed Component System (Low Freedom):"
+          },
+          {
+            "type": "text",
+            "text": "AI can only call limited preset components (lists, widgets, cards). No structural breakthroughs allowed."
           },
           {
             "type": "image",
@@ -957,7 +1049,11 @@
           },
           {
             "type": "text",
-            "text": "2. Extended Component System (Medium Freedom):\nAI still calls preset components but allows assembly, combination, and grouping."
+            "text": "2. Extended Component System (Medium Freedom):"
+          },
+          {
+            "type": "text",
+            "text": "AI still calls preset components but allows assembly, combination, and grouping."
           },
           {
             "type": "image",
@@ -966,7 +1062,11 @@
           },
           {
             "type": "text",
-            "text": "3. Open Generation System (High Freedom):\nAI can generate complete HTML or free-form layouts (e.g., using design skills for AI to freely generate UI)."
+            "text": "3. Open Generation System (High Freedom):"
+          },
+          {
+            "type": "text",
+            "text": "AI can generate complete HTML or free-form layouts (e.g., using design skills for AI to freely generate UI)."
           },
           {
             "type": "image",
