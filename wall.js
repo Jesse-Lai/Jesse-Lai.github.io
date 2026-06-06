@@ -353,8 +353,8 @@ import { WallArticle } from "./wall-article.js?v=151";
   const wallArticle = new WallArticle(focusOverlay, contentData, LANG);
   wallArticle.setupComposer();
   // Update composer placeholder for language
-  const wcTextarea = document.querySelector('#wall-composer textarea');
-  if (wcTextarea) wcTextarea.placeholder = LANG === 'zh' ? '问Jesse任何问题...' : 'Ask anything about Jesse...';
+  const wcInput = document.querySelector('#wall-composer .composer-input');
+  if (wcInput) wcInput.dataset.placeholder = LANG === 'zh' ? '问Jesse任何问题...' : 'Ask anything about Jesse...';
 
   const mouse = { x:-9999, y:-9999 };
 

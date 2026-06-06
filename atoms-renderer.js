@@ -3339,43 +3339,43 @@ export class FocusOverlay {
 
   _setupComposer() {
     const composer = document.getElementById('article-composer');
-    const textarea = composer.querySelector('textarea');
+    const input = composer.querySelector('.composer-input');
     const sendBtn = composer.querySelector('.send-btn');
     composer.style.display = 'block';
-    textarea.value = '';
+    input.textContent = '';
     sendBtn.disabled = true;
 
     this._composerHandlers = {
       input: () => {
-        textarea.style.height = 'auto';
-        textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
-        sendBtn.disabled = !textarea.value.trim();
+        input.style.height = 'auto';
+        input.style.height = Math.min(input.scrollHeight, 120) + 'px';
+        sendBtn.disabled = !input.textContent.trim();
       },
       keydown: (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
           e.preventDefault();
-          if (textarea.value.trim()) this._sendChatMessage(textarea, sendBtn);
+          if (input.textContent.trim()) this._sendChatMessage(input, sendBtn);
         }
       },
       click: () => {
-        if (textarea.value.trim()) this._sendChatMessage(textarea, sendBtn);
+        if (input.textContent.trim()) this._sendChatMessage(input, sendBtn);
       }
     };
 
-    textarea.addEventListener('input', this._composerHandlers.input);
-    textarea.addEventListener('keydown', this._composerHandlers.keydown);
+    input.addEventListener('input', this._composerHandlers.input);
+    input.addEventListener('keydown', this._composerHandlers.keydown);
     sendBtn.addEventListener('click', this._composerHandlers.click);
   }
 
   _teardownComposer() {
     const composer = document.getElementById('article-composer');
-    const textarea = composer.querySelector('textarea');
+    const input = composer.querySelector('.composer-input');
     const sendBtn = composer.querySelector('.send-btn');
     composer.style.display = 'none';
 
     if (this._composerHandlers) {
-      textarea.removeEventListener('input', this._composerHandlers.input);
-      textarea.removeEventListener('keydown', this._composerHandlers.keydown);
+      input.removeEventListener('input', this._composerHandlers.input);
+      input.removeEventListener('keydown', this._composerHandlers.keydown);
       sendBtn.removeEventListener('click', this._composerHandlers.click);
       this._composerHandlers = null;
     }
@@ -3397,14 +3397,14 @@ export class FocusOverlay {
     }
   }
 
-  _sendChatMessage(textarea, sendBtn) {
+  _sendChatMessage(input, sendBtn) {
     this._chatRounds = (this._chatRounds || 0) + 1;
     if (window.umami) umami.track('chat-send', { title: this.activeItem?.focusData?.title || 'wall', round: this._chatRounds });
-    const query = textarea.value.trim();
+    const query = input.textContent.trim();
     if (!query) return;
 
-    textarea.value = '';
-    textarea.style.height = 'auto';
+    input.textContent = '';
+    input.style.height = 'auto';
     sendBtn.disabled = true;
 
     // 显示 chat 容器

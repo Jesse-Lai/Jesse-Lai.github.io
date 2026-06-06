@@ -439,14 +439,20 @@
       box-shadow: inset 2px 2px 1px 0 rgba(255, 255, 255, 0.7),
         inset -1px -1px 1px 1px rgba(255, 255, 255, 0.6);
     }
-    .composer-bar textarea {
+    .composer-bar .composer-input {
       position: relative; z-index: 3;
-      flex: 1; resize: none; border: none; background: none; outline: none;
+      flex: 1; border: none; background: none; outline: none;
       color: #333; font-size: 15px; line-height: 1.5;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       max-height: 120px; min-height: 22px; padding: 0;
+      overflow-y: auto; white-space: pre-wrap; word-break: break-word;
+      -webkit-user-select: text; user-select: text;
     }
-    .composer-bar textarea::placeholder { color: rgba(0,0,0,0.3); }
+    .composer-bar .composer-input:empty::before {
+      content: attr(data-placeholder);
+      color: rgba(0,0,0,0.3);
+      pointer-events: none;
+    }
     .composer-bar .send-btn {
       position: relative; z-index: 3;
       flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%;
@@ -662,10 +668,10 @@
     html.night-mode .article-toc-item.active .toc-text { color: var(--text-secondary); }
 
     /* Composer textarea */
-    html.night-mode .composer-bar textarea {
+    html.night-mode .composer-bar .composer-input {
       color: rgba(255,255,255,0.75);
     }
-    html.night-mode .composer-bar textarea::placeholder {
+    html.night-mode .composer-bar .composer-input:empty::before {
       color: rgba(255,255,255,0.28);
     }
     html.night-mode .composer-bar .send-btn {
@@ -783,7 +789,7 @@
     <div id="focus-article"></div>
     <div id="article-composer" class="composer-bar">
       <div class="composer-box"><div class="glass-effect"></div><div class="glass-tint"></div><div class="glass-shine"></div>
-        <textarea rows="1" placeholder="Ask anything about Jesse..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-form-type="other" data-1p-ignore data-lpignore="true" enterkeyhint="send"></textarea>
+        <div class="composer-input" contenteditable="true" role="textbox" aria-placeholder="Ask anything about Jesse..." data-placeholder="Ask anything about Jesse..." enterkeyhint="send"></div>
         <button class="send-btn" disabled>
           <svg width="14" height="14" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4.284 10.296A1 1 0 0 0 5.709 11.7L11 6.33V20a1 1 0 1 0 2 0V6.336l5.285 5.364a1 1 0 0 0 1.425-1.404l-6.823-6.924a1.25 1.25 0 0 0-1.78 0l-6.823 6.924Z" fill="currentColor"/></svg>
         </button>
@@ -817,7 +823,7 @@
         </svg>
       </button>
       <div class="composer-box"><div class="glass-effect"></div><div class="glass-tint"></div><div class="glass-shine"></div>
-        <textarea rows="1" placeholder="Ask anything about Jesse..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-form-type="other" data-1p-ignore data-lpignore="true" enterkeyhint="send"></textarea>
+        <div class="composer-input" contenteditable="true" role="textbox" aria-placeholder="Ask anything about Jesse..." data-placeholder="Ask anything about Jesse..." enterkeyhint="send"></div>
       <button class="send-btn" disabled>
         <svg width="14" height="14" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4.284 10.296A1 1 0 0 0 5.709 11.7L11 6.33V20a1 1 0 1 0 2 0V6.336l5.285 5.364a1 1 0 0 0 1.425-1.404l-6.823-6.924a1.25 1.25 0 0 0-1.78 0l-6.823 6.924Z" fill="currentColor"/></svg>
       </button>

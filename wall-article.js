@@ -22,32 +22,32 @@ export class WallArticle {
   }
 
   setupComposer() {
-    const textarea = this.composerEl.querySelector('textarea');
+    const input = this.composerEl.querySelector('.composer-input');
     const sendBtn = this.composerEl.querySelector('.send-btn');
 
-    textarea.addEventListener('input', () => {
-      textarea.style.height = 'auto';
-      textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
-      sendBtn.disabled = !textarea.value.trim();
+    input.addEventListener('input', () => {
+      input.style.height = 'auto';
+      input.style.height = Math.min(input.scrollHeight, 120) + 'px';
+      sendBtn.disabled = !input.textContent.trim();
     });
 
-    textarea.addEventListener('keydown', (e) => {
+    input.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
-        if (textarea.value.trim()) this._send(textarea, sendBtn);
+        if (input.textContent.trim()) this._send(input, sendBtn);
       }
     });
 
     sendBtn.addEventListener('click', () => {
-      if (textarea.value.trim()) this._send(textarea, sendBtn);
+      if (input.textContent.trim()) this._send(input, sendBtn);
     });
   }
 
-  _send(textarea, sendBtn) {
-    const query = textarea.value.trim();
+  _send(input, sendBtn) {
+    const query = input.textContent.trim();
     if (!query) return;
-    textarea.value = '';
-    textarea.style.height = 'auto';
+    input.textContent = '';
+    input.style.height = 'auto';
     sendBtn.disabled = true;
     this.open(query);
   }
