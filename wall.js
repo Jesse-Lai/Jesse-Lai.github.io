@@ -1,5 +1,5 @@
 // wall.js — Main view, uses atoms-renderer.js
-import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, renderTearoffCard, makeDraggable, FocusOverlay, getOrCreateVideo, animateTo, fadeIn } from "./atoms-renderer-v211.js";
+import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, renderTearoffCard, makeDraggable, FocusOverlay, getOrCreateVideo, _videoCache, animateTo, fadeIn } from "./atoms-renderer-v211.js";
 import { WallArticle } from "./wall-article.js?v=151";
 
 (async () => {
@@ -346,6 +346,19 @@ import { WallArticle } from "./wall-article.js?v=151";
     }
   }
   photoSystem.onFocus = (item) => { track('atom-click', { title: item.focusData?.title || '' }); focusOverlay.open(item); };
+
+  // ─── WeChat: warm up all videos after creation ───
+  function _warmUpVideos() {
+    console.log('[warmup] running, cache size:', _videoCache.size);
+    for (const entry of _videoCache.values()) {
+      entry.video.play().then(() => {
+        console.log('[warmup] OK:', entry.video.src.slice(-30));
+        entry.video.pause();
+      }).catch(e => console.log('[warmup] fail:', entry.video.src.slice(-30), e?.message));
+    }
+  }
+  if (typeof WeixinJSBridge !== 'undefined') { _warmUpVideos(); }
+  else { document.addEventListener('WeixinJSBridgeReady', _warmUpVideos, { once: true }); }
 
   // ─── Fetch all video blobs upfront (not dependent on first play success) ───
   for (const r of rendered) {
