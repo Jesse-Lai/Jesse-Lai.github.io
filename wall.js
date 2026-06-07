@@ -777,9 +777,6 @@ import { WallArticle } from "./wall-article.js?v=151";
       };
       requestAnimationFrame(animScale);
       if (cur && cur.videoSrc && cur.sprite) {
-        // WeChat: use GIF overlay for photo_portrait (test)
-        const gifSrc = _isWeChat && cur.videoSrc === 'photo_portrait.mp4' ? 'photo_portrait.gif' : null;
-        if (gifSrc) { _showGifOverlay(gifSrc, cur.sprite); return; }
 
         const entry = getOrCreateVideo(cur.videoSrc);
         // Use blob URL for first video if available
