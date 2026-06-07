@@ -298,38 +298,8 @@ export function getOrCreateVideo(videoSrc) {
     entry.ready = true;
   }, { once: true });
   _videoCache.set(videoSrc, entry);
-  // WeChat: if bridge was ready before this video was created, unlock it now
-  if (_wechatBridgeReady && !_videosUnlocked) {
-    _unlockSingleVideo(video);
-  }
   return entry;
 }
-
-// Unlock all cached videos on first user touch (needed for WeChat browser)
-let _videosUnlocked = false;
-let _wechatBridgeReady = false;
-function _unlockVideos() {
-  if (_videosUnlocked) return;
-  _videosUnlocked = true;
-  for (const entry of _videoCache.values()) {
-    entry.video.play().then(() => entry.video.pause()).catch(() => {});
-  }
-  document.removeEventListener('touchstart', _unlockVideos, true);
-  document.removeEventListener('click', _unlockVideos, true);
-}
-// Unlock a single video (called when WeixinJSBridge was ready before video was created)
-function _unlockSingleVideo(video) {
-  video.play().then(() => video.pause()).catch(() => {});
-}
-document.addEventListener('touchstart', _unlockVideos, true);
-document.addEventListener('click', _unlockVideos, true);
-// WeChat-specific: mark bridge ready, unlock existing + future videos
-function _onWechatReady() {
-  _wechatBridgeReady = true;
-  _unlockVideos();
-}
-if (typeof WeixinJSBridge !== 'undefined') { _onWechatReady(); }
-else { document.addEventListener('WeixinJSBridgeReady', _onWechatReady, { once: true }); }
 
 export function sampleDominantColor(imgData) {
   const px = imgData.data.data;
