@@ -348,8 +348,9 @@ import { WallArticle } from "./wall-article.js?v=151";
   photoSystem.onFocus = (item) => { track('atom-click', { title: item.focusData?.title || '' }); focusOverlay.open(item); };
 
   // ─── Wait for all videos to download ───
-  setProgress(92);
-  await waitAllVideos();
+  await waitAllVideos((done, total) => {
+    setProgress(90 + (done / total) * 10);
+  });
 
   // ─── Reveal: hide loading, show canvas ───
   setProgress(100);

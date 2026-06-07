@@ -308,13 +308,19 @@ export function getOrCreateVideo(videoSrc) {
   return entry;
 }
 
-// Wait for all video blobs to finish downloading
-export function waitAllVideos() {
+// Wait for all video blobs to finish downloading, with progress callback
+export function waitAllVideos(onProgress) {
   const promises = [];
   for (const entry of _videoCache.values()) {
     if (entry.fetchPromise) promises.push(entry.fetchPromise);
   }
-  return Promise.all(promises);
+  if (!promises.length) return Promise.resolve();
+  let done = 0;
+  const total = promises.length;
+  return Promise.all(promises.map(p => p.then(() => {
+    done++;
+    if (onProgress) onProgress(done, total);
+  })));
 }
 
 export function sampleDominantColor(imgData) {
