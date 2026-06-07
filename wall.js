@@ -357,7 +357,14 @@ import { WallArticle } from "./wall-article.js?v=151";
         fetch(item.videoSrc).then(r => r.blob()).then(blob => {
           entry.video.src = URL.createObjectURL(blob);
           entry.video.load();
-          console.log('[video] blob loaded:', item.videoSrc);
+          console.log('[video] blob loaded:', item.videoSrc, 'readyState:', entry.video.readyState, 'inDOM:', !!entry.video.parentNode);
+          // Check readyState after a delay to see if load() actually does anything
+          setTimeout(() => {
+            console.log('[video] after 1s:', item.videoSrc, 'readyState:', entry.video.readyState, 'ready:', entry.ready);
+          }, 1000);
+          setTimeout(() => {
+            console.log('[video] after 5s:', item.videoSrc, 'readyState:', entry.video.readyState, 'ready:', entry.ready);
+          }, 5000);
         }).catch(e => console.error('[video] fetch fail:', item.videoSrc, e));
       }
     }
