@@ -287,40 +287,13 @@ export function getOrCreateVideo(videoSrc) {
   video.muted = true;
   video.playsInline = true;
   video.preload = 'auto';
-  // WeChat browser compatibility
-  video.setAttribute('webkit-playsinline', '');
-  video.setAttribute('x5-playsinline', '');
-  video.setAttribute('x5-video-player-type', 'h5');
-  // Append to DOM (hidden)
-  video.style.cssText = 'position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;pointer-events:none;z-index:-1;';
-  document.body.appendChild(video);
-  const entry = { video, texture: null, ready: false, fetchPromise: null };
+  const entry = { video, texture: null, ready: false };
   video.addEventListener('canplay', () => {
     entry.texture = PIXI.Texture.from(video, { resourceOptions: { autoPlay: false } });
     entry.ready = true;
   }, { once: true });
-  // Fetch full video as blob to guarantee complete download
-  entry.fetchPromise = fetch(videoSrc).then(r => r.blob()).then(blob => {
-    video.src = URL.createObjectURL(blob);
-    video.load();
-  }).catch(() => {});
   _videoCache.set(videoSrc, entry);
   return entry;
-}
-
-// Wait for all video blobs to finish downloading, with progress callback
-export function waitAllVideos(onProgress) {
-  const promises = [];
-  for (const entry of _videoCache.values()) {
-    if (entry.fetchPromise) promises.push(entry.fetchPromise);
-  }
-  if (!promises.length) return Promise.resolve();
-  let done = 0;
-  const total = promises.length;
-  return Promise.all(promises.map(p => p.then(() => {
-    done++;
-    if (onProgress) onProgress(done, total);
-  })));
 }
 
 export function sampleDominantColor(imgData) {

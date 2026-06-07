@@ -1,5 +1,5 @@
 // wall.js — Main view, uses atoms-renderer.js
-import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, renderTearoffCard, makeDraggable, FocusOverlay, getOrCreateVideo, waitAllVideos, animateTo, fadeIn } from "./atoms-renderer.js?v=204";
+import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, renderTearoffCard, makeDraggable, FocusOverlay, getOrCreateVideo, animateTo, fadeIn } from "./atoms-renderer.js?v=204";
 import { WallArticle } from "./wall-article.js?v=151";
 
 (async () => {
@@ -253,6 +253,13 @@ import { WallArticle } from "./wall-article.js?v=151";
       const photoItem = await photoSystem.addPhoto(item.src, 0, 0, photoScale, item, imgData);
       photoItem.videoSrc = item.src.replace(/\.(png|jpg|jpeg|webp)$/i, '.mp4');
       getOrCreateVideo(photoItem.videoSrc);
+      // Mobile: prefetch first video as blob so it can play without user interaction
+      if (isMobile && !window._firstVideoPrefetched) {
+        window._firstVideoPrefetched = true;
+        fetch(photoItem.videoSrc).then(r => r.blob()).then(blob => {
+          window._firstVideoBlob = { src: photoItem.videoSrc, url: URL.createObjectURL(blob) };
+        }).catch(() => {});
+      }
       if (item.focus) { photoItem.focusData = item.focus; const fd = focusDesc[item.caption] || focusDesc[item.title]; photoItem.focusData.description = fd ? fd[LANG] : (item.keywords || item.focus.description); }
       const b = photoItem.group.getBounds();
       rendered.push({ group: photoItem.group, bounds: b, wallItem: item, focusableItem: photoItem });
@@ -346,11 +353,6 @@ import { WallArticle } from "./wall-article.js?v=151";
     }
   }
   photoSystem.onFocus = (item) => { track('atom-click', { title: item.focusData?.title || '' }); focusOverlay.open(item); };
-
-  // ─── Wait for all videos to download ───
-  await waitAllVideos((done, total) => {
-    setProgress(90 + (done / total) * 10);
-  });
 
   // ─── Reveal: hide loading, show canvas ───
   setProgress(100);
@@ -754,26 +756,35 @@ import { WallArticle } from "./wall-article.js?v=151";
       requestAnimationFrame(animScale);
       if (cur && cur.videoSrc && cur.sprite) {
         const entry = getOrCreateVideo(cur.videoSrc);
-        const playAndSwap = () => {
-          entry.video.currentTime = 0;
-          entry.video.play().then(() => {
-            if (!entry.texture) {
-              entry.texture = PIXI.Texture.from(entry.video, { resourceOptions: { autoPlay: false } });
-              entry.ready = true;
-            }
-            cur._staticTex = cur._staticTex || cur.sprite.texture;
-            cur.sprite.texture = entry.texture;
+        // Use blob URL for first video if available
+        const blob = window._firstVideoBlob && window._firstVideoBlob.src === cur.videoSrc ? window._firstVideoBlob : null;
+        if (blob && !entry.ready) entry.video.src = blob.url;
+        // Try to play (works after first user touch on iOS)
+        entry.video.currentTime = 0;
+        entry.video.play().then(() => {
+          if (!entry.texture) {
             if (window.umami) umami.track("video-play", { src: cur.videoSrc });
-          }).catch(() => {});
-        };
-        if (entry.ready) {
-          playAndSwap();
-        } else {
-          // Video not downloaded yet — play when ready (only if still current atom)
-          entry.video.addEventListener('canplay', () => {
-            if (currentSnapIdx === idx) playAndSwap();
-          }, { once: true });
-        }
+            entry.texture = PIXI.Texture.from(entry.video, { resourceOptions: { autoPlay: false } });
+            entry.ready = true;
+          }
+          cur._staticTex = cur._staticTex || cur.sprite.texture;
+          cur.sprite.texture = entry.texture;
+          // After first successful play, fetch all other videos as blobs
+          if (!window._videosLoading) {
+            window._videosLoading = true;
+            snapTargets.forEach(t => {
+              if (t.item && t.item.videoSrc && t.item !== cur) {
+                const e = getOrCreateVideo(t.item.videoSrc);
+                if (!e.ready) {
+                  fetch(t.item.videoSrc).then(r => r.blob()).then(blob => {
+                    e.video.src = URL.createObjectURL(blob);
+                    e.video.load();
+                  }).catch(() => {});
+                }
+              }
+            });
+          }
+        }).catch(() => {});
       }
     };
 
