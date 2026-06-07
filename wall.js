@@ -98,9 +98,9 @@ import { WallArticle } from "./wall-article.js?v=151";
 
   // Bilingual overrides: keyed by original title
   const i18n = {
-    'Hello I\'m Jesse Lai':  {
+    'Hello I\u2019m Jesse Lai':  {
       zh: { title: '你好，我是Jesse Lai', body: '微软AI产品设计师，探索人与AI自然交互的未来。' },
-      en: { title: 'Hello I\'m Jesse Lai', body: 'AI Product Designer at Microsoft, exploring the future of natural human-AI interaction.' }
+      en: { title: 'Hello I\u2019m Jesse Lai', body: 'AI Product Designer at Microsoft, exploring the future of natural human-AI interaction.' }
     },
     'Microsoft': {
       zh: { title: 'Microsoft', body: 'AI builder，与全球的团队一起设计 ToC 和 ToB 的Copilot' },
@@ -148,7 +148,7 @@ import { WallArticle } from "./wall-article.js?v=151";
 
   // Photo captions (Schoolbell font, always English) + dates
   const photoCaptions = {
-    'Hello I\'m Jesse Lai': { caption: 'Hello I\'m Jesse Lai', date: "" },
+    'Hello I\u2019m Jesse Lai': { caption: 'Hello I\u2019m Jesse Lai', date: "" },
     'Stand-up Comedian':    { caption: 'Stand-up Comedian', date: "'23 06 28" },
     'Drawing':              { caption: 'Drawing', date: "'15 12 20" },
     'Vibe Coding':          { caption: 'Vibe Coding', date: "'25 05 26" },
@@ -157,7 +157,7 @@ import { WallArticle } from "./wall-article.js?v=151";
 
   // Focus overlay description overrides (bilingual)
   const focusDesc = {
-    'Hello I\'m Jesse Lai': { zh: '嗨👋 我喜欢做各种好玩的东西！', en: 'Hi 👋 I love making all kinds of fun things!' },
+    'Hello I\u2019m Jesse Lai': { zh: '嗨👋 我喜欢做各种好玩的东西！', en: 'Hi 👋 I love making all kinds of fun things!' },
     'Microsoft': { zh: '在微软，我做了各种Copilot，等等… 它们好像都长一个样！', en: 'At Microsoft, I worked on various Copilots and so on... they all seem to look the same!' },
     'Alibaba': { zh: '在阿里，我除了送外卖，还观察骑手怎么送外卖…', en: 'At Alibaba, besides delivering food, I also observe how couriers deliver food…' },
     'Vibe Coding': { zh: 'Vibe coding一年来，感觉找回了9岁那个下午，自己做了艘电动玩具船，在水上跑起来的兴奋感', en: 'After a year of vibe coding, it feels like I\'ve rediscovered that afternoon when I was nine, the excitement of building an electric toy boat and watching it run across the water.' },
