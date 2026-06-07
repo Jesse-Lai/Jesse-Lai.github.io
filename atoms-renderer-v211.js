@@ -298,16 +298,22 @@ export function getOrCreateVideo(videoSrc) {
   return entry;
 }
 
-// Load a single video as blob and wait for canplay
+// Load a single video as blob (only fetch once) and wait for canplay
 async function _loadVideoBlob(entry) {
   try {
-    const resp = await fetch(entry.videoSrc);
-    const blob = await resp.blob();
-    console.log('[serial] blob fetched:', entry.videoSrc);
-    entry.video.src = URL.createObjectURL(blob);
-    entry.video.load();
+    // Only fetch blob once, reuse on retry
+    if (!entry.blobUrl) {
+      const resp = await fetch(entry.videoSrc);
+      const blob = await resp.blob();
+      entry.blobUrl = URL.createObjectURL(blob);
+      entry.video.src = entry.blobUrl;
+      entry.video.load();
+      console.log('[serial] blob fetched:', entry.videoSrc);
+    } else {
+      console.log('[serial] retry (blob already set):', entry.videoSrc);
+    }
     if (entry.ready) return;
-    // Wait for canplay AFTER blob is set (timeout only for decode, not download)
+    // Wait for canplay (don't re-fetch or re-set src on retry)
     await new Promise(resolve => {
       entry.video.addEventListener('canplay', () => resolve(), { once: true });
       setTimeout(resolve, 5000);
