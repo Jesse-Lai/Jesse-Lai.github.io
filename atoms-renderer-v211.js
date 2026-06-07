@@ -299,7 +299,7 @@ export function getOrCreateVideo(videoSrc) {
 }
 
 // Load a single video as blob (only fetch once) and wait for canplay
-async function _loadVideoBlob(entry) {
+export async function loadVideoBlob(entry) {
   try {
     // Only fetch blob once, reuse on retry
     if (!entry.blobUrl) {
@@ -335,7 +335,7 @@ export async function loadAllVideosSequentially(videoSrcList) {
     for (const src of pending) {
       const entry = _videoCache.get(src);
       console.log('[serial] loading:', src);
-      await _loadVideoBlob(entry);
+      await loadVideoBlob(entry);
       console.log('[serial] done:', src, 'ready:', entry.ready);
     }
   }

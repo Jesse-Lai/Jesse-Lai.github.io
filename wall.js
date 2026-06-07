@@ -1,5 +1,5 @@
 // wall.js — Main view, uses atoms-renderer.js
-import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, renderTearoffCard, makeDraggable, FocusOverlay, getOrCreateVideo, loadAllVideosSequentially, animateTo, fadeIn } from "./atoms-renderer-v211.js";
+import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, renderTearoffCard, makeDraggable, FocusOverlay, getOrCreateVideo, loadVideoBlob, loadAllVideosSequentially, animateTo, fadeIn } from "./atoms-renderer-v211.js";
 import { WallArticle } from "./wall-article.js?v=151";
 
 (async () => {
@@ -243,6 +243,15 @@ import { WallArticle } from "./wall-article.js?v=151";
   const preloaded = await Promise.all(preloads);
   setProgress(50);
 
+  // Early video preload: start fetching first 3 video blobs in parallel with atom rendering
+  const earlyVideoSrcs = contentData
+    .filter(e => (e.atom === 'photo' && e.cover_image) || (e.atom === 'sticky' && e.cover_image))
+    .slice(0, 3)
+    .map(e => e.cover_image.replace(/\.(png|jpg|jpeg|webp)$/i, '.mp4'));
+  const earlyVideoPromise = Promise.all(
+    earlyVideoSrcs.map(src => loadVideoBlob(getOrCreateVideo(src)))
+  );
+
   // Phase 2: Render sequentially (PIXI requires ordered operations)
   for (let i = 0; i < wallItems.length; i++) {
     const item = wallItems[i];
@@ -353,6 +362,9 @@ import { WallArticle } from "./wall-article.js?v=151";
     .sort((a, b) => a.group.y - b.group.y)
     .map(r => r.focusableItem.videoSrc);
   loadAllVideosSequentially(videoSrcsByPosition);
+
+  // Wait for first 3 videos to be ready before revealing
+  await earlyVideoPromise;
 
   // ─── Reveal: hide loading, show canvas ───
   setProgress(100);
