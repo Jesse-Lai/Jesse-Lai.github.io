@@ -3935,18 +3935,27 @@ export class FocusOverlay {
     app.canvas.style.display = 'block';
     app.canvas.style.cursor = 'pointer';
     app.canvas.style.margin = '0 auto';
-    app.canvas.style.touchAction = 'pan-y';
-    // Mobile: remove PixiJS event system to allow native scroll (click still works via DOM)
-    if ('ontouchstart' in window && app.renderer.events) {
-      app.renderer.events.setTargetElement(null);
-      app.renderer.events.destroy();
+    const isMobile = 'ontouchstart' in window;
+    // Mobile: let touch pass through canvas for native scroll, click on container
+    if (isMobile) {
+      app.canvas.style.touchAction = 'pan-y';
+      app.canvas.style.pointerEvents = 'none';
+      if (app.renderer.events) {
+        app.renderer.events.setTargetElement(null);
+        app.renderer.events.destroy();
+      }
     }
 
-    // 点击 → 打开嵌套 focus
-    app.canvas.addEventListener('click', () => this._openNestedFocus(meta, app, result));
+    // 容器
+    const container = document.createElement('div');
+    container.className = 'atom-entry';
+    container.appendChild(app.canvas);
 
-    // Video hover for photo atoms
-    if (meta.atomType === 'photo' && meta.src && result.sprite) {
+    // 点击 → 打开嵌套 focus（移动端挂在容器上，桌面端挂在canvas上）
+    (isMobile ? container : app.canvas).addEventListener('click', () => this._openNestedFocus(meta, app, result));
+
+    // Video hover for photo atoms (desktop only)
+    if (!isMobile && meta.atomType === 'photo' && meta.src && result.sprite) {
       const videoSrc = meta.src.replace(/\.(png|jpg|jpeg|webp)$/i, '.mp4');
       const vEntry = getOrCreateVideo(videoSrc);
       let vHover = false, staticTex = null;
@@ -3965,11 +3974,6 @@ export class FocusOverlay {
         }
       });
     }
-
-    // 容器
-    const container = document.createElement('div');
-    container.className = 'atom-entry';
-    container.appendChild(app.canvas);
 
     // 保存引用以便清理
     if (!this._chatAtomApps) this._chatAtomApps = [];
@@ -4026,19 +4030,22 @@ export class FocusOverlay {
     app.canvas.style.display = 'block';
     app.canvas.style.cursor = 'pointer';
     app.canvas.style.margin = '0 auto';
-    app.canvas.style.touchAction = 'pan-y';
-    if ('ontouchstart' in window && app.renderer.events) {
-      app.renderer.events.setTargetElement(null);
-      app.renderer.events.destroy();
+    const isMobile = 'ontouchstart' in window;
+    if (isMobile) {
+      app.canvas.style.touchAction = 'pan-y';
+      app.canvas.style.pointerEvents = 'none';
+      if (app.renderer.events) {
+        app.renderer.events.setTargetElement(null);
+        app.renderer.events.destroy();
+      }
     }
 
     // Click opens first item's nested focus
     const firstMeta = metas[0];
-    app.canvas.addEventListener('click', () => this._openNestedFocus(firstMeta, app, result));
-
     const container = document.createElement('div');
     container.className = 'atom-entry';
     container.appendChild(app.canvas);
+    (isMobile ? container : app.canvas).addEventListener('click', () => this._openNestedFocus(firstMeta, app, result));
 
     if (!this._chatAtomApps) this._chatAtomApps = [];
     this._chatAtomApps.push(app);
