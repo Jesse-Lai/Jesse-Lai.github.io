@@ -297,6 +297,18 @@ export function getOrCreateVideo(videoSrc) {
   return entry;
 }
 
+// WeChat: warm up all cached videos in WeixinJSBridgeReady to obtain playback permission
+function _warmUpVideos() {
+  for (const entry of _videoCache.values()) {
+    entry.video.play().then(() => {
+      console.log('[warmup] OK:', entry.video.src.slice(-30));
+      entry.video.pause();
+    }).catch(e => console.log('[warmup] fail:', entry.video.src.slice(-30), e?.message));
+  }
+}
+if (typeof WeixinJSBridge !== 'undefined') { _warmUpVideos(); }
+else { document.addEventListener('WeixinJSBridgeReady', _warmUpVideos, { once: true }); }
+
 export function sampleDominantColor(imgData) {
   const px = imgData.data.data;
   let rT=0,gT=0,bT=0,count=0;
