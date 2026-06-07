@@ -352,11 +352,13 @@ import { WallArticle } from "./wall-article.js?v=151";
     const item = r.focusableItem;
     if (item && item.videoSrc) {
       const entry = getOrCreateVideo(item.videoSrc);
+      console.log('[video] fetch start:', item.videoSrc, 'ready:', entry.ready);
       if (!entry.ready) {
         fetch(item.videoSrc).then(r => r.blob()).then(blob => {
           entry.video.src = URL.createObjectURL(blob);
           entry.video.load();
-        }).catch(() => {});
+          console.log('[video] blob loaded:', item.videoSrc);
+        }).catch(e => console.error('[video] fetch fail:', item.videoSrc, e));
       }
     }
   }
@@ -763,9 +765,12 @@ import { WallArticle } from "./wall-article.js?v=151";
       requestAnimationFrame(animScale);
       if (cur && cur.videoSrc && cur.sprite) {
         const entry = getOrCreateVideo(cur.videoSrc);
+        console.log('[activate]', cur.videoSrc, 'ready:', entry.ready, 'texture:', !!entry.texture);
         const playAndSwap = () => {
+          console.log('[play]', cur.videoSrc, 'calling play()');
           entry.video.currentTime = 0;
           entry.video.play().then(() => {
+            console.log('[play] OK:', cur.videoSrc);
             if (!entry.texture) {
               entry.texture = PIXI.Texture.from(entry.video, { resourceOptions: { autoPlay: false } });
               entry.ready = true;
@@ -773,13 +778,15 @@ import { WallArticle } from "./wall-article.js?v=151";
             cur._staticTex = cur._staticTex || cur.sprite.texture;
             cur.sprite.texture = entry.texture;
             if (window.umami) umami.track("video-play", { src: cur.videoSrc });
-          }).catch(() => {});
+          }).catch(e => console.error('[play] FAIL:', cur.videoSrc, e?.message || e));
         };
         if (entry.ready) {
           playAndSwap();
         } else {
+          console.log('[activate] not ready, waiting canplay:', cur.videoSrc);
           // Video blob not downloaded yet — play when ready (only if still current atom)
           entry.video.addEventListener('canplay', () => {
+            console.log('[canplay] fired:', cur.videoSrc, 'stillCurrent:', currentSnapIdx === idx);
             if (currentSnapIdx === idx) playAndSwap();
           }, { once: true });
         }
