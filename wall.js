@@ -249,21 +249,13 @@ import { WallArticle } from "./wall-article.js?v=151";
   if (isWeChat) {
     async function waitUntilReady(entry, maxMs = 30000) {
       if (entry.ready) return;
-      // Fetch blob immediately (no interaction needed for network)
       if (!entry.blobUrl) {
         const resp = await fetch(entry.videoSrc);
         const blob = await resp.blob();
         entry.blobUrl = URL.createObjectURL(blob);
         entry.video.src = entry.blobUrl;
-        console.log('[early] blob fetched:', entry.videoSrc);
       }
-      // Wait for user tap before decoding (WeChat requires interaction)
       const start = Date.now();
-      while (!window._userTapped && Date.now() - start < maxMs) {
-        await new Promise(r => setTimeout(r, 200));
-      }
-      console.log('[early] tap wait done, _userTapped:', window._userTapped, 'elapsed:', Date.now() - start, 'ms');
-      // Now loop video.load() until canplay
       while (!entry.ready && Date.now() - start < maxMs) {
         entry.video.load();
         await new Promise(resolve => {
