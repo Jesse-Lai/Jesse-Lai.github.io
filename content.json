@@ -165,404 +165,6 @@
     }
   },
   {
-    "id": "copilot-bc-001",
-    "title": "Microsoft",
-    "category": "design_projects",
-    "atom": "sticky",
-    "body": "Building AI products at Microsoft, designing next-gen human-AI interaction experiences.",
-    "cover_image": "Microsoft.webp",
-    "keywords": "microsoft copilot ai design",
-    "focus": {
-      "title": "Microsoft",
-      "description": "Microsoft Copilot",
-      "link": "#",
-      "linkText": "Read more",
-      "article": {
-        "title": "Microsoft",
-        "sections": [
-          {
-            "type": "subtitle",
-            "text": "Microsoft Copilot"
-          },
-          {
-            "type": "text",
-            "text": "我作为微软Copilot产品设计师，有幸与global团队合作，参与了CopilotC/B两端的产品体验设计，经验主要集中于AI chat 产品中的 Generative UI 体验。"
-          },
-          {
-            "type": "subtitle",
-            "text": "To C: Copilot消费者端"
-          },
-          {
-            "type": "text",
-            "text": "• 设计 Copilot consumer 的 answer card 和 consumption page，用户会在对话中触发这些体验，进行进一步交互"
-          },
-          {
-            "type": "subtitle",
-            "text": "To B: Copilot企业端"
-          },
-          {
-            "type": "text",
-            "text": "• 设计和开发 To B copilot 中的 GenUX 组件"
-          },
-          {
-            "type": "subtitle",
-            "text": "Microsoft MSN"
-          },
-          {
-            "type": "text",
-            "text": "• 参与微软内容产品的设计，为微软生态内如 Edge, Bing, Copilot 等产品提供内容服务"
-          }
-        ],
-        "sections_en": [
-          {
-            "type": "subtitle",
-            "text": "Microsoft Copilot"
-          },
-          {
-            "type": "text",
-            "text": "As a product designer on Microsoft Copilot, I've had the privilege of collaborating with our global team on both consumer and enterprise Copilot experiences. My expertise focuses on Generative UX and Agent experience design within AI chat products."
-          },
-          {
-            "type": "subtitle",
-            "text": "To C: Copilot Consumer"
-          },
-          {
-            "type": "text",
-            "text": "• Designed Copilot consumer answer cards and consumption pages — users trigger these experiences during conversations for further interaction"
-          },
-          {
-            "type": "subtitle",
-            "text": "To B: Copilot Enterprise"
-          },
-          {
-            "type": "text",
-            "text": "• Designed and developed GenUX components in enterprise Copilot"
-          },
-          {
-            "type": "subtitle",
-            "text": "Microsoft MSN"
-          },
-          {
-            "type": "text",
-            "text": "• Contributing to Microsoft's content product design, providing content services for products across the Microsoft ecosystem including Edge, Bing, and Copilot"
-          }
-        ]
-      }
-    },
-    "body_en": "Building AI products at Microsoft, designing next-gen human-AI interaction experiences.",
-    "title_en": "Microsoft"
-  },
-  {
-    "id": "116400ee-0cf5-8156-9ca8-fbc4ded84bda",
-    "title": "Alibaba",
-    "category": "design_projects",
-    "atom": "sticky",
-    "body": "在大语言模型兴起的早期，设计帮助小商家做好\u201c吃\u201d的 AI 产品",
-    "cover_image": "alibaba.webp",
-    "focus": {
-      "title": "Alibaba",
-      "description": "<a href=\"https://www.notion.so/116400ee0cf581569ca8fbc4ded84bda\">Untitled</a>",
-      "link": "#",
-      "linkText": "Read more",
-      "article": {
-        "title": "Alibaba",
-        "sections": [
-          {
-            "type": "subtitle",
-            "text": "🍔 外卖配送服务：商家入驻体验优化"
-          },
-          {
-            "type": "text",
-            "text": "饿了么是中国知名的外卖配送平台。通过设计研究，我发现用户在开店前试图处理复杂流程导致流失。我缩短了开店前流程以提高入驻效率，并改进了任务奖励系统帮助商家运营在线店铺、提高存活率。"
-          },
-          {
-            "type": "subtitle",
-            "text": "🤖 AI 商家助手"
-          },
-          {
-            "type": "text",
-            "text": "在这个项目中，我分析了生成式 AI 对饿了么商家在线咨询服务的影响。我设计了合适的交互模型，并从零开始为 App 和 PC 端搭建了对话式助手，旨在提升商家咨询体验并降低人力成本。"
-          },
-          {
-            "type": "subtitle",
-            "text": "🔍 评价分析"
-          },
-          {
-            "type": "text",
-            "text": "\"评价分析\"对外卖在线店铺运营至关重要，帮助用户了解顾客反馈并改进服务质量。我发现用户很少使用该功能，通过设计研究找到原因并提出创新方案。"
-          }
-        ],
-        "sections_en": [
-          {
-            "type": "subtitle",
-            "text": "🍔 Food Delivery Service: Restaurant Owner's Onboarding Experience"
-          },
-          {
-            "type": "text",
-            "text": "Eleme (饿了么) is a renowned food delivery service in China, it means “Are you hungry?”\nThrough the design research, I found that our users tried to deal with the complexity before opening, which led to churn. Our users are also not familiar with online restaurant operations, which leads to a low survival rate. I shortened the pre-opening process to higher onboarding efficiency and improved the task-reward system to help our users operate their online restaurants and increase their survival rate."
-          },
-          {
-            "type": "subtitle",
-            "text": "🤖 AI Merchant Assistant"
-          },
-          {
-            "type": "text",
-            "text": "In this project, I analyzed the impact of generative AI on Eleme's merchant online consultation service. I designed suitable interaction models and built a conversational assistant for the app and PC from scratch, aiming to enhance merchants' consultation experience and reduce labour costs."
-          },
-          {
-            "type": "subtitle",
-            "text": "🔍 Review Analysis"
-          },
-          {
-            "type": "text",
-            "text": "\"Review analysis\" is essential for managing takeout online shops, helping users understand customer feedback to optimize their services and food. However, through research, I found that most users rarely access the review analysis page. This project identifies the reasons through design and user research, and offers innovative design solutions to meet diverse user needs, thereby increasing the number of users using the evaluation analysis feature."
-          }
-        ]
-      }
-    },
-    "keywords": "B2C ● Eleme ● Onboarding ● Survival Rate ● 2023",
-    "body_en": "In the early days of LLMs, I designed AI products behind every better bite.",
-    "title_en": "Alibaba"
-  },
-  {
-    "id": "146400ee-0cf5-808f-87e8-d536e92e21ee",
-    "title": "Stand-up Comedian",
-    "category": "hobby",
-    "atom": "photo",
-    "body": "脱口秀是我一生的热爱。把生活的酸甜苦辣变成段子搬上舞台的过程，已经成为我生活中不可分割的一部分。我发现脱口秀和设计之间有很多共通之处： • 两者都需要对日常生活的敏锐观察力",
-    "cover_image": "content_images/146400ee_3.webp",
-    "focus": {
-      "title": "Stand-up Comedian",
-      "description": "Stand-up comedy is a lifelong passion of mine. The process of turning life's highs and lows into jokes and performing them on stage has become an inte",
-      "link": "#",
-      "linkText": "Read more",
-      "article": {
-        "title": "Stand-up Comedian",
-        "sections": [
-          {
-            "type": "text",
-            "text": "脱口秀是我一生的热爱。把生活的酸甜苦辣变成段子搬上舞台的过程，已经成为我生活中不可分割的一部分。我发现脱口秀和设计之间有很多共通之处："
-          },
-          {
-            "type": "text",
-            "text": "• 两者都需要对日常生活的敏锐观察力"
-          },
-          {
-            "type": "text",
-            "text": "• 两者都需要不断迭代和打磨素材"
-          },
-          {
-            "type": "text",
-            "text": "• 两者都是把日常痛点转化为有意义的东西——设计将其变为解决方案，喜剧将其变为笑声"
-          },
-          {
-            "type": "text",
-            "text": "• 开放麦本质上就是一种用户测试：你听取观众反馈，迭代，再改进"
-          },
-          {
-            "type": "text",
-            "text": "• 喜剧和设计都需要品味——能注意到大多数人忽略但又能引起共鸣的东西"
-          },
-          {
-            "type": "image",
-            "src": "content_images/comedy_zh_1.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "喜剧不仅提升了我的幽默感，也锻炼了我的演讲和沟通能力。在工作中用讲故事的方式推动想法，更容易获得认同。"
-          },
-          {
-            "type": "image",
-            "src": "content_images/comedy_zh_2.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "从2023年开始，我一直在用英文做脱口秀，跟随 Norah 和 Dave 等知名喜剧演员学习技巧。我的素材通常围绕文化差异、科技行业的趣事、以及个人生活的日常展开。"
-          },
-          {
-            "type": "image",
-            "src": "content_images/comedy_zh_3.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "虽然中国的英文脱口秀场景相对小众，但你偶尔可以在上海和北京的开放麦活动中看到我。"
-          },
-          {
-            "type": "image",
-            "src": "content_images/comedy_zh_4.png",
-            "caption": ""
-          }
-        ],
-        "sections_en": [
-          {
-            "type": "text",
-            "text": "Stand-up comedy is a lifelong passion of mine. The process of turning life's highs and lows into jokes and performing them on stage has become an integral part of my life. Comedy and design have many things in common."
-          },
-          {
-            "type": "text",
-            "text": "• Both require a sharp eye for observing everyday life."
-          },
-          {
-            "type": "text",
-            "text": "• Both involve constant iteration and refinement of ideas and materials."
-          },
-          {
-            "type": "text",
-            "text": "• Both turn everyday pain points into something meaningful — design turns them into solutions, comedy turns them into punchlines."
-          },
-          {
-            "type": "text",
-            "text": "• An open mic is essentially a form of user testing: you listen to audience feedback, iterate, and improve. Sometimes the feedback is so bad that the material never makes it to production 🤣"
-          },
-          {
-            "type": "text",
-            "text": "• Both comedy and design require taste—the ability to notice things that most people overlook but somehow feel off. This sensitivity is a talent shared by great comedians and great designers alike."
-          },
-          {
-            "type": "image",
-            "src": "content_images/comedy_en_1.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "Comedy not only enhances my sense of humor but also improves my public speaking and communication skills. It’s a great way to channel negative emotions into something positive, helping me stay optimistic. Bad day? Great-time to write a new joke!"
-          },
-          {
-            "type": "image",
-            "src": "content_images/comedy_en_2.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "Since 2023, I’ve been doing stand-up in English, learning from well-known comedians like Norah and Davy, popular faces on Rock & Roast."
-          },
-          {
-            "type": "image",
-            "src": "content_images/comedy_en_3.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "Although the English stand-up scene in China is relatively niche, you can catch my performances at some international comedy clubs."
-          },
-          {
-            "type": "image",
-            "src": "content_images/comedy_en_4.png",
-            "caption": ""
-          }
-        ]
-      }
-    },
-    "keywords": "Comedy ● Open Mic ● Storytelling ● Since 2024"
-  },
-  {
-    "id": "360400ee-0cf5-80e4-ae1c-ccb2760bb841",
-    "title": "Drawing",
-    "category": "hobby",
-    "atom": "photo",
-    "body": "我以前经常画画，这能让我感到心流的快乐，经常一不小心就发现已经天亮了。\n下面是我的一些古法绘画作品，绝不含AI，请欣赏 🙂",
-    "cover_image": "content_images/360400ee_1.webp",
-    "focus": {
-      "title": "Drawing",
-      "description": "Coming soon",
-      "link": "#",
-      "linkText": "Read more",
-      "article": {
-        "title": "Drawing",
-        "sections": [
-          {
-            "type": "text",
-            "text": "我以前经常画画，这能让我感到心流的快乐，经常一不小心就发现已经天亮了。\n下面是我的一些古法绘画作品，绝不含AI，请欣赏 🙂"
-          },
-          {
-            "type": "image",
-            "src": "content_images/drawing_zh_1.png",
-            "caption": ""
-          },
-          {
-            "type": "image",
-            "src": "content_images/drawing_zh_2.png",
-            "caption": ""
-          },
-          {
-            "type": "image",
-            "src": "content_images/drawing_zh_3.png",
-            "caption": ""
-          },
-          {
-            "type": "image",
-            "src": "content_images/drawing_zh_4.png",
-            "caption": ""
-          },
-          {
-            "type": "image",
-            "src": "content_images/drawing_zh_5.png",
-            "caption": ""
-          },
-          {
-            "type": "image",
-            "src": "content_images/drawing_zh_6.png",
-            "caption": ""
-          },
-          {
-            "type": "image",
-            "src": "content_images/drawing_zh_7.png",
-            "caption": ""
-          }
-        ],
-        "sections_en": [
-          {
-            "type": "text",
-            "text": "I used to draw a lot. It was one of the few things that could put me into a true flow state—I’d get so absorbed that I’d suddenly realize it was already morning."
-          },
-          {
-            "type": "text",
-            "text": "Here are some of my pre-AI-era artworks, created entirely by hand. Hope you enjoy them! 🙂"
-          },
-          {
-            "type": "image",
-            "src": "content_images/drawing_en_1.png",
-            "caption": ""
-          },
-          {
-            "type": "image",
-            "src": "content_images/drawing_en_2.png",
-            "caption": ""
-          },
-          {
-            "type": "image",
-            "src": "content_images/drawing_en_3.png",
-            "caption": ""
-          },
-          {
-            "type": "image",
-            "src": "content_images/drawing_en_4.png",
-            "caption": ""
-          },
-          {
-            "type": "image",
-            "src": "content_images/drawing_en_5.png",
-            "caption": ""
-          },
-          {
-            "type": "image",
-            "src": "content_images/drawing_en_6.png",
-            "caption": ""
-          },
-          {
-            "type": "image",
-            "src": "content_images/drawing_en_7.png",
-            "caption": ""
-          }
-        ]
-      }
-    },
-    "keywords": "Illustration ● Watercolor ● Coming Soon"
-  },
-  {
     "id": "30d400ee-0cf5-805a-ab9d-cf4d576901da",
     "title": "GenUI 设计指南",
     "category": "design_thought",
@@ -1179,112 +781,122 @@
     "subtitle_en": "A summary of my thoughts on GenUI systems and workflows."
   },
   {
-    "id": "358400ee-0cf5-81e1-aff1-ee6de5859ccd",
-    "title": "AI产品设计原则",
-    "category": "design_thought",
+    "id": "copilot-bc-001",
+    "title": "Microsoft",
+    "category": "design_projects",
     "atom": "sticky",
-    "body": "我在构思这个个人网站的时候，我希望网站本身就是一个 AI native 产品，符合我对 AI native 产品的设计原则，我觉得一个AI native 的产品应该符合以下原则： • 把AI能力从产品中拿走，这个产品就不成立了",
-    "cover_image": "content_images/358400ee_cover.webp",
+    "body": "Building AI products at Microsoft, designing next-gen human-AI interaction experiences.",
+    "cover_image": "Microsoft.webp",
+    "keywords": "microsoft copilot ai design",
     "focus": {
-      "title": "AI产品设计原则",
-      "description": "📌 状态：积累中 | 素材越多文章越充实，Jesse觉得可以发了就进入定稿 • Jakob Nielsen — Intent by Discovery: Designing the AI User Experience (2026-03-26) 链接",
+      "title": "Microsoft",
+      "description": "Microsoft Copilot",
       "link": "#",
       "linkText": "Read more",
       "article": {
-        "title": "AI产品设计原则",
+        "title": "Microsoft",
         "sections": [
           {
-            "type": "text",
-            "text": "我在构思这个个人网站的时候，我希望网站本身就是一个 AI native 产品，符合我对 AI native 产品的设计原则，我觉得一个AI native 的产品应该符合以下原则："
+            "type": "subtitle",
+            "text": "Microsoft Copilot"
           },
           {
             "type": "text",
-            "text": "• 产品围绕AI能力为核心设计"
+            "text": "作为产品设计师，与global团队合作，一起设计了CopilotC/B两端的产品体验设计，经验主要集中于AI chat 产品中的 Generative UI 体验。"
           },
           {
-            "type": "text",
-            "text": "• 产品能力会随着AI模型能力提升而变得更强"
-          },
-          {
-            "type": "text",
-            "text": "• 为Agent使用设计"
-          },
-          {
-            "type": "text",
-            "text": "在后续迭代中，我还希望我的AI产品："
-          },
-          {
-            "type": "text",
-            "text": "• AI行为从简单规则涌现，少写规则，多写原则"
-          },
-          {
-            "type": "text",
-            "text": "• 将产品拆分到最小单元，定义这些基本单元，剩下的一切都是它们的组合"
-          },
-          {
-            "type": "text",
-            "text": "• 了解模型能力的边界，在边界内通过harness达到更好的产品效果"
-          },
-          {
-            "type": "text",
-            "text": "• AI 会犯错，产品要优雅处理不确定性"
+            "type": "subtitle",
+            "text": "To C: Copilot 消费者端"
           },
           {
             "type": "image",
-            "src": "content_images/358400ee_1.png",
+            "src": "content_images/tocCopilot.png",
             "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "设计 Copilot 消费者端的日常对话体验，通过 Generative UI 丰富用户获得的回答，用户可以与回答内容进行进一步交互，获取更深度和个性化的内容，提升用户对产品的信任感"
+          },
+          {
+            "type": "subtitle",
+            "text": "To B: Copilot 企业端"
+          },
+          {
+            "type": "image",
+            "src": "content_images/tobCopilot.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "设计和开发 To B copilot 的办公体验，不仅涉及对话场景，还需要串联微软生态内的不同应用的AI体验"
+          },
+          {
+            "type": "subtitle",
+            "text": "Microsoft MSN"
+          },
+          {
+            "type": "image",
+            "src": "content_images/MSN.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "微软ToC的内容产品的设计，提升用户在微软生态内产品的内容消费体验，如 Edge, Bing, Copilot 等等"
           }
         ],
         "sections_en": [
           {
-            "type": "text",
-            "text": "When I started designing this personal website, I wanted the website itself to be an AI-native product—one that reflects my own principles for AI-native product design."
+            "type": "subtitle",
+            "text": "Microsoft Copilot"
           },
           {
             "type": "text",
-            "text": "I believe an AI-native product should follow these principles:"
+            "text": "As a product designer on Microsoft Copilot, I've had the privilege of collaborating with our global team on both consumer and enterprise Copilot experiences. My expertise focuses on Generative UX and Agent experience design within AI chat products."
           },
           {
-            "type": "text",
-            "text": "• The product is designed around AI capabilities as its core."
-          },
-          {
-            "type": "text",
-            "text": "• The product becomes more powerful as AI models improve."
-          },
-          {
-            "type": "text",
-            "text": "• The product is designed not only for humans, but also for agents."
-          },
-          {
-            "type": "text",
-            "text": "In future iterations, I want this AI product to further embrace the following ideas:"
-          },
-          {
-            "type": "text",
-            "text": "• AI behavior should emerge from simple principles rather than complex rules. Write fewer rules, define better principles."
-          },
-          {
-            "type": "text",
-            "text": "• Break the product down into its smallest building blocks, clearly define those primitives, and let everything else emerge from their combinations."
-          },
-          {
-            "type": "text",
-            "text": "• Understand the boundaries of model capabilities, and use harnesses and system design to maximize product quality within those boundaries."
-          },
-          {
-            "type": "text",
-            "text": "• AI will make mistakes. Products should handle uncertainty gracefully rather than pretending certainty."
+            "type": "subtitle",
+            "text": "To C: Copilot Consumer"
           },
           {
             "type": "image",
-            "src": "content_images/358400ee_en_1.png",
+            "src": "content_images/tocCopilot.png",
             "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "Designed Copilot consumer answer cards and consumption pages — users trigger these experiences during conversations for further interaction"
+          },
+          {
+            "type": "subtitle",
+            "text": "To B: Copilot Enterprise"
+          },
+          {
+            "type": "image",
+            "src": "content_images/tobCopilot.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "Designed and developed GenUX components in enterprise Copilot"
+          },
+          {
+            "type": "subtitle",
+            "text": "Microsoft MSN"
+          },
+          {
+            "type": "image",
+            "src": "content_images/MSN.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "Contributing to Microsoft's content product design, providing content services for products across the Microsoft ecosystem including Edge, Bing, and Copilot"
           }
         ]
       }
     },
-    "keywords": "Design Principles ● Intent-based UI ● Jakob Nielsen ● 2026"
+    "body_en": "Building AI products at Microsoft, designing next-gen human-AI interaction experiences.",
+    "title_en": "Microsoft"
   },
   {
     "id": "vibe-coding-001",
@@ -1581,6 +1193,454 @@
     }
   },
   {
+    "id": "360400ee-0cf5-80e4-ae1c-ccb2760bb841",
+    "title": "Drawing",
+    "category": "hobby",
+    "atom": "photo",
+    "body": "我以前经常画画，这能让我感到心流的快乐，经常一不小心就发现已经天亮了。\n下面是我的一些古法绘画作品，绝不含AI，请欣赏 🙂",
+    "cover_image": "content_images/360400ee_1.webp",
+    "focus": {
+      "title": "Drawing",
+      "description": "Coming soon",
+      "link": "#",
+      "linkText": "Read more",
+      "article": {
+        "title": "Drawing",
+        "sections": [
+          {
+            "type": "text",
+            "text": "我以前经常画画，这能让我感到心流的快乐，经常一不小心就发现已经天亮了。\n下面是我的一些古法绘画作品，绝不含AI，请欣赏 🙂"
+          },
+          {
+            "type": "image",
+            "src": "content_images/drawing_zh_1.png",
+            "caption": ""
+          },
+          {
+            "type": "image",
+            "src": "content_images/drawing_zh_2.png",
+            "caption": ""
+          },
+          {
+            "type": "image",
+            "src": "content_images/drawing_zh_3.png",
+            "caption": ""
+          },
+          {
+            "type": "image",
+            "src": "content_images/drawing_zh_4.png",
+            "caption": ""
+          },
+          {
+            "type": "image",
+            "src": "content_images/drawing_zh_5.png",
+            "caption": ""
+          },
+          {
+            "type": "image",
+            "src": "content_images/drawing_zh_6.png",
+            "caption": ""
+          },
+          {
+            "type": "image",
+            "src": "content_images/drawing_zh_7.png",
+            "caption": ""
+          }
+        ],
+        "sections_en": [
+          {
+            "type": "text",
+            "text": "I used to draw a lot. It was one of the few things that could put me into a true flow state—I’d get so absorbed that I’d suddenly realize it was already morning."
+          },
+          {
+            "type": "text",
+            "text": "Here are some of my pre-AI-era artworks, created entirely by hand. Hope you enjoy them! 🙂"
+          },
+          {
+            "type": "image",
+            "src": "content_images/drawing_en_1.png",
+            "caption": ""
+          },
+          {
+            "type": "image",
+            "src": "content_images/drawing_en_2.png",
+            "caption": ""
+          },
+          {
+            "type": "image",
+            "src": "content_images/drawing_en_3.png",
+            "caption": ""
+          },
+          {
+            "type": "image",
+            "src": "content_images/drawing_en_4.png",
+            "caption": ""
+          },
+          {
+            "type": "image",
+            "src": "content_images/drawing_en_5.png",
+            "caption": ""
+          },
+          {
+            "type": "image",
+            "src": "content_images/drawing_en_6.png",
+            "caption": ""
+          },
+          {
+            "type": "image",
+            "src": "content_images/drawing_en_7.png",
+            "caption": ""
+          }
+        ]
+      }
+    },
+    "keywords": "Illustration ● Watercolor ● Coming Soon"
+  },
+  {
+    "id": "116400ee-0cf5-8156-9ca8-fbc4ded84bda",
+    "title": "Alibaba",
+    "category": "design_projects",
+    "atom": "sticky",
+    "body": "在大语言模型兴起的早期，设计帮助小商家做好“吃”的 AI 产品",
+    "cover_image": "alibaba.webp",
+    "focus": {
+      "title": "Alibaba",
+      "description": "<a href=\"https://www.notion.so/116400ee0cf581569ca8fbc4ded84bda\">Untitled</a>",
+      "link": "#",
+      "linkText": "Read more",
+      "article": {
+        "title": "Alibaba",
+        "sections": [
+          {
+            "type": "subtitle",
+            "text": "🍔 外卖配送服务： 商家入驻体验优化"
+          },
+          {
+            "type": "image",
+            "src": "content_images/project1.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "通过详实的前期数据和用户研究，我们发现用户开店过程中，因为复杂的线上餐饮注册流程导致大量流失。经过我的重新设计开店流程，并改进了任务奖励系统，商家的入驻效率和新店存活率都提升了。"
+          },
+          {
+            "type": "subtitle",
+            "text": "🤖 AI 商家助手"
+          },
+          {
+            "type": "image",
+            "src": "content_images/project2.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "在这个项目中，我分析了生成式 AI 对饿了么商家在线咨询服务的影响。并针对业务特点，0-1设计了产品的基本框架，最终提升商家咨询体验并节约了BD的时间成本。"
+          },
+          {
+            "type": "subtitle",
+            "text": "🔍 评价分析"
+          },
+          {
+            "type": "image",
+            "src": "content_images/project3.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "\"评价分析\"对外卖在线店铺运营至关重要，在这个项目中我还原商家使用的真实场景，找到了商家很少使用该功能的原因，提出并推动了一个产品创新方案，带来了超预期的业务增长。"
+          }
+        ],
+        "sections_en": [
+          {
+            "type": "subtitle",
+            "text": "🍔 Food Delivery Service: Restaurant Owner's Onboarding Experience"
+          },
+          {
+            "type": "image",
+            "src": "content_images/project1.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "Through extensive data analysis and user research, we discovered that many merchants dropped off during store onboarding due to the complex online restaurant registration process. I redesigned the onboarding flow and improved the task-and-rewards system, resulting in higher onboarding efficiency and better new-store retention rates."
+          },
+          {
+            "type": "subtitle",
+            "text": "🤖 AI Merchant Assistant"
+          },
+          {
+            "type": "image",
+            "src": "content_images/project2.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "In this project, I explored the impact of Generative AI on Ele.me's merchant support services. Based on business needs, I designed the product framework from the ground up (0→1), improving the merchant consultation experience while reducing the time costs for business development teams."
+          },
+          {
+            "type": "subtitle",
+            "text": "🔍 Review Analysis"
+          },
+          {
+            "type": "image",
+            "src": "content_images/project3.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "Review analysis is critical to the success of food delivery merchants. In this project, I reconstructed real merchant operating scenarios and identified why adoption of the feature was low. I proposed and drove an innovative product solution that significantly exceeded business growth expectations."
+          }
+        ]
+      }
+    },
+    "keywords": "B2C ● Eleme ● Onboarding ● Survival Rate ● 2023",
+    "body_en": "In the early days of LLMs, I designed AI products behind every better bite.",
+    "title_en": "Alibaba"
+  },
+  {
+    "id": "358400ee-0cf5-81e1-aff1-ee6de5859ccd",
+    "title": "AI产品设计原则",
+    "category": "design_thought",
+    "atom": "sticky",
+    "body": "我在构思这个个人网站的时候，我希望网站本身就是一个 AI native 产品，符合我对 AI native 产品的设计原则，我觉得一个AI native 的产品应该符合以下原则： • 把AI能力从产品中拿走，这个产品就不成立了",
+    "cover_image": "content_images/358400ee_cover.webp",
+    "focus": {
+      "title": "AI产品设计原则",
+      "description": "📌 状态：积累中 | 素材越多文章越充实，Jesse觉得可以发了就进入定稿 • Jakob Nielsen — Intent by Discovery: Designing the AI User Experience (2026-03-26) 链接",
+      "link": "#",
+      "linkText": "Read more",
+      "article": {
+        "title": "AI产品设计原则",
+        "sections": [
+          {
+            "type": "text",
+            "text": "我在构思这个个人网站的时候，我希望网站本身就是一个 AI native 产品，符合我对 AI native 产品的设计原则，我觉得一个AI native 的产品应该符合以下原则："
+          },
+          {
+            "type": "text",
+            "text": "• 产品围绕AI能力为核心设计"
+          },
+          {
+            "type": "text",
+            "text": "• 产品能力会随着AI模型能力提升而变得更强"
+          },
+          {
+            "type": "text",
+            "text": "• 为Agent使用设计"
+          },
+          {
+            "type": "text",
+            "text": "在后续迭代中，我还希望我的AI产品："
+          },
+          {
+            "type": "text",
+            "text": "• AI行为从简单规则涌现，少写规则，多写原则"
+          },
+          {
+            "type": "text",
+            "text": "• 将产品拆分到最小单元，定义这些基本单元，剩下的一切都是它们的组合"
+          },
+          {
+            "type": "text",
+            "text": "• 了解模型能力的边界，在边界内通过harness达到更好的产品效果"
+          },
+          {
+            "type": "text",
+            "text": "• AI 会犯错，产品要优雅处理不确定性"
+          },
+          {
+            "type": "image",
+            "src": "content_images/358400ee_1.png",
+            "caption": ""
+          }
+        ],
+        "sections_en": [
+          {
+            "type": "text",
+            "text": "When I started designing this personal website, I wanted the website itself to be an AI-native product—one that reflects my own principles for AI-native product design."
+          },
+          {
+            "type": "text",
+            "text": "I believe an AI-native product should follow these principles:"
+          },
+          {
+            "type": "text",
+            "text": "• The product is designed around AI capabilities as its core."
+          },
+          {
+            "type": "text",
+            "text": "• The product becomes more powerful as AI models improve."
+          },
+          {
+            "type": "text",
+            "text": "• The product is designed not only for humans, but also for agents."
+          },
+          {
+            "type": "text",
+            "text": "In future iterations, I want this AI product to further embrace the following ideas:"
+          },
+          {
+            "type": "text",
+            "text": "• AI behavior should emerge from simple principles rather than complex rules. Write fewer rules, define better principles."
+          },
+          {
+            "type": "text",
+            "text": "• Break the product down into its smallest building blocks, clearly define those primitives, and let everything else emerge from their combinations."
+          },
+          {
+            "type": "text",
+            "text": "• Understand the boundaries of model capabilities, and use harnesses and system design to maximize product quality within those boundaries."
+          },
+          {
+            "type": "text",
+            "text": "• AI will make mistakes. Products should handle uncertainty gracefully rather than pretending certainty."
+          },
+          {
+            "type": "image",
+            "src": "content_images/358400ee_en_1.png",
+            "caption": ""
+          }
+        ]
+      }
+    },
+    "keywords": "Design Principles ● Intent-based UI ● Jakob Nielsen ● 2026"
+  },
+  {
+    "id": "146400ee-0cf5-808f-87e8-d536e92e21ee",
+    "title": "Stand-up Comedian",
+    "category": "hobby",
+    "atom": "photo",
+    "body": "脱口秀是我一生的热爱。把生活的酸甜苦辣变成段子搬上舞台的过程，已经成为我生活中不可分割的一部分。我发现脱口秀和设计之间有很多共通之处： • 两者都需要对日常生活的敏锐观察力",
+    "cover_image": "content_images/146400ee_3.webp",
+    "focus": {
+      "title": "Stand-up Comedian",
+      "description": "Stand-up comedy is a lifelong passion of mine. The process of turning life's highs and lows into jokes and performing them on stage has become an inte",
+      "link": "#",
+      "linkText": "Read more",
+      "article": {
+        "title": "Stand-up Comedian",
+        "sections": [
+          {
+            "type": "text",
+            "text": "脱口秀是我一生的热爱。把生活的酸甜苦辣变成段子搬上舞台的过程，已经成为我生活中不可分割的一部分。我发现脱口秀和设计之间有很多共通之处："
+          },
+          {
+            "type": "text",
+            "text": "• 两者都需要对日常生活的敏锐观察力"
+          },
+          {
+            "type": "text",
+            "text": "• 两者都需要不断迭代和打磨素材"
+          },
+          {
+            "type": "text",
+            "text": "• 两者都是把日常痛点转化为有意义的东西——设计将其变为解决方案，喜剧将其变为笑声"
+          },
+          {
+            "type": "text",
+            "text": "• 开放麦本质上就是一种用户测试：你听取观众反馈，迭代，再改进"
+          },
+          {
+            "type": "text",
+            "text": "• 喜剧和设计都需要品味——能注意到大多数人忽略但又能引起共鸣的东西"
+          },
+          {
+            "type": "image",
+            "src": "content_images/comedy_zh_1.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "喜剧不仅提升了我的幽默感，也锻炼了我的演讲和沟通能力。在工作中用讲故事的方式推动想法，更容易获得认同。"
+          },
+          {
+            "type": "image",
+            "src": "content_images/comedy_zh_2.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "从2023年开始，我一直在用英文做脱口秀，跟随 Norah 和 Dave 等知名喜剧演员学习技巧。我的素材通常围绕文化差异、科技行业的趣事、以及个人生活的日常展开。"
+          },
+          {
+            "type": "image",
+            "src": "content_images/comedy_zh_3.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "虽然中国的英文脱口秀场景相对小众，但你偶尔可以在上海和北京的开放麦活动中看到我。"
+          },
+          {
+            "type": "image",
+            "src": "content_images/comedy_zh_4.png",
+            "caption": ""
+          }
+        ],
+        "sections_en": [
+          {
+            "type": "text",
+            "text": "Stand-up comedy is a lifelong passion of mine. The process of turning life's highs and lows into jokes and performing them on stage has become an integral part of my life. Comedy and design have many things in common."
+          },
+          {
+            "type": "text",
+            "text": "• Both require a sharp eye for observing everyday life."
+          },
+          {
+            "type": "text",
+            "text": "• Both involve constant iteration and refinement of ideas and materials."
+          },
+          {
+            "type": "text",
+            "text": "• Both turn everyday pain points into something meaningful — design turns them into solutions, comedy turns them into punchlines."
+          },
+          {
+            "type": "text",
+            "text": "• An open mic is essentially a form of user testing: you listen to audience feedback, iterate, and improve. Sometimes the feedback is so bad that the material never makes it to production 🤣"
+          },
+          {
+            "type": "text",
+            "text": "• Both comedy and design require taste—the ability to notice things that most people overlook but somehow feel off. This sensitivity is a talent shared by great comedians and great designers alike."
+          },
+          {
+            "type": "image",
+            "src": "content_images/comedy_en_1.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "Comedy not only enhances my sense of humor but also improves my public speaking and communication skills. It’s a great way to channel negative emotions into something positive, helping me stay optimistic. Bad day? Great-time to write a new joke!"
+          },
+          {
+            "type": "image",
+            "src": "content_images/comedy_en_2.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "Since 2023, I’ve been doing stand-up in English, learning from well-known comedians like Norah and Davy, popular faces on Rock & Roast."
+          },
+          {
+            "type": "image",
+            "src": "content_images/comedy_en_3.png",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "Although the English stand-up scene in China is relatively niche, you can catch my performances at some international comedy clubs."
+          },
+          {
+            "type": "image",
+            "src": "content_images/comedy_en_4.png",
+            "caption": ""
+          }
+        ]
+      }
+    },
+    "keywords": "Comedy ● Open Mic ● Storytelling ● Since 2024"
+  },
+  {
     "id": "arduino-light-001",
     "title": "Born Builder",
     "category": "hobby",
@@ -1705,124 +1765,5 @@
     "title": "Grab a strip for your agent",
     "category": "who_i_am",
     "atom": "tearoff"
-  },
-  {
-    "id": "36f400ee-0cf5-807e-9b7c-f87b177542ee",
-    "title": "Born Builder",
-    "title_en": "Born Builder",
-    "category": "hobby",
-    "atom": "photo",
-    "body": "这个项目是我还在上学时的一个课程作业，已经过去快10年了，但我还是很喜欢。\n因为它提醒我 —— 我是一个builder，不论在有没有AI的时代，把东西做出来，就会让我兴奋！ 火焰是最原始的人与光的互动媒介，人们会用双手保护蜡烛的火苗，用嘴吹灭火苗，微微的风也能改变火苗方向。电灯的出现让人与光的交互变",
-    "cover_image": "",
-    "focus": {
-      "title": "Born Builder",
-      "title_en": "Born Builder",
-      "description": "",
-      "link": "#",
-      "linkText": "Read more",
-      "article": {
-        "title": "Born Builder",
-        "sections": [
-          {
-            "type": "text",
-            "text": "这个项目是我还在上学时的一个课程作业，已经过去快10年了，但我还是很喜欢。\n因为它提醒我 —— 我是一个builder，不论在有没有AI的时代，把东西做出来，就会让我兴奋！"
-          },
-          {
-            "type": "text",
-            "text": "火焰是最原始的人与光的互动媒介，人们会用双手保护蜡烛的火苗，用嘴吹灭火苗，微微的风也能改变火苗方向。电灯的出现让人与光的交互变得更直接，这个项目尝试用人与火苗的互动方式去重新设计电灯。"
-          },
-          {
-            "type": "image",
-            "src": "content_images/builder_zh2_1.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "我用了不同的sensors，来让这个产品感知周围的温度，光线和大气压力，让后用一块Arduino来根据这些输入控制输出 —— 1个LED灯泡"
-          },
-          {
-            "type": "image",
-            "src": "content_images/builder_zh2_2.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "我希望这个产品是一个有温度的艺术品，而不是科技感满满的电子产品，所以我自己制作硅胶模具，用水泥作为材料，做了好几版不同的产品设计。"
-          },
-          {
-            "type": "image",
-            "src": "content_images/builder_zh2_3.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "这是其中最满意的一个造型，用户可以用火柴点亮它，用手和它互动，以及 —— 像吹生日蜡烛一样熄灭它！"
-          },
-          {
-            "type": "image",
-            "src": "content_images/builder_zh2_4.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "这里有一个来自“古代”的视频展示👇"
-          },
-          {
-            "type": "video",
-            "src": "https://www.youtube.com/embed/Gt6PV9eqL3g"
-          }
-        ],
-        "sections_en": [
-          {
-            "type": "text",
-            "text": "This project was a school assignment from nearly 10 years ago, but I still love it. Because it reminds me — I'm a builder. Whether or not we're in the AI era, making things come to life excites me!"
-          },
-          {
-            "type": "text",
-            "text": "Fire is the most primitive medium of interaction between humans and light. People cup their hands to protect a candle flame, blow to extinguish it, and even a gentle breeze can change its direction. The invention of electric light made human-light interaction more direct. This project attempts to redesign electric lighting using the interactive language of fire and flame."
-          },
-          {
-            "type": "image",
-            "src": "content_images/builder_en2_1.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "I used different sensors to let the product perceive surrounding temperature, light, and atmospheric pressure, then used an Arduino to control the output based on these inputs."
-          },
-          {
-            "type": "image",
-            "src": "content_images/builder_en2_2.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "I wanted this product to be a warm piece of art rather than a tech-heavy electronic device. So I made my own silicone molds and used cement as the material, going through several iterations of different forms."
-          },
-          {
-            "type": "image",
-            "src": "content_images/builder_en2_3.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "This is my favorite form among them. Users can light it with a match, interact with it by hand, and blow it out like a birthday candle!"
-          },
-          {
-            "type": "image",
-            "src": "content_images/builder_en2_4.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "Here is a video demo from the ancient times below"
-          },
-          {
-            "type": "video",
-            "src": "https://www.youtube.com/embed/Gt6PV9eqL3g"
-          }
-        ]
-      }
-    }
   }
 ]
