@@ -286,6 +286,8 @@ export function getOrCreateVideo(videoSrc) {
   video.loop = true;
   video.muted = true;
   video.playsInline = true;
+  video.style.cssText = 'position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;pointer-events:none;z-index:-1;';
+  document.body.appendChild(video);
   const entry = { video, texture: null, ready: false };
   video.addEventListener('canplay', () => {
     entry.texture = PIXI.Texture.from(video, { resourceOptions: { autoPlay: false } });
