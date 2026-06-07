@@ -310,7 +310,8 @@ async function _loadVideoBlob(entry) {
       entry.video.load();
       console.log('[serial] blob fetched:', entry.videoSrc);
     } else {
-      console.log('[serial] retry (blob already set):', entry.videoSrc);
+      console.log('[serial] retry (blob already set), re-load:', entry.videoSrc);
+      entry.video.load();
     }
     if (entry.ready) return;
     // Wait for canplay (don't re-fetch or re-set src on retry)
