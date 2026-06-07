@@ -3935,6 +3935,12 @@ export class FocusOverlay {
     app.canvas.style.display = 'block';
     app.canvas.style.cursor = 'pointer';
     app.canvas.style.margin = '0 auto';
+    app.canvas.style.touchAction = 'pan-y';
+    // Mobile: remove PixiJS event system to allow native scroll (click still works via DOM)
+    if ('ontouchstart' in window && app.renderer.events) {
+      app.renderer.events.setTargetElement(null);
+      app.renderer.events.destroy();
+    }
 
     // 点击 → 打开嵌套 focus
     app.canvas.addEventListener('click', () => this._openNestedFocus(meta, app, result));
@@ -4020,6 +4026,11 @@ export class FocusOverlay {
     app.canvas.style.display = 'block';
     app.canvas.style.cursor = 'pointer';
     app.canvas.style.margin = '0 auto';
+    app.canvas.style.touchAction = 'pan-y';
+    if ('ontouchstart' in window && app.renderer.events) {
+      app.renderer.events.setTargetElement(null);
+      app.renderer.events.destroy();
+    }
 
     // Click opens first item's nested focus
     const firstMeta = metas[0];
