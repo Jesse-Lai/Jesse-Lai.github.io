@@ -27,22 +27,6 @@
             "text": "幸运的是，我曾多次被 <a href=\"https://mp.weixin.qq.com/s/5FFKYeLy22Bx1S-b4z8UKw\">公司官方媒体</a>作为优秀案例报道。在工作之余，我偶尔也会在 <a href=\"https://mp.weixin.qq.com/s/hbqhQS9mMXhLmtFRbWKDEQ\">微信公众号</a>和 <a href=\"https://medium.com/@laijianxun123\">Medium</a> 上写一些关于 AI 时代产品设计的思考。"
           },
           {
-            "type": "text",
-            "text": "对了，如果我不在做设计和Vibe coding，那大概率是在创作<a href=\"/146400ee0cf5808f87e8d536e92e21ee\">脱口秀</a> 🤣"
-          },
-          {
-            "type": "subtitle",
-            "text": "教育经历"
-          },
-          {
-            "type": "text",
-            "text": "• 以专业排名第一保送研究生"
-          },
-          {
-            "type": "text",
-            "text": "• 连续获得4次国家一等奖学金"
-          },
-          {
             "type": "subtitle",
             "text": "工作经历"
           },
@@ -80,11 +64,31 @@
           },
           {
             "type": "subtitle",
-            "text": "技能"
+            "text": "教育经历"
+          },
+          {
+            "type": "text",
+            "text": "• 以专业排名第一保送研究生"
+          },
+          {
+            "type": "text",
+            "text": "• 连续获得4次国家一等奖学金"
           },
           {
             "type": "subtitle",
-            "text": "Media"
+            "text": "联系方式"
+          },
+          {
+            "type": "text",
+            "text": "<img src=\"https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/x.svg\" style=\"width:16px;height:16px;vertical-align:middle;margin-right:6px;filter:invert(1);\"><a href=\"https://x.com/JesseLaiJianXun\">X (Twitter)</a>"
+          },
+          {
+            "type": "text",
+            "text": "<img src=\"https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/xiaohongshu.svg\" style=\"width:16px;height:16px;vertical-align:middle;margin-right:6px;filter:invert(1);\"><a href=\"https://xhslink.com/m/3q5X7UNOKRj\">小红书</a>"
+          },
+          {
+            "type": "text",
+            "text": "<img src=\"https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/wechat.svg\" style=\"width:16px;height:16px;vertical-align:middle;margin-right:6px;filter:invert(1);\">微信：a576328431"
           }
         ],
         "sections_en": [
@@ -99,22 +103,6 @@
           {
             "type": "text",
             "text": "Fortunately, I've been recognised multiple times by company official media as an \"outstanding employee\". Outside of work, I occasionally write about product design in the AI era on <a href=\"https://mp.weixin.qq.com/s/5FFKYeLy22Bx1S-b4z8UKw\">WeChat Blog</a> and <a href=\"https://medium.com/@jesselai\">Medium</a>."
-          },
-          {
-            "type": "text",
-            "text": "Oh, and if I'm not designing or vibe coding, I'm probably doing <a href=\"/146400ee0cf5808f87e8d536e92e21ee\">stand-up comedy</a> 🤣"
-          },
-          {
-            "type": "subtitle",
-            "text": "Education"
-          },
-          {
-            "type": "text",
-            "text": "• Admitted to graduate school ranked #1 in major"
-          },
-          {
-            "type": "text",
-            "text": "• 4-time National First-Class Scholarship recipient"
           },
           {
             "type": "subtitle",
@@ -154,15 +142,255 @@
           },
           {
             "type": "subtitle",
-            "text": "Skills"
+            "text": "Education"
+          },
+          {
+            "type": "text",
+            "text": "• Admitted to graduate school ranked #1 in major"
+          },
+          {
+            "type": "text",
+            "text": "• 4-time National First-Class Scholarship recipient"
           },
           {
             "type": "subtitle",
-            "text": "Media"
+            "text": "Contact"
+          },
+          {
+            "type": "text",
+            "text": "<img src=\"https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/x.svg\" style=\"width:16px;height:16px;vertical-align:middle;margin-right:6px;filter:invert(1);\"><a href=\"https://x.com/JesseLaiJianXun\">X (Twitter)</a>"
+          },
+          {
+            "type": "text",
+            "text": "<img src=\"https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/xiaohongshu.svg\" style=\"width:16px;height:16px;vertical-align:middle;margin-right:6px;filter:invert(1);\"><a href=\"https://xhslink.com/m/3q5X7UNOKRj\">Xiaohongshu</a>"
+          },
+          {
+            "type": "text",
+            "text": "<img src=\"https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/wechat.svg\" style=\"width:16px;height:16px;vertical-align:middle;margin-right:6px;filter:invert(1);\">WeChat: a576328431"
           }
         ]
       }
     }
+  },
+  {
+    "id": "copilot-bc-001",
+    "title": "Microsoft",
+    "category": "design_projects",
+    "atom": "sticky",
+    "body": "Building AI products at Microsoft, designing next-gen human-AI interaction experiences.",
+    "cover_image": "Microsoft.webp",
+    "keywords": "microsoft copilot ai design",
+    "focus": {
+      "title": "Microsoft",
+      "description": "Microsoft Copilot",
+      "link": "#",
+      "linkText": "Read more",
+      "article": {
+        "title": "Microsoft",
+        "sections": [
+          {
+            "type": "subtitle",
+            "text": "Microsoft Copilot"
+          },
+          {
+            "type": "text",
+            "text": "作为产品设计师，与global团队合作，一起设计了CopilotC/B两端的产品体验设计，经验主要集中于AI chat 产品中的 Generative UI 体验。"
+          },
+          {
+            "type": "subtitle",
+            "text": "To C: Copilot 消费者端"
+          },
+          {
+            "type": "image",
+            "src": "content_images/tocCopilot.webp",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "设计 Copilot 消费者端的日常对话体验，通过 Generative UI 丰富用户获得的回答，用户可以与回答内容进行进一步交互，获取更深度和个性化的内容，提升用户对产品的信任感"
+          },
+          {
+            "type": "subtitle",
+            "text": "To B: Copilot 企业端"
+          },
+          {
+            "type": "image",
+            "src": "content_images/tobCopilot.webp",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "设计和开发 To B copilot 的办公体验，不仅涉及对话场景，还需要串联微软生态内的不同应用的AI体验"
+          },
+          {
+            "type": "subtitle",
+            "text": "Microsoft MSN"
+          },
+          {
+            "type": "image",
+            "src": "content_images/MSN.webp",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "微软ToC的内容产品的设计，提升用户在微软生态内产品的内容消费体验，如 Edge, Bing, Copilot 等等"
+          }
+        ],
+        "sections_en": [
+          {
+            "type": "subtitle",
+            "text": "Microsoft Copilot"
+          },
+          {
+            "type": "text",
+            "text": "As a product designer on Microsoft Copilot, I've had the privilege of collaborating with our global team on both consumer and enterprise Copilot experiences. My expertise focuses on Generative UX and Agent experience design within AI chat products."
+          },
+          {
+            "type": "subtitle",
+            "text": "To C: Copilot Consumer"
+          },
+          {
+            "type": "image",
+            "src": "content_images/tocCopilot.webp",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "Designed Copilot consumer answer cards and consumption pages — users trigger these experiences during conversations for further interaction"
+          },
+          {
+            "type": "subtitle",
+            "text": "To B: Copilot Enterprise"
+          },
+          {
+            "type": "image",
+            "src": "content_images/tobCopilot.webp",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "Designed and developed GenUX components in enterprise Copilot"
+          },
+          {
+            "type": "subtitle",
+            "text": "Microsoft MSN"
+          },
+          {
+            "type": "image",
+            "src": "content_images/MSN.webp",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "Contributing to Microsoft's content product design, providing content services for products across the Microsoft ecosystem including Edge, Bing, and Copilot"
+          }
+        ]
+      }
+    },
+    "body_en": "Building AI products at Microsoft, designing next-gen human-AI interaction experiences.",
+    "title_en": "Microsoft"
+  },
+  {
+    "id": "116400ee-0cf5-8156-9ca8-fbc4ded84bda",
+    "title": "Alibaba",
+    "category": "design_projects",
+    "atom": "sticky",
+    "body": "在大语言模型兴起的早期，设计帮助小商家做好“吃”的 AI 产品",
+    "cover_image": "alibaba.webp",
+    "focus": {
+      "title": "Alibaba",
+      "description": "<a href=\"https://www.notion.so/116400ee0cf581569ca8fbc4ded84bda\">Untitled</a>",
+      "link": "#",
+      "linkText": "Read more",
+      "article": {
+        "title": "Alibaba",
+        "sections": [
+          {
+            "type": "subtitle",
+            "text": "🍔 外卖配送服务： 商家入驻体验优化"
+          },
+          {
+            "type": "image",
+            "src": "content_images/project1.webp",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "通过详实的前期数据和用户研究，我们发现用户开店过程中，因为复杂的线上餐饮注册流程导致大量流失。经过我的重新设计开店流程，并改进了任务奖励系统，商家的入驻效率和新店存活率都提升了。"
+          },
+          {
+            "type": "subtitle",
+            "text": "🤖 AI 商家助手"
+          },
+          {
+            "type": "image",
+            "src": "content_images/project2.webp",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "在这个项目中，我分析了生成式 AI 对饿了么商家在线咨询服务的影响。并针对业务特点，0-1设计了产品的基本框架，最终提升商家咨询体验并节约了BD的时间成本。"
+          },
+          {
+            "type": "subtitle",
+            "text": "🔍 评价分析"
+          },
+          {
+            "type": "image",
+            "src": "content_images/project3.webp",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "\"评价分析\"对外卖在线店铺运营至关重要，在这个项目中我还原商家使用的真实场景，找到了商家很少使用该功能的原因，提出并推动了一个产品创新方案，带来了超预期的业务增长。"
+          }
+        ],
+        "sections_en": [
+          {
+            "type": "subtitle",
+            "text": "🍔 Food Delivery Service: Restaurant Owner's Onboarding Experience"
+          },
+          {
+            "type": "image",
+            "src": "content_images/project1.webp",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "Through extensive data analysis and user research, we discovered that many merchants dropped off during store onboarding due to the complex online restaurant registration process. I redesigned the onboarding flow and improved the task-and-rewards system, resulting in higher onboarding efficiency and better new-store retention rates."
+          },
+          {
+            "type": "subtitle",
+            "text": "🤖 AI Merchant Assistant"
+          },
+          {
+            "type": "image",
+            "src": "content_images/project2.webp",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "In this project, I explored the impact of Generative AI on Ele.me's merchant support services. Based on business needs, I designed the product framework from the ground up (0→1), improving the merchant consultation experience while reducing the time costs for business development teams."
+          },
+          {
+            "type": "subtitle",
+            "text": "🔍 Review Analysis"
+          },
+          {
+            "type": "image",
+            "src": "content_images/project3.webp",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "Review analysis is critical to the success of food delivery merchants. In this project, I reconstructed real merchant operating scenarios and identified why adoption of the feature was low. I proposed and drove an innovative product solution that significantly exceeded business growth expectations."
+          }
+        ]
+      }
+    },
+    "keywords": "B2C ● Eleme ● Onboarding ● Survival Rate ● 2023",
+    "body_en": "In the early days of LLMs, I designed AI products behind every better bite.",
+    "title_en": "Alibaba"
   },
   {
     "id": "30d400ee-0cf5-805a-ab9d-cf4d576901da",
@@ -170,7 +398,7 @@
     "category": "design_thought",
     "atom": "sticky",
     "body": "在微软工作一年后，我决定重新开始写写AI native designer的转型过程，和AI design workflow的变化，希望能链接更多感兴趣的人。 这次聊的话题是因为前段时间参与了一些Generative UI的项目，因此分享一些总结和反思。看完本文你能获得：",
-    "cover_image": "content_images/30d400ee_1.png",
+    "cover_image": "content_images/30d400ee_1.webp",
     "focus": {
       "title": "GenUI 设计指南",
       "description": "在微软工作一年后，我决定重新开始写写AI native designer的转型过程，和AI design workflow的变化，希望能链接更多感兴趣的人。 这次聊的话题是因为前段时间参与了一些Generative UI的项目，因此分享一些总结和反思。看完本文你能获得：",
@@ -221,7 +449,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/genui_zh2_1.png",
+            "src": "content_images/genui_zh2_1.webp",
             "caption": ""
           },
           {
@@ -238,7 +466,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/genui_zh2_2.png",
+            "src": "content_images/genui_zh2_2.webp",
             "caption": ""
           },
           {
@@ -255,7 +483,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/genui_zh2_3.png",
+            "src": "content_images/genui_zh2_3.webp",
             "caption": ""
           },
           {
@@ -296,7 +524,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/genui_zh2_4.png",
+            "src": "content_images/genui_zh2_4.webp",
             "caption": ""
           },
           {
@@ -309,7 +537,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/genui_zh2_5.png",
+            "src": "content_images/genui_zh2_5.webp",
             "caption": ""
           },
           {
@@ -322,7 +550,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/genui_zh2_6.png",
+            "src": "content_images/genui_zh2_6.webp",
             "caption": ""
           },
           {
@@ -351,7 +579,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/genui_zh2_7.png",
+            "src": "content_images/genui_zh2_7.webp",
             "caption": ""
           },
           {
@@ -364,7 +592,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/genui_zh2_8.png",
+            "src": "content_images/genui_zh2_8.webp",
             "caption": ""
           },
           {
@@ -377,7 +605,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/genui_zh2_9.png",
+            "src": "content_images/genui_zh2_9.webp",
             "caption": ""
           },
           {
@@ -410,7 +638,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/genui_zh2_10.png",
+            "src": "content_images/genui_zh2_10.webp",
             "caption": ""
           },
           {
@@ -447,7 +675,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/genui_zh2_11.png",
+            "src": "content_images/genui_zh2_11.webp",
             "caption": ""
           },
           {
@@ -456,7 +684,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/genui_zh2_12.png",
+            "src": "content_images/genui_zh2_12.webp",
             "caption": ""
           },
           {
@@ -465,7 +693,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/genui_zh2_13.png",
+            "src": "content_images/genui_zh2_13.webp",
             "caption": ""
           },
           {
@@ -516,7 +744,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/30d400ee_en_1.png",
+            "src": "content_images/30d400ee_en_1.webp",
             "caption": ""
           },
           {
@@ -533,7 +761,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/30d400ee_en_2.png",
+            "src": "content_images/30d400ee_en_2.webp",
             "caption": ""
           },
           {
@@ -550,7 +778,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/30d400ee_en_3.png",
+            "src": "content_images/30d400ee_en_3.webp",
             "caption": ""
           },
           {
@@ -591,7 +819,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/30d400ee_en_4.png",
+            "src": "content_images/30d400ee_en_4.webp",
             "caption": ""
           },
           {
@@ -604,7 +832,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/30d400ee_en_5.png",
+            "src": "content_images/30d400ee_en_5.webp",
             "caption": ""
           },
           {
@@ -617,7 +845,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/30d400ee_en_6.png",
+            "src": "content_images/30d400ee_en_6.webp",
             "caption": ""
           },
           {
@@ -646,7 +874,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/30d400ee_en_7.png",
+            "src": "content_images/30d400ee_en_7.webp",
             "caption": ""
           },
           {
@@ -659,7 +887,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/30d400ee_en_8.png",
+            "src": "content_images/30d400ee_en_8.webp",
             "caption": ""
           },
           {
@@ -672,7 +900,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/30d400ee_en_9.png",
+            "src": "content_images/30d400ee_en_9.webp",
             "caption": ""
           },
           {
@@ -705,7 +933,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/30d400ee_en_10.png",
+            "src": "content_images/30d400ee_en_10.webp",
             "caption": ""
           },
           {
@@ -742,7 +970,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/30d400ee_en_11.png",
+            "src": "content_images/30d400ee_en_11.webp",
             "caption": ""
           },
           {
@@ -751,7 +979,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/30d400ee_en_12.png",
+            "src": "content_images/30d400ee_en_12.webp",
             "caption": ""
           },
           {
@@ -760,7 +988,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/30d400ee_en_13.png",
+            "src": "content_images/30d400ee_en_13.webp",
             "caption": ""
           },
           {
@@ -779,124 +1007,6 @@
     "title_en": "Designing for GenUI",
     "subtitle": "我对 GenUI 形态、系统与工作流的总结",
     "subtitle_en": "A summary of my thoughts on GenUI systems and workflows."
-  },
-  {
-    "id": "copilot-bc-001",
-    "title": "Microsoft",
-    "category": "design_projects",
-    "atom": "sticky",
-    "body": "Building AI products at Microsoft, designing next-gen human-AI interaction experiences.",
-    "cover_image": "Microsoft.webp",
-    "keywords": "microsoft copilot ai design",
-    "focus": {
-      "title": "Microsoft",
-      "description": "Microsoft Copilot",
-      "link": "#",
-      "linkText": "Read more",
-      "article": {
-        "title": "Microsoft",
-        "sections": [
-          {
-            "type": "subtitle",
-            "text": "Microsoft Copilot"
-          },
-          {
-            "type": "text",
-            "text": "作为产品设计师，与global团队合作，一起设计了CopilotC/B两端的产品体验设计，经验主要集中于AI chat 产品中的 Generative UI 体验。"
-          },
-          {
-            "type": "subtitle",
-            "text": "To C: Copilot 消费者端"
-          },
-          {
-            "type": "image",
-            "src": "content_images/tocCopilot.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "设计 Copilot 消费者端的日常对话体验，通过 Generative UI 丰富用户获得的回答，用户可以与回答内容进行进一步交互，获取更深度和个性化的内容，提升用户对产品的信任感"
-          },
-          {
-            "type": "subtitle",
-            "text": "To B: Copilot 企业端"
-          },
-          {
-            "type": "image",
-            "src": "content_images/tobCopilot.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "设计和开发 To B copilot 的办公体验，不仅涉及对话场景，还需要串联微软生态内的不同应用的AI体验"
-          },
-          {
-            "type": "subtitle",
-            "text": "Microsoft MSN"
-          },
-          {
-            "type": "image",
-            "src": "content_images/MSN.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "微软ToC的内容产品的设计，提升用户在微软生态内产品的内容消费体验，如 Edge, Bing, Copilot 等等"
-          }
-        ],
-        "sections_en": [
-          {
-            "type": "subtitle",
-            "text": "Microsoft Copilot"
-          },
-          {
-            "type": "text",
-            "text": "As a product designer on Microsoft Copilot, I've had the privilege of collaborating with our global team on both consumer and enterprise Copilot experiences. My expertise focuses on Generative UX and Agent experience design within AI chat products."
-          },
-          {
-            "type": "subtitle",
-            "text": "To C: Copilot Consumer"
-          },
-          {
-            "type": "image",
-            "src": "content_images/tocCopilot.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "Designed Copilot consumer answer cards and consumption pages — users trigger these experiences during conversations for further interaction"
-          },
-          {
-            "type": "subtitle",
-            "text": "To B: Copilot Enterprise"
-          },
-          {
-            "type": "image",
-            "src": "content_images/tobCopilot.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "Designed and developed GenUX components in enterprise Copilot"
-          },
-          {
-            "type": "subtitle",
-            "text": "Microsoft MSN"
-          },
-          {
-            "type": "image",
-            "src": "content_images/MSN.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "Contributing to Microsoft's content product design, providing content services for products across the Microsoft ecosystem including Edge, Bing, and Copilot"
-          }
-        ]
-      }
-    },
-    "body_en": "Building AI products at Microsoft, designing next-gen human-AI interaction experiences.",
-    "title_en": "Microsoft"
   },
   {
     "id": "vibe-coding-001",
@@ -932,12 +1042,12 @@
           },
           {
             "type": "image",
-            "src": "content_images/vibe_zh_1.png",
+            "src": "content_images/vibe_zh_1.webp",
             "caption": ""
           },
           {
             "type": "image",
-            "src": "content_images/vibe_zh_2.png",
+            "src": "content_images/vibe_zh_2.webp",
             "caption": ""
           },
           {
@@ -958,7 +1068,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/vibe_zh_3.png",
+            "src": "content_images/vibe_zh_3.webp",
             "caption": ""
           },
           {
@@ -979,7 +1089,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/vibe_zh_4.png",
+            "src": "content_images/vibe_zh_4.webp",
             "caption": ""
           },
           {
@@ -1000,7 +1110,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/vibe_zh_5.png",
+            "src": "content_images/vibe_zh_5.webp",
             "caption": ""
           },
           {
@@ -1021,7 +1131,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/vibe_zh_6.png",
+            "src": "content_images/vibe_zh_6.webp",
             "caption": ""
           },
           {
@@ -1042,12 +1152,12 @@
           },
           {
             "type": "image",
-            "src": "content_images/vibe_zh_7.png",
+            "src": "content_images/vibe_zh_7.webp",
             "caption": ""
           },
           {
             "type": "image",
-            "src": "content_images/vibe_zh_8.png",
+            "src": "content_images/vibe_zh_8.webp",
             "caption": ""
           }
         ],
@@ -1070,12 +1180,12 @@
           },
           {
             "type": "image",
-            "src": "content_images/vibe_en_1.png",
+            "src": "content_images/vibe_en_1.webp",
             "caption": ""
           },
           {
             "type": "image",
-            "src": "content_images/vibe_en_2.png",
+            "src": "content_images/vibe_en_2.webp",
             "caption": ""
           },
           {
@@ -1096,7 +1206,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/vibe_en_3.png",
+            "src": "content_images/vibe_en_3.webp",
             "caption": ""
           },
           {
@@ -1117,7 +1227,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/vibe_en_4.png",
+            "src": "content_images/vibe_en_4.webp",
             "caption": ""
           },
           {
@@ -1138,7 +1248,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/vibe_en_5.png",
+            "src": "content_images/vibe_en_5.webp",
             "caption": ""
           },
           {
@@ -1159,7 +1269,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/vibe_en_6.png",
+            "src": "content_images/vibe_en_6.webp",
             "caption": ""
           },
           {
@@ -1180,12 +1290,12 @@
           },
           {
             "type": "image",
-            "src": "content_images/vibe_en_7.png",
+            "src": "content_images/vibe_en_7.webp",
             "caption": ""
           },
           {
             "type": "image",
-            "src": "content_images/vibe_en_8.png",
+            "src": "content_images/vibe_en_8.webp",
             "caption": ""
           }
         ]
@@ -1213,37 +1323,37 @@
           },
           {
             "type": "image",
-            "src": "content_images/drawing_zh_1.png",
+            "src": "content_images/drawing_zh_1.webp",
             "caption": ""
           },
           {
             "type": "image",
-            "src": "content_images/drawing_zh_2.png",
+            "src": "content_images/drawing_zh_2.webp",
             "caption": ""
           },
           {
             "type": "image",
-            "src": "content_images/drawing_zh_3.png",
+            "src": "content_images/drawing_zh_3.webp",
             "caption": ""
           },
           {
             "type": "image",
-            "src": "content_images/drawing_zh_4.png",
+            "src": "content_images/drawing_zh_4.webp",
             "caption": ""
           },
           {
             "type": "image",
-            "src": "content_images/drawing_zh_5.png",
+            "src": "content_images/drawing_zh_5.webp",
             "caption": ""
           },
           {
             "type": "image",
-            "src": "content_images/drawing_zh_6.png",
+            "src": "content_images/drawing_zh_6.webp",
             "caption": ""
           },
           {
             "type": "image",
-            "src": "content_images/drawing_zh_7.png",
+            "src": "content_images/drawing_zh_7.webp",
             "caption": ""
           }
         ],
@@ -1258,145 +1368,43 @@
           },
           {
             "type": "image",
-            "src": "content_images/drawing_en_1.png",
+            "src": "content_images/drawing_en_1.webp",
             "caption": ""
           },
           {
             "type": "image",
-            "src": "content_images/drawing_en_2.png",
+            "src": "content_images/drawing_en_2.webp",
             "caption": ""
           },
           {
             "type": "image",
-            "src": "content_images/drawing_en_3.png",
+            "src": "content_images/drawing_en_3.webp",
             "caption": ""
           },
           {
             "type": "image",
-            "src": "content_images/drawing_en_4.png",
+            "src": "content_images/drawing_en_4.webp",
             "caption": ""
           },
           {
             "type": "image",
-            "src": "content_images/drawing_en_5.png",
+            "src": "content_images/drawing_en_5.webp",
             "caption": ""
           },
           {
             "type": "image",
-            "src": "content_images/drawing_en_6.png",
+            "src": "content_images/drawing_en_6.webp",
             "caption": ""
           },
           {
             "type": "image",
-            "src": "content_images/drawing_en_7.png",
+            "src": "content_images/drawing_en_7.webp",
             "caption": ""
           }
         ]
       }
     },
     "keywords": "Illustration ● Watercolor ● Coming Soon"
-  },
-  {
-    "id": "116400ee-0cf5-8156-9ca8-fbc4ded84bda",
-    "title": "Alibaba",
-    "category": "design_projects",
-    "atom": "sticky",
-    "body": "在大语言模型兴起的早期，设计帮助小商家做好“吃”的 AI 产品",
-    "cover_image": "alibaba.webp",
-    "focus": {
-      "title": "Alibaba",
-      "description": "<a href=\"https://www.notion.so/116400ee0cf581569ca8fbc4ded84bda\">Untitled</a>",
-      "link": "#",
-      "linkText": "Read more",
-      "article": {
-        "title": "Alibaba",
-        "sections": [
-          {
-            "type": "subtitle",
-            "text": "🍔 外卖配送服务： 商家入驻体验优化"
-          },
-          {
-            "type": "image",
-            "src": "content_images/project1.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "通过详实的前期数据和用户研究，我们发现用户开店过程中，因为复杂的线上餐饮注册流程导致大量流失。经过我的重新设计开店流程，并改进了任务奖励系统，商家的入驻效率和新店存活率都提升了。"
-          },
-          {
-            "type": "subtitle",
-            "text": "🤖 AI 商家助手"
-          },
-          {
-            "type": "image",
-            "src": "content_images/project2.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "在这个项目中，我分析了生成式 AI 对饿了么商家在线咨询服务的影响。并针对业务特点，0-1设计了产品的基本框架，最终提升商家咨询体验并节约了BD的时间成本。"
-          },
-          {
-            "type": "subtitle",
-            "text": "🔍 评价分析"
-          },
-          {
-            "type": "image",
-            "src": "content_images/project3.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "\"评价分析\"对外卖在线店铺运营至关重要，在这个项目中我还原商家使用的真实场景，找到了商家很少使用该功能的原因，提出并推动了一个产品创新方案，带来了超预期的业务增长。"
-          }
-        ],
-        "sections_en": [
-          {
-            "type": "subtitle",
-            "text": "🍔 Food Delivery Service: Restaurant Owner's Onboarding Experience"
-          },
-          {
-            "type": "image",
-            "src": "content_images/project1.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "Through extensive data analysis and user research, we discovered that many merchants dropped off during store onboarding due to the complex online restaurant registration process. I redesigned the onboarding flow and improved the task-and-rewards system, resulting in higher onboarding efficiency and better new-store retention rates."
-          },
-          {
-            "type": "subtitle",
-            "text": "🤖 AI Merchant Assistant"
-          },
-          {
-            "type": "image",
-            "src": "content_images/project2.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "In this project, I explored the impact of Generative AI on Ele.me's merchant support services. Based on business needs, I designed the product framework from the ground up (0→1), improving the merchant consultation experience while reducing the time costs for business development teams."
-          },
-          {
-            "type": "subtitle",
-            "text": "🔍 Review Analysis"
-          },
-          {
-            "type": "image",
-            "src": "content_images/project3.png",
-            "caption": ""
-          },
-          {
-            "type": "text",
-            "text": "Review analysis is critical to the success of food delivery merchants. In this project, I reconstructed real merchant operating scenarios and identified why adoption of the feature was low. I proposed and drove an innovative product solution that significantly exceeded business growth expectations."
-          }
-        ]
-      }
-    },
-    "keywords": "B2C ● Eleme ● Onboarding ● Survival Rate ● 2023",
-    "body_en": "In the early days of LLMs, I designed AI products behind every better bite.",
-    "title_en": "Alibaba"
   },
   {
     "id": "358400ee-0cf5-81e1-aff1-ee6de5859ccd",
@@ -1451,7 +1459,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/358400ee_1.png",
+            "src": "content_images/358400ee_1.webp",
             "caption": ""
           }
         ],
@@ -1498,7 +1506,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/358400ee_en_1.png",
+            "src": "content_images/358400ee_en_1.webp",
             "caption": ""
           }
         ]
@@ -1547,7 +1555,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/comedy_zh_1.png",
+            "src": "content_images/comedy_zh_1.webp",
             "caption": ""
           },
           {
@@ -1556,7 +1564,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/comedy_zh_2.png",
+            "src": "content_images/comedy_zh_2.webp",
             "caption": ""
           },
           {
@@ -1565,7 +1573,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/comedy_zh_3.png",
+            "src": "content_images/comedy_zh_3.webp",
             "caption": ""
           },
           {
@@ -1574,7 +1582,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/comedy_zh_4.png",
+            "src": "content_images/comedy_zh_4.webp",
             "caption": ""
           }
         ],
@@ -1605,7 +1613,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/comedy_en_1.png",
+            "src": "content_images/comedy_en_1.webp",
             "caption": ""
           },
           {
@@ -1614,7 +1622,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/comedy_en_2.png",
+            "src": "content_images/comedy_en_2.webp",
             "caption": ""
           },
           {
@@ -1623,7 +1631,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/comedy_en_3.png",
+            "src": "content_images/comedy_en_3.webp",
             "caption": ""
           },
           {
@@ -1632,7 +1640,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/comedy_en_4.png",
+            "src": "content_images/comedy_en_4.webp",
             "caption": ""
           }
         ]
@@ -1666,7 +1674,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/builder_zh2_1.png",
+            "src": "content_images/builder_zh2_1.webp",
             "caption": ""
           },
           {
@@ -1675,7 +1683,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/builder_zh2_2.png",
+            "src": "content_images/builder_zh2_2.webp",
             "caption": ""
           },
           {
@@ -1684,7 +1692,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/builder_zh2_3.png",
+            "src": "content_images/builder_zh2_3.webp",
             "caption": ""
           },
           {
@@ -1693,7 +1701,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/builder_zh2_4.png",
+            "src": "content_images/builder_zh2_4.webp",
             "caption": ""
           },
           {
@@ -1716,7 +1724,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/builder_en2_1.png",
+            "src": "content_images/builder_en2_1.webp",
             "caption": ""
           },
           {
@@ -1725,7 +1733,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/builder_en2_2.png",
+            "src": "content_images/builder_en2_2.webp",
             "caption": ""
           },
           {
@@ -1734,7 +1742,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/builder_en2_3.png",
+            "src": "content_images/builder_en2_3.webp",
             "caption": ""
           },
           {
@@ -1743,7 +1751,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/builder_en2_4.png",
+            "src": "content_images/builder_en2_4.webp",
             "caption": ""
           },
           {
