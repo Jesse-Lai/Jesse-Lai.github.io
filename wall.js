@@ -776,6 +776,10 @@ import { WallArticle } from "./wall-article.js?v=151";
         else curGroup.scale.set(targetScale);
       };
       requestAnimationFrame(animScale);
+      // DEBUG: temporary alert to diagnose WeChat issue
+      if (idx <= 1) {
+        document.title = `idx=${idx} wc=${_isWeChat} vid=${cur?.videoSrc||'none'} spr=${!!cur?.sprite}`;
+      }
       if (cur && cur.videoSrc && cur.sprite) {
         // WeChat: use GIF overlay for photo_portrait (test)
         const gifSrc = _isWeChat && cur.videoSrc === 'photo_portrait.mp4' ? 'photo_portrait.gif' : null;
