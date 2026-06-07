@@ -291,15 +291,19 @@ export function getOrCreateVideo(videoSrc) {
   video.setAttribute('webkit-playsinline', '');
   video.setAttribute('x5-playsinline', '');
   video.setAttribute('x5-video-player-type', 'h5');
-  // Append to DOM (hidden) — WeChat WKWebView requires in-DOM video for play()
+  // Append to DOM (hidden)
   video.style.cssText = 'position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;pointer-events:none;z-index:-1;';
   document.body.appendChild(video);
-  video.load();  // force preload start
   const entry = { video, texture: null, ready: false };
   video.addEventListener('canplay', () => {
     entry.texture = PIXI.Texture.from(video, { resourceOptions: { autoPlay: false } });
     entry.ready = true;
   }, { once: true });
+  // Fetch full video as blob to guarantee complete download during loading
+  fetch(videoSrc).then(r => r.blob()).then(blob => {
+    video.src = URL.createObjectURL(blob);
+    video.load();
+  }).catch(() => {});
   _videoCache.set(videoSrc, entry);
   return entry;
 }
