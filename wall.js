@@ -254,6 +254,7 @@ import { WallArticle } from "./wall-article.js?v=151";
         const resp = await fetch(src);
         const blob = await resp.blob();
         entry.blobUrl = URL.createObjectURL(blob);
+        entry.video.src = entry.blobUrl;
         console.log('[prefetch] blob ready:', src);
       } catch(e) { console.error('[prefetch] failed:', src, e); }
     }
