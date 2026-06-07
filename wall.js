@@ -243,37 +243,21 @@ import { WallArticle } from "./wall-article.js?v=151";
   const preloaded = await Promise.all(preloads);
   setProgress(50);
 
-  // WeChat-only: early video preload with retry loop (WeChat delays canplay)
-  const isWeChat = /MicroMessenger/i.test(navigator.userAgent);
-  let earlyVideoPromise = null;
-  if (isWeChat) {
-    async function waitUntilReady(entry, maxMs = 30000) {
-      if (entry.ready) return;
-      if (!entry.blobUrl) {
-        const resp = await fetch(entry.videoSrc);
+  // Pre-fetch all video blobs during loading (parallel with atom rendering, no decode)
+  const allVideoSrcs = contentData
+    .filter(e => e.cover_image)
+    .map(e => e.cover_image.replace(/\.(png|jpg|jpeg|webp)$/i, '.mp4'));
+  Promise.all(allVideoSrcs.map(async src => {
+    const entry = getOrCreateVideo(src);
+    if (!entry.blobUrl) {
+      try {
+        const resp = await fetch(src);
         const blob = await resp.blob();
         entry.blobUrl = URL.createObjectURL(blob);
-        entry.video.src = entry.blobUrl;
-      }
-      const start = Date.now();
-      while (!entry.ready && Date.now() - start < maxMs) {
-        entry.video.load();
-        await new Promise(resolve => {
-          entry.video.addEventListener('canplay', resolve, { once: true });
-          setTimeout(resolve, 2000);
-        });
-      }
-      console.log('[early]', entry.videoSrc, 'ready:', entry.ready, 'elapsed:', Date.now() - start, 'ms');
+        console.log('[prefetch] blob ready:', src);
+      } catch(e) { console.error('[prefetch] failed:', src, e); }
     }
-
-    const earlyVideoSrcs = contentData
-      .filter(e => (e.atom === 'photo' && e.cover_image) || (e.atom === 'sticky' && e.cover_image))
-      .slice(0, 3)
-      .map(e => e.cover_image.replace(/\.(png|jpg|jpeg|webp)$/i, '.mp4'));
-    earlyVideoPromise = Promise.all(
-      earlyVideoSrcs.map(src => waitUntilReady(getOrCreateVideo(src)))
-    );
-  }
+  }));
 
   // Phase 2: Render sequentially (PIXI requires ordered operations)
   for (let i = 0; i < wallItems.length; i++) {
@@ -384,8 +368,6 @@ import { WallArticle } from "./wall-article.js?v=151";
     .filter(r => r.focusableItem && r.focusableItem.videoSrc)
     .sort((a, b) => a.group.y - b.group.y)
     .map(r => r.focusableItem.videoSrc);
-  // WeChat: wait for first 3 videos before revealing, then load the rest
-  if (earlyVideoPromise) await earlyVideoPromise;
   loadAllVideosSequentially(videoSrcsByPosition);
 
   // ─── Reveal: hide loading, show canvas ───
