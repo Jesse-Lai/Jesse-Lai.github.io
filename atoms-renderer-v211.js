@@ -299,17 +299,20 @@ export function getOrCreateVideo(videoSrc) {
 }
 
 // Load a single video as blob and wait for canplay
-function _loadVideoBlob(entry) {
-  return new Promise(resolve => {
-    fetch(entry.videoSrc).then(r => r.blob()).then(blob => {
-      entry.video.src = URL.createObjectURL(blob);
-      entry.video.load();
-      if (entry.ready) { resolve(); return; }
+async function _loadVideoBlob(entry) {
+  try {
+    const resp = await fetch(entry.videoSrc);
+    const blob = await resp.blob();
+    console.log('[serial] blob fetched:', entry.videoSrc);
+    entry.video.src = URL.createObjectURL(blob);
+    entry.video.load();
+    if (entry.ready) return;
+    // Wait for canplay AFTER blob is set (timeout only for decode, not download)
+    await new Promise(resolve => {
       entry.video.addEventListener('canplay', () => resolve(), { once: true });
-      // Timeout fallback — don't block queue forever
-      setTimeout(resolve, 8000);
-    }).catch(() => resolve());
-  });
+      setTimeout(resolve, 5000);
+    });
+  } catch(e) { console.error('[serial] fetch error:', entry.videoSrc, e); }
 }
 
 // Load all videos as blobs sequentially (one at a time to avoid concurrent decode limit)
