@@ -749,16 +749,26 @@ import { WallArticle } from "./wall-article.js?v=151";
       requestAnimationFrame(animScale);
       if (cur && cur.videoSrc && cur.sprite) {
         const entry = getOrCreateVideo(cur.videoSrc);
-        entry.video.currentTime = 0;
-        entry.video.play().then(() => {
-          if (!entry.texture) {
-            entry.texture = PIXI.Texture.from(entry.video, { resourceOptions: { autoPlay: false } });
-            entry.ready = true;
-          }
-          cur._staticTex = cur._staticTex || cur.sprite.texture;
-          cur.sprite.texture = entry.texture;
-          if (window.umami) umami.track("video-play", { src: cur.videoSrc });
-        }).catch(() => {});
+        const playAndSwap = () => {
+          entry.video.currentTime = 0;
+          entry.video.play().then(() => {
+            if (!entry.texture) {
+              entry.texture = PIXI.Texture.from(entry.video, { resourceOptions: { autoPlay: false } });
+              entry.ready = true;
+            }
+            cur._staticTex = cur._staticTex || cur.sprite.texture;
+            cur.sprite.texture = entry.texture;
+            if (window.umami) umami.track("video-play", { src: cur.videoSrc });
+          }).catch(() => {});
+        };
+        if (entry.ready) {
+          playAndSwap();
+        } else {
+          // Video not downloaded yet — play when ready (only if still current atom)
+          entry.video.addEventListener('canplay', () => {
+            if (currentSnapIdx === idx) playAndSwap();
+          }, { once: true });
+        }
       }
     };
 
