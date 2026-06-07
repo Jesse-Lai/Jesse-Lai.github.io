@@ -315,16 +315,25 @@ async function _loadVideoBlob(entry) {
   } catch(e) { console.error('[serial] fetch error:', entry.videoSrc, e); }
 }
 
-// Load all videos as blobs sequentially (one at a time to avoid concurrent decode limit)
+// Load all videos as blobs sequentially, retry failed ones until all ready
 export async function loadAllVideosSequentially(videoSrcList) {
-  for (const src of videoSrcList) {
-    const entry = _videoCache.get(src);
-    if (entry && !entry.ready) {
+  const maxRounds = 5;
+  for (let round = 1; round <= maxRounds; round++) {
+    const pending = videoSrcList.filter(src => {
+      const entry = _videoCache.get(src);
+      return entry && !entry.ready;
+    });
+    if (pending.length === 0) break;
+    console.log(`[serial] round ${round}: ${pending.length} videos remaining`);
+    for (const src of pending) {
+      const entry = _videoCache.get(src);
       console.log('[serial] loading:', src);
       await _loadVideoBlob(entry);
       console.log('[serial] done:', src, 'ready:', entry.ready);
     }
   }
+  const still = videoSrcList.filter(src => !_videoCache.get(src)?.ready);
+  if (still.length) console.warn('[serial] gave up on:', still.join(', '));
 }
 
 export function sampleDominantColor(imgData) {
