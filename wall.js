@@ -705,6 +705,27 @@ import { WallArticle } from "./wall-article.js?v=151";
   }
 
   // ─── Mobile: TikTok-style snap scroll ───
+  const _isWeChat = /MicroMessenger/i.test(navigator.userAgent);
+  let _gifOverlay = null;
+  function _hideGifOverlay() {
+    if (_gifOverlay) { _gifOverlay.style.display = 'none'; }
+  }
+  function _showGifOverlay(gifSrc, group) {
+    if (!_gifOverlay) {
+      _gifOverlay = document.createElement('img');
+      _gifOverlay.style.cssText = 'position:fixed;pointer-events:none;z-index:3;display:none;';
+      document.body.appendChild(_gifOverlay);
+    }
+    const bounds = group.getBounds();
+    const scrollY = window.scrollY || 0;
+    _gifOverlay.src = gifSrc;
+    _gifOverlay.style.left = bounds.x + 'px';
+    _gifOverlay.style.top = (bounds.y - scrollY) + 'px';
+    _gifOverlay.style.width = bounds.width + 'px';
+    _gifOverlay.style.height = bounds.height + 'px';
+    _gifOverlay.style.display = 'block';
+  }
+
   if ('ontouchstart' in window) {
     const snapTargets = rendered.map(r => ({
       y: r.group.y - 40,
@@ -725,6 +746,7 @@ import { WallArticle } from "./wall-article.js?v=151";
           photoSystem._hideHoverLabel(prev);
           photoSystem._stopPhotoVideo(prev);
         }
+        _hideGifOverlay();
         // Animate scale down for all atom types
         const restoreScale = prevTarget.baseScale;
         const prevGroup = prevTarget.group;
@@ -755,6 +777,10 @@ import { WallArticle } from "./wall-article.js?v=151";
       };
       requestAnimationFrame(animScale);
       if (cur && cur.videoSrc && cur.sprite) {
+        // WeChat: use GIF overlay for photo_portrait (test)
+        const gifSrc = _isWeChat && cur.videoSrc === 'photo_portrait.mp4' ? 'photo_portrait.gif' : null;
+        if (gifSrc) { _showGifOverlay(gifSrc, curGroup); return; }
+
         const entry = getOrCreateVideo(cur.videoSrc);
         // Use blob URL for first video if available
         const blob = window._firstVideoBlob && window._firstVideoBlob.src === cur.videoSrc ? window._firstVideoBlob : null;
