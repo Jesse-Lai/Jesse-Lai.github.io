@@ -75,7 +75,7 @@ export class WallArticle {
     this.isOpen = true;
     this._chatHistory = [];
     this.canvas.classList.add('faded');
-    if (this.atomsBtn) this.atomsBtn.style.display = 'none';
+    if (this.atomsBtn) { this._atomsBtnWasVisible = this.atomsBtn.style.display !== 'none'; this.atomsBtn.style.display = 'none'; }
     this.overlay.style.display = 'block';
     requestAnimationFrame(() => {
       requestAnimationFrame(() => this.overlay.classList.add('visible'));
@@ -122,7 +122,7 @@ export class WallArticle {
     }, 400);
     this.canvas.classList.remove('faded');
     this.composerEl.style.display = '';
-    if (this.atomsBtn) this.atomsBtn.style.display = '';
+    if (this.atomsBtn) this.atomsBtn.style.display = this._atomsBtnWasVisible ? '' : 'none';
   }
 
   async _callAI(query) {
