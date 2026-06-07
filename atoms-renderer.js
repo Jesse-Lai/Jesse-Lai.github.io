@@ -1,4 +1,5 @@
 // atoms-renderer.js — Shared atom rendering module
+console.log('[atoms-renderer] v=211 loaded');
 // All atom types are rendered from here. Both atoms.html and wall.js import this.
 import { streamChat, chatSync, buildSystemPrompt } from './ai-client.js?v=166';
 
