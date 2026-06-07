@@ -1,5 +1,5 @@
 // wall.js — Main view, uses atoms-renderer.js
-import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, renderTearoffCard, makeDraggable, FocusOverlay, getOrCreateVideo, animateTo, fadeIn } from "./atoms-renderer-v211.js";
+import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, renderTearoffCard, makeDraggable, FocusOverlay, getOrCreateVideo, loadAllVideosSequentially, animateTo, fadeIn } from "./atoms-renderer-v211.js";
 import { WallArticle } from "./wall-article.js?v=151";
 
 (async () => {
@@ -346,6 +346,13 @@ import { WallArticle } from "./wall-article.js?v=151";
     }
   }
   photoSystem.onFocus = (item) => { track('atom-click', { title: item.focusData?.title || '' }); focusOverlay.open(item); };
+
+  // ─── Load all video blobs sequentially (ordered by atom position, top first) ───
+  const videoSrcsByPosition = rendered
+    .filter(r => r.focusableItem && r.focusableItem.videoSrc)
+    .sort((a, b) => a.group.y - b.group.y)
+    .map(r => r.focusableItem.videoSrc);
+  loadAllVideosSequentially(videoSrcsByPosition);
 
   // ─── Reveal: hide loading, show canvas ───
   setProgress(100);

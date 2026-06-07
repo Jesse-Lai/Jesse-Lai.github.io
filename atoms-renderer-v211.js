@@ -283,18 +283,45 @@ const _videoCache = new Map();
 export function getOrCreateVideo(videoSrc) {
   if (_videoCache.has(videoSrc)) return _videoCache.get(videoSrc);
   const video = document.createElement('video');
-  video.src = videoSrc;
   video.loop = true;
   video.muted = true;
   video.playsInline = true;
-  video.preload = 'auto';
-  const entry = { video, texture: null, ready: false };
+  video.style.cssText = 'position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;pointer-events:none;z-index:-1;';
+  document.body.appendChild(video);
+  const entry = { video, texture: null, ready: false, videoSrc };
   video.addEventListener('canplay', () => {
     entry.texture = PIXI.Texture.from(video, { resourceOptions: { autoPlay: false } });
     entry.ready = true;
+    console.log('[canplay]', videoSrc, 'ready!');
   }, { once: true });
   _videoCache.set(videoSrc, entry);
   return entry;
+}
+
+// Load a single video as blob and wait for canplay
+function _loadVideoBlob(entry) {
+  return new Promise(resolve => {
+    fetch(entry.videoSrc).then(r => r.blob()).then(blob => {
+      entry.video.src = URL.createObjectURL(blob);
+      entry.video.load();
+      if (entry.ready) { resolve(); return; }
+      entry.video.addEventListener('canplay', () => resolve(), { once: true });
+      // Timeout fallback — don't block queue forever
+      setTimeout(resolve, 8000);
+    }).catch(() => resolve());
+  });
+}
+
+// Load all videos as blobs sequentially (one at a time to avoid concurrent decode limit)
+export async function loadAllVideosSequentially(videoSrcList) {
+  for (const src of videoSrcList) {
+    const entry = _videoCache.get(src);
+    if (entry && !entry.ready) {
+      console.log('[serial] loading:', src);
+      await _loadVideoBlob(entry);
+      console.log('[serial] done:', src, 'ready:', entry.ready);
+    }
+  }
 }
 
 export function sampleDominantColor(imgData) {
