@@ -256,7 +256,7 @@ import { WallArticle } from "./wall-article.js?v=151";
       // Mobile: prefetch first video as blob so it can play without user interaction
       if (isMobile && !window._firstVideoPrefetched) {
         window._firstVideoPrefetched = true;
-        fetch(photoItem.videoSrc).then(r => r.blob()).then(blob => {
+        window._firstVideoPrefetchPromise = fetch(photoItem.videoSrc).then(r => r.blob()).then(blob => {
           window._firstVideoBlob = { src: photoItem.videoSrc, url: URL.createObjectURL(blob) };
         }).catch(() => {});
       }
@@ -797,8 +797,13 @@ import { WallArticle } from "./wall-article.js?v=151";
       setTimeout(() => { isAnimating = false; }, 500);
     };
 
-    // Initial snap
-    scrollToIdx(0);
+    // Initial snap — wait for first video blob so it can play immediately
+    const startSnap = () => scrollToIdx(0);
+    if (window._firstVideoPrefetchPromise) {
+      window._firstVideoPrefetchPromise.then(startSnap).catch(startSnap);
+    } else {
+      startSnap();
+    }
 
     // Block native scroll completely — JS controls position
     // But allow scrolling inside focus overlay (article mode) or wall-article
