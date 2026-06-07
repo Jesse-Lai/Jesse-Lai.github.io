@@ -1,5 +1,5 @@
 // wall.js — Main view, uses atoms-renderer.js
-import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, renderTearoffCard, makeDraggable, FocusOverlay, getOrCreateVideo, loadVideoBlob, loadAllVideosSequentially, animateTo, fadeIn } from "./atoms-renderer-v211.js";
+import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, renderTearoffCard, makeDraggable, FocusOverlay, getOrCreateVideo, loadAllVideosSequentially, animateTo, fadeIn } from "./atoms-renderer-v211.js";
 import { WallArticle } from "./wall-article.js?v=151";
 
 (async () => {
@@ -243,13 +243,32 @@ import { WallArticle } from "./wall-article.js?v=151";
   const preloaded = await Promise.all(preloads);
   setProgress(50);
 
-  // Early video preload: start fetching first 3 video blobs in parallel with atom rendering
+  // Early video preload: fetch blob + loop video.load() until canplay (or 30s timeout)
+  async function waitUntilReady(entry, maxMs = 30000) {
+    if (entry.ready) return;
+    if (!entry.blobUrl) {
+      const resp = await fetch(entry.videoSrc);
+      const blob = await resp.blob();
+      entry.blobUrl = URL.createObjectURL(blob);
+      entry.video.src = entry.blobUrl;
+    }
+    const start = Date.now();
+    while (!entry.ready && Date.now() - start < maxMs) {
+      entry.video.load();
+      await new Promise(resolve => {
+        entry.video.addEventListener('canplay', resolve, { once: true });
+        setTimeout(resolve, 2000);
+      });
+    }
+    console.log('[early]', entry.videoSrc, 'ready:', entry.ready, 'elapsed:', Date.now() - start, 'ms');
+  }
+
   const earlyVideoSrcs = contentData
     .filter(e => (e.atom === 'photo' && e.cover_image) || (e.atom === 'sticky' && e.cover_image))
     .slice(0, 3)
     .map(e => e.cover_image.replace(/\.(png|jpg|jpeg|webp)$/i, '.mp4'));
   const earlyVideoPromise = Promise.all(
-    earlyVideoSrcs.map(src => loadVideoBlob(getOrCreateVideo(src)))
+    earlyVideoSrcs.map(src => waitUntilReady(getOrCreateVideo(src)))
   );
 
   // Phase 2: Render sequentially (PIXI requires ordered operations)
