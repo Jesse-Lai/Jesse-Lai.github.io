@@ -250,6 +250,7 @@ export class WallArticle {
         if (sb && ta) this._restoreComposer(ta, sb);
       },
       this._abortController.signal,
+      { userInitiated: true },
     );
   }
 

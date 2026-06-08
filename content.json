@@ -89,6 +89,10 @@
           {
             "type": "text",
             "text": "<img src=\"X_logo.jpg\" style=\"width:18px;height:18px;vertical-align:middle;margin-right:6px;border-radius:4px;\"><a href=\"https://x.com/JesseLaiJianXun\">X (Twitter)</a>"
+          },
+          {
+            "type": "text",
+            "text": "<img src=\"github-mark.png\" style=\"width:18px;height:18px;vertical-align:middle;margin-right:6px;border-radius:4px;\"><a href=\"https://github.com/Jesse-Lai\">GitHub</a>"
           }
         ],
         "sections_en": [
@@ -167,6 +171,10 @@
           {
             "type": "text",
             "text": "<img src=\"X_logo.jpg\" style=\"width:18px;height:18px;vertical-align:middle;margin-right:6px;border-radius:4px;\"><a href=\"https://x.com/JesseLaiJianXun\">X (Twitter)</a>"
+          },
+          {
+            "type": "text",
+            "text": "<img src=\"github-mark.png\" style=\"width:18px;height:18px;vertical-align:middle;margin-right:6px;border-radius:4px;\"><a href=\"https://github.com/Jesse-Lai\">GitHub</a>"
           }
         ]
       }

@@ -3553,6 +3553,7 @@ export class FocusOverlay {
         this._restoreArticleComposer(ta, sb);
       },
       this._chatAbort.signal,
+      { userInitiated: true },
     );
   }
 

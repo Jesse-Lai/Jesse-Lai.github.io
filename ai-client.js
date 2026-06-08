@@ -56,13 +56,15 @@ FORMAT:
 /**
  * Stream a chat completion from Azure OpenAI.
  */
-export async function streamChat(messages, onToken, onDone, signal) {
+export async function streamChat(messages, onToken, onDone, signal, options = {}) {
   await _envReady;
 
-  // Track user question via Umami
-  const lastUserMsg = [...messages].reverse().find(m => m.role === 'user');
-  if (lastUserMsg && typeof umami !== 'undefined') {
-    try { umami.track('user-question', { question: lastUserMsg.content.slice(0, 400), source: 'website' }); } catch(e) {}
+  // Track user question via Umami (only for real user input)
+  if (options.userInitiated) {
+    const lastUserMsg = [...messages].reverse().find(m => m.role === 'user');
+    if (lastUserMsg && typeof umami !== 'undefined') {
+      try { umami.track('user-question', { question: lastUserMsg.content.slice(0, 400), source: 'website' }); } catch(e) {}
+    }
   }
 
   // Choose endpoint: local dev (direct Azure) or production (Cloudflare Worker)
