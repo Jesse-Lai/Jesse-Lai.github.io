@@ -1,0 +1,10 @@
+# Jesse Lai
+
+> Product Designer at Microsoft AI. I design AI-native products and code my designs into production.
+
+## API
+
+- [API Schema](https://crimson-waterfall-c16b.laijianxun123.workers.dev/api/schema): Full API documentation. Start here to discover all available endpoints.
+- [About](https://crimson-waterfall-c16b.laijianxun123.workers.dev/api/about): Bio, role, and contact info
+- [Projects](https://crimson-waterfall-c16b.laijianxun123.workers.dev/api/projects): All portfolio projects
+- [Search](https://crimson-waterfall-c16b.laijianxun123.workers.dev/api/search?q=keyword): Search projects and content
