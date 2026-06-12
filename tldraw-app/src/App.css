@@ -1,0 +1,68 @@
+.app {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: background-color 3s ease;
+}
+
+.tldraw-container {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+/* Override tldraw background to transparent */
+.tldraw-container .tl-background {
+  background: transparent !important;
+}
+.tldraw-container .tl-canvas {
+  background: transparent !important;
+}
+.tldraw-container [data-testid="canvas-background"] {
+  background: transparent !important;
+}
+.tldraw-container .tl-background__wrapper {
+  background: transparent !important;
+}
+.tl-container {
+  background: transparent !important;
+}
+[data-color-mode] {
+  --color-background: transparent !important;
+}
+
+/* Wall texture overlay — subtle grain */
+.wall-texture {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.top-controls {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  display: flex;
+  gap: 12px;
+}
+
+/* Font imports */
+@import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=Schoolbell&family=Red+Hat+Mono:wght@400;500&display=swap');
+
+:root {
+  --title-font: 'Special Elite', cursive;
+  --caption-font: 'Schoolbell', cursive;
+  --body-font: 'Red Hat Mono', monospace;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .top-controls {
+    top: 12px;
+    right: 12px;
+  }
+}
