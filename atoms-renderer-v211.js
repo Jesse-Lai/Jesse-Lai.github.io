@@ -2605,6 +2605,7 @@ export class FocusOverlay {
       requestAnimationFrame(tick);
 
       this.overlay.style.display = 'block';
+      this.closeBtn.style.display = 'none'; // Hide until article mode is ready
       document.body.classList.add('focus-active');
 
       // After fly animation completes, enter clip summary article directly
@@ -2672,6 +2673,7 @@ export class FocusOverlay {
     requestAnimationFrame(tick);
 
     this.overlay.style.display = 'block';
+    this.closeBtn.style.display = 'none'; // Hide until article mode is ready
     document.body.classList.add('focus-active');
 
     // After paper curl completes, enter article mode directly
@@ -2939,6 +2941,7 @@ export class FocusOverlay {
       this.overlay.style.overflowY = 'auto';
       this.overlay.scrollTop = 0;
       this.closeBtn.style.position = 'fixed';
+      this.closeBtn.style.display = ''; // Show close button with article
 
       // mesh follows overlay scroll
       const scrollY = window.scrollY || 0;
@@ -3022,6 +3025,8 @@ export class FocusOverlay {
     this.overlay.classList.add('article-open');
     document.body.style.overflow = 'hidden';
     this.overlay.style.overflowY = 'auto';
+    this.closeBtn.style.position = 'fixed';
+    this.closeBtn.style.display = ''; // Show close button with article
     requestAnimationFrame(() => { articleWrap.style.opacity = '1'; articleWrap.style.transform = 'translateY(0)'; });
 
     // Scroll tracking: move clip elements with article scroll
@@ -3160,6 +3165,7 @@ export class FocusOverlay {
     }
     if (!this._articleMode) return;
     this._articleMode = false;
+    this.closeBtn.style.display = 'none'; // Hide immediately on close
 
     // 清理 composer
     this._teardownComposer();
