@@ -849,21 +849,22 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg, o
     stampH = stampResult.stampH;
     var stampSeed = stampResult.seed;
 
-    // Random position near an edge (not center)
+    // Random position near an edge (not center), always below title
+    const stampMinY = titleBottom + 4;
     const edge = Math.floor(Math.random() * 4); // 0=right, 1=bottom, 2=left, 3=bottom-right
     let sx, sy;
     if (edge === 0) { // right edge
       sx = noteW - stampW * (0.6 + Math.random()*0.2);
-      sy = 60 + Math.random() * 120;
+      sy = stampMinY + Math.random() * 100;
     } else if (edge === 1) { // bottom edge
       sx = padding + Math.random() * (noteW - stampW - padding);
-      sy = 200 - stampH * (0.3 + Math.random()*0.3);
+      sy = Math.max(stampMinY, 200 - stampH * (0.3 + Math.random()*0.3));
     } else if (edge === 2) { // left edge
       sx = -stampW * (0.1 + Math.random()*0.15);
-      sy = 60 + Math.random() * 120;
+      sy = stampMinY + Math.random() * 100;
     } else { // bottom-right corner
       sx = noteW - stampW * (0.7 + Math.random()*0.2);
-      sy = 200 - stampH * (0.2 + Math.random()*0.3);
+      sy = Math.max(stampMinY, 200 - stampH * (0.2 + Math.random()*0.3));
     }
     stampContainer.x = sx;
     stampContainer.y = sy;
@@ -1825,7 +1826,7 @@ export class PhotoSystem {
     const categoryMap = {
       who_i_am: isZh ? '关于我' : 'About Me',
       design_projects: isZh ? '设计项目' : 'Design Project',
-      design_thought: isZh ? '设计思考' : 'Design thinking',
+      design_thought: isZh ? '文章' : 'Article',
       hobby: isZh ? '爱好' : 'Hobby',
       vibe_coding: 'Vibe Coding',
     };
@@ -2405,7 +2406,8 @@ export class FocusOverlay {
         if (section.type === 'subtitle') {
           html += `<h2 style="font-family:var(--title-font, Special Elite);font-size:20px;color:var(--text-secondary, #333);margin:48px 0 16px;line-height:1.4;">${section.text}</h2>`;
         } else if (section.type === 'text') {
-          html += `<p style="font-family:var(--body-font, -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif);font-size:16px;color:var(--text-body, #444);line-height:1.85;margin-bottom:24px;">${section.text.replace(/\n/g, '<br>')}</p>`;
+          const _mb = section.text.trimStart().startsWith('•') ? '6px' : '24px';
+          html += `<p style="font-family:var(--body-font, -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif);font-size:16px;color:var(--text-body, #444);line-height:1.85;margin-bottom:${_mb};">${section.text.replace(/\n/g, '<br>')}</p>`;
         } else if (section.type === 'image') {
           html += `<img src="${section.src}" alt="${section.alt || ''}" style="width:100%;border-radius:6px;margin:32px 0 8px;">`;
           if (section.caption) {
@@ -2417,9 +2419,11 @@ export class FocusOverlay {
       }
     }
 
-    // 更新 DOM
+    // 更新 DOM — 给所有 <a> 标签添加外链箭头图标
+    const _arrowSvg = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="display:inline;vertical-align:middle;margin-left:2px;margin-top:-2px;"><path d="m12.497 3.002 7.555.001.121.014.088.02.104.034.09.04.063.036.063.042.064.05.063.058.094.11.072.11.053.114.035.105.016.065.01.053.01.148v7.504a1 1 0 0 1-1.993.117l-.007-.117v-5.09L4.706 20.708a1 1 0 0 1-1.32.083l-.094-.083a1 1 0 0 1-.083-1.32l.083-.095L17.583 5.002h-5.086a1 1 0 0 1-.993-.883l-.007-.117a1 1 0 0 1 1-1Z"/></svg>';
+    html = html.replace(/<\/a>/g, _arrowSvg + '</a>');
     this._articleWrap.innerHTML = html;
-    this._articleWrap.querySelectorAll('a').forEach(a => { a.setAttribute('target', '_blank'); a.style.color = 'inherit'; });
+    this._articleWrap.querySelectorAll('a').forEach(a => { a.setAttribute('target', '_blank'); a.style.color = 'inherit'; a.style.textDecoration = 'underline'; a.style.textUnderlineOffset = '3px'; a.style.textDecorationThickness = '1px'; });
     this._articleWrap.style.paddingBottom = '160px';
     this._bindImageLightbox();
 
@@ -2567,12 +2571,10 @@ export class FocusOverlay {
       const groupW = maxX - minX, groupH = maxY - minY;
       const groupCenterX = minX + groupW / 2, groupCenterY = minY + groupH / 2;
 
-      // Target position: centered in viewport
+      // Target position: top of viewport (directly into article position)
       const scrollY = window.scrollY || 0;
-      const totalContentH = groupH + focusGap + textBlockH;
-      const blockTopY = Math.max(topPad, (vH - totalContentH) / 2);
       const targetCenterX = W / 2;
-      const targetCenterY = scrollY + blockTopY + groupH / 2;
+      const targetCenterY = scrollY + 80 + groupH / 2;
       const dx = targetCenterX - groupCenterX;
       const dy = targetCenterY - groupCenterY;
 
@@ -2602,24 +2604,13 @@ export class FocusOverlay {
       };
       requestAnimationFrame(tick);
 
-      // Position HTML content below
-      document.getElementById('focus-content').style.top = (blockTopY + groupH + focusGap) + 'px';
-
-      // Populate HTML
-      const data = item.focusData;
-      this.titleEl.textContent = data.title || '';
-      this.descEl.textContent = data.description || '';
-      if (data.link) {
-        this.linkEl.href = data.link;
-        this.linkEl.textContent = data.linkText || 'View';
-        this.linkEl.style.display = '';
-      } else {
-        this.linkEl.style.display = 'none';
-      }
-
       this.overlay.style.display = 'block';
       document.body.classList.add('focus-active');
-      setTimeout(() => this.overlay.classList.add('visible'), duration * 0.7);
+
+      // After fly animation completes, enter clip summary article directly
+      setTimeout(() => {
+        this._openClipSummaryArticle();
+      }, duration);
       return; // skip normal single-atom mesh flow
     }
 
@@ -2653,16 +2644,13 @@ export class FocusOverlay {
     this._baseW = baseW;
     this._baseH = baseH;
 
-    // Animate: paper curl → fly to center
+    // Animate: paper curl → fly to top (directly into article mode)
     const startX = mesh.x, startY = mesh.y;
     const targetW = item.itemW * targetScale;
     const targetH = item.itemH * targetScale;
-    const totalContentH = targetH + focusGap + textBlockH;
-    const blockTopY = Math.max(topPad, (vH - totalContentH) / 2);
-    const atomCenterY = blockTopY + targetH / 2;
     const scrollY = window.scrollY || 0;
     const targetMeshX = W / 2;
-    const targetMeshY = scrollY + atomCenterY;
+    const targetMeshY = scrollY + 80 + targetH / 2;
     const startW = meshW, startH = meshH;
     const duration = 1200;
     const start = performance.now();
@@ -2683,124 +2671,13 @@ export class FocusOverlay {
     };
     requestAnimationFrame(tick);
 
-    // Position HTML content below the focused element (viewport coords)
-    document.getElementById('focus-content').style.top = (blockTopY + targetH + focusGap) + 'px';
-
-    // Populate HTML
-    const data = item.focusData;
-    this.titleEl.textContent = data.title || '';
-    this.descEl.textContent = data.description || '';
-    if (data.link) {
-      this.linkEl.href = data.link;
-      this.linkEl.textContent = data.linkText || 'View';
-      this.linkEl.style.display = '';
-    } else {
-      this.linkEl.style.display = 'none';
-    }
-
     this.overlay.style.display = 'block';
     document.body.classList.add('focus-active');
-    // Show text/button when fly-in animation is ~70% done
-    setTimeout(() => this.overlay.classList.add('visible'), duration * 0.7);
 
-    // Play video once after fly-in — only for single photo atoms (not clip groups)
-    if (item.videoSrc && !item._isClipGroupFocus) {
-      setTimeout(() => {
-        if (!this.mesh) return;
-        const entry = getOrCreateVideo(item.videoSrc);
-
-        const startPlayback = () => {
-          if (!this.mesh) return;
-          if (!entry.texture) {
-            entry.texture = PIXI.Texture.from(entry.video, { resourceOptions: { autoPlay: false } });
-            entry.ready = true;
-          }
-
-          const focusScale = this.mesh.width / item.itemW;
-
-          if (item._stickyTitle) {
-            // Sticky: overlay only the stampContainer on top of the mesh.
-            // mesh stays visible and item.group never moves — no jump.
-            let stampContainer = item.sprite;
-            while (stampContainer && stampContainer.parent !== item.group) {
-              stampContainer = stampContainer.parent;
-            }
-            if (!stampContainer) return;
-
-            const meshLeft = this.mesh.x - this.mesh.width / 2; // anchorX = 0
-            const meshTop  = this.mesh.y - this.mesh.height / 2;
-            const origStampX     = stampContainer.x;
-            const origStampY     = stampContainer.y;
-            const origStampScale = stampContainer.scale.x;
-
-            // Subtract the bounds offset so the overlay aligns with the stamp
-            // as it appears in the mesh texture (texture pixel-0 = bounds left, not group origin).
-            const localLeft = this._stickyLocalLeft;
-            const localTop  = this._stickyLocalTop;
-
-            item.group.removeChild(stampContainer);
-            stampContainer.x = meshLeft + (origStampX - localLeft) * focusScale;
-            stampContainer.y = meshTop  + (origStampY - localTop)  * focusScale;
-            stampContainer.scale.set(focusScale);
-            stampContainer.alpha = 0;
-            this.app.stage.addChild(stampContainer);
-
-            item._overlayStamp = { container: stampContainer, origX: origStampX, origY: origStampY, origScale: origStampScale };
-
-            item._staticTex = item.sprite.texture;
-            item.sprite.texture = entry.texture;
-            entry.video.loop = false;
-            entry.video.currentTime = 0;
-            entry.video.play().catch(() => {});
-            this._videoPlaying = true;
-
-            // Fade in stamp overlay
-            const FADE = 300, t0 = performance.now();
-            const fadeIn = () => {
-              if (!this._videoPlaying) return;
-              stampContainer.alpha = Math.min(1, (performance.now() - t0) / FADE);
-              if (stampContainer.alpha < 1) requestAnimationFrame(fadeIn);
-            };
-            requestAnimationFrame(fadeIn);
-          } else {
-            // Photo / other: position live group at mesh, hide mesh
-            item.group.scale.set(focusScale);
-            item.group.x = this.mesh.x - this.mesh.width / 2 + item.anchorX * focusScale;
-            item.group.y = this.mesh.y - this.mesh.height / 2 + item.anchorY * focusScale;
-            item.group.rotation = this.mesh.rotation;
-            item.group.visible = true;
-            this.app.stage.addChild(item.group);
-            this.mesh.visible = false;
-
-            item._staticTex = item.sprite.texture;
-            item.sprite.texture = entry.texture;
-            entry.video.loop = false;
-            entry.video.currentTime = 0;
-            entry.video.play().catch(() => {});
-            this._videoPlaying = true;
-          }
-
-          const onEnded = () => {
-            entry.video.loop = true;
-            if (!this._videoPlaying) return;
-            this._cleanupFocusVideo();
-          };
-          entry.video.addEventListener('ended', onEnded, { once: true });
-          this._videoEndedCleanup = () => {
-            entry.video.removeEventListener('ended', onEnded);
-            entry.video.pause();
-            entry.video.currentTime = 0;
-            entry.video.loop = true;
-          };
-        };
-
-        if (entry.ready && entry.texture) {
-          startPlayback();
-        } else {
-          entry.video.addEventListener('canplay', startPlayback, { once: true });
-        }
-      }, duration);
-    }
+    // After paper curl completes, enter article mode directly
+    setTimeout(() => {
+      this._enterArticleMode(mesh);
+    }, duration);
   }
 
   _cleanupFocusVideo() {
@@ -2992,9 +2869,107 @@ export class FocusOverlay {
 
   // ─── Article Mode (lives inside the focus overlay) ───
 
-  openArticle() {
+  // Shared article-building logic: dim → build DOM → fade in
+  _enterArticleMode(mesh) {
     this._articleOpenTime = Date.now();
     if (window.umami) umami.track('article-view', { title: this.activeItem?.focusData?.title || '' });
+    if (!this.activeItem || !mesh) return;
+
+    const W = this.app.screen.width;
+    this._articleMode = true;
+    document.getElementById('focus-content').style.display = 'none';
+    this.overlay.classList.add('visible');
+
+    // Dim to full overlay
+    this._animateDim(0.6, 1.0, 8, 10, 400);
+
+    // Build article content after dim transition
+    setTimeout(() => {
+      const data = this.activeItem.focusData;
+      const article = data.article;
+      const meshBottom = 80 + mesh.height;
+
+      const articleWrap = document.createElement('div');
+      articleWrap.style.cssText = `position:absolute;top:${meshBottom + 48}px;left:0;right:0;max-width:640px;margin:0 auto;padding:0 24px 80px;opacity:0;transform:translateY(30px);transition:opacity 0.5s ease,transform 0.5s ease;`;
+
+      let html = '';
+      const title = article?.title || data.title || '';
+      if (title) {
+        html += `<h1 style="font-family:var(--title-font, Special Elite);font-size:28px;color:var(--text-primary, #1a1a1a);letter-spacing:0.5px;line-height:1.4;margin:0 0 32px;padding-bottom:24px;border-bottom:1px solid var(--border-divider, rgba(0,0,0,0.08));">${title}</h1>`;
+      }
+
+      if (article?.sections) {
+        const _secs = (this._lang === 'en' && article.sections_en) ? article.sections_en : article.sections;
+        for (const section of _secs) {
+          if (section.type === 'subtitle') {
+            html += `<h2 style="font-family:var(--title-font, Special Elite);font-size:20px;color:var(--text-secondary, #333);margin:48px 0 16px;line-height:1.4;">${section.text}</h2>`;
+          } else if (section.type === 'text') {
+            const _mb = section.text.trimStart().startsWith('•') ? '6px' : '24px';
+            html += `<p style="font-family:var(--body-font, -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif);font-size:16px;color:var(--text-body, #444);line-height:1.85;margin-bottom:${_mb};">${section.text.replace(/\n/g, '<br>')}</p>`;
+          } else if (section.type === 'image') {
+            html += `<img src="${section.src}" alt="${section.alt || ''}" style="width:100%;border-radius:6px;margin:32px 0 8px;">`;
+            if (section.caption) {
+              html += `<p style="font-family:Red Hat Mono,monospace;font-size:11px;color:var(--text-caption, #555);text-align:center;margin:0 0 32px;">${section.caption}</p>`;
+            }
+          } else if (section.type === 'video') {
+            html += `<div style="position:relative;width:100%;padding-bottom:56.25%;margin:32px 0;"><iframe src="${section.src}" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:6px;" allowfullscreen></iframe></div>`;
+          }
+        }
+      }
+
+      const _arrowSvg = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="display:inline;vertical-align:middle;margin-left:2px;margin-top:-2px;"><path d="m12.497 3.002 7.555.001.121.014.088.02.104.034.09.04.063.036.063.042.064.05.063.058.094.11.072.11.053.114.035.105.016.065.01.053.01.148v7.504a1 1 0 0 1-1.993.117l-.007-.117v-5.09L4.706 20.708a1 1 0 0 1-1.32.083l-.094-.083a1 1 0 0 1-.083-1.32l.083-.095L17.583 5.002h-5.086a1 1 0 0 1-.993-.883l-.007-.117a1 1 0 0 1 1-1Z"/></svg>';
+      html = html.replace(/<\/a>/g, _arrowSvg + '</a>');
+      articleWrap.innerHTML = html;
+      articleWrap.querySelectorAll('a').forEach(a => { a.setAttribute('target', '_blank'); a.style.color = 'inherit'; a.style.textDecoration = 'underline'; a.style.textUnderlineOffset = '3px'; a.style.textDecorationThickness = '1px'; });
+      articleWrap.style.paddingBottom = '160px';
+
+      const chatContainer = document.createElement('div');
+      chatContainer.className = 'article-chat';
+      chatContainer.style.display = 'none';
+      articleWrap.appendChild(chatContainer);
+      this._chatContainer = chatContainer;
+
+      this.overlay.appendChild(articleWrap);
+      this._articleWrap = articleWrap;
+
+      this.overlay.classList.add('article-open');
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+
+      this.overlay.style.overflowY = 'auto';
+      this.overlay.scrollTop = 0;
+      this.closeBtn.style.position = 'fixed';
+
+      // mesh follows overlay scroll
+      const scrollY = window.scrollY || 0;
+      this._articleMeshBaseY = scrollY + 80 + mesh.height / 2;
+      this._onArticleScroll = () => {
+        mesh.y = this._articleMeshBaseY - this.overlay.scrollTop;
+        this._updateTOCPosition();
+      };
+      this.overlay.addEventListener('scroll', this._onArticleScroll);
+
+      this._setupComposer();
+
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          articleWrap.style.opacity = '1';
+          articleWrap.style.transform = 'translateY(0)';
+        });
+      });
+
+      setTimeout(() => {
+        const h2s = articleWrap.querySelectorAll('h2');
+        if (h2s.length) {
+          const headings = Array.from(h2s).map(el => ({ text: el.textContent, el }));
+          this._buildTOC(headings);
+        }
+        this._bindImageLightbox();
+      }, 550);
+    }, 400);
+  }
+
+  openArticle() {
     if (!this.activeItem) return;
 
     // Clip group → AI-generated summary article (no mesh)
@@ -3004,133 +2979,13 @@ export class FocusOverlay {
     }
 
     if (!this.mesh) return;
-    // Stop focus video if still playing
-    this._cleanupFocusVideo();
-
-    const mesh = this.mesh;
-    const W = this.app.screen.width;
-    this._articleMode = true;
-    this._focusMeshX = mesh.x;
-    this._focusMeshY = mesh.y;
-
-    // 隐藏文案和按钮
-    document.getElementById('focus-content').style.display = 'none';
-
-    // 动画 mesh 上移到顶部（考虑页面滚动）
-    const scrollY = window.scrollY || 0;
-    const targetX = W / 2;
-    const targetY = scrollY + 80 + mesh.height / 2;
-    const startX = mesh.x, startY = mesh.y;
-    const duration = 500;
-    const startTime = performance.now();
-    const tick = () => {
-      const t = Math.min(1, (performance.now() - startTime) / duration);
-      const ease = 1 - Math.pow(1 - t, 3);
-      mesh.x = startX + (targetX - startX) * ease;
-      mesh.y = startY + (targetY - startY) * ease;
-      if (t < 1) requestAnimationFrame(tick);
-    };
-    requestAnimationFrame(tick);
-
-    // 上移结束后，蒙层变全黑
-    setTimeout(() => {
-      this._animateDim(0.6, 1.0, 8, 10, 400);
-
-      // 蒙层变黑后，构建文章内容容器
-      setTimeout(() => {
-        const data = this.activeItem.focusData;
-        const article = data.article;
-        // articleWrap is inside fixed overlay, use viewport coords
-        const meshBottom = 80 + mesh.height;
-
-        // 文章容器，定位在 mesh 下方
-        const articleWrap = document.createElement('div');
-        articleWrap.style.cssText = `position:absolute;top:${meshBottom + 48}px;left:0;right:0;max-width:640px;margin:0 auto;padding:0 24px 80px;opacity:0;transform:translateY(30px);transition:opacity 0.5s ease,transform 0.5s ease;`;
-
-        // 标题
-        let html = '';
-        const title = article?.title || data.title || '';
-        if (title) {
-          html += `<h1 style="font-family:var(--title-font, Special Elite);font-size:28px;color:var(--text-primary, #1a1a1a);letter-spacing:0.5px;line-height:1.4;margin:0 0 32px;padding-bottom:24px;border-bottom:1px solid var(--border-divider, rgba(0,0,0,0.08));">${title}</h1>`;
-        }
-
-        // 文章正文
-        if (article?.sections) {
-          const _secs2 = (this._lang === 'en' && article.sections_en) ? article.sections_en : article.sections;
-          for (const section of _secs2) {
-            if (section.type === 'subtitle') {
-              html += `<h2 style="font-family:var(--title-font, Special Elite);font-size:20px;color:var(--text-secondary, #333);margin:48px 0 16px;line-height:1.4;">${section.text}</h2>`;
-            } else if (section.type === 'text') {
-              html += `<p style="font-family:var(--body-font, -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif);font-size:16px;color:var(--text-body, #444);line-height:1.85;margin-bottom:24px;">${section.text.replace(/\n/g, '<br>')}</p>`;
-            } else if (section.type === 'image') {
-              html += `<img src="${section.src}" alt="${section.alt || ''}" style="width:100%;border-radius:6px;margin:32px 0 8px;">`;
-              if (section.caption) {
-                html += `<p style="font-family:Red Hat Mono,monospace;font-size:11px;color:var(--text-caption, #555);text-align:center;margin:0 0 32px;">${section.caption}</p>`;
-              }
-            } else if (section.type === 'video') {
-              html += `<div style="position:relative;width:100%;padding-bottom:56.25%;margin:32px 0;"><iframe src="${section.src}" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:6px;" allowfullscreen></iframe></div>`;
-            }
-          }
-        }
-
-        articleWrap.innerHTML = html;
-        articleWrap.querySelectorAll('a').forEach(a => { a.setAttribute('target', '_blank'); a.style.color = 'inherit'; });
-        articleWrap.style.paddingBottom = '160px';
-
-        // Chat 容器（在文章内容下方）
-        const chatContainer = document.createElement('div');
-        chatContainer.className = 'article-chat';
-        chatContainer.style.display = 'none';
-        articleWrap.appendChild(chatContainer);
-        this._chatContainer = chatContainer;
-
-        this.overlay.appendChild(articleWrap);
-        this._articleWrap = articleWrap;
-
-        this.overlay.classList.add('article-open');
-        document.body.style.overflow = 'hidden';
-        document.documentElement.style.overflow = 'hidden';
-
-        // 先让 overlay 可滚动，再重置滚动位置（scrollTop 在非 auto 时无效）
-        this.overlay.style.overflowY = 'auto';
-        this.overlay.scrollTop = 0;
-        this.closeBtn.style.position = 'fixed';
-
-        // mesh 跟随 overlay 滚动
-        this._articleMeshBaseY = targetY;
-        this._onArticleScroll = () => {
-          mesh.y = this._articleMeshBaseY - this.overlay.scrollTop;
-          this._updateTOCPosition();
-        };
-        this.overlay.addEventListener('scroll', this._onArticleScroll);
-
-        // Composer 事件绑定
-        this._setupComposer();
-
-        // 双 rAF 确保浏览器先渲染初始状态再触发 transition
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            articleWrap.style.opacity = '1';
-            articleWrap.style.transform = 'translateY(0)';
-          });
-        });
-
-        // Build TOC + bind image lightbox after article transitions in
-        setTimeout(() => {
-          const h2s = articleWrap.querySelectorAll('h2');
-          if (h2s.length) {
-            const headings = Array.from(h2s).map(el => ({ text: el.textContent, el }));
-            this._buildTOC(headings);
-          }
-          this._bindImageLightbox();
-        }, 550);
-      }, 400);
-    }, duration);
+    this._enterArticleMode(this.mesh);
   }
 
   async _openClipSummaryArticle() {
     const W = this.app.screen.width;
     this._articleMode = true;
+    this.overlay.classList.add('visible');
 
     // Get all clip elements and compute their current bounds
     const allEls = this._clipOrigPositions ? this._clipOrigPositions.map(o => o.el) : [];
@@ -3141,31 +2996,8 @@ export class FocusOverlay {
       maxY = Math.max(maxY, b.y + b.height);
     }
     const groupH = maxY - minY;
-    const groupCenterY = (minY + maxY) / 2;
 
-    // Save current positions for returning from article
-    this._clipArticlePositions = allEls.map(el => ({ el, x: el.x, y: el.y }));
-
-    document.getElementById('focus-content').style.display = 'none';
-
-    // Animate all clip elements up to near top
-    const scrollY = window.scrollY || 0;
-    const targetCenterY = scrollY + 80 + groupH / 2;
-    const dy = targetCenterY - groupCenterY;
-    const duration = 500;
-    const startPositions = allEls.map(el => ({ x: el.x, y: el.y }));
-    const startTime = performance.now();
-    const tick = () => {
-      const t = Math.min(1, (performance.now() - startTime) / duration);
-      const ease = 1 - Math.pow(1 - t, 3);
-      for (let i = 0; i < allEls.length; i++) {
-        allEls[i].y = startPositions[i].y + dy * ease;
-      }
-      if (t < 1) requestAnimationFrame(tick);
-    };
-    requestAnimationFrame(tick);
-
-    await new Promise(r => setTimeout(r, duration));
+    // Elements are already at top position (animated by open())
     this._animateDim(0.6, 1.0, 8, 10, 400);
 
     await new Promise(r => setTimeout(r, 300));
@@ -3355,12 +3187,6 @@ export class FocusOverlay {
     document.documentElement.style.overflow = '';
     this.closeBtn.style.position = '';
     document.getElementById('focus-content').style.display = '';
-
-    // 把 mesh 归位到 focus 中心（scroll 可能偏移了）
-    if (this.mesh) {
-      this.mesh.y = this._focusMeshY;
-      this.mesh.x = this._focusMeshX;
-    }
 
     // 直接调用 close()，从全黑蒙层 → 飞回 wall
     this.close();
@@ -4154,6 +3980,8 @@ export class FocusOverlay {
     if (!this._articleWrap) return;
     const imgs = this._articleWrap.querySelectorAll('img');
     imgs.forEach(img => {
+      // 跳过内联小图标（联系方式 logo 等）
+      if (img.offsetWidth <= 24 || img.style.width === '18px') return;
       img.style.cursor = 'zoom-in';
       img.addEventListener('click', (e) => {
         e.stopPropagation();

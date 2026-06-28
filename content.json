@@ -24,7 +24,7 @@
           },
           {
             "type": "text",
-            "text": "幸运的是，我曾多次被 <a href=\"https://mp.weixin.qq.com/s/5FFKYeLy22Bx1S-b4z8UKw\">公司官方媒体</a>作为优秀案例报道。在工作之余，我偶尔也会在 <a href=\"https://mp.weixin.qq.com/s/hbqhQS9mMXhLmtFRbWKDEQ\">微信公众号</a>和 <a href=\"https://medium.com/@laijianxun123\">Medium</a> 上写一些关于 AI 时代产品设计的思考。"
+            "text": "幸运的是，我曾多次被公司官方媒体作为 <a href=\"https://mp.weixin.qq.com/s/5FFKYeLy22Bx1S-b4z8UKw\">优秀案例</a> 报道。在工作之余，我偶尔也会在 <a href=\"https://mp.weixin.qq.com/s/hbqhQS9mMXhLmtFRbWKDEQ\">微信公众号</a> 和 <a href=\"https://medium.com/@laijianxun123\">Medium</a> 上写一些关于 AI 时代产品设计的思考。"
           },
           {
             "type": "text",
@@ -44,7 +44,7 @@
           },
           {
             "type": "text",
-            "text": "• 连续4年优秀绩效"
+            "text": "• 连续5年优秀绩效"
           },
           {
             "type": "text",
@@ -65,6 +65,11 @@
           {
             "type": "text",
             "text": "• 25年完成了10+个 Vibe Coding 产品插件和原型"
+          },
+          {
+            "type": "image",
+            "src": "content_images/vibe_en_8.webp",
+            "caption": ""
           },
           {
             "type": "subtitle",
@@ -110,7 +115,7 @@
           },
           {
             "type": "text",
-            "text": "Fortunately, I've been recognised multiple times by company official media as an \"outstanding employee\". Outside of work, I occasionally write about product design in the AI era on <a href=\"https://mp.weixin.qq.com/s/5FFKYeLy22Bx1S-b4z8UKw\">WeChat Blog</a> and <a href=\"https://medium.com/@jesselai\">Medium</a>."
+            "text": "Fortunately, I've been recognised multiple times by company official media as an <a href=\"https://mp.weixin.qq.com/s/5FFKYeLy22Bx1S-b4z8UKw\">outstanding employee</a>. Outside of work, I occasionally write about product design in the AI era on <a href=\"https://mp.weixin.qq.com/s/5FFKYeLy22Bx1S-b4z8UKw\">WeChat Blog</a> and <a href=\"https://medium.com/@laijianxun123\">Medium</a>."
           },
           {
             "type": "text",
@@ -151,6 +156,11 @@
           {
             "type": "text",
             "text": "• Completed 10+ Vibe Coding product plugins and prototypes in 2025"
+          },
+          {
+            "type": "image",
+            "src": "content_images/vibe_en_8.webp",
+            "caption": ""
           },
           {
             "type": "subtitle",
@@ -520,7 +530,7 @@
           },
           {
             "type": "subtitle",
-            "text": "GenUI 的形态"
+            "text": "GenUI 的行为"
           },
           {
             "type": "text",
@@ -571,7 +581,7 @@
           },
           {
             "type": "subtitle",
-            "text": "GenUI 的形态"
+            "text": "GenUI 的行为"
           },
           {
             "type": "text",
@@ -815,7 +825,7 @@
           },
           {
             "type": "subtitle",
-            "text": "Forms of GenUI"
+            "text": "Behaviors of GenUI"
           },
           {
             "type": "text",
@@ -866,7 +876,7 @@
           },
           {
             "type": "subtitle",
-            "text": "Forms of GenUI"
+            "text": "Behaviors of GenUI"
           },
           {
             "type": "text",
@@ -1475,8 +1485,16 @@
           },
           {
             "type": "image",
-            "src": "content_images/358400ee_1.webp",
+            "src": "stamp2.webp",
             "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "我觉得做AI产品和钓鱼很像（对的我也喜欢钓鱼），来得太早或太晚都没有收获（模型能力没达到，或已被模型能力覆盖），而是要判断潮汐趋势，在对的timing下竿。"
+          },
+          {
+            "type": "text",
+            "text": "做AI产品，要提前判断模型能力的发展，让产品能在模型能力的边界处发光。"
           }
         ],
         "sections_en": [
@@ -1522,8 +1540,16 @@
           },
           {
             "type": "image",
-            "src": "content_images/358400ee_en_1.webp",
+            "src": "stamp2.webp",
             "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "I think building AI products is like fishing (yes, I also love fishing) — arriving too early or too late yields nothing (model capabilities haven't reached the threshold, or have already surpassed it). The key is to anticipate where the boundary will be"
+          },
+          {
+            "type": "text",
+            "text": "Building AI products requires anticipating the development of model capabilities, so the product can shine right at the frontier of what's possible."
           }
         ]
       }
@@ -1667,7 +1693,7 @@
   {
     "id": "arduino-light-001",
     "title": "Born Builder",
-    "category": "hobby",
+    "category": "design_projects",
     "atom": "photo",
     "body": "An interactive light built with Arduino — merging hardware and creativity.",
     "cover_image": "Arduinolight.webp",

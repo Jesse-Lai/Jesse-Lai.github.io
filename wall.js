@@ -278,6 +278,7 @@ import { WallArticle } from "./wall-article.js?v=151";
       stickyResult.group.scale.set(atomScale);
       const b = stickyResult.group.getBounds();
       const stickyItem = photoSystem.addItem(stickyResult.group, b.width / atomScale, b.height / atomScale);
+      stickyItem.config = { category: item.category, caption: item.title };
       if (item.focus) { stickyItem.focusData = item.focus; stickyItem.focusData.title = item.title; const fd = focusDesc[item._origTitle] || focusDesc[item.title]; stickyItem.focusData.description = fd ? fd[LANG] : (item.keywords || item.focus.description); }
       stickyItem._stickyTitle = { tx: stickyResult.titleX, ty: stickyResult.titleY, tw: stickyResult.titleW, th: stickyResult.titleH };
       // Stamp video: swap stamp sprite texture on hover

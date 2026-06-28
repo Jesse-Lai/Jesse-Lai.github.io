@@ -2384,9 +2384,17 @@ export class FocusOverlay {
       }
     }
 
-    // 更新 DOM
+    // 更新 DOM — 给所有 <a> 标签添加外链箭头图标
+    const _arrowSvg = '<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="display:inline;vertical-align:middle;margin-left:1px;margin-top:-2px;"><path d="m12.497 3.002 7.555.001.121.014.088.02.104.034.09.04.063.036.063.042.064.05.063.058.094.11.072.11.053.114.035.105.016.065.01.053.01.148v7.504a1 1 0 0 1-1.993.117l-.007-.117v-5.09L4.706 20.708a1 1 0 0 1-1.32.083l-.094-.083a1 1 0 0 1-.083-1.32l.083-.095L17.583 5.002h-5.086a1 1 0 0 1-.993-.883l-.007-.117a1 1 0 0 1 1-1Z"/></svg>';
+    html = html.replace(/<\/a>/g, _arrowSvg + '</a>');
     this._articleWrap.innerHTML = html;
-    this._articleWrap.querySelectorAll('a').forEach(a => { a.setAttribute('target', '_blank'); a.style.color = 'inherit'; });
+    this._articleWrap.querySelectorAll('a').forEach(a => {
+      a.setAttribute('target', '_blank');
+      a.style.color = 'inherit';
+      a.style.textDecoration = 'underline';
+      a.style.textUnderlineOffset = '3px';
+      a.style.textDecorationThickness = '1px';
+    });
     this._articleWrap.style.paddingBottom = '160px';
     this._bindImageLightbox();
 
@@ -3040,8 +3048,16 @@ export class FocusOverlay {
           }
         }
 
+        const _arrowSvg2 = '<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="display:inline;vertical-align:middle;margin-left:1px;margin-top:-2px;"><path d="m12.497 3.002 7.555.001.121.014.088.02.104.034.09.04.063.036.063.042.064.05.063.058.094.11.072.11.053.114.035.105.016.065.01.053.01.148v7.504a1 1 0 0 1-1.993.117l-.007-.117v-5.09L4.706 20.708a1 1 0 0 1-1.32.083l-.094-.083a1 1 0 0 1-.083-1.32l.083-.095L17.583 5.002h-5.086a1 1 0 0 1-.993-.883l-.007-.117a1 1 0 0 1 1-1Z"/></svg>';
+        html = html.replace(/<\/a>/g, _arrowSvg2 + '</a>');
         articleWrap.innerHTML = html;
-        articleWrap.querySelectorAll('a').forEach(a => { a.setAttribute('target', '_blank'); a.style.color = 'inherit'; });
+        articleWrap.querySelectorAll('a').forEach(a => {
+          a.setAttribute('target', '_blank');
+          a.style.color = 'inherit';
+          a.style.textDecoration = 'underline';
+          a.style.textUnderlineOffset = '3px';
+          a.style.textDecorationThickness = '1px';
+        });
         articleWrap.style.paddingBottom = '160px';
 
         // Chat 容器（在文章内容下方）
