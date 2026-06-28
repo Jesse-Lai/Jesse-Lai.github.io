@@ -3192,7 +3192,7 @@ export class FocusOverlay {
     document.body.style.overflow = '';
     document.documentElement.style.overflow = '';
     this.closeBtn.style.position = '';
-    document.getElementById('focus-content').style.display = '';
+    // Keep focus-content hidden (no longer used in direct-to-article flow)
 
     // Reposition mesh to current viewport center before flying back to wall
     // (scroll may have pushed it off-screen)
