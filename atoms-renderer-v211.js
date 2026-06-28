@@ -3188,6 +3188,13 @@ export class FocusOverlay {
     this.closeBtn.style.position = '';
     document.getElementById('focus-content').style.display = '';
 
+    // Reposition mesh to current viewport center before flying back to wall
+    // (scroll may have pushed it off-screen)
+    if (this.mesh) {
+      this.mesh.x = this.app.screen.width / 2;
+      this.mesh.y = (window.scrollY || 0) + window.innerHeight / 2;
+    }
+
     // 直接调用 close()，从全黑蒙层 → 飞回 wall
     this.close();
   }
