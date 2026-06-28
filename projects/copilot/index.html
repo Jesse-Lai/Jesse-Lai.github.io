@@ -6,23 +6,25 @@
 <title>Microsoft Copilot — GenUI Design System</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: -apple-system, 'SF Pro Text', 'Helvetica Neue', sans-serif; background: #f5f0e8; color: #2d2a26; line-height: 1.8; }
+body { font-family: 'Segoe UI', -apple-system, system-ui, sans-serif; background: #f8f6f3; color: #1b1a19; line-height: 1.75; }
 .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
-img.full { width: 100%; border-radius: 8px; margin: 1.5rem 0; display: block; }
-h1 { font-size: 2.4rem; font-weight: 700; margin: 4rem 0 1rem; letter-spacing: -0.02em; }
-h2 { font-size: 1.6rem; font-weight: 600; margin: 3rem 0 1rem; }
-p { margin: 1rem 0; font-size: 1.05rem; color: #4a4540; }
-.chapter { padding: 4rem 0; border-top: 1px solid #e0d8cc; }
+img.full { width: 100%; border-radius: 12px; margin: 1.5rem 0; display: block; box-shadow: 0 4px 8px rgba(0,0,0,0.06); }
+h1 { font-size: 2.4rem; font-weight: 700; margin: 5rem 0 1.2rem; letter-spacing: -0.02em; background: linear-gradient(135deg, #7B2FF2, #2F7FF2, #44E5A0); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+h2 { font-size: 1.5rem; font-weight: 600; margin: 3rem 0 1rem; color: #1b1a19; }
+p { margin: 1.2rem 0; font-size: 1.05rem; color: #605E5C; line-height: 1.8; }
+.chapter { padding: 80px 0; border-top: 1px solid #E1DFDD; opacity: 0; transform: translateY(24px); transition: opacity 0.6s cubic-bezier(0,0,0,1), transform 0.6s cubic-bezier(0,0,0,1); }
+.chapter.visible { opacity: 1; transform: translateY(0); }
 .chapter:first-of-type { border-top: none; }
-.hero { padding: 2rem 0 0; }
-.spacer { height: 3rem; }
-.caption { font-size: 0.9rem; color: #8a8278; margin-top: -0.8rem; margin-bottom: 2rem; text-align: center; }
+.hero { padding: 2rem 0 0; opacity: 0; transform: translateY(24px); transition: opacity 0.6s cubic-bezier(0,0,0,1), transform 0.6s cubic-bezier(0,0,0,1); }
+.hero.visible { opacity: 1; transform: translateY(0); }
+.spacer { height: 3.5rem; }
+.caption { font-size: 0.9rem; color: #605E5C; margin-top: -0.8rem; margin-bottom: 2rem; text-align: center; }
 
 /* Password gate */
-#gate { position: fixed; inset: 0; background: #f5f0e8; z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; }
-#gate input { border: 2px solid #d4ccc0; background: #fff; padding: 12px 20px; border-radius: 8px; font-size: 1rem; width: 240px; text-align: center; outline: none; }
-#gate input:focus { border-color: #2d2a26; }
-#gate p { font-size: 0.85rem; color: #8a8278; margin-top: 12px; }
+#gate { position: fixed; inset: 0; background: linear-gradient(135deg, rgba(123,47,242,0.15), rgba(47,127,242,0.15), rgba(68,229,160,0.1)); backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px); z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; }
+#gate input { border: 1.5px solid #E1DFDD; background: rgba(255,255,255,0.9); padding: 14px 20px; border-radius: 8px; font-size: 1rem; width: 260px; text-align: center; outline: none; box-shadow: 0 2px 4px rgba(0,0,0,0.04); transition: border-color 0.2s, box-shadow 0.2s; font-family: 'Segoe UI', -apple-system, system-ui, sans-serif; }
+#gate input:focus { border-color: #7B2FF2; box-shadow: 0 0 0 3px rgba(123,47,242,0.12); }
+#gate p { font-size: 0.85rem; color: #605E5C; margin-top: 12px; }
 #gate .error { color: #c0392b; }
 #content { display: none; }
 
@@ -30,7 +32,7 @@ p { margin: 1rem 0; font-size: 1.05rem; color: #4a4540; }
   h1 { font-size: 1.8rem; }
   h2 { font-size: 1.3rem; }
   .container { padding: 0 16px; }
-  .chapter { padding: 2.5rem 0; }
+  .chapter { padding: 48px 0; }
 }
 </style>
 </head>
@@ -178,6 +180,7 @@ input.addEventListener('keydown', function(e) {
       localStorage.setItem('copilot_auth', PASS);
       gate.style.display = 'none';
       content.style.display = 'block';
+      initObserver();
     } else {
       msg.textContent = '密码错误';
       msg.className = 'error';
@@ -185,6 +188,14 @@ input.addEventListener('keydown', function(e) {
     }
   }
 });
+
+function initObserver() {
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.chapter, .hero').forEach(el => obs.observe(el));
+}
+if (localStorage.getItem('copilot_auth') === PASS) { setTimeout(initObserver, 100); }
 </script>
 </body>
 </html>
