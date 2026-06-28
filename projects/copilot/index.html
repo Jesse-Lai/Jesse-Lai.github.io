@@ -3,199 +3,342 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Microsoft Copilot — GenUI Design System</title>
+<title>Copilot Mobile — GenUI Case Study | Jesse Lai</title>
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Segoe UI', -apple-system, system-ui, sans-serif; background: #f8f6f3; color: #1b1a19; line-height: 1.75; }
-.container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
-img.full { width: 100%; border-radius: 12px; margin: 1.5rem 0; display: block; box-shadow: 0 4px 8px rgba(0,0,0,0.06); }
-h1 { font-size: 2.4rem; font-weight: 700; margin: 5rem 0 1.2rem; letter-spacing: -0.02em; background: linear-gradient(135deg, #7B2FF2, #2F7FF2, #44E5A0); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-h2 { font-size: 1.5rem; font-weight: 600; margin: 3rem 0 1rem; color: #1b1a19; }
-p { margin: 1.2rem 0; font-size: 1.05rem; color: #605E5C; line-height: 1.8; }
-.chapter { padding: 80px 0; border-top: 1px solid #E1DFDD; opacity: 0; transform: translateY(24px); transition: opacity 0.6s cubic-bezier(0,0,0,1), transform 0.6s cubic-bezier(0,0,0,1); }
-.chapter.visible { opacity: 1; transform: translateY(0); }
-.chapter:first-of-type { border-top: none; }
-.hero { padding: 2rem 0 0; opacity: 0; transform: translateY(24px); transition: opacity 0.6s cubic-bezier(0,0,0,1), transform 0.6s cubic-bezier(0,0,0,1); }
-.hero.visible { opacity: 1; transform: translateY(0); }
-.spacer { height: 3.5rem; }
-.caption { font-size: 0.9rem; color: #605E5C; margin-top: -0.8rem; margin-bottom: 2rem; text-align: center; }
-
+:root{--bg:#f8f6f3;--card:#fff;--text:#1b1a19;--text2:#605E5C;--stroke:#E1DFDD;--accent:linear-gradient(135deg,#7B2FF2,#2F7FF2,#44E5A0);--purple:#7B2FF2;--blue:#2F7FF2;--green:#44E5A0;--radius:12px;--max-w:820px;--shadow:0 4px 12px rgba(0,0,0,0.06)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',-apple-system,system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.75;font-size:16px}
+.container{max-width:var(--max-w);margin:0 auto;padding:0 24px}
+section{padding:80px 0;opacity:0;transform:translateY(20px);transition:opacity .6s cubic-bezier(0,0,0,1),transform .6s cubic-bezier(0,0,0,1)}
+section.visible{opacity:1;transform:translateY(0)}
+h1{font-size:2.4rem;font-weight:700;background:var(--accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:0.5rem}
+h2{font-size:1.8rem;font-weight:700;margin-bottom:1.5rem;color:var(--text)}
+h3{font-size:1.3rem;font-weight:600;margin:2.5rem 0 1rem;color:var(--text)}
+h4{font-size:1.05rem;font-weight:600;margin-bottom:0.5rem}
+p{margin-bottom:1.2rem;color:var(--text2)}
+strong{color:var(--text)}
+hr{border:none;border-top:1px solid var(--stroke);margin:0}
+.label{font-size:0.75rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--text2);margin-bottom:0.5rem}
+.hero{text-align:center;padding:120px 0 80px}
+.hero p{font-size:1.1rem;max-width:600px;margin:1rem auto}
+.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin:1.5rem 0}
+.stat{background:var(--card);border-radius:var(--radius);padding:1.5rem;box-shadow:var(--shadow);text-align:center}
+.stat .num{font-size:2rem;font-weight:700;background:var(--accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat .desc{font-size:0.85rem;color:var(--text2);margin-top:0.3rem}
+blockquote{border-left:3px solid var(--purple);padding:1rem 1.5rem;background:rgba(123,47,242,0.04);border-radius:0 var(--radius) var(--radius) 0;margin:1.5rem 0;font-style:italic;color:var(--text)}
+.card-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin:1.5rem 0}
+.card{background:var(--card);border-radius:var(--radius);padding:1.5rem;box-shadow:var(--shadow);border-top:3px solid transparent}
+.card.purple{border-top-color:var(--purple)}
+.card.blue{border-top-color:var(--blue)}
+.card.green{border-top-color:var(--green)}
+.card .icon{font-size:1.8rem;margin-bottom:0.5rem}
+.highlight{background:var(--card);border-radius:var(--radius);padding:2rem;box-shadow:var(--shadow);margin:2rem 0;border-left:4px solid var(--purple)}
+table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.9rem}
+th,td{padding:0.75rem 1rem;text-align:left;border-bottom:1px solid var(--stroke)}
+th{background:var(--card);font-weight:600;color:var(--text)}
+td{color:var(--text2)}
+.tag{display:inline-block;padding:0.2rem 0.6rem;border-radius:4px;font-size:0.75rem;font-weight:600;margin-right:0.5rem}
+.tag-purple{background:rgba(123,47,242,0.1);color:var(--purple)}
+.tag-blue{background:rgba(47,127,242,0.1);color:var(--blue)}
+.tag-green{background:rgba(68,229,160,0.1);color:#1a8a5a}
+ul{padding-left:1.5rem;margin:1rem 0}
+li{margin-bottom:0.5rem;color:var(--text2)}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin:2rem 0}
+@media(max-width:700px){.two-col,.card-row{grid-template-columns:1fr}.stat-row{grid-template-columns:repeat(2,1fr)}h1{font-size:1.8rem}h2{font-size:1.4rem}}
 /* Password gate */
-#gate { position: fixed; inset: 0; background: linear-gradient(135deg, rgba(123,47,242,0.15), rgba(47,127,242,0.15), rgba(68,229,160,0.1)); backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px); z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; }
-#gate input { border: 1.5px solid #E1DFDD; background: rgba(255,255,255,0.9); padding: 14px 20px; border-radius: 8px; font-size: 1rem; width: 260px; text-align: center; outline: none; box-shadow: 0 2px 4px rgba(0,0,0,0.04); transition: border-color 0.2s, box-shadow 0.2s; font-family: 'Segoe UI', -apple-system, system-ui, sans-serif; }
-#gate input:focus { border-color: #7B2FF2; box-shadow: 0 0 0 3px rgba(123,47,242,0.12); }
-#gate p { font-size: 0.85rem; color: #605E5C; margin-top: 12px; }
-#gate .error { color: #c0392b; }
-#content { display: none; }
-
-@media (max-width: 600px) {
-  h1 { font-size: 1.8rem; }
-  h2 { font-size: 1.3rem; }
-  .container { padding: 0 16px; }
-  .chapter { padding: 48px 0; }
-}
+#gate{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(123,47,242,0.9),rgba(47,127,242,0.85),rgba(68,229,160,0.8));backdrop-filter:blur(40px)}
+#gate.hidden{display:none}
+#gate form{background:#fff;padding:2.5rem;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.2);text-align:center;max-width:360px;width:90%}
+#gate input{width:100%;padding:0.8rem 1rem;border:1.5px solid var(--stroke);border-radius:8px;font-size:1rem;outline:none;transition:border-color .2s,box-shadow .2s}
+#gate input:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(123,47,242,0.15)}
+#gate button{margin-top:1rem;width:100%;padding:0.8rem;border:none;border-radius:8px;background:var(--accent);color:#fff;font-size:1rem;font-weight:600;cursor:pointer}
+#gate .err{color:#e74c3c;font-size:0.85rem;margin-top:0.5rem;display:none}
+nav{position:sticky;top:0;background:rgba(248,246,243,0.9);backdrop-filter:blur(10px);z-index:100;border-bottom:1px solid var(--stroke);padding:0.8rem 0}
+nav .container{display:flex;gap:1.5rem;overflow-x:auto;font-size:0.85rem}
+nav a{color:var(--text2);text-decoration:none;white-space:nowrap}
+nav a:hover{color:var(--text)}
 </style>
 </head>
 <body>
 
 <div id="gate">
-<input type="password" id="pwd" placeholder="输入密码查看" autofocus>
-<p id="gate-msg">Portfolio access is password-protected.</p>
+<form onsubmit="return checkPw()">
+<h3 style="margin-bottom:1.5rem">🔒 Portfolio Access</h3>
+<input type="password" id="pw" placeholder="Enter password" autocomplete="off">
+<div class="err" id="err">密码错误</div>
+<button type="submit">Enter</button>
+</form>
 </div>
 
-<div id="content">
+<nav><div class="container">
+<a href="#bg">背景</a><a href="#problem">问题</a><a href="#strategy">策略</a><a href="#framework">GenUI框架</a><a href="#impl">落地</a><a href="#result">结果</a>
+</div></nav>
+
 <div class="container">
 
 <!-- Hero -->
-<div class="hero">
-<img src="img/Copilot.png" alt="Microsoft Copilot 产品介绍" class="full">
+<section class="hero" id="bg">
+<div class="label">Microsoft Copilot · Mobile · 2024-2026</div>
+<h1>在AI产品里定义GenUI设计范式</h1>
+<p>从"纯文字对话"到"AI根据场景动态生成最合适的界面"——我在Copilot Mobile端的设计实践。</p>
+</section>
+
+<hr>
+
+<!-- Ch1: Background -->
+<section>
+<div class="label">第一章</div>
+<h2>产品背景</h2>
+<p>Microsoft Copilot是微软的AI助手产品，覆盖Windows、Mobile、Web全平台。我负责移动端（iOS/Android）的2B+2C全链路体验设计。</p>
+
+<div class="stat-row">
+<div class="stat"><div class="num">43M</div><div class="desc">周活跃用户</div></div>
+<div class="stat"><div class="num">20M+</div><div class="desc">付费企业席位</div></div>
+<div class="stat"><div class="num">Top 3</div><div class="desc">北美AI App</div></div>
+<div class="stat"><div class="num">90%+</div><div class="desc">Fortune 500使用</div></div>
 </div>
 
-<!-- Chapter 1: 背景 -->
-<div class="chapter">
-<h1>背景</h1>
-<p>Microsoft Copilot 是微软面向消费者与企业的 AI 助手产品，覆盖 Windows、Edge、移动端。我作为 GenUI Design Lead，负责定义 AI 对话中「动态生成界面」的设计系统与框架。</p>
+<div class="two-col">
+<div>
+<h4>🧑 Consumer（2C）</h4>
+<p>生活陪伴 — 健康咨询、财务规划、体育赛事、学习辅导、日常问答</p>
+</div>
+<div>
+<h4>💼 Enterprise（2B）</h4>
+<p>办公效率 — 邮件摘要、会议准备、数据分析、文档生成、任务管理</p>
+</div>
+</div>
+</section>
+
+<hr>
+
+<!-- Ch2: Problem -->
+<section id="problem">
+<div class="label">第二章</div>
+<h2>有些对话让人失望</h2>
+
+<h3>对话场景集中</h3>
+<p>Consumer端高频场景：体育（实时比分）、娱乐（推荐）、财务（理财/税务/保险）、健康（症状评估）。Enterprise端：邮件、会议、数据分析。</p>
+
+<h3>纯文字的代价</h3>
+
+<div class="stat-row">
+<div class="stat"><div class="num">73%</div><div class="desc">用户认为"易懂"比"全面"重要</div></div>
+<div class="stat"><div class="num">89%</div><div class="desc">用户认为GenUI比纯文字更好理解</div></div>
+<div class="stat"><div class="num">82%</div><div class="desc">付费用户同时在用其他AI工具</div></div>
 </div>
 
-<!-- Chapter 2: 发现问题 -->
-<div class="chapter">
-<h1>发现问题</h1>
-<p>我们首先研究了用户对话的构成——不同场景下，用户的期待截然不同。</p>
-<img src="img/Scenario.png" alt="对话场景分布" class="full">
-<img src="img/33.png" alt="场景 query 占比" class="full">
-<img src="img/34.png" alt="Sports queries 细分" class="full">
+<blockquote>"I will 100% miss information in a long text response. I need structure, I need hierarchy."<br><span style="font-style:normal;font-size:0.85rem;color:var(--text2)">— Copilot用户调研</span></blockquote>
 
-<div class="spacer"></div>
-<p>用户调研揭示了核心洞察：73% 的用户认为「易懂」是最重要的，89% 认为 GenUI 比纯文本更好。</p>
-<img src="img/problem.png" alt="用户调研数据" class="full">
+<h3>关键失败数据</h3>
+<table>
+<tr><th>场景</th><th>问题</th><th>影响</th></tr>
+<tr><td>金融产品搜索</td><td>18.3万用户/周来找产品</td><td><strong>100%流失</strong>到竞品比价</td></tr>
+<tr><td>税务计算</td><td>回答失败率</td><td>~30%</td></tr>
+<tr><td>房贷计算</td><td>计算失败率</td><td>38.9%</td></tr>
+<tr><td>工资计算</td><td>计算失败率</td><td>25.9%</td></tr>
+</table>
 
-<div class="spacer"></div>
-<p>然而，现实中有些对话让人失望。</p>
-<img src="img/image_2065417122.png" alt="让人失望的对话体验" class="full">
+<div class="highlight">
+<h4>根本问题</h4>
+<p style="margin:0;font-size:1.1rem"><strong>Copilot把"好的回答"当作产品，但用户需要的是"好的结果"。</strong><br>50.4%的个人金融用户intent超越"学习"——他们要评估、决策、购物、执行。纯对话满足不了。</p>
+</div>
+</section>
+
+<hr>
+
+<!-- Ch3: Strategy -->
+<section id="strategy">
+<div class="label">第三章</div>
+<h2>不是每个场景都需要相同的回答</h2>
+
+<h3>用户期待因问题类型而异</h3>
+<div class="two-col">
+<div>
+<h4>宽泛问题</h4>
+<p>"什么是ETF" → 简洁、高效、清晰</p>
+</div>
+<div>
+<h4>具体问题</h4>
+<p>"我能负担25万的房子吗" → 深入、个性化、可行动</p>
+</div>
 </div>
 
-<!-- Chapter 3: 设计策略 -->
-<div class="chapter">
-<h1>设计策略</h1>
-<p>不同类型的问题，用户有不同的期待。我们需要一个框架来匹配这些期待。</p>
-<img src="img/Frame.png" alt="用户期待雷达图" class="full">
+<p>4个体验维度：<strong>简洁度</strong>（Succinctness）、<strong>启发性</strong>（Intrigue）、<strong>视觉吸引</strong>（Visual Appeal）、<strong>任务效率</strong>（Task Efficiency）。不同问题权重不同。</p>
+
+<h3>设计策略三角</h3>
+<div class="card-row">
+<div class="card purple"><div class="icon">📖</div><h4>阅读效率</h4><p>→ 满意度</p></div>
+<div class="card blue"><div class="icon">👆</div><h4>互动意愿</h4><p>→ 点击率/对话轮数/时长</p></div>
+<div class="card green"><div class="icon">🤝</div><h4>信任感</h4><p>→ 留存/满意度/付费续订</p></div>
 </div>
 
-<!-- Chapter 4: GenUI 框架 -->
-<div class="chapter">
-<h1>GenUI 框架</h1>
-<p>GenUI 是 AI 时代的人机界面——不是固定模版，而是根据对话动态生成的最佳表达。</p>
-<img src="img/69.png" alt="GenUI 定义" class="full">
+<h3>竞品差距与机会</h3>
+<p>对比ChatGPT/Gemini，Copilot最大差距在 <strong>"Better personalization"</strong>。但Copilot的独特优势是能接入微软生态的用户数据（日历、邮件、文件）——做真正的个性化GenUI。</p>
+</section>
 
-<div class="spacer"></div>
-<h2>了解模型边界</h2>
-<p>在模型能力的边界内，设计优雅的体验。</p>
-<img src="img/T-2.png" alt="同心圆：模型边界" class="full">
+<hr>
 
-<div class="spacer"></div>
-<h2>Freedom of Expression</h2>
-<p>我们定义了三个层级的表达自由度：从固定到开放，像乐高、摇摇马、飞马。</p>
-<img src="img/image_1164.png" alt="三级 Freedom 类比" class="full">
-<img src="img/60.png" alt="Low Freedom - 固定组件" class="full">
-<img src="img/61.png" alt="Medium Freedom - 扩展组件" class="full">
-<img src="img/62.png" alt="High Freedom - 开放生成" class="full">
+<!-- Ch4: Framework -->
+<section id="framework">
+<div class="label">第四章 · 核心</div>
+<h2>了解模型边界，在边界内优雅设计</h2>
+<p style="font-size:1.1rem;color:var(--text)">GenUI Design Framework</p>
 
-<div class="spacer"></div>
-<h2>谁来控制表达？</h2>
-<img src="img/63.png" alt="Who Controls Expression" class="full">
+<h3>什么是GenUI</h3>
+<p><strong>GenUI = Generative UI</strong> — 由AI根据场景和用户context实时动态生成的用户界面。不是画死的静态页面，是模型根据理解"组装"出来的界面。是AI时代的人机界面。</p>
+
+<h3>GenUI的3种产品形态</h3>
+<div class="card-row">
+<div class="card purple"><div class="icon">💬</div><h4>Chat</h4><p>对话即产品。GenUI以内嵌卡片、图表形式出现在对话流中。</p></div>
+<div class="card blue"><div class="icon">💬+</div><h4>Chat+</h4><p>对话+工作区协作。GenUI在侧边面板或主区域展开。</p></div>
+<div class="card green"><div class="icon">✨</div><h4>Chatless</h4><p>无对话窗口。系统根据输入直接用GenUI呈现结果。</p></div>
 </div>
 
-<!-- Chapter 5: 设计落地 -->
-<div class="chapter">
-<h1>设计落地</h1>
-<h2>实现机制</h2>
-<p>GenUI 的实现依赖三个维度：数据、组件、决策。</p>
-<img src="img/57.png" alt="GenUI 实现机制" class="full">
+<h3>Freedom of Expression — 3种自由度</h3>
+<p>2个影响GenUI行为的关键维度：<strong>表达的自由度</strong>（系统允许多大变化空间）和 <strong>谁来控制表达</strong>（产品规定 vs 模型自主）。</p>
 
-<div class="spacer"></div>
-<h2>MAI Sports</h2>
-<img src="img/C-1.png" alt="Sports 场景" class="full">
-
-<div class="spacer"></div>
-<h2>Enterprise Copilot</h2>
-<p>To B 场景中的 Task 流程设计。</p>
-<img src="img/Copilot-2.png" alt="日历 + Planning" class="full">
-<img src="img/Copilot-3.png" alt="Pathways + Code + Chart" class="full">
-<img src="img/Copilot-4.png" alt="Enterprise Copilot 第三组" class="full">
-
-<div class="spacer"></div>
-<h2>Finance & Tax</h2>
-<img src="img/Copilot-5.png" alt="Finance 信用卡推荐" class="full">
-<img src="img/Copilot-6.png" alt="Tax 学生贷款" class="full">
-
-<div class="spacer"></div>
-<h2>组件库</h2>
-<img src="img/Copilot-1.png" alt="组件库全览" class="full">
-
-<div class="spacer"></div>
-<h2>Mosaic — GenUI 生成系统</h2>
-<img src="img/64.png" alt="Mosaic 系统" class="full">
-<img src="img/image_1165.png" alt="Desired vs Broken GenUI" class="full">
-
-<div class="spacer"></div>
-<h2>设计工具的未来</h2>
-<p>当 UI 由 AI 动态生成，传统的 Figma 工作流不再可行。我们需要新的设计工具。</p>
-<img src="img/68.png" alt="Figma 不再可行" class="full">
-<img src="img/67.png" alt="AI Workflow 工具" class="full">
+<div class="card-row">
+<div class="card" style="border-top:3px solid var(--purple)">
+<div class="icon">🔒</div>
+<h4>固定组件系统<br><span class="tag tag-purple">Low Freedom</span></h4>
+<p>预设组件库（卡片/列表/图表），模型只能选择+填充数据。确定性最高，风险最低。</p>
+<p style="font-size:0.85rem;opacity:0.7">类比：乐高积木 — 形状固定，按说明书拼</p>
+</div>
+<div class="card" style="border-top:3px solid var(--blue);position:relative">
+<span style="position:absolute;top:12px;right:12px" class="tag tag-blue">🎯 甜蜜点</span>
+<div class="icon">🧩</div>
+<h4>扩展组件系统<br><span class="tag tag-blue">Medium Freedom</span></h4>
+<p>模型从组件库中选择并自由组合、排列。在边界内创造，兼顾创意和可控。</p>
+<p style="font-size:0.85rem;opacity:0.7">类比：摇摇马 — 用标准件拼出新东西</p>
+</div>
+<div class="card" style="border-top:3px solid var(--green)">
+<div class="icon">🎨</div>
+<h4>开放生成系统<br><span class="tag tag-green">High Freedom</span></h4>
+<p>模型可生成完整HTML/自由布局。创造力最大，但风险也最大（可能失控）。</p>
+<p style="font-size:0.85rem;opacity:0.7">类比：飞马 — 自由创造，但可能"断裂"</p>
+</div>
 </div>
 
-<!-- Chapter 6: 结果与未来 -->
-<div class="chapter">
-<h1>结果与未来</h1>
-<img src="img/C-1-1.png" alt="数据反馈" class="full">
-
-<div class="spacer"></div>
-<h2>8 种交互模式</h2>
-<img src="img/C-1-2.png" alt="8 种交互模式" class="full">
-
-<div class="spacer"></div>
-<h2>Design Skill</h2>
-<img src="img/C-1-3.png" alt="Design Skill" class="full">
+<h3>谁来控制表达</h3>
+<div class="highlight">
+<p><strong style="color:var(--purple)">Product Controls：</strong>开发者定义规则（只能用哪些组件），产品规定结构，模型只填数据。</p>
+<p><strong style="color:var(--blue)">Model Controls：</strong>模型自己决定呈现方式（表格/Grouping/HTML），产品只负责渲染。</p>
+<p style="margin:0"><strong>现实定位：</strong>大多数产品在中间——应用设定边界，模型在边界内自适应。Copilot当前处于Medium Freedom，正在向High Freedom演进。</p>
 </div>
 
-<div style="padding:4rem 0;text-align:center;color:#8a8278;font-size:0.9rem;">
-— End —
+<h3>模型能力决定自由度上限</h3>
+<p>模型能力越强 → 给予更高自由度。模型能力弱时 → 限制在Fixed System内。这不是一次性选择，是随模型迭代<strong>持续调整的动态决策</strong>。</p>
+</section>
+
+<hr>
+
+<!-- Ch5: Implementation -->
+<section id="impl">
+<div class="label">第五章</div>
+<h2>从框架到产品</h2>
+
+<h3>实现机制：数据 × 组件 × 决策</h3>
+<div class="card-row">
+<div class="card"><h4>1. 了解Context</h4><p>用户偏好、设备、时间、历史对话、微软生态数据</p></div>
+<div class="card"><h4>2. 组件框架</h4><p>原子组件库：卡片、图表、列表、表格、计算器等</p></div>
+<div class="card"><h4>3. AI组装</h4><p>模型根据context选择组件 → 排列 → 填充数据 → 渲染</p></div>
 </div>
 
-</div><!-- .container -->
-</div><!-- #content -->
+<p>两类场景策略：<strong>Mainline场景</strong>（沉浸式交互：体育直播、健康追踪）vs <strong>Catalyst场景</strong>（轻量操作：快速计算、简单查询）。</p>
+
+<h3 style="color:var(--purple)">Low Freedom落地 — 固定卡片系统</h3>
+<p>标准化信息展示：赛程卡片、天气卡片、新闻摘要。<br>例：MAI Sports — 问候→赛程卡片→比分详情→球员数据，每步用标准化卡片逐步展开。</p>
+
+<h3 style="color:var(--blue)">Medium Freedom落地 — Mosaic组合系统</h3>
+<p>组件可拼装组合、自适应布局、内容密度动态调整。</p>
+<ul>
+<li><strong>To B：</strong>日历+邮件摘要+任务清单 → 组合成"今日工作面板"</li>
+<li><strong>Finance：</strong>信用卡推荐→个性化问卷→资格检查→结果对比表</li>
+<li><strong>To B Task：</strong>Discover文章+股票图表+Teams邮件+代码+Offsite Planning</li>
+</ul>
+
+<h3 style="color:var(--green)">High Freedom落地 — 开放生成</h3>
+<p>Tax场景：AI生成完整省税方案（Discover→问卷→计算→"You could save $472"）。用户全程不需要离开Copilot。</p>
+
+<h3>组件系统全览</h3>
+<p>沉淀了完整移动端组件库（亮色/暗色主题），涵盖：对话气泡、内容卡片、数据图表、代码块、日历、媒体播放器、表格、评分等。支持2B和2C两套主题无缝切换。</p>
+
+<h3>AI Workflow工具 — GenUI时代的新挑战</h3>
+<div class="highlight">
+<h4>问题</h4>
+<p>GenUI时代，Figma不再可行——每次生成结果不同，无法穷尽所有组合场景来"手搓"。理想的GenUI是摇摇马（稳定可控），失控的GenUI是断裂的飞马。</p>
+</div>
+
+<p><strong>我的解法：</strong></p>
+<ol style="padding-left:1.5rem;margin:1rem 0">
+<li>找到开源GenUI库，理出技术架构</li>
+<li>定义GenUI Design System（组件+规则）</li>
+<li>和LLM约定返回内容带GenUI Tag</li>
+<li>Agent根据规则，将带Tag的信息渲染成UI</li>
+</ol>
+<p>效果：日本旅行规划 — 纯文本（大段难读）vs GenUI版本（结构化、带地图/图片/行程卡片，视觉吸引力显著提升）。甚至输入信用卡问题，AI直接生成了可交互的申请流程。</p>
+</section>
+
+<hr>
+
+<!-- Ch6: Results -->
+<section id="result">
+<div class="label">第六章</div>
+<h2>影响与未来</h2>
+
+<h3>数据结果</h3>
+<p><strong>To C — Answer Card：</strong></p>
+<div class="stat-row">
+<div class="stat"><div class="num">4%</div><div class="desc">GenUI卡片CTR</div></div>
+<div class="stat"><div class="num">~10K</div><div class="desc">日曝光次数</div></div>
+</div>
+
+<p><strong>To B — Copilot整体（2026 H1）：</strong></p>
+<div class="stat-row">
+<div class="stat"><div class="num">+145.7%</div><div class="desc">DAU增长（半年）</div></div>
+<div class="stat"><div class="num">+117.6%</div><div class="desc">WAU增长（半年）</div></div>
+<div class="stat"><div class="num">70.1%</div><div class="desc">新用户周留存（+12.3pts）</div></div>
+<div class="stat"><div class="num">24.1次/周</div><div class="desc">人均使用频次（+24.7%）</div></div>
+</div>
+
+<h3>系统性影响</h3>
+<ul>
+<li>沉淀了移动端GenUI组件库，被多个场景复用</li>
+<li>建立了GenUI设计框架，成为团队的共同语言</li>
+<li>GenUI测试工具改变了团队工作方式：从"手搓每个UI"到"定义规则让AI生成"</li>
+</ul>
+
+<h3>未来方向：Agentic UX</h3>
+<p>当前Copilot是无状态的——用户走了就忘。下周同一个人问同一个问题，从零开始。<br>未来需要：<strong>有记忆、能主动触达、能跨session关联上下文</strong>。</p>
+
+<p>用户和AI交互正在从简单的问答走向持续关系：</p>
+<table>
+<tr><th>模式</th><th>行为</th><th>代表</th></tr>
+<tr><td>Blocking</td><td>等AI回完才能发下一条</td><td>ChatGPT</td></tr>
+<tr><td>Queue</td><td>可以提前输入，排队处理</td><td>Cursor</td></tr>
+<tr><td>Steer</td><td>AI执行中可改变方向</td><td>Claude Code</td></tr>
+<tr><td>Interrupt</td><td>强制停止当前生成</td><td>Stop按钮</td></tr>
+<tr><td>Append</td><td>追加上下文不打断</td><td>Agent产品</td></tr>
+<tr><td>Batch</td><td>多条合并处理</td><td>Devin</td></tr>
+<tr><td>Branch</td><td>创建并行分支</td><td>编辑消息</td></tr>
+<tr><td>Delegate</td><td>完全委托AI自主执行</td><td>Manus</td></tr>
+</table>
+
+<p style="margin-top:2rem;font-size:1.1rem;color:var(--text)"><strong>从"回答问题"到"陪伴决策全程"——这是Copilot和所有AI产品的下一章。</strong></p>
+</section>
+
+<div style="padding:60px 0;text-align:center;color:var(--text2);font-size:0.85rem">
+Jesse Lai · Microsoft Copilot Mobile Design · 2024-2026
+</div>
+
+</div>
 
 <script>
-const PASS = 'copilot2026';
-const input = document.getElementById('pwd');
-const gate = document.getElementById('gate');
-const content = document.getElementById('content');
-const msg = document.getElementById('gate-msg');
-
-if (localStorage.getItem('copilot_auth') === PASS) { gate.style.display='none'; content.style.display='block'; }
-
-input.addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') {
-    if (input.value === PASS) {
-      localStorage.setItem('copilot_auth', PASS);
-      gate.style.display = 'none';
-      content.style.display = 'block';
-      initObserver();
-    } else {
-      msg.textContent = '密码错误';
-      msg.className = 'error';
-      input.value = '';
-    }
-  }
-});
-
-function initObserver() {
-  const obs = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
-  }, { threshold: 0.1 });
-  document.querySelectorAll('.chapter, .hero').forEach(el => obs.observe(el));
-}
-if (localStorage.getItem('copilot_auth') === PASS) { setTimeout(initObserver, 100); }
+function checkPw(){var p=document.getElementById('pw').value;if(p==='copilot2026'){document.getElementById('gate').classList.add('hidden');localStorage.setItem('cp_auth','1');return false}document.getElementById('err').style.display='block';return false}
+if(localStorage.getItem('cp_auth')==='1')document.getElementById('gate').classList.add('hidden');
+const obs=new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})},{threshold:0.1});
+document.querySelectorAll('section').forEach(s=>obs.observe(s));
 </script>
 </body>
 </html>
