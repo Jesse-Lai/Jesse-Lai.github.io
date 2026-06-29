@@ -149,10 +149,10 @@ import { WallArticle } from "./wall-article.js?v=151";
   // Photo captions (Schoolbell font, always English) + dates
   const photoCaptions = {
     'Hello I\u2019m Jesse Lai': { caption: 'Hello I\u2019m Jesse Lai', date: "" },
-    'Stand-up Comedian':    { caption: 'Stand-up Comedian', date: "'23 06 28" },
-    'Drawing':              { caption: 'Drawing', date: "'15 12 20" },
-    'Vibe Coding':          { caption: 'Vibe Coding', date: "'25 05 26" },
-    'Arduino Light':        { caption: 'Born Builder', date: "'16 09 20" },
+    'Stand-up Comedian':    { caption: 'Stand-up Comedian', date: "06 28 '23" },
+    'Drawing':              { caption: 'Drawing', date: "12 20 '15" },
+    'Vibe Coding':          { caption: 'Vibe Coding', date: "05 26 '25" },
+    'Arduino Light':        { caption: 'Born Builder', date: "09 20 '16" },
   };
 
   // Focus overlay description overrides (bilingual)
@@ -197,7 +197,7 @@ import { WallArticle } from "./wall-article.js?v=151";
         category: entry.category,
         title: t(entry, 'title') || entry.title,
         body: t(entry, 'body') || entry.body || '',
-        date: ({ 'GenUI 设计指南': "'25 11 20", 'AI产品设计原则': "'26 05 20", 'Microsoft': "'25 02 27", 'Alibaba': "'20 06 29" })[entry.title] || "'26 05 01",
+        date: ({ 'GenUI 设计指南': "11 20 '25", 'AI产品设计原则': "05 20 '26", 'Microsoft': "02 27 '25", 'Alibaba': "06 29 '20" })[entry.title] || "05 01 '26",
         stampSrc: stampOverrides[entry.title] || entry.cover_image || 'stamp1.webp',
         colorScheme: coolStickies.includes(entry.title) ? 'cool' : 'warm',
         _origTitle: entry.title, keywords: entry.keywords, focus: entry.focus || { title: entry.title, description: entry.body || entry.title, link: '#', linkText: 'Read more', article: { title: entry.title, sections: (entry.full_text || []).map(t => ({type:'text',text:t})) } },
