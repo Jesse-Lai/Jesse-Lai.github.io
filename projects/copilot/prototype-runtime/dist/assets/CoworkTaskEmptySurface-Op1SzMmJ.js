@@ -1,0 +1,1 @@
+import{j as a}from"./index-Brwh7ytf.js";function r(){return a.jsx("div",{"data-testid":"cowork-task-empty-surface",className:"flex min-h-0 flex-1 bg-surface-neutral-near","aria-label":"New Cowork task"})}export{r as CoworkTaskEmptySurface};

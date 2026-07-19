@@ -1,344 +1,1961 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Copilot Mobile — GenUI Case Study | Jesse Lai</title>
-<style>
-:root{--bg:#f8f6f3;--card:#fff;--text:#1b1a19;--text2:#605E5C;--stroke:#E1DFDD;--accent:linear-gradient(135deg,#7B2FF2,#2F7FF2,#44E5A0);--purple:#7B2FF2;--blue:#2F7FF2;--green:#44E5A0;--radius:12px;--max-w:820px;--shadow:0 4px 12px rgba(0,0,0,0.06)}
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Segoe UI',-apple-system,system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.75;font-size:16px}
-.container{max-width:var(--max-w);margin:0 auto;padding:0 24px}
-section{padding:80px 0;opacity:0;transform:translateY(20px);transition:opacity .6s cubic-bezier(0,0,0,1),transform .6s cubic-bezier(0,0,0,1)}
-section.visible{opacity:1;transform:translateY(0)}
-h1{font-size:2.4rem;font-weight:700;background:var(--accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:0.5rem}
-h2{font-size:1.8rem;font-weight:700;margin-bottom:1.5rem;color:var(--text)}
-h3{font-size:1.3rem;font-weight:600;margin:2.5rem 0 1rem;color:var(--text)}
-h4{font-size:1.05rem;font-weight:600;margin-bottom:0.5rem}
-p{margin-bottom:1.2rem;color:var(--text2)}
-strong{color:var(--text)}
-hr{border:none;border-top:1px solid var(--stroke);margin:0}
-.label{font-size:0.75rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--text2);margin-bottom:0.5rem}
-.hero{text-align:center;padding:120px 0 80px}
-.hero p{font-size:1.1rem;max-width:600px;margin:1rem auto}
-.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin:1.5rem 0}
-.stat{background:var(--card);border-radius:var(--radius);padding:1.5rem;box-shadow:var(--shadow);text-align:center}
-.stat .num{font-size:2rem;font-weight:700;background:var(--accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.stat .desc{font-size:0.85rem;color:var(--text2);margin-top:0.3rem}
-blockquote{border-left:3px solid var(--purple);padding:1rem 1.5rem;background:rgba(123,47,242,0.04);border-radius:0 var(--radius) var(--radius) 0;margin:1.5rem 0;font-style:italic;color:var(--text)}
-.card-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin:1.5rem 0}
-.card{background:var(--card);border-radius:var(--radius);padding:1.5rem;box-shadow:var(--shadow);border-top:3px solid transparent}
-.card.purple{border-top-color:var(--purple)}
-.card.blue{border-top-color:var(--blue)}
-.card.green{border-top-color:var(--green)}
-.card .icon{font-size:1.8rem;margin-bottom:0.5rem}
-.highlight{background:var(--card);border-radius:var(--radius);padding:2rem;box-shadow:var(--shadow);margin:2rem 0;border-left:4px solid var(--purple)}
-table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.9rem}
-th,td{padding:0.75rem 1rem;text-align:left;border-bottom:1px solid var(--stroke)}
-th{background:var(--card);font-weight:600;color:var(--text)}
-td{color:var(--text2)}
-.tag{display:inline-block;padding:0.2rem 0.6rem;border-radius:4px;font-size:0.75rem;font-weight:600;margin-right:0.5rem}
-.tag-purple{background:rgba(123,47,242,0.1);color:var(--purple)}
-.tag-blue{background:rgba(47,127,242,0.1);color:var(--blue)}
-.tag-green{background:rgba(68,229,160,0.1);color:#1a8a5a}
-ul{padding-left:1.5rem;margin:1rem 0}
-li{margin-bottom:0.5rem;color:var(--text2)}
-.two-col{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin:2rem 0}
-@media(max-width:700px){.two-col,.card-row{grid-template-columns:1fr}.stat-row{grid-template-columns:repeat(2,1fr)}h1{font-size:1.8rem}h2{font-size:1.4rem}}
-/* Password gate */
-#gate{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(123,47,242,0.9),rgba(47,127,242,0.85),rgba(68,229,160,0.8));backdrop-filter:blur(40px)}
-#gate.hidden{display:none}
-#gate form{background:#fff;padding:2.5rem;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.2);text-align:center;max-width:360px;width:90%}
-#gate input{width:100%;padding:0.8rem 1rem;border:1.5px solid var(--stroke);border-radius:8px;font-size:1rem;outline:none;transition:border-color .2s,box-shadow .2s}
-#gate input:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(123,47,242,0.15)}
-#gate button{margin-top:1rem;width:100%;padding:0.8rem;border:none;border-radius:8px;background:var(--accent);color:#fff;font-size:1rem;font-weight:600;cursor:pointer}
-#gate .err{color:#e74c3c;font-size:0.85rem;margin-top:0.5rem;display:none}
-nav{position:sticky;top:0;background:rgba(248,246,243,0.9);backdrop-filter:blur(10px);z-index:100;border-bottom:1px solid var(--stroke);padding:0.8rem 0}
-nav .container{display:flex;gap:1.5rem;overflow-x:auto;font-size:0.85rem}
-nav a{color:var(--text2);text-decoration:none;white-space:nowrap}
-nav a:hover{color:var(--text)}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Copilot - AI不完美，但可以被优雅地设计</title>
+  <style>
+    @font-face{font-family:Bradford;src:url("fonts/BradfordLLWeb-Regular.woff2") format("woff2");font-weight:400}
+    @font-face{font-family:SegoeLocal;src:url("fonts/Segoe-sans.woff2") format("woff2");font-weight:400}
+    @font-face{font-family:RedHatLocal;src:url("fonts/RedHatMono-Regular.woff2") format("woff2");font-weight:400}
+    :root{
+      --cream-light:#FEF9ED;--cream:#EFE2D1;--cream-dark:#E1DBC6;--warm-gray:#72675B;
+      --brown:#5F4E41;--dark-brown:#3B230E;
+      --orange-lightest:#FBCFB9;--orange-light:#E68863;--orange-medium:#CC653C;--orange-dark:#5F2711;
+      --yellow-lightest:#FFEECC;--yellow-light:#FDE095;--ink:#242220;
+      --font-scale:1;--serif:Bradford,"Songti SC","STSong",serif;
+      --sans:SegoeLocal,"PingFang SC","Microsoft YaHei",Arial,sans-serif;
+      --mono:RedHatLocal,"SFMono-Regular",Consolas,monospace;
+      --slide-pad-x:clamp(3rem,5vw,5rem);--slide-pad-top:clamp(2.4rem,4vh,3.3rem);
+      --slide-safe-bottom:clamp(7rem,13vh,9.5rem);
+      --header-mark-h:clamp(1rem,1.25vw,1.2rem);
+      --control-fg:var(--dark-brown);--control-border:rgba(59,35,14,.28);
+      --control-border-hover:rgba(59,35,14,.6);--control-hover-bg:rgba(59,35,14,.06)
+    }
+    *{box-sizing:border-box}html,body{height:100%;margin:0;overflow:hidden;background:var(--orange-lightest)}
+    body,h1,h2,h3,h4,h5,h6,p,span,a,button,li,div{font-synthesis:none;-webkit-font-synthesis:none}
+    h1,h2,h3,h4,h5,h6,p{margin:0;font-weight:400}button{font:inherit}
+    .stage{position:fixed;inset:0;display:block;background:var(--orange-lightest)}
+    .stage-area{position:absolute;inset:0;overflow:hidden}.stage-card,.deck{position:relative;width:100%;height:100%;overflow:hidden}
+    .deck{container-type:size;background:var(--orange-lightest)}
+    .slide{position:absolute;inset:0;display:flex;width:100%;height:100%;overflow:hidden;opacity:0;pointer-events:none;z-index:1;background:var(--orange-lightest);color:var(--dark-brown);transition:opacity .72s cubic-bezier(.76,0,.24,1)}
+    .slide.active{opacity:1;pointer-events:auto;z-index:2}.slide.hide{display:none}
+    .content-slide{padding:var(--slide-pad-top) var(--slide-pad-x) var(--slide-safe-bottom)}
+    .cream{background:var(--cream-light)}.dark{background:var(--orange-dark);color:var(--cream-light)}
+    .mid{background:var(--orange-medium);color:var(--cream-light)}
+    .slide-logo{position:absolute;right:var(--slide-pad-x);top:clamp(1.6rem,2.8vh,2.25rem);width:auto;height:var(--header-mark-h);z-index:7}
+    .page-index{position:absolute;left:var(--slide-pad-x);top:clamp(1.6rem,2.8vh,2.25rem);height:var(--header-mark-h);display:flex;align-items:center;z-index:7;font-family:var(--mono);font-size:calc(clamp(.68rem,.8cqw,.82rem)*var(--font-scale));line-height:1;letter-spacing:.12em;text-transform:uppercase;color:var(--brown)}
+    .dark .page-index,.mid .page-index,.glass-bg .page-index{color:var(--cream)}
+    .slide-shell{position:relative;z-index:4;width:100%;height:100%;display:flex;flex-direction:column;gap:clamp(1.2rem,2.5cqh,2rem)}
+    .title-zone{flex:0 0 clamp(7.2rem,20cqh,10rem);min-height:0;display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;gap:.65rem;padding-top:clamp(2.5rem,5cqh,3.5rem)}
+    .content-zone{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;justify-content:center;align-content:center}
+    .section-tag,.kicker,.caption,.micro,.stat-label{font-family:var(--mono);font-size:calc(clamp(.68rem,.8cqw,.82rem)*var(--font-scale));line-height:1.25;letter-spacing:.12em;text-transform:uppercase;color:var(--brown)}
+    .content-slide .section-tag{position:absolute;left:clamp(2.3rem,3.2cqw,3.1rem);top:calc(clamp(1.6rem,2.8vh,2.25rem) - var(--slide-pad-top));height:var(--header-mark-h);display:flex;align-items:center;z-index:7}
+    .slide.bound-meta .section-tag{display:none}
+    .dark .section-tag,.mid .section-tag,.dark .kicker,.mid .kicker,.dark .caption,.mid .caption{color:var(--cream)}
+    .page-title{font-family:var(--sans);font-size:calc(clamp(1.85rem,3.35cqw,3.9rem)*var(--font-scale));line-height:1.04;letter-spacing:0;color:var(--dark-brown);max-width:none;white-space:nowrap}
+    .page-title.wide{max-width:none;font-size:calc(clamp(1.85rem,3.25cqw,3.7rem)*var(--font-scale))}
+    .dark .page-title,.mid .page-title{color:var(--cream-light)}
+    .lead{font-family:var(--sans);font-size:calc(clamp(1.25rem,1.9cqw,2.2rem)*var(--font-scale));line-height:1.34;color:var(--dark-brown);max-width:34ch}
+    .body-text{font-family:var(--sans);font-size:calc(clamp(.92rem,1.12cqw,1.18rem)*var(--font-scale));line-height:1.58;color:var(--brown)}
+    .dark .lead,.mid .lead{color:var(--cream-light)}.dark .body-text,.mid .body-text{color:var(--cream)}
+    .reveal{opacity:0;transform:translateY(.9rem);filter:blur(6px);transition:opacity .7s cubic-bezier(.76,0,.24,1),transform .7s cubic-bezier(.76,0,.24,1),filter .7s cubic-bezier(.76,0,.24,1);transition-delay:calc(.18s + var(--i,0)*.09s)}
+    .slide.active .reveal{opacity:1;transform:none;filter:none}.slide[data-motion="drift-left"] .reveal{transform:translateX(1rem)}
+    .slide[data-motion="drift-right"] .reveal{transform:translateX(-1rem)}.slide[data-motion="zoom-in"] .reveal{transform:scale(.985)}
+    .slide[data-motion="zoom-out"] .reveal{transform:scale(1.015)}.slide[data-motion="depth"] .reveal{transform:translateY(1.1rem) scale(.992)}
+    .slide.active[data-motion] .reveal{transform:none}
+    .dither-mount.chart-enter{animation:chart-enter .68s cubic-bezier(.76,0,.24,1) both;animation-delay:calc(var(--chart-i,0)*.07s);will-change:opacity,transform,filter}
+    @keyframes chart-enter{from{opacity:0;transform:translateY(.6rem) scale(.985);filter:blur(5px)}to{opacity:1;transform:none;filter:none}}
+
+    .slide-cover,.slide-closing{flex-direction:column;justify-content:flex-end;align-items:flex-start;padding:0;background:var(--orange-lightest)}
+    .cover-bg,.closing-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+    .slide-closing:after{content:"";position:absolute;inset:0;background:linear-gradient(to right,rgba(251,207,185,.94),rgba(251,207,185,.8) 30%,rgba(251,207,185,.32) 70%,rgba(251,207,185,0))}
+    .cover-logo{position:absolute;z-index:6;right:var(--slide-pad-x);top:clamp(1.6rem,2.8vh,2.25rem);width:auto;height:var(--header-mark-h)}
+    .cover-content,.closing-content{position:relative;z-index:5;padding:0 clamp(2.5rem,6vw,6rem) clamp(7rem,14vh,10rem);display:flex;flex-direction:column;gap:clamp(.8rem,2vh,1.25rem);max-width:1100px}
+    .cover-title,.closing-title{font-family:var(--serif);font-size:clamp(5rem,10cqw,10rem);line-height:.84;color:var(--dark-brown);max-width:9ch}
+    .cover-subtitle,.closing-sub{font-family:var(--sans);font-size:calc(clamp(1.2rem,1.75cqw,1.8rem)*var(--font-scale));line-height:1.45;color:var(--brown)}
+    .cover-meta,.cover-tag,.closing-tag{font-family:var(--mono);font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--brown)}
+    .slide-cover .page-index{display:none}
+    .slide-cover .cover-bg{object-fit:cover}
+    .slide-cover .cover-logo{left:clamp(2rem,3vw,3.6rem);right:auto;top:clamp(2rem,4.5vh,3rem);height:clamp(1.7rem,2.2vw,2.5rem)}
+    .slide-cover .cover-content{position:absolute;left:clamp(2rem,3vw,3.6rem);top:clamp(14.5rem,32.5vh,22rem);padding:0;gap:clamp(2rem,5.5vh,3rem);max-width:none}
+    .slide-cover .cover-title{font-size:clamp(6.5rem,9.5cqw,11rem);line-height:.78;color:var(--cream-light);max-width:none}
+    .slide-cover .cover-subtitle{font-size:calc(clamp(2rem,3.2cqw,3.8rem)*var(--font-scale));line-height:1.08;color:var(--cream-light);white-space:nowrap}
+    .cover-footer{position:absolute;z-index:6;left:clamp(2rem,3vw,3.6rem);right:clamp(2rem,3vw,3.6rem);bottom:clamp(1.6rem,3.5vh,2.6rem);display:grid;grid-template-columns:1fr 1fr 1fr;align-items:end;font-family:var(--mono);font-size:calc(clamp(.65rem,.75cqw,.82rem)*var(--font-scale));letter-spacing:.06em;color:var(--cream-light)}
+    .cover-footer span:nth-child(2){text-align:center}.cover-footer span:nth-child(3){text-align:right}
+    .project-grid{display:grid;grid-template-columns:minmax(0,.72fr) minmax(0,1.28fr);gap:clamp(2rem,4cqw,4rem);align-items:center}
+    .project-copy{display:flex;flex-direction:column;gap:1.4rem}.product-name{font-family:var(--sans);font-size:calc(clamp(2rem,3.6cqw,4.2rem)*var(--font-scale));line-height:1;display:flex;align-items:center;gap:1rem}
+    .copilot-mark{display:block;width:clamp(2.6rem,3.4cqw,3.5rem);height:clamp(2.6rem,3.4cqw,3.5rem);object-fit:contain;flex:none}
+    .principles-slide{background:var(--orange-lightest)}
+    .principles-layout{height:100%;padding-top:clamp(4.8rem,10cqh,6.8rem);display:flex;flex-direction:column;gap:clamp(2rem,4.5cqh,3.4rem)}
+    .principles-title{font-family:var(--sans);font-size:calc(clamp(2.25rem,3.85cqw,4.4rem)*var(--font-scale));line-height:1;color:var(--dark-brown);white-space:nowrap}
+    .principles-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(1.4rem,3cqw,3.2rem);align-items:start}
+    .principle-card{display:grid;grid-template-rows:auto auto minmax(4.8rem,auto) auto;gap:clamp(.8rem,1.6cqh,1.2rem);min-width:0}
+    .journey-step{display:grid;grid-template-columns:auto minmax(2rem,1fr);gap:1rem;align-items:center;font-family:var(--sans);font-size:calc(clamp(.82rem,1.05cqw,1.05rem)*var(--font-scale));color:var(--brown)}
+    .journey-line{height:1px;background:rgba(95,78,65,.3);position:relative}
+    .principle-card:not(:last-child) .journey-line:after{content:"";position:absolute;right:0;top:-3px;width:6px;height:6px;border-top:1px solid rgba(95,78,65,.45);border-right:1px solid rgba(95,78,65,.45);transform:rotate(45deg)}
+    .principle-card h3{font-family:var(--sans);font-size:calc(clamp(1.15rem,1.55cqw,1.7rem)*var(--font-scale));font-weight:600;line-height:1.25;color:var(--dark-brown)}
+    .principle-card p{font-family:var(--sans);font-size:calc(clamp(.95rem,1.25cqw,1.3rem)*var(--font-scale));line-height:1.45;color:var(--brown)}
+    .principle-card img{display:block;width:100%;height:auto;object-fit:initial;border:1px solid rgba(59,35,14,.12);border-radius:5px}
+    .phone-row{display:flex;gap:clamp(1rem,2.3cqw,2.3rem);justify-content:center;align-items:flex-end}.phone{height:clamp(22rem,61cqh,35rem);width:auto;object-fit:contain;filter:drop-shadow(0 1.2rem 2rem rgba(59,35,14,.14))}
+    .positioning-slide{background:var(--ink);color:var(--cream-light)}
+    .positioning-slide .slide-shell{gap:clamp(1rem,2cqh,1.6rem)}
+    .positioning-title{font-family:var(--sans);font-size:calc(clamp(1.8rem,3.3cqw,3.8rem)*var(--font-scale));line-height:1.08;color:#FFE6CC;margin-top:clamp(3.7rem,8.5cqh,5.4rem);white-space:nowrap}
+    .positioning-visual{flex:1;min-height:0;display:flex;align-items:center;justify-content:center}
+    .positioning-map{width:min(82vw,72rem);height:auto;max-height:62cqh;object-fit:contain;filter:drop-shadow(0 1.5rem 3rem rgba(0,0,0,.32))}
+    .status-slide{background:var(--yellow-lightest)}
+    .status-layout{height:100%;display:grid;grid-template-columns:minmax(0,1.55fr) minmax(18rem,.65fr);gap:clamp(2rem,4.5cqw,5rem);align-items:center}
+    .complaint-cluster{height:min(62cqh,34rem);min-height:24rem;display:flex;align-items:center;justify-content:center}
+    .complaint-img{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 .8rem 1.4rem rgba(59,35,14,.1))}
+    .status-pies{display:grid;gap:clamp(1.8rem,4.2cqh,3.2rem);align-content:center;justify-items:start;min-height:min(62cqh,34rem)}
+    .status-pie-row{display:grid;grid-template-columns:clamp(7.5rem,9.8cqw,10rem) minmax(0,1fr);gap:clamp(1.35rem,2cqw,2rem);align-items:center}
+    .status-pie{width:100%;aspect-ratio:1}
+    .status-pie-copy{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(.35rem,.8cqh,.6rem);min-width:0;max-width:100%;font-family:var(--sans);color:var(--brown)}
+    .status-pie-copy strong{display:block;min-width:0;max-width:100%;font-family:var(--sans);font-weight:700;font-size:calc(clamp(3rem,5.2cqw,5.4rem)*var(--font-scale));line-height:.9;color:var(--brown);letter-spacing:-.02em}
+    .status-pie-copy span{display:block;min-width:0;width:100%;max-width:100%;font-size:calc(clamp(1.25rem,1.7cqw,1.9rem)*var(--font-scale));line-height:1.25;color:var(--brown);white-space:normal;overflow-wrap:anywhere;text-wrap:balance}
+    .pie-card{display:grid;justify-items:center;gap:clamp(.8rem,1.8cqh,1.2rem);min-width:0;max-width:100%;font-family:var(--sans);color:var(--dark-brown)}
+    .pie-title{font-size:calc(clamp(1rem,1.35cqw,1.35rem)*var(--font-scale))}
+    .pie{width:clamp(6.5rem,10.5cqw,9.5rem);aspect-ratio:1;border-radius:50%;background:conic-gradient(#5B95F5 0 var(--value),#DDD9CF var(--value) 100%);filter:drop-shadow(0 .6rem 1.2rem rgba(59,35,14,.08))}
+    .research-slide{background:var(--yellow-lightest)}
+    .research-evidence{height:100%;display:grid;grid-template-rows:auto 1fr auto;gap:clamp(1.2rem,3cqh,2.2rem);padding-top:clamp(5.2rem,10cqh,7rem)}
+    .evidence-board{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(2rem,4cqw,4.5rem);align-items:start;min-height:0}
+    .interview-img{width:100%;max-height:38cqh;object-fit:contain;object-position:left top}
+    .survey-stack{position:relative;min-height:clamp(16rem,38cqh,24rem)}
+    .survey-stack img{position:absolute;object-fit:contain;filter:drop-shadow(0 .8rem 1.1rem rgba(59,35,14,.08))}
+    .survey-main{left:0;top:0;width:72%}.survey-side{right:0;top:12%;width:44%}.survey-bottom{left:18%;bottom:0;width:70%}
+    .research-takeaways{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(1.4rem,3cqw,3rem);padding:0 clamp(5rem,8cqw,8rem)}
+    .takeaway{min-width:0;overflow:hidden;background:var(--orange-light);border-radius:8px;color:var(--cream-light);padding:clamp(1.2rem,2.8cqh,2rem);font-family:var(--sans);font-size:calc(clamp(1.25rem,2cqw,2rem)*var(--font-scale));line-height:1.18;overflow-wrap:anywhere;text-wrap:balance}
+    .takeaway span{display:block;font-family:var(--mono);font-size:calc(clamp(1.2rem,1.8cqw,1.8rem)*var(--font-scale));margin-bottom:.4rem}
+    .timeback-slide{background:var(--yellow-lightest)}
+    .timeback-layout{height:100%;min-height:0;display:flex;flex-direction:column;gap:clamp(.8rem,1.8cqh,1.25rem);padding-top:clamp(2rem,4.5cqh,3rem)}
+    .timeback-title{font-family:var(--sans);font-size:calc(clamp(2.1rem,4.1cqw,4.7rem)*var(--font-scale));line-height:1.08;color:var(--brown);white-space:nowrap}
+    .timeback-phone-track{flex:1 1 auto;min-height:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(1rem,2.3cqw,2.2rem);align-items:start}
+    .timeback-step{min-width:0;min-height:0;display:grid;grid-template-rows:auto minmax(0,1fr);gap:clamp(.8rem,1.7cqh,1.15rem)}
+    .timeback-step-label{min-width:0;display:grid;grid-template-columns:auto minmax(1.5rem,1fr);gap:clamp(.6rem,1cqw,.95rem);align-items:center;font-family:var(--sans);font-size:calc(clamp(.92rem,1.28cqw,1.45rem)*var(--font-scale));line-height:1;color:var(--brown);white-space:normal;overflow-wrap:anywhere;text-wrap:balance}
+    .timeback-step-label:after{content:"";height:1px;background:rgba(95,78,65,.24);position:relative}
+    .timeback-phone{display:block;align-self:start;justify-self:center;width:100%;max-width:clamp(10rem,16.6cqw,16.2rem);height:min(62cqh,31.5rem);object-fit:contain;object-position:top center;filter:drop-shadow(0 .75rem 1.2rem rgba(59,35,14,.12))}
+    .timeback-overlay-slide{background:#5e584b;color:var(--cream-light)}
+    .timeback-overlay-slide .page-index,.timeback-overlay-slide .section-tag{color:rgba(254,249,237,.72)}
+    .timeback-overlay-slide .slide-logo{z-index:8}.timeback-overlay-slide .slide-shell{overflow:visible}
+    .timeback-overlay-bg{position:absolute;inset:0;opacity:.44;filter:blur(8px);transform:scale(1.018);pointer-events:none;z-index:1}
+    .timeback-overlay-bg .timeback-title,.timeback-overlay-bg .timeback-step-label{color:rgba(254,249,237,.7)}
+    .timeback-overlay-shade{position:absolute;inset:calc(-1 * var(--slide-pad-top)) calc(-1 * var(--slide-pad-x)) calc(-1 * var(--slide-safe-bottom));background:rgba(36,34,29,.6);z-index:2;pointer-events:none}
+    .timeback-metric-layer{position:relative;z-index:3;height:100%;min-height:0;display:flex;align-items:center;justify-content:center;padding-top:clamp(2.5rem,6cqh,4rem)}
+    .friction-metrics{width:min(84vw,74rem);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(2.2rem,5cqw,6rem);align-items:center}
+    .friction-metric{min-width:0;display:grid;gap:clamp(1.3rem,2.6cqh,2.2rem);justify-items:center;color:#fff}
+    .friction-title{max-width:100%;font-family:var(--sans);font-weight:700;font-size:calc(clamp(1.95rem,3.45cqw,4.25rem)*var(--font-scale));line-height:1;letter-spacing:0;white-space:normal;text-align:center;overflow-wrap:anywhere;text-wrap:balance}
+    .friction-chart-row{display:grid;grid-template-columns:auto minmax(0,1fr);gap:clamp(.8rem,1.45cqw,1.25rem);align-items:center;justify-content:center;justify-self:center;min-width:0;width:min(100%,18rem)}
+    .friction-pie{width:clamp(4.1rem,6.8cqw,6.45rem);aspect-ratio:1;border-radius:50%;background:conic-gradient(#5B95F5 0 var(--slice),#F2F2F2 var(--slice) 100%);box-shadow:0 .45rem 1.1rem rgba(0,0,0,.12)}
+    .friction-copy{min-width:0;display:grid;gap:.35rem;align-content:center;justify-items:start}
+    .friction-copy strong{font-family:var(--sans);font-weight:700;font-size:calc(clamp(2rem,3.35cqw,3.7rem)*var(--font-scale));line-height:.9;color:#fff;white-space:nowrap}
+    .friction-copy span{font-family:var(--sans);font-size:calc(clamp(.88rem,1.12cqw,1.2rem)*var(--font-scale));line-height:1.15;color:rgba(255,255,255,.9);white-space:normal;overflow-wrap:anywhere;text-wrap:balance}
+    .intent-reduce-slide{background:var(--yellow-lightest)}
+    .intent-reduce-slide.content-slide{padding:clamp(2.2rem,4.2vh,3rem) var(--slide-pad-x) clamp(2.2rem,4vh,3.1rem)}
+    .intent-reduce-layout{height:100%;min-height:0;display:flex;flex-direction:column;gap:clamp(.8rem,1.8cqh,1.3rem);padding-top:clamp(1.7rem,3.6cqh,2.5rem)}
+    .intent-reduce-title{font-family:var(--sans);font-size:calc(clamp(1.65rem,2.45cqw,2.9rem)*var(--font-scale));line-height:1.08;color:var(--brown);white-space:normal;overflow-wrap:anywhere;text-wrap:balance}
+    .intent-reduce-phones{flex:1 1 auto;min-height:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(1.2rem,3.3cqw,4rem);align-items:start}
+    .intent-step{min-width:0;min-height:0;display:grid;grid-template-rows:auto minmax(0,1fr);gap:clamp(.75rem,1.55cqh,1.05rem)}
+    .intent-step-label{min-width:0;display:grid;grid-template-columns:auto minmax(1.5rem,1fr);gap:clamp(.65rem,1.2cqw,1rem);align-items:center;font-family:var(--sans);font-size:calc(clamp(.92rem,1.22cqw,1.35rem)*var(--font-scale));line-height:1.1;color:var(--brown);white-space:normal;overflow-wrap:anywhere;text-wrap:balance}
+    .intent-step-label:after{content:"";height:1px;background:rgba(95,78,65,.24)}
+    .intent-phone{display:block;align-self:start;justify-self:center;width:100%;max-width:clamp(10rem,15.6cqw,15.4rem);height:min(65cqh,33rem);object-fit:contain;object-position:top center;filter:drop-shadow(0 .75rem 1.2rem rgba(59,35,14,.12))}
+    .intent-axis{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:clamp(.9rem,1.8cqw,1.4rem);align-items:center;font-family:var(--sans);font-size:calc(clamp(.95rem,1.18cqw,1.28rem)*var(--font-scale));line-height:1;color:var(--brown)}
+    .intent-axis i{height:1px;background:rgba(95,78,65,.24);position:relative}.intent-axis i:after{content:"";position:absolute;right:0;top:-3px;width:6px;height:6px;border-top:1px solid rgba(95,78,65,.38);border-right:1px solid rgba(95,78,65,.38);transform:rotate(45deg)}
+    .intent-complex-layout{height:100%;min-height:0;display:grid;grid-template-columns:minmax(14rem,.62fr) minmax(0,1.38fr);gap:clamp(1.6rem,3.4cqw,3.2rem);align-items:stretch;padding-top:clamp(1.6rem,3.6cqh,2.4rem)}
+    .blocking-panel{min-width:0;min-height:0;background:rgba(114,103,91,.12);border-radius:0 clamp(2.2rem,4cqw,4rem) clamp(2.2rem,4cqw,4rem) 0;padding:clamp(1rem,2.2cqh,1.6rem) clamp(1rem,2cqw,1.5rem);display:grid;grid-template-rows:auto auto auto minmax(0,1fr);gap:clamp(.7rem,1.4cqh,1rem);justify-items:center}
+    .blocking-panel .intent-reduce-title{justify-self:start;font-size:calc(clamp(1.45rem,2.25cqw,2.55rem)*var(--font-scale))}
+    .blocking-sub{justify-self:start;font-family:var(--sans);font-size:calc(clamp(.86rem,1.1cqw,1.12rem)*var(--font-scale));font-weight:600;line-height:1.25;color:var(--brown)}
+    .before-label,.phase-label{min-width:0;display:grid;grid-template-columns:minmax(1.8rem,1fr) auto minmax(1.8rem,1fr);gap:.8rem;align-items:center;font-family:var(--sans);font-size:calc(clamp(.9rem,1.15cqw,1.2rem)*var(--font-scale));line-height:1;color:var(--brown);white-space:normal;text-wrap:balance}
+    .before-label:before,.before-label:after,.phase-label:after{content:"";height:1px;background:rgba(95,78,65,.2)}
+    .phase-label{grid-template-columns:auto minmax(1.8rem,1fr);width:100%;font-weight:600}.phase-label:before{display:none}
+    .phase-label:after{position:relative}.phase-label:after{background:rgba(95,78,65,.24)}
+    .phase-panel{min-width:0;min-height:0;display:flex;flex-direction:column;gap:clamp(1rem,2.3cqh,1.5rem)}
+    .phase-panel .intent-reduce-title{font-size:calc(clamp(1.55rem,2.45cqw,2.8rem)*var(--font-scale))}
+    .phase-grid{flex:1 1 auto;min-height:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(1.2rem,2.7cqw,2.8rem);align-items:start}
+    .phase-step{min-width:0;min-height:0;display:grid;grid-template-rows:auto minmax(0,1fr);gap:clamp(.75rem,1.5cqh,1rem)}
+    .complex-phone{display:block;align-self:start;justify-self:center;width:100%;max-width:clamp(9.5rem,15.4cqw,14.8rem);height:min(66cqh,33rem);object-fit:contain;object-position:top center;filter:drop-shadow(0 .75rem 1.2rem rgba(59,35,14,.12))}
+    .blocking-panel .complex-phone{height:min(58cqh,29rem);max-width:clamp(8.8rem,13.2cqw,12.2rem)}
+    .intent-impact-slide{background:#5e584b;color:#fff}.intent-impact-slide .page-index,.intent-impact-slide .section-tag{color:rgba(254,249,237,.72)}
+    .intent-impact-bg{position:absolute;inset:0;z-index:1;opacity:.46;filter:blur(8px);transform:scale(1.018);pointer-events:none}.intent-impact-bg .intent-complex-layout{padding:clamp(2.2rem,4.2vh,3rem) var(--slide-pad-x) clamp(2.2rem,4vh,3.1rem);padding-top:calc(clamp(2.2rem,4.2vh,3rem) + clamp(1.6rem,3.6cqh,2.4rem))}.intent-impact-bg .intent-reduce-title,.intent-impact-bg .blocking-sub,.intent-impact-bg .before-label,.intent-impact-bg .phase-label{color:rgba(254,249,237,.7)}
+    .intent-impact-shade{position:absolute;inset:0;background:rgba(36,34,29,.62);z-index:2;pointer-events:none}.intent-impact-slide .slide-logo{z-index:8}
+    .intent-impact-layer{position:relative;z-index:3;height:100%;min-height:0;display:flex;align-items:center;justify-content:center;padding-top:clamp(2.6rem,5cqh,3.6rem)}
+    .intent-impact-metrics{width:min(86vw,78rem);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(2.2rem,5.2cqw,6rem);align-items:center}
+    .intent-impact-metric{min-width:0;display:grid;gap:clamp(1.35rem,2.5cqh,2rem);justify-items:center;color:#fff}.intent-impact-title{font-family:var(--sans);font-weight:700;font-size:calc(clamp(1.9rem,2.75cqw,3.35rem)*var(--font-scale));line-height:.98;white-space:normal;text-align:center;text-wrap:balance;overflow-wrap:anywhere}
+    .intent-impact-row{display:grid;grid-template-columns:auto minmax(0,1fr);gap:clamp(.75rem,1.05cqw,1rem);align-items:center;width:min(100%,22rem);justify-self:center}.intent-impact-pie{width:clamp(4.1rem,6.5cqw,6.25rem);aspect-ratio:1;border-radius:50%;background:conic-gradient(#5B95F5 0 var(--slice),#F2F2F2 var(--slice) 100%)}
+    .intent-impact-copy{min-width:0;max-width:100%;display:grid;gap:.45rem}.intent-impact-values{min-width:0;max-width:100%;display:grid;gap:.22rem;font-family:var(--sans);font-weight:700;font-size:calc(clamp(1.18rem,1.65cqw,1.95rem)*var(--font-scale));line-height:1;color:#fff}.intent-impact-values span{color:rgba(255,255,255,.42)}.intent-impact-values strong{font:inherit;color:#fff;white-space:nowrap}.intent-impact-copy small{font-family:var(--sans);font-size:calc(clamp(.82rem,1.05cqw,1.12rem)*var(--font-scale));line-height:1.1;color:rgba(255,255,255,.9);white-space:normal;overflow-wrap:anywhere;text-wrap:balance}
+    .glass-bg{background:#183a2b}.glass-bg:before{content:"";position:absolute;inset:0;background:url("Content/Frame.webp") center/cover no-repeat;opacity:.9}.glass-bg:after{content:"";position:absolute;inset:0;background:rgba(10,31,22,.32)}
+    .glass-bg .slide-shell,.glass-bg .slide-logo{z-index:5}.glass-bg .product-name,.glass-bg .body-text{color:var(--cream-light)}.glass-bg .caption,.glass-bg .section-tag{color:var(--cream-dark)}
+    .distribution{display:grid;grid-template-columns:.55fr 1.45fr;gap:2.2cqw;align-items:center}.note-stack{display:grid;gap:1.2rem}
+    .note{padding-top:1rem;border-top:1px solid rgba(59,35,14,.18);font-family:var(--sans);font-size:calc(clamp(1rem,1.35cqw,1.45rem)*var(--font-scale));line-height:1.4}
+    .bar-chart{display:grid;gap:.85rem}.bar-row{display:grid;grid-template-columns:10rem 1fr 3rem;gap:.8rem;align-items:center;font-family:var(--sans);font-size:.88rem}
+    .bar-track{height:1.2rem;background:rgba(59,35,14,.08);border-radius:3px;overflow:hidden}.bar{height:100%;background:var(--orange-medium)}
+    .bar.consumer{background:var(--orange-light)}.bar-row strong{font-weight:400}
+    .conversation-dither{width:100%;height:min(48cqh,28rem);min-height:20rem}
+    .problem-grid{display:grid;grid-template-columns:.78fr 1.22fr;gap:4cqw;align-items:center}.problem-list{display:grid;gap:1rem;margin-top:1.2rem}
+    .problem-item{display:grid;grid-template-columns:.7rem 1fr;gap:.7rem;font-family:var(--sans);font-size:calc(clamp(.92rem,1.15cqw,1.2rem)*var(--font-scale));line-height:1.45;color:var(--brown)}
+    .problem-item:before{content:"";width:.52rem;height:.52rem;background:var(--dark-brown);border-radius:50%;margin-top:.55rem}
+    .stacked-responses{position:relative;height:clamp(22rem,57cqh,33rem)}.response-card{position:absolute;width:88%;right:0;padding:1.5rem;border:1px solid rgba(59,35,14,.14);border-radius:8px;background:rgba(254,249,237,.92);font-family:var(--sans);font-size:1rem;line-height:1.45;box-shadow:0 .7rem 2rem rgba(59,35,14,.06)}
+    .response-card:nth-child(1){top:0;transform:rotate(1deg)}.response-card:nth-child(2){top:27%;right:2%;transform:rotate(.5deg)}.response-card:nth-child(3){top:57%;right:1%;transform:rotate(-1deg)}.response-card,.response-card p,.problem-item{min-width:0;overflow-wrap:anywhere;text-wrap:balance}
+    .conversation-distribution-slide,.disappointment-slide{background:var(--cream-light);color:var(--dark-brown)}
+    .conversation-distribution-slide.content-slide,.disappointment-slide.content-slide{padding:clamp(2rem,4.1cqh,3.15rem) clamp(2.6rem,4.8cqw,4.7rem) clamp(1.45rem,2.9cqh,2.25rem)}
+    .conversation-distribution-slide .page-index,.disappointment-slide .page-index{display:none}
+    .conversation-distribution-layout{width:100%;height:100%;min-height:0;display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:clamp(1.15rem,2.3cqh,1.8rem)}
+    .conversation-main-title{min-width:0;font-family:var(--sans);font-size:calc(clamp(1.65rem,2.55cqw,3.05rem)*var(--font-scale));line-height:1.08;color:#514b44;white-space:normal;overflow-wrap:anywhere;text-wrap:balance}
+    .conversation-panels{min-height:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(1.55rem,2.5cqw,2.7rem);align-items:stretch}
+    .conversation-panel{min-width:0;min-height:0;overflow:hidden;background:#E7DCC3;border-radius:clamp(2.2rem,4.6cqw,5.15rem);padding:clamp(1.45rem,3.2cqh,2.35rem) clamp(1.35rem,2.2cqw,2.2rem) clamp(1.35rem,2.8cqh,2rem);display:grid;grid-template-rows:auto minmax(0,1fr);gap:clamp(1.1rem,2.4cqh,1.9rem)}
+    .conversation-panel-title{min-width:0;font-family:var(--sans);font-size:calc(clamp(1.25rem,1.72cqw,2rem)*var(--font-scale));font-weight:600;line-height:1.14;text-align:center;color:var(--ink);white-space:normal;overflow-wrap:anywhere;text-wrap:balance}
+    .conversation-chart-wrap{min-width:0;min-height:0;display:flex;align-items:flex-start;justify-content:center}
+    .enterprise-chart-card,.consumer-chart-card{width:100%;background:rgba(254,249,237,.9);border:1px solid rgba(95,78,65,.1);box-shadow:0 .45rem 1rem rgba(59,35,14,.04);overflow:hidden;color:#33312f}
+    .enterprise-chart-card{align-self:start;max-width:clamp(31rem,43cqw,48rem);height:min(42cqh,27rem);border-radius:clamp(1.35rem,2.6cqw,2.7rem);padding:clamp(.68rem,1.4cqh,1rem) clamp(.72rem,1.35cqw,1.05rem);display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;gap:clamp(.34rem,.82cqh,.58rem);margin-top:clamp(1.05rem,3.4cqh,2.25rem)}
+    .enterprise-chart-title{min-width:0;font-family:var(--sans);font-weight:700;font-size:calc(clamp(.48rem,.72cqw,.78rem)*var(--font-scale));line-height:1.15;color:#383432;white-space:normal;overflow-wrap:anywhere;text-wrap:balance}
+    .chart-meta{min-width:0;display:flex;gap:clamp(.25rem,.55cqw,.48rem);flex-wrap:wrap;font-family:var(--mono);font-size:calc(clamp(.28rem,.42cqw,.46rem)*var(--font-scale));line-height:1.1;color:#5f5b57}.chart-meta span{border-radius:.25rem;background:#f2efea;padding:.18rem .28rem;white-space:nowrap}
+    .enterprise-bars{min-height:0;display:grid;gap:clamp(.12rem,.35cqh,.22rem);padding:clamp(.22rem,.55cqh,.36rem) 0;background:linear-gradient(90deg,transparent 0 22%,rgba(95,78,65,.07) 22.1% 22.3%,transparent 22.4% 100%),repeating-linear-gradient(90deg,transparent 0 20%,rgba(95,78,65,.08) 20.05% 20.2%,transparent 20.25% 100%)}
+    .enterprise-bar-row{min-width:0;display:grid;grid-template-columns:minmax(6.5rem,.72fr) minmax(0,1.28fr) clamp(1.8rem,2.7cqw,2.5rem);gap:clamp(.3rem,.7cqw,.58rem);align-items:center;font-family:var(--sans);font-size:calc(clamp(.37rem,.53cqw,.6rem)*var(--font-scale));line-height:1.05;color:#34302d}
+    .enterprise-bar-row span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.enterprise-bar-row strong{font-weight:600;font-size:calc(clamp(.34rem,.48cqw,.54rem)*var(--font-scale));line-height:1;white-space:nowrap;color:#67605a}.enterprise-bar-track{height:clamp(.34rem,.82cqh,.52rem);background:transparent;border-radius:.12rem;overflow:visible}.enterprise-bar-track i{display:block;height:100%;width:calc(var(--v)*1%);background:var(--c);border-radius:.08rem}
+    .enterprise-table{min-width:0;display:grid;grid-template-columns:minmax(5.8rem,1.3fr) .45fr .38fr minmax(5rem,1fr);border-top:1px solid rgba(95,78,65,.12);font-family:var(--sans);font-size:calc(clamp(.34rem,.48cqw,.52rem)*var(--font-scale));line-height:1.15;color:#5d5751}.enterprise-table span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:.18rem .22rem;border-bottom:1px solid rgba(95,78,65,.06)}.enterprise-table .head{font-weight:700;color:#4c4641;background:#f5f1ea}
+    .consumer-chart-card{align-self:start;max-width:clamp(28rem,40cqw,45rem);height:min(45cqh,29rem);border-radius:clamp(2rem,4cqw,4.5rem);padding:clamp(2rem,4.6cqh,3.5rem) clamp(1.5rem,2.55cqw,2.55rem) clamp(1.35rem,2.8cqh,2.1rem);margin-top:clamp(1.05rem,3.4cqh,2.25rem);display:flex;align-items:stretch}
+    .consumer-chart{min-width:0;min-height:0;width:100%;display:grid;grid-template-rows:minmax(0,1fr) auto;gap:clamp(.55rem,1.2cqh,.9rem)}
+    .consumer-bar-plot{position:relative;min-height:0;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:clamp(.72rem,1.35cqw,1.25rem);align-items:end;padding:clamp(.75rem,1.5cqh,1rem) clamp(.45rem,.8cqw,.75rem) 0 clamp(1rem,1.6cqw,1.45rem);border-left:1px solid rgba(95,78,65,.28);border-bottom:1px solid rgba(95,78,65,.28)}
+    .consumer-bar-plot:before{content:"";position:absolute;left:clamp(1rem,1.6cqw,1.45rem);right:clamp(.45rem,.8cqw,.75rem);top:clamp(.75rem,1.5cqh,1rem);bottom:0;background:repeating-linear-gradient(to top,rgba(95,78,65,.1) 0 1px,transparent 1px 12.5%);pointer-events:none}.consumer-column{position:relative;z-index:1;min-width:0;height:100%;display:grid;grid-template-rows:auto minmax(0,1fr);gap:clamp(.18rem,.45cqh,.35rem);justify-items:center;align-items:end}.consumer-column span{font-family:var(--sans);font-size:calc(clamp(.58rem,.76cqw,.82rem)*var(--font-scale));line-height:1;color:#797168;white-space:nowrap}.consumer-column i{display:block;width:min(100%,clamp(2.6rem,4.3cqw,4.35rem));height:calc(var(--v)*10%);background:#F5BB86;min-height:.45rem}
+    .consumer-labels{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:clamp(.62rem,1.2cqw,1.1rem);padding-left:clamp(1rem,1.6cqw,1.45rem);font-family:var(--sans);font-size:calc(clamp(.58rem,.78cqw,.86rem)*var(--font-scale));font-weight:600;line-height:1.2;color:#242220;text-align:center}.consumer-labels span{min-width:0;overflow-wrap:anywhere;text-wrap:balance}
+    .mini-deck-footer{min-width:0;display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:calc(clamp(.62rem,.8cqw,.9rem)*var(--font-scale));line-height:1;letter-spacing:.08em;color:var(--warm-gray);position:relative;z-index:6}
+    .disappointment-layout{position:relative;width:100%;height:100%;min-height:0;display:grid;grid-template-rows:minmax(0,1fr) auto;gap:clamp(1rem,2cqh,1.5rem)}
+    .disappointment-main{min-height:0;display:grid;grid-template-columns:minmax(24rem,.86fr) minmax(0,1.14fr);gap:clamp(2.4rem,4.5cqw,5rem);align-items:stretch}
+    .disappointment-copy{min-width:0;display:flex;flex-direction:column;align-items:flex-start;padding-top:clamp(1rem,2.6cqh,2rem);color:#54504b}
+    .disappointment-title{min-width:0;font-family:var(--sans);font-size:calc(clamp(1.85rem,2.75cqw,3.25rem)*var(--font-scale));line-height:1.08;color:#4f4a44;white-space:normal;overflow-wrap:anywhere;text-wrap:balance}
+    .disappointment-lead{min-width:0;max-width:37ch;margin-top:clamp(2rem,5.2cqh,4rem);font-family:var(--sans);font-size:calc(clamp(1rem,1.25cqw,1.45rem)*var(--font-scale));font-weight:700;line-height:1.62;color:#5c5751;white-space:normal;overflow-wrap:anywhere;text-wrap:pretty}
+    .disappointment-bullets{display:grid;gap:clamp(.92rem,2.2cqh,1.55rem);margin-top:clamp(1.2rem,3cqh,2.1rem);max-width:45ch}
+    .disappointment-bullets p{min-width:0;display:grid;grid-template-columns:clamp(.64rem,.9cqw,.82rem) minmax(0,1fr);gap:clamp(.5rem,.9cqw,.8rem);align-items:start;font-family:var(--sans);font-size:calc(clamp(.94rem,1.2cqw,1.35rem)*var(--font-scale));font-weight:700;line-height:1.52;color:#5c5751;white-space:normal;overflow-wrap:anywhere;text-wrap:pretty}
+    .disappointment-bullets p:before{content:"";width:clamp(.52rem,.72cqw,.68rem);aspect-ratio:1;border-radius:50%;background:#55504a;margin-top:.44em}
+    .disappointment-card-stack{position:relative;min-width:0;min-height:0;height:100%;overflow:visible}
+    .disappointment-card-img{position:absolute;display:block;width:clamp(33rem,52cqw,57rem);max-width:none;height:auto;filter:drop-shadow(0 .7rem 1.4rem rgba(59,35,14,.07));transform-origin:center}
+    .disappointment-card-img.card-nba{right:calc(-1 * clamp(.35rem,1.15cqw,1.2rem));top:clamp(.2rem,.9cqh,.75rem);transform:rotate(.6deg)}
+    .disappointment-card-img.card-meeting{right:calc(-1 * clamp(.15rem,.7cqw,.7rem));top:clamp(8rem,18.2cqh,12.6rem);transform:rotate(.2deg)}
+    .disappointment-card-img.card-credit{right:calc(-1 * clamp(.35rem,.95cqw,1rem));top:clamp(19.2rem,43cqh,29rem);transform:rotate(.5deg)}
+    .disappointment-card-img.card-stock{right:calc(-1 * clamp(.15rem,.8cqw,.8rem));top:clamp(29.6rem,66cqh,42rem);transform:rotate(-.8deg)}
+    @media(max-height:760px){
+      .conversation-distribution-slide.content-slide,.disappointment-slide.content-slide{padding:clamp(1.45rem,3.1cqh,2.1rem) clamp(2.1rem,4cqw,3.4rem) clamp(1.05rem,2.1cqh,1.45rem)}
+      .conversation-distribution-layout{gap:clamp(.75rem,1.6cqh,1.15rem)}.conversation-panel{border-radius:clamp(1.8rem,4cqw,3.8rem);padding:clamp(1rem,2.35cqh,1.55rem) clamp(1rem,1.8cqw,1.45rem)}
+      .enterprise-chart-card{height:min(39cqh,22rem);margin-top:clamp(.45rem,1.5cqh,1rem)}.consumer-chart-card{height:min(41cqh,23rem);padding:clamp(1.35rem,3.2cqh,2.1rem) clamp(1.05rem,2cqw,1.6rem) clamp(.9rem,2cqh,1.35rem);margin-top:clamp(.45rem,1.5cqh,1rem)}
+      .disappointment-main{grid-template-columns:minmax(21rem,.82fr) minmax(0,1.18fr);gap:clamp(1.6rem,3.2cqw,3.2rem)}.disappointment-copy{padding-top:clamp(.6rem,1.5cqh,1rem)}.disappointment-lead{margin-top:clamp(1.25rem,3cqh,2rem);font-size:calc(clamp(.9rem,1.08cqw,1.08rem)*var(--font-scale));line-height:1.48}.disappointment-bullets{gap:clamp(.55rem,1.35cqh,.9rem);margin-top:clamp(.9rem,2cqh,1.25rem)}.disappointment-bullets p{font-size:calc(clamp(.82rem,1cqw,1rem)*var(--font-scale));line-height:1.36}.disappointment-card-img{width:clamp(30rem,51cqw,48rem)}.disappointment-card-img.card-meeting{top:clamp(6.7rem,17cqh,9rem)}.disappointment-card-img.card-credit{top:clamp(15.8rem,40.5cqh,21rem)}.disappointment-card-img.card-stock{top:clamp(24.5rem,62cqh,31rem)}
+    }
+    @media(max-height:640px){.enterprise-table{display:none}.enterprise-chart-card{grid-template-rows:auto auto minmax(0,1fr);height:min(38cqh,18rem)}.conversation-panel-title{font-size:calc(clamp(1rem,1.45cqw,1.45rem)*var(--font-scale))}.consumer-column span,.consumer-labels{font-size:calc(clamp(.48rem,.65cqw,.68rem)*var(--font-scale))}.disappointment-lead{line-height:1.35}.disappointment-bullets{gap:clamp(.42rem,1cqh,.65rem)}.disappointment-bullets p{line-height:1.25}.disappointment-card-img{width:clamp(27rem,49cqw,42rem)}}
+    @media(max-width:820px){.conversation-distribution-slide.content-slide,.disappointment-slide.content-slide{padding:1.4rem 1.25rem 1.1rem}.conversation-panels{grid-template-columns:1fr;gap:.8rem}.conversation-panel{border-radius:2rem;padding:1rem}.enterprise-chart-card,.consumer-chart-card{height:min(28cqh,12rem);margin-top:0}.consumer-chart-card{padding:1rem}.enterprise-table{display:none}.disappointment-main{grid-template-columns:1fr}.disappointment-card-stack{display:none}.disappointment-lead{margin-top:1rem}.disappointment-bullets{gap:.65rem;margin-top:.85rem;max-width:none}}
+    .research-grid{height:min(50cqh,29.5rem);min-height:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(.85rem,1.35cqw,1.35rem);align-items:stretch}
+    .research-card{min-width:0;min-height:0;display:grid;grid-template-rows:auto minmax(0,1fr);gap:clamp(.75rem,1.45cqh,1.1rem);border-top:1px solid rgba(59,35,14,.18);padding:clamp(.85rem,1.55cqh,1.15rem) clamp(.85rem,1.1cqw,1.1rem) 0;overflow:hidden}
+    .research-text-card{grid-template-rows:minmax(0,1fr) auto}.research-text-card .body-text{min-width:0;max-width:100%;font-size:calc(clamp(.82rem,.96cqw,1.02rem)*var(--font-scale));line-height:1.48;overflow-wrap:anywhere;text-wrap:pretty}.quote{min-width:0;margin-top:0;font-family:var(--serif);font-style:italic;font-size:calc(clamp(1rem,1.36cqw,1.62rem)*var(--font-scale));line-height:1.22;color:var(--orange-dark);max-width:100%;overflow-wrap:anywhere;text-wrap:balance}
+    .research-card-title{min-width:0;font-family:var(--sans);font-size:calc(clamp(.88rem,1.02cqw,1.08rem)*var(--font-scale));font-weight:600;line-height:1.24;color:var(--brown);overflow-wrap:anywhere;text-wrap:balance}
+    .readability-bar-card{min-height:0;display:grid;grid-template-rows:minmax(0,1fr) auto;gap:clamp(.35rem,.8cqh,.55rem)}
+    .readability-bar-plot{position:relative;min-height:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(.52rem,.9cqw,.85rem);align-items:end;padding:clamp(.9rem,1.6cqh,1.15rem) 0 clamp(.25rem,.7cqh,.45rem) clamp(1.9rem,2.35cqw,2.35rem);background:repeating-linear-gradient(to top,rgba(95,78,65,.16) 0 1px,transparent 1px 25%)}
+    .readability-bar-plot:before{content:"";position:absolute;left:clamp(1.9rem,2.35cqw,2.35rem);right:0;bottom:clamp(.25rem,.7cqh,.45rem);height:1px;background:rgba(95,78,65,.18)}
+    .readability-y{position:absolute;left:0;top:clamp(.2rem,.5cqh,.35rem);bottom:clamp(.25rem,.7cqh,.45rem);display:flex;flex-direction:column;justify-content:space-between;font-family:var(--mono);font-size:calc(clamp(.5rem,.58cqw,.62rem)*var(--font-scale));line-height:1;color:var(--warm-gray)}
+    .readability-bar{position:relative;z-index:1;min-width:0;height:100%;display:flex;align-items:flex-end;justify-content:center}.readability-bar i{display:block;width:min(100%,clamp(2.1rem,3.5cqw,3.5rem));height:calc(var(--v)*100%);min-height:.45rem;border:1px solid rgba(204,101,60,.46);background:repeating-linear-gradient(-45deg,rgba(230,136,99,.82) 0 2px,rgba(230,136,99,.18) 2px 4px);box-shadow:0 .4rem 1.2rem rgba(204,101,60,.08)}
+    .readability-bar-labels{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(.5rem,.9cqw,.8rem);padding-left:clamp(1.9rem,2.35cqw,2.35rem);font-family:var(--sans);font-size:calc(clamp(.62rem,.68cqw,.72rem)*var(--font-scale));line-height:1.1;color:var(--brown);text-align:center}.readability-bar-labels span{min-width:0;overflow-wrap:anywhere;text-wrap:balance}
+    .readability-donut-card{min-height:0;display:grid;grid-template-columns:minmax(6.8rem,.76fr) minmax(0,1fr);gap:clamp(.85rem,1.45cqw,1.35rem);align-items:center}.readability-donut{position:relative;justify-self:center;width:clamp(7rem,11.5cqw,10.2rem);aspect-ratio:1;border-radius:50%;background:conic-gradient(var(--orange-light) 0 89%,rgba(114,103,91,.18) 89% 100%);box-shadow:0 .4rem 1.2rem rgba(204,101,60,.09)}
+    .readability-donut:before{content:"";position:absolute;inset:0;border-radius:50%;background:repeating-conic-gradient(rgba(254,249,237,.22) 0deg 1deg,transparent 1deg 3deg);mix-blend-mode:screen}.readability-donut:after{content:"";position:absolute;inset:32%;border-radius:50%;background:var(--cream-light)}
+    .readability-donut-copy{min-width:0;display:grid;gap:.3rem;color:var(--brown)}.readability-donut-copy strong{display:block;font-family:var(--serif);font-size:calc(clamp(3rem,5.1cqw,5.25rem)*var(--font-scale));font-weight:400;line-height:1.14;color:var(--orange-medium);white-space:nowrap}.readability-donut-copy span{font-family:var(--sans);font-size:calc(clamp(.92rem,1.05cqw,1.12rem)*var(--font-scale));line-height:1.16}.readability-donut-copy small{font-family:var(--mono);font-size:calc(clamp(.62rem,.72cqw,.76rem)*var(--font-scale));line-height:1.2;color:var(--warm-gray)}
+    .insight-viz{display:grid;gap:clamp(1rem,2.4cqh,1.7rem)}
+    .insight-viz .dither-mount{height:100%;min-height:min(45cqh,26rem)}
+    .viz-card{border-top:1px solid rgba(59,35,14,.2);padding-top:clamp(.9rem,1.8cqh,1.25rem)}
+    .viz-title{font-family:var(--sans);font-size:calc(clamp(1.05rem,1.35cqw,1.45rem)*var(--font-scale));line-height:1.25;color:var(--dark-brown)}
+    .viz-note{font-family:var(--mono);font-size:calc(clamp(.62rem,.72cqw,.75rem)*var(--font-scale));letter-spacing:.08em;text-transform:uppercase;color:var(--warm-gray);margin-top:.28rem}
+    .rank-list{display:grid;gap:clamp(.65rem,1.45cqh,1rem);margin-top:clamp(.9rem,1.8cqh,1.2rem)}
+    .rank-row{display:grid;grid-template-columns:clamp(4.2rem,5.2cqw,5.4rem) minmax(0,1fr) clamp(4.2rem,5cqw,5rem);gap:clamp(.7rem,1.2cqw,1rem);align-items:center;font-family:var(--sans);color:var(--brown)}
+    .rank-value{font-family:var(--serif);font-size:calc(clamp(1.55rem,2.45cqw,2.8rem)*var(--font-scale));line-height:.9;color:var(--dark-brown)}
+    .rank-track{height:clamp(.65rem,1.2cqh,.9rem);background:rgba(114,103,91,.13);border-radius:999px;overflow:hidden}
+    .rank-fill{display:block;height:100%;width:calc(var(--v)*1%);background:var(--yellow-light);border-radius:999px}
+    .rank-row:first-child .rank-fill{background:var(--orange-light)}
+    .rank-label{font-size:calc(clamp(.8rem,.95cqw,1rem)*var(--font-scale));line-height:1.2}
+    .structure-card{display:grid;grid-template-columns:minmax(9rem,.72fr) minmax(0,1fr);gap:clamp(1rem,2cqw,1.6rem);align-items:center}
+    .structure-stat{display:grid;gap:.35rem}
+    .structure-stat strong{font-family:var(--serif);font-size:calc(clamp(3.8rem,7cqw,7rem)*var(--font-scale));line-height:.82;color:var(--dark-brown)}
+    .structure-stat span{font-family:var(--sans);font-size:calc(clamp(.95rem,1.2cqw,1.2rem)*var(--font-scale));line-height:1.28;color:var(--brown)}
+    .split-bar{height:clamp(2rem,4.2cqh,3.2rem);display:flex;border-radius:999px;overflow:hidden;background:rgba(114,103,91,.13)}
+    .split-bar i:first-child{width:89%;background:var(--orange-light)}.split-bar i:last-child{width:11%;background:rgba(114,103,91,.18)}
+    .split-labels{display:flex;justify-content:space-between;margin-top:.55rem;font-family:var(--mono);font-size:calc(clamp(.62rem,.74cqw,.78rem)*var(--font-scale));color:var(--brown)}
+    .viz-principles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.55rem;margin-top:clamp(.85rem,1.5cqh,1.1rem)}
+    .viz-principles span{min-width:0;max-width:100%;border:1px solid rgba(59,35,14,.14);border-radius:999px;padding:.45rem .62rem;text-align:center;font-family:var(--sans);font-size:calc(clamp(.72rem,.82cqw,.86rem)*var(--font-scale));line-height:1.1;color:var(--brown);overflow-wrap:anywhere;text-wrap:balance}
+    .section-divider{align-items:center;justify-content:center;text-align:center;padding:var(--slide-pad-top) var(--slide-pad-x) var(--slide-safe-bottom)}
+    .divider-num{font-family:var(--serif);font-size:clamp(7rem,16cqw,17rem);line-height:.7;color:rgba(254,249,237,.45)}.divider-title{font-family:var(--sans);font-size:calc(clamp(2rem,4.1cqw,4.8rem)*var(--font-scale));line-height:1.08;max-width:none;color:var(--cream-light);white-space:nowrap}
+    .legacy-answer-slide{background:var(--yellow-lightest)}.legacy-answer-slide.content-slide{padding:clamp(2.2rem,4.2vh,3rem) var(--slide-pad-x) clamp(2.2rem,4vh,3.1rem)}
+    .legacy-answer-layout{height:100%;min-height:0;display:flex;flex-direction:column;gap:clamp(1rem,2.4cqh,1.7rem);padding-top:clamp(1.7rem,3.8cqh,2.8rem)}
+    .legacy-answer-title{font-family:var(--sans);font-size:calc(clamp(1.75rem,2.95cqw,3.45rem)*var(--font-scale));line-height:1.06;color:var(--brown);white-space:normal;overflow-wrap:anywhere;text-wrap:balance}
+    .legacy-answer-grid{flex:1 1 auto;min-height:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(1.6rem,5cqw,7rem);align-items:start}
+    .legacy-answer-item{min-width:0;min-height:0;display:grid;grid-template-rows:auto minmax(0,1fr);gap:clamp(.8rem,1.6cqh,1.15rem);justify-items:center}
+    .legacy-answer-label{width:100%;min-width:0;display:grid;grid-template-columns:minmax(2rem,1fr) auto minmax(2rem,1fr);gap:clamp(.75rem,1.3cqw,1rem);align-items:center;font-family:var(--sans);font-size:calc(clamp(.96rem,1.25cqw,1.35rem)*var(--font-scale));line-height:1;color:var(--brown);white-space:nowrap}
+    .legacy-answer-label:before,.legacy-answer-label:after{content:"";height:1px;background:rgba(95,78,65,.22)}
+    .legacy-answer-phone{display:block;align-self:start;justify-self:center;width:100%;max-width:clamp(10.8rem,19.2cqw,17.1rem);height:min(65cqh,33rem);object-fit:contain;object-position:top center;filter:drop-shadow(0 .8rem 1.35rem rgba(59,35,14,.11))}
+    .split-layout{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:4cqw;align-items:center}.split-copy{display:flex;flex-direction:column;gap:1.25rem}
+    .feature-list{display:grid;gap:.7rem;counter-reset:item}.feature-list p{font-family:var(--sans);font-size:calc(clamp(.95rem,1.15cqw,1.2rem)*var(--font-scale));line-height:1.45;color:var(--brown)}
+    .feature-list p:before{counter-increment:item;content:counter(item) ". ";color:var(--orange-dark)}
+    .demo-frame{height:clamp(21rem,57cqh,33rem);overflow:hidden;border:1px solid rgba(59,35,14,.15);border-radius:5px;background:var(--cream)}
+    .demo-frame img{width:100%;height:100%;object-fit:contain}.freedom-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(1rem,2.5cqw,2.5rem);align-items:start}
+    .freedom-card{display:flex;flex-direction:column;gap:.8rem;min-width:0;overflow:hidden}.freedom-card h3{font-family:var(--sans);font-size:calc(clamp(1.15rem,1.55cqw,1.7rem)*var(--font-scale));font-weight:600;overflow-wrap:anywhere;text-wrap:balance}
+    .freedom-card p{min-height:4.2rem}.freedom-card img{display:block;width:100%;height:auto;object-fit:initial;border-radius:5px;background:transparent}
+    .freedom-axis{display:grid;grid-template-columns:auto 1fr auto;gap:1rem;align-items:center;margin-top:1.2rem;font-family:var(--sans);color:var(--brown)}.axis-line{height:1px;background:var(--orange-light);position:relative}.axis-line:after{content:"";position:absolute;right:0;top:-4px;width:8px;height:8px;border-right:1px solid var(--orange-light);border-top:1px solid var(--orange-light);transform:rotate(45deg)}
+    .showcase{display:grid;grid-template-columns:minmax(0,.32fr) minmax(0,.68fr);gap:2cqw;align-items:center}.showcase-title{font-family:var(--sans);font-size:calc(clamp(1.2rem,1.75cqw,2.05rem)*var(--font-scale));line-height:1.05;white-space:normal;overflow-wrap:anywhere;text-wrap:balance}
+    .screen-strip{min-width:0;display:flex;gap:clamp(.65rem,1.5cqw,1.5rem);align-items:center;justify-content:flex-end}.screen-strip img{height:clamp(20rem,60cqh,35rem);width:auto;object-fit:contain;filter:drop-shadow(0 .7rem 1.4rem rgba(59,35,14,.1))}
+    .screen-strip.four img{height:clamp(16rem,48cqh,28rem)}.section-label{font-family:var(--mono);font-size:.7rem;color:var(--brown);margin-top:1rem}
+    .intent-slide{background:var(--yellow-lightest)}
+    .intent-flow{height:100%;display:flex;flex-direction:column;padding-top:clamp(4.5rem,8cqh,5.8rem);gap:clamp(1rem,2.4cqh,1.7rem)}
+    .intent-title{font-family:var(--sans);font-size:calc(clamp(2rem,3.65cqw,4.25rem)*var(--font-scale));line-height:1;color:var(--brown);white-space:nowrap}
+    .phone-stages{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(1.1rem,2.3cqw,2.2rem);align-items:start;min-height:0}
+    .phone-stage{display:flex;flex-direction:column;gap:clamp(.65rem,1.4cqh,1rem);min-width:0}
+    .stage-label{display:grid;grid-template-columns:auto minmax(2rem,1fr);align-items:center;gap:clamp(.7rem,1.2cqw,1.2rem);font-family:var(--sans);font-size:calc(clamp(.98rem,1.35cqw,1.55rem)*var(--font-scale));line-height:1;color:var(--brown)}
+    .stage-label:after{content:"";height:1px;background:rgba(95,78,65,.24);position:relative}
+    .stage-label.has-arrow:after{background:linear-gradient(to right,rgba(95,78,65,.24),rgba(95,78,65,.24))}
+    .stage-phone{display:block;width:100%;height:min(60cqh,33rem);object-fit:contain;object-position:top center;filter:drop-shadow(0 .7rem 1.2rem rgba(59,35,14,.1))}
+    iframe.stage-phone{width:auto;max-width:100%;aspect-ratio:412/917;margin-inline:auto}
+    .interaction-flow .stage-phone{height:min(62cqh,33.5rem)}
+    .process-slide{background:var(--yellow-lightest)}
+    .process-slide.content-slide{padding:0}
+    .process-slide .page-index,.process-slide .slide-logo{display:none}
+    .process-layout{position:relative;width:100%;height:100%;overflow:hidden;background:var(--yellow-lightest);font-family:var(--sans);color:var(--dark-brown)}
+    .process-flow-board{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;background:linear-gradient(180deg,#fff0d0 0%,#ffefcf 100%)}
+    .process-flow-title{position:absolute;left:50%;top:6.3%;transform:translateX(-50%);font-size:calc(clamp(1.4rem,2.05cqw,2rem)*var(--font-scale));line-height:1;color:#4b4039;white-space:nowrap}
+    .process-flow-subtitle{position:absolute;left:50%;bottom:5.8%;transform:translateX(-50%);font-size:calc(clamp(1.4rem,2.15cqw,2.1rem)*var(--font-scale));line-height:1;color:#4b4039;white-space:nowrap}
+    .process-axis-label{position:absolute;transform:translate(-50%,-50%);font-size:calc(clamp(.825rem,.945cqw,1.025rem)*var(--font-scale));line-height:1;color:#594e44;white-space:nowrap}
+    .process-avatar{position:absolute;transform:translate(-50%,-50%);width:clamp(2.6rem,4.25cqw,4.1rem);aspect-ratio:1;border-radius:50%;overflow:hidden;background:rgba(255,255,255,.45);box-shadow:0 .25rem .7rem rgba(59,35,14,.08)}
+    .process-avatar img{display:block;width:100%;height:100%;object-fit:cover}.process-avatar.is-blur{background:transparent;box-shadow:none}.process-avatar.is-blur img{object-fit:contain;border-radius:0}
+    .process-card{position:absolute;border-radius:clamp(1.2rem,2.1cqw,2.1rem);display:flex;align-items:center;justify-content:center;overflow:hidden;padding:clamp(.42rem,.8cqw,.8rem);color:#4e453d;font-size:calc(clamp(.745rem,.885cqw,.925rem)*var(--font-scale));line-height:1.2;text-align:center}
+    .process-card.noise{background:rgba(209,207,201,.42);border:1px dashed rgba(95,78,65,.24);display:block}
+    .process-card.harness{background:rgba(255,230,178,.38)}
+    .process-card.output{background:#ffdf94;border:1px solid rgba(184,134,37,.33);flex-direction:column;gap:clamp(.32rem,.62cqw,.58rem)}
+    .process-chip{position:absolute;display:flex;align-items:center;justify-content:center;min-width:0;max-width:100%;min-height:clamp(.95rem,1.75cqh,1.4rem);height:auto;padding:clamp(.12rem,.28cqh,.22rem) clamp(.34rem,.66cqw,.62rem);border-radius:clamp(.25rem,.45cqw,.45rem);background:rgba(255,255,255,.88);box-shadow:0 .12rem .3rem rgba(59,35,14,.04);font-size:calc(clamp(.56rem,.72cqw,.8rem)*var(--font-scale));line-height:1.1;white-space:normal;overflow-wrap:anywhere;text-wrap:balance;color:#5a5048}
+    .process-card.noise .process-chip{max-width:38%}
+    .process-chip.static{position:static}.process-chip-group{display:flex;align-items:center;justify-content:center;gap:clamp(.22rem,.55cqw,.5rem);margin-left:0;max-width:100%;min-width:0;flex-wrap:wrap}
+    .process-card-label{display:flex;align-items:center;justify-content:center;min-width:0;max-width:100%;white-space:normal;text-wrap:balance}.process-card-label.small{font-size:calc(clamp(.685rem,.825cqw,.865rem)*var(--font-scale))}
+    .process-agent-bar{position:absolute;left:8.3%;right:8.3%;top:44.4%;height:8.8%;border-radius:clamp(1rem,1.7cqw,1.7rem);background:#756238;color:#fff8ea;display:flex;align-items:center;justify-content:center;font-size:calc(clamp(1.15rem,1.8cqw,1.8rem)*var(--font-scale));line-height:1;letter-spacing:.01em}
+    .process-puzzle{position:absolute;transform:translate(-50%,-50%);width:clamp(3.6rem,5.6cqw,5.4rem);aspect-ratio:1;border-radius:50%;overflow:hidden;box-shadow:0 .25rem .8rem rgba(59,35,14,.09)}
+    .process-puzzle img{display:block;width:100%;height:100%;object-fit:cover}
+    .process-connectors{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}.process-connectors path,.process-connectors line{fill:none;stroke:rgba(95,78,65,.55);stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}.process-connectors .dashed{stroke-dasharray:6 6}.process-connectors .soft{stroke:rgba(95,78,65,.34)}
+    @media(max-height:700px){.process-chip{height:clamp(1rem,2cqh,1.35rem)}.process-flow-title,.process-flow-subtitle{font-size:calc(clamp(1.25rem,1.9cqw,1.75rem)*var(--font-scale))}}
+    .process-map{position:relative;width:100%;height:100%;min-height:0;background:var(--yellow-lightest);overflow:hidden}
+    .process-map:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(254,249,237,.26),rgba(253,224,149,.12));opacity:.8}
+    .map-heading{position:absolute;top:clamp(.1rem,.5cqh,.35rem);font-family:var(--sans);font-size:calc(clamp(2.05rem,3.25cqw,3.7rem)*var(--font-scale));line-height:1;color:var(--dark-brown);white-space:nowrap}
+    .map-heading.left{left:0}.map-heading.right{right:0}
+    .axis-label{position:absolute;font-family:var(--sans);font-size:calc(clamp(1.35rem,2.1cqw,2.25rem)*var(--font-scale));line-height:1.1;color:var(--dark-brown)}
+    .axis-label.v{writing-mode:vertical-rl;text-orientation:mixed;letter-spacing:.05em}.axis-label.left-top{left:0;top:20%}.axis-label.left-mid{left:0;top:52%}.axis-label.left-bottom{left:0;bottom:1%}.axis-label.right-top{right:2%;top:20%}.axis-label.right-mid{right:0;top:52%}.axis-label.right-bottom{right:2%;bottom:1%}
+    .flow-lines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}.flow-lines path,.flow-lines line{fill:none;stroke:rgba(95,78,65,.58);stroke-width:1.55;vector-effect:non-scaling-stroke}.flow-lines .axis{stroke:rgba(95,78,65,.58);stroke-width:1.35}.flow-lines .faint{stroke:rgba(95,78,65,.36);stroke-dasharray:5 8}.flow-lines .hot{stroke:rgba(95,39,17,.72);stroke-width:1.9}.process-map[data-active="recommend"] .recommend-line,.process-map[data-active="associate"] .associate-line,.process-map[data-active="recognize"] .recognize-line,.process-map[data-active="context"] .context-line,.process-map[data-active="optimize"] .optimize-line{stroke:var(--orange-dark);stroke-width:2.35;stroke-dasharray:none}
+    .flow-node{position:absolute;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;border:1.5px solid rgba(95,78,65,.56);background:transparent;font-family:var(--sans);font-size:calc(clamp(1rem,1.25cqw,1.28rem)*var(--font-scale));line-height:1.15;color:var(--dark-brown);text-align:center;cursor:pointer;transition:background .22s,border-color .22s,transform .22s,box-shadow .22s}
+    .flow-node:hover,.flow-node:focus-visible,.flow-node.is-selected{background:rgba(254,249,237,.48);border-color:var(--orange-dark);box-shadow:0 .6rem 1.2rem rgba(59,35,14,.08);outline:none}
+    .flow-node.decision{width:clamp(6.2rem,8.8cqw,8.8rem);height:clamp(4.8rem,9.5cqh,6.6rem);border:0;background:transparent;padding:clamp(.8rem,1.3cqh,1rem);overflow:visible}
+    .flow-node.decision:before{content:"";position:absolute;inset:clamp(.25rem,.7cqh,.45rem) clamp(.7rem,1.05cqw,.95rem);border:1.5px solid rgba(95,78,65,.56);background:rgba(255,238,204,.22);transform:rotate(45deg);z-index:-1;transition:border-color .22s,background .22s,box-shadow .22s}
+    .flow-node.decision:hover:before,.flow-node.decision:focus-visible:before,.flow-node.decision.is-selected:before{border-color:var(--orange-dark);background:rgba(254,249,237,.46);box-shadow:0 .6rem 1.2rem rgba(59,35,14,.08)}
+    .flow-node.user{width:clamp(3.9rem,5.4cqw,5rem);height:clamp(3.9rem,5.4cqw,5rem);border-radius:50%;border:0;background:var(--yellow-light);font-size:calc(clamp(.95rem,1.15cqw,1.2rem)*var(--font-scale))}
+    .flow-node.panel{width:clamp(13rem,17cqw,18rem);height:clamp(18rem,48cqh,27rem);border-style:dashed;border-radius:clamp(1.8rem,3cqw,2.6rem);background:rgba(254,249,237,.14);display:flex;flex-direction:column;gap:clamp(1.1rem,2.7cqh,1.7rem);font-size:calc(clamp(1rem,1.22cqw,1.25rem)*var(--font-scale));line-height:1.4}
+    .flow-node.panel span{display:block}
+    .flow-node.panel:hover,.flow-node.panel:focus-visible,.flow-node.panel.is-selected{background:rgba(254,249,237,.28)}
+    .flow-note{position:absolute;transform:translate(-50%,-50%);font-family:var(--sans);font-size:calc(clamp(.9rem,1.05cqw,1.08rem)*var(--font-scale));line-height:1;color:var(--brown);white-space:nowrap}
+    .flow-detail{display:none}
+    .flow-detail span{display:none}.flow-detail p{margin:0}
+    .handoff-flow{gap:clamp(.85rem,1.7cqh,1.25rem)}
+    .before-after-rail{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(1.1rem,2.3cqw,2.2rem);align-items:center}
+    .rail-segment{display:grid;grid-template-columns:minmax(2rem,1fr) auto minmax(2rem,1fr);align-items:center;gap:clamp(.75rem,1.3cqw,1.15rem);font-family:var(--sans);font-size:calc(clamp(1rem,1.35cqw,1.55rem)*var(--font-scale));line-height:1;color:var(--brown)}
+    .rail-segment:before,.rail-segment:after{content:"";height:1px;background:rgba(95,78,65,.24)}
+    .rail-segment.before{grid-column:1 / span 1}.rail-segment.after{grid-column:2 / span 3}
+    .context-pair{height:100%;display:flex;flex-direction:column;gap:clamp(1.2rem,3cqh,2rem);padding-top:clamp(4.6rem,8.5cqh,6rem)}
+    .context-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(2rem,6cqw,6rem);align-items:start;justify-items:center;min-height:0}
+    .context-card{display:flex;flex-direction:column;align-items:center;gap:clamp(.8rem,1.7cqh,1.2rem)}
+    .context-label{max-width:100%;font-family:var(--sans);font-size:calc(clamp(1.05rem,1.5cqw,1.7rem)*var(--font-scale));line-height:1.15;color:var(--brown);overflow-wrap:anywhere;text-wrap:balance;text-align:center}
+    .context-card img{height:min(62cqh,35rem);width:auto;max-width:100%;object-fit:contain;filter:drop-shadow(0 .8rem 1.4rem rgba(59,35,14,.11))}
+    .asset-only{--asset-gap:12px;--asset-split-gap-extra:6px;--asset-edge:16px;padding:0;background:linear-gradient(to right,var(--orange-lightest) 0 50%,#1B1B1B 50% 100%)}
+    .asset-only .page-index,.asset-only .slide-logo{display:none}
+    .asset-gallery{width:100%;height:100%;display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:var(--asset-gap);padding:0 var(--asset-edge);align-items:stretch;overflow:hidden}
+    .asset-strip{min-width:0;min-height:0;height:100%;overflow:hidden;background:var(--orange-lightest)}
+    .asset-strip:nth-child(4){margin-right:var(--asset-split-gap-extra)}
+    .asset-strip:nth-child(5){margin-left:var(--asset-split-gap-extra)}
+    .asset-strip.dark-strip{background:#1B1B1B}
+    .asset-strip-track{display:flex;flex-direction:column;gap:var(--asset-gap);width:100%;will-change:transform;animation:asset-column-loop var(--strip-speed,54s) linear infinite}
+    .asset-strip:nth-child(2n) .asset-strip-track{--strip-speed:62s}
+    .asset-strip:nth-child(3n) .asset-strip-track{--strip-speed:58s}
+    .asset-strip img{display:block;width:100%;height:auto;min-width:0;flex:0 0 auto}
+    @keyframes asset-column-loop{to{transform:translateY(calc(-1 * var(--loop-distance, 100vh)))}}
+    .principle-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.2rem}.principle{padding:1.4rem;border-top:1px solid rgba(59,35,14,.25);display:flex;flex-direction:column;gap:1rem}
+    .principle-num{font-family:var(--serif);font-size:4rem;line-height:.8;color:var(--orange-medium)}.principle h3{font-family:var(--sans);font-size:1.45rem}.principle p{font-family:var(--sans);font-size:1rem;line-height:1.5;color:var(--brown)}
+    .impact-slide .slide-shell{gap:clamp(.8rem,1.7cqh,1.25rem)}
+    .impact-slide .title-zone{flex:0 0 clamp(5.2rem,14cqh,7rem);padding-top:clamp(2.2rem,4.4cqh,3.1rem);justify-content:flex-end}
+    .impact-tabs{display:flex;align-items:baseline;gap:clamp(1rem,3cqw,3.6rem);min-width:0;max-width:100%;font-family:var(--sans);line-height:1;white-space:normal;flex-wrap:wrap}
+    .impact-tab{appearance:none;border:0;background:transparent;padding:0;margin:0;cursor:pointer;font:inherit;font-size:calc(clamp(2rem,3.2cqw,3.7rem)*var(--font-scale));font-weight:600;line-height:1;color:rgba(95,78,65,.34);transition:color .22s cubic-bezier(.76,0,.24,1),opacity .22s cubic-bezier(.76,0,.24,1)}
+    .impact-tab:hover{color:rgba(59,35,14,.64)}
+    .impact-tab.is-active{color:var(--ink)}
+    .impact-tab:focus-visible{outline:2px solid rgba(204,101,60,.55);outline-offset:.35rem;border-radius:4px}
+    .impact-panels{height:100%;min-height:0;position:relative}
+    .impact-panel{position:absolute;inset:0;opacity:0;pointer-events:none;transform:translateY(.45rem);transition:opacity .28s cubic-bezier(.76,0,.24,1),transform .28s cubic-bezier(.76,0,.24,1)}
+    .impact-panel.is-active{opacity:1;pointer-events:auto;transform:none}
+    .impact-board{height:100%;min-height:0;display:grid;grid-template-rows:auto minmax(0,1fr);gap:clamp(1.4rem,2.8cqh,2rem)}
+    .overall-band{display:grid;gap:clamp(.35rem,.8cqh,.55rem)}
+    .overall-title{font-family:var(--sans);font-size:calc(clamp(1.25rem,1.75cqw,2rem)*var(--font-scale));font-weight:700;line-height:1;color:var(--ink)}
+    .overall-rule{height:1px;background:rgba(204,101,60,.22);position:relative}
+    .overall-rule:after{content:"";position:absolute;right:0;top:50%;width:.58rem;height:.58rem;border-top:1px solid rgba(204,101,60,.32);border-right:1px solid rgba(204,101,60,.32);transform:translateY(-50%) rotate(45deg)}
+    .overall-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(1rem,3cqw,3rem);font-family:var(--sans);color:var(--warm-gray)}
+    .overall-metrics p{min-width:0;font-size:calc(clamp(.84rem,1.04cqw,1.1rem)*var(--font-scale));line-height:1.2;white-space:normal;overflow-wrap:anywhere;text-wrap:balance}
+    .overall-metrics strong{font-weight:700;color:var(--ink)}
+    .impact-cards{min-height:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(1rem,1.5cqw,1.6rem)}
+    .impact-card{min-width:0;min-height:0;background:rgba(239,226,209,.42);border-radius:8px;padding:clamp(1.05rem,2cqh,1.55rem) clamp(1.05rem,1.6cqw,1.45rem) clamp(.7rem,1.3cqh,1rem);display:grid;grid-template-rows:clamp(7.4rem,15.5cqh,8.5rem) minmax(0,1fr);gap:clamp(.8rem,1.7cqh,1.2rem);overflow:hidden}
+    .impact-card h3{font-family:var(--sans);font-size:calc(clamp(1.35rem,1.9cqw,2.15rem)*var(--font-scale));font-weight:700;line-height:1;color:var(--ink)}
+    .card-rule{height:1px;background:rgba(204,101,60,.2);margin-top:clamp(.45rem,.9cqh,.65rem);position:relative}
+    .card-rule:after{content:"";position:absolute;right:0;top:50%;width:.48rem;height:.48rem;border-top:1px solid rgba(204,101,60,.32);border-right:1px solid rgba(204,101,60,.32);transform:translateY(-50%) rotate(45deg)}
+    .impact-card p{min-width:0;font-family:var(--sans);font-size:calc(clamp(.82rem,1cqw,1.03rem)*var(--font-scale));line-height:1.25;color:var(--warm-gray);margin-top:clamp(.45rem,.9cqh,.65rem);white-space:normal;overflow-wrap:anywhere;text-wrap:balance}
+    .impact-card p strong{font-weight:700;color:var(--ink)}
+    .card-screens{min-height:0;overflow:hidden;display:flex;align-items:flex-start;justify-content:center;gap:clamp(.85rem,1.5cqw,1.35rem)}
+    .card-screens img{display:block;height:min(40cqh,24.5rem);max-height:100%;max-width:48%;width:auto;object-fit:contain}
+    .card-screens img.tall{height:min(40cqh,24.5rem)}
+    .card-screens img.slim{max-width:41%}
+    .bc-board{height:100%;min-height:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(1.25rem,2.2cqw,2rem)}
+    .bc-card{--chart-accent:#358FF3;--chart-muted:#D8D8D8;min-width:0;min-height:0;background:rgba(239,226,209,.42);border-radius:8px;padding:clamp(1.35rem,2.5cqh,1.9rem) clamp(1.45rem,2.15cqw,2.2rem);display:grid;grid-template-columns:minmax(12rem,.82fr) minmax(14rem,1.08fr);grid-template-rows:auto minmax(0,1fr);column-gap:clamp(1.4rem,2.6cqw,2.6rem);row-gap:clamp(.9rem,1.7cqh,1.25rem);overflow:hidden}
+    .bc-card-title{grid-column:1/-1;font-family:var(--sans);font-size:calc(clamp(1.55rem,2.35cqw,2.65rem)*var(--font-scale));font-weight:700;line-height:1;color:var(--ink)}
+    .bc-phone{grid-row:2;align-self:start;justify-self:center;height:min(61cqh,37.5rem);max-height:100%;max-width:100%;width:auto;object-fit:contain}
+    .bc-copy{grid-row:2;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:clamp(1.35rem,3.35cqh,2.35rem);padding-top:clamp(.25rem,.8cqh,.55rem);font-family:var(--sans);color:var(--warm-gray)}
+    .bc-stat{display:grid;gap:clamp(.55rem,1.15cqh,.85rem);width:min(100%,18rem)}
+    .bc-stat-title{display:flex;align-items:baseline;gap:.55rem;min-width:0;max-width:100%;font-size:calc(clamp(1rem,1.35cqw,1.45rem)*var(--font-scale));line-height:1.05;color:var(--ink);white-space:normal;flex-wrap:wrap;overflow-wrap:anywhere;text-wrap:balance}
+    .bc-stat-title strong{font-size:calc(clamp(1.55rem,2.05cqw,2.35rem)*var(--font-scale));font-weight:700;color:var(--ink)}
+    .bc-compare{width:min(100%,18rem);height:clamp(3rem,6.8cqh,3.6rem)}
+    .bc-genui{display:grid;gap:clamp(.65rem,1.35cqh,.95rem);align-items:start;justify-items:start}
+    .bc-genui-copy{display:grid;gap:.28rem;color:var(--ink)}
+    .bc-genui-copy strong{font-size:calc(clamp(1.45rem,2cqw,2.35rem)*var(--font-scale));font-weight:700;line-height:1}
+    .bc-genui-copy span{font-size:calc(clamp(1rem,1.35cqw,1.5rem)*var(--font-scale));line-height:1.15;color:var(--warm-gray);white-space:normal;overflow-wrap:anywhere;text-wrap:balance}
+    .bc-pie-mount{width:clamp(3.8rem,5.4cqw,5.25rem);aspect-ratio:1}
+    .bc-card-b .bc-copy{gap:clamp(1.1rem,2.75cqh,1.75rem)}
+    @media(max-height:760px){
+      .bc-card{padding:clamp(.9rem,1.9cqh,1.15rem) clamp(1rem,1.8cqw,1.35rem);column-gap:clamp(.8rem,1.5cqw,1.2rem);row-gap:clamp(.45rem,1cqh,.7rem)}
+      .bc-card-title{font-size:calc(clamp(1.3rem,2cqw,1.8rem)*var(--font-scale))}
+      .bc-phone{height:min(55cqh,31rem)}
+      .bc-copy,.bc-card-b .bc-copy{gap:clamp(.6rem,1.4cqh,.9rem);padding-top:0}
+      .bc-stat{gap:clamp(.32rem,.7cqh,.5rem)}
+      .bc-stat-title strong,.bc-genui-copy strong{font-size:calc(clamp(1.12rem,1.55cqw,1.6rem)*var(--font-scale))}
+      .bc-stat-title,.bc-genui-copy span{font-size:calc(clamp(.82rem,1.05cqw,1.05rem)*var(--font-scale))}
+      .bc-pie-mount{width:clamp(3rem,4.5cqw,4.1rem)}
+    }
+    @media(max-height:680px){
+      .impact-slide .slide-shell{gap:clamp(.5rem,1.2cqh,.8rem)}
+      .impact-slide .title-zone{flex-basis:clamp(4.2rem,11.5cqh,5rem);padding-top:clamp(1.35rem,3.2cqh,1.8rem)}
+      .impact-tab{font-size:calc(clamp(1.6rem,2.7cqw,2.1rem)*var(--font-scale))}
+      .bc-board{gap:clamp(.65rem,1.3cqw,1rem)}
+      .bc-card{grid-template-columns:minmax(7rem,.78fr) minmax(8.5rem,1.12fr);padding:clamp(.62rem,1.25cqh,.78rem) clamp(.72rem,1.4cqw,1rem);column-gap:clamp(.55rem,1.05cqw,.85rem);row-gap:clamp(.28rem,.7cqh,.42rem)}
+      .bc-card-title{font-size:calc(clamp(1rem,1.55cqw,1.25rem)*var(--font-scale))}
+      .bc-phone{height:min(43cqh,22rem)}
+      .bc-copy,.bc-card-b .bc-copy{gap:clamp(.34rem,.8cqh,.5rem)}
+      .bc-stat{gap:clamp(.18rem,.45cqh,.28rem)}
+      .bc-stat-title{gap:.38rem;font-size:calc(clamp(.72rem,.92cqw,.86rem)*var(--font-scale));line-height:1}
+      .bc-stat-title strong,.bc-genui-copy strong{font-size:calc(clamp(.95rem,1.25cqw,1.2rem)*var(--font-scale))}
+      .bc-compare{height:clamp(2rem,4.4cqh,2.45rem)}
+      .bc-genui{gap:clamp(.28rem,.65cqh,.42rem)}
+      .bc-genui-copy{gap:.16rem}
+      .bc-genui-copy span{font-size:calc(clamp(.72rem,.9cqw,.84rem)*var(--font-scale));line-height:1.05}
+      .bc-pie-mount{width:clamp(2.35rem,3.7cqw,3.05rem)}
+    }
+    .lifecycle{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1rem}.life-card{background:rgba(254,249,237,.7);border:1px solid rgba(59,35,14,.12);border-radius:5px;padding:1.2rem;display:flex;flex-direction:column;gap:1rem;min-height:17rem}
+    .life-card h3{font-family:var(--sans);font-size:1.35rem}.life-value{font-family:var(--serif);font-size:3rem;color:var(--orange-medium)}.life-bar{height:.75rem;background:rgba(59,35,14,.1);border-radius:4px;overflow:hidden}.life-bar i{display:block;height:100%;background:var(--orange-medium)}
+    .life-card p{font-family:var(--sans);font-size:.95rem;line-height:1.45;color:var(--brown)}
+
+    .stage-controls{position:absolute;left:0;right:0;bottom:0;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:clamp(.9rem,1.6vh,1.3rem) clamp(3rem,5vw,5rem);color:var(--control-fg);pointer-events:auto;z-index:30;transition:opacity .24s cubic-bezier(.76,0,.24,1),transform .24s cubic-bezier(.76,0,.24,1)}.stage-controls>*{pointer-events:auto}
+    .controls-left{justify-self:start;display:flex;align-items:center;gap:.8rem}.controls-center{justify-self:center}.controls-right{justify-self:end;display:flex;align-items:center;gap:.8rem}.font-controls,.nav-bar{display:flex;align-items:center;gap:.8rem}
+    .btn{appearance:none;background:transparent;color:var(--control-fg);font-family:var(--mono);font-size:.86rem;cursor:pointer;border:1px solid var(--control-border);border-radius:10px;width:2.6rem;height:2.6rem;padding:0;display:flex;align-items:center;justify-content:center;transition:.2s}.btn:hover,.present-btn:hover{background:var(--control-hover-bg);border-color:var(--control-border-hover)}.btn:disabled{opacity:.3}
+    .btn svg{width:1.1rem;height:1.1rem}.slide-counter{font-family:var(--mono);font-size:.86rem;min-width:4.2rem;text-align:center}
+    .present-btn,.lang-btn{appearance:none;background:transparent;color:var(--control-fg);font-family:var(--mono);font-size:.72rem;letter-spacing:.13em;text-transform:uppercase;cursor:pointer;border:1px solid var(--control-border);border-radius:10px;padding:0 1rem;height:2.6rem;display:flex;align-items:center;gap:.5rem}.lang-btn{min-width:3.8rem;justify-content:center;padding:0 .85rem}.lang-btn.is-active{background:var(--control-hover-bg);border-color:var(--control-border-hover)}
+    .present-btn svg{width:1rem;height:1rem}body.is-presenting .stage-controls{display:none}
+    body.asset-only-active .stage-controls{display:none}
+    .sidebar-overlay{position:absolute;inset:0;background:rgba(46,77,77,.28);opacity:0;pointer-events:none;transition:opacity .35s;z-index:40}.sidebar-overlay.open{opacity:1;pointer-events:auto}
+    .sidebar{position:absolute;top:0;left:0;bottom:0;width:clamp(13rem,22vw,17rem);background:rgba(255,255,255,.58);backdrop-filter:blur(22px) saturate(140%);border-right:1px solid rgba(255,255,255,.5);transform:translateX(-100%);transition:transform .4s cubic-bezier(.6,0,.2,1);z-index:41;display:flex;flex-direction:column;box-shadow:6px 0 28px rgba(46,77,77,.16)}.sidebar.open{transform:none}
+    .sidebar-head{font-family:var(--mono);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dark-brown);padding:1.4rem 1.4rem .9rem}.sidebar-list{flex:1;overflow-y:auto;padding:0 1rem 1.4rem;display:flex;flex-direction:column;gap:.9rem}
+    .thumb{display:flex;flex-direction:column;gap:.4rem;cursor:grab;background:none;padding:0;text-align:left;border:none}.thumb:active{cursor:grabbing}.thumb.dragging{opacity:.35}.thumb.over .thumb-frame{border-color:var(--dark-brown)}.thumb.hide{display:none}
+    .thumb-tools{position:absolute;top:.35rem;right:.35rem;display:flex;gap:.3rem;opacity:0;transition:.2s;z-index:3}.thumb:hover .thumb-tools{opacity:1}.thumb-tool{width:1.5rem;height:1.5rem;border:none;border-radius:5px;background:rgba(255,255,255,.88);color:var(--dark-brown);display:flex;align-items:center;justify-content:center;cursor:pointer}.thumb-tool svg{width:.9rem;height:.9rem}.thumb.hide{opacity:.42}
+    .thumb-frame{position:relative;width:100%;aspect-ratio:16/9;border-radius:5px;overflow:hidden;border:1.5px solid rgba(46,77,77,.22)}.thumb.active .thumb-frame{border-color:var(--dark-brown)}.thumb-frame .deck{position:absolute;top:0;left:0;width:1280px;height:720px;transform-origin:top left;pointer-events:none}.thumb-cap{font-family:var(--mono);font-size:.66rem;color:var(--brown)}.thumb.active .thumb-cap{color:var(--dark-brown)}
+    @media(max-width:820px){:root{--slide-pad-x:1.4rem;--slide-safe-bottom:7rem}.project-grid,.distribution,.problem-grid,.research-grid,.split-layout,.feedback-grid{grid-template-columns:1fr}.freedom-grid,.principle-grid,.lifecycle,.principles-grid,.phone-stages,.context-grid{grid-template-columns:1fr}.principle-card:not(:first-child){display:none}.phone-row img:nth-child(n+2),.screen-strip img:nth-child(n+3),.phone-stage:nth-child(n+3),.context-card:nth-child(n+2){display:none}.asset-gallery{grid-template-columns:repeat(4,minmax(0,1fr))}.asset-gallery img:nth-child(n+5){display:none}.page-title{font-size:2.2rem}.slide-cover .cover-title{font-size:clamp(4.5rem,15vw,7rem)}.slide-cover .cover-subtitle{font-size:clamp(1.25rem,4.5vw,2rem);white-space:normal}.slide-cover .cover-content{top:32vh}.cover-footer{grid-template-columns:1fr auto}.cover-footer span:nth-child(2){display:none}.stage-controls{padding-left:1.2rem;padding-right:1.2rem}.font-controls{display:none}.present-btn{width:2.6rem;padding:0}.present-btn span{display:none}}
+    @media(hover:hover) and (pointer:fine){.stage-controls{opacity:0;transform:translateY(.45rem)}.stage-controls:hover,.stage-controls:focus-within,body.controls-hot .stage-controls{opacity:1;transform:none}}
+    @media(prefers-reduced-motion:reduce){.slide,.reveal{transition:opacity .2s!important;transform:none!important;filter:none!important}.asset-strip-track{animation:none!important}.dither-mount.chart-enter{animation:none!important}}
+  </style>
+  <link rel="stylesheet" href="assets/react-islands/mai-dither-charts.v2.css">
 </head>
 <body>
+<div class="stage" id="stage">
+  <div class="stage-area"><div class="stage-card"><div class="deck" id="deck">
+    <section class="slide slide-cover active" data-control="dark" data-motion="fade-blur">
+      <img src="Content/Frame2.webp" alt="" class="cover-bg">
+      <img src="assets/MAI Logo on dark.svg" alt="MAI" class="cover-logo reveal" style="--i:0">
+      <div class="cover-content">
+        <h1 class="cover-title reveal" style="--i:1">Copilot</h1>
+        <p class="cover-subtitle reveal" style="--i:2">AI不完美，但可以被优雅地设计</p>
+      </div>
+      <div class="cover-footer reveal" style="--i:3"><span>Microsoft AI</span><span>Month Day, Year</span><span>Cycle X</span></div>
+    </section>
 
-<div id="gate">
-<form onsubmit="return checkPw()">
-<h3 style="margin-bottom:1.5rem">🔒 Portfolio Access</h3>
-<input type="password" id="pw" placeholder="Enter password" autocomplete="off">
-<div class="err" id="err">密码错误</div>
-<button type="submit">Enter</button>
-</form>
+    <section class="slide content-slide glass-bg" data-control="dark" data-motion="drift-left">
+      <img src="assets/MAI Logo on dark.svg" alt="MAI" class="slide-logo">
+      <div class="slide-shell"><div class="title-zone"><div class="section-tag reveal" style="--i:0">Project introduction</div></div>
+        <div class="content-zone"><div class="project-grid">
+          <div class="project-copy reveal" style="--i:1">
+            <div class="product-name"><img src="assets/CopilotLogoRainbow.svg" alt="" class="copilot-mark">Copilot</div>
+            <p class="body-text">Microsoft Copilot 是微软最重要、增长最快的产品线之一。从 2023 年底发布到 2026 年初，已达到 1.5 亿月活用户，超过 2,000 万付费用户，是北美市场 Top 3 的 AI 产品。</p>
+            <p class="body-text">Copilot 移动端是微软中国最重要的核心业务之一。我在团队中设计 Copilot To B 和 To C 的双端体验。</p>
+          </div>
+          <div class="phone-row reveal" style="--i:2"><img src="Content/home.webp" alt="Consumer Copilot home" class="phone"><img src="Content/ZQ Rest.webp" alt="Enterprise Copilot home" class="phone"></div>
+        </div></div>
+      </div>
+    </section>
+
+    <section class="slide content-slide positioning-slide" data-control="dark" data-motion="depth">
+      <img src="assets/MAI Logo on dark.svg" alt="MAI" class="slide-logo">
+      <div class="slide-shell">
+        <div class="section-tag reveal" style="--i:0">Product positioning</div>
+        <h2 class="positioning-title reveal" style="--i:1">Copilot 产品定位: To C 个人陪伴, To B 效率工具</h2>
+        <div class="positioning-visual reveal" style="--i:2">
+          <img src="Content/Group 2117134657.webp" alt="Copilot product positioning map" class="positioning-map">
+        </div>
+      </div>
+    </section>
+
+    <section class="slide content-slide status-slide" data-control="light" data-motion="rise">
+      <img src="assets/MAI Logo.svg" alt="MAI" class="slide-logo">
+      <div class="slide-shell">
+        <div class="title-zone"><div class="section-tag reveal" style="--i:0">Product reality</div><h2 class="page-title reveal" style="--i:1">产品现状堪忧</h2></div>
+        <div class="content-zone">
+          <div class="status-layout">
+            <div class="complaint-cluster reveal" style="--i:2">
+              <img src="Content/Group 2117134671.webp" alt="User complaints about Copilot" class="complaint-img">
+            </div>
+            <div class="status-pies reveal" style="--i:3">
+              <div class="status-pie-row">
+                <div class="status-pie dither-mount" data-dither-chart="status-retention-pie"></div>
+                <div class="status-pie-copy"><strong>57.8%</strong><span>新用户留存率</span></div>
+              </div>
+              <div class="status-pie-row">
+                <div class="status-pie dither-mount" data-dither-chart="status-paid-active"></div>
+                <div class="status-pie-copy"><strong>48.7%</strong><span>付费席位活跃率</span></div>
+              </div>
+              <div class="status-pie-row">
+                <div class="status-pie dither-mount" data-dither-chart="status-ai-subscription"></div>
+                <div class="status-pie-copy"><strong>82%</strong><span>付费用户有其他 AI 订阅</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide content-slide research-slide" data-control="light" data-motion="drift-left">
+      <img src="assets/MAI Logo.svg" alt="MAI" class="slide-logo">
+      <div class="slide-shell">
+        <div class="section-tag reveal" style="--i:0">Problem research</div>
+        <div class="research-evidence">
+          <h2 class="page-title wide reveal" style="--i:1">为了搞清楚问题，做了调研</h2>
+          <div class="evidence-board">
+            <img src="Content/Group 2117134660.webp" alt="User research interview grid" class="interview-img reveal" style="--i:2">
+            <div class="survey-stack reveal" style="--i:3">
+              <img src="Content/Group 2117134663.webp" alt="Copilot subscriber survey" class="survey-main">
+              <img src="Content/Group 2117134663.webp" alt="Copilot survey detail" class="survey-side">
+              <img src="Content/Group 2117134663.webp" alt="Copilot feature preference chart" class="survey-bottom">
+            </div>
+          </div>
+          <div class="research-takeaways reveal" style="--i:4">
+            <div class="takeaway"><span>1.</span>用户意图识别不准</div>
+            <div class="takeaway"><span>2.</span>执行过程不透明</div>
+            <div class="takeaway"><span>3.</span>产出结果很随机</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide content-slide timeback-slide" data-control="light" data-motion="rise">
+      <img src="assets/MAI Logo.svg" alt="MAI" class="slide-logo">
+      <div class="slide-shell">
+        <div class="section-tag reveal" style="--i:0">Baseline research</div>
+        <div class="timeback-layout">
+          <h2 class="timeback-title reveal" style="--i:1">时间回到 1.5 年前</h2>
+          <div class="timeback-phone-track">
+            <article class="timeback-step reveal" style="--i:2">
+              <div class="timeback-step-label">信息量过载的首屏界面</div>
+              <img src="Content/3254.webp" alt="信息量过载的首屏界面" class="timeback-phone">
+            </article>
+            <article class="timeback-step reveal" style="--i:3">
+              <div class="timeback-step-label">输入中没有任何引导</div>
+              <img src="Content/54645.webp" alt="输入中没有任何引导" class="timeback-phone">
+            </article>
+            <article class="timeback-step reveal" style="--i:4">
+              <div class="timeback-step-label">等待过程漫长</div>
+              <img src="Content/354.webp" alt="等待过程漫长" class="timeback-phone">
+            </article>
+            <article class="timeback-step reveal" style="--i:5">
+              <div class="timeback-step-label">回答可读性差</div>
+              <img src="Content/6575.webp" alt="回答可读性差" class="timeback-phone">
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide content-slide timeback-slide timeback-overlay-slide" data-control="dark" data-motion="fade-blur">
+      <img src="assets/MAI Logo on dark.svg" alt="MAI" class="slide-logo">
+      <div class="slide-shell">
+        <div class="section-tag reveal" style="--i:0">Baseline friction</div>
+        <div class="timeback-overlay-bg" aria-hidden="true">
+          <div class="timeback-layout">
+            <h2 class="timeback-title">时间回到 1.5 年前</h2>
+            <div class="timeback-phone-track">
+              <article class="timeback-step"><div class="timeback-step-label">信息量过载的首屏界面</div><img src="Content/3254.webp" alt="" class="timeback-phone"></article>
+              <article class="timeback-step"><div class="timeback-step-label">输入中没有任何引导</div><img src="Content/54645.webp" alt="" class="timeback-phone"></article>
+              <article class="timeback-step"><div class="timeback-step-label">等待过程漫长</div><img src="Content/354.webp" alt="" class="timeback-phone"></article>
+              <article class="timeback-step"><div class="timeback-step-label">回答可读性差</div><img src="Content/6575.webp" alt="" class="timeback-phone"></article>
+            </div>
+          </div>
+        </div>
+        <div class="timeback-overlay-shade" aria-hidden="true"></div>
+        <div class="timeback-metric-layer reveal" style="--i:1">
+          <div class="friction-metrics">
+            <div class="friction-metric">
+              <h3 class="friction-title">不会问</h3>
+              <div class="friction-chart-row">
+                <div class="friction-pie" style="--slice:48%"></div>
+                <div class="friction-copy"><strong>48%</strong><span>首次互动率</span></div>
+              </div>
+            </div>
+            <div class="friction-metric">
+              <h3 class="friction-title">不想等</h3>
+              <div class="friction-chart-row">
+                <div class="friction-pie" style="--slice:10.1%"></div>
+                <div class="friction-copy"><strong>10.1%</strong><span>生成终止率</span></div>
+              </div>
+            </div>
+            <div class="friction-metric">
+              <h3 class="friction-title">推不准</h3>
+              <div class="friction-chart-row">
+                <div class="friction-pie" style="--slice:2.74%"></div>
+                <div class="friction-copy"><strong>2.74%</strong><span>Turn N 点击率</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide section-divider mid" data-control="dark" data-motion="zoom-out">
+      <img src="assets/MAI Logo on dark.svg" alt="MAI" class="slide-logo">
+      <div class="slide-shell" style="align-items:center;justify-content:center"><div class="divider-num reveal" style="--i:0">01</div><h2 class="divider-title reveal" style="--i:1">缩小意图表达偏差</h2></div>
+    </section>
+
+    <section class="slide content-slide intent-reduce-slide" data-control="light" data-motion="drift-left">
+      <img src="assets/MAI Logo.svg" alt="MAI" class="slide-logo">
+      <div class="slide-shell">
+        <div class="section-tag reveal" style="--i:0">Intent before input</div>
+        <div class="intent-reduce-layout">
+          <h2 class="intent-reduce-title reveal" style="--i:1">输入前：意图模糊、上下文缺失</h2>
+          <div class="intent-reduce-phones">
+            <article class="intent-step reveal" style="--i:2">
+              <div class="intent-step-label">推荐 - 基于工作习惯</div>
+              <img src="Content/4244.webp" alt="推荐 - 基于工作习惯" class="intent-phone">
+            </article>
+            <article class="intent-step reveal" style="--i:3">
+              <div class="intent-step-label">联想 - 基于工作文件</div>
+              <img src="Content/4455.webp" alt="联想 - 基于工作文件" class="intent-phone">
+            </article>
+            <article class="intent-step reveal" style="--i:4">
+              <div class="intent-step-label">澄清 - 缩小意图偏差</div>
+              <img src="Content/332.webp" alt="澄清 - 缩小意图偏差" class="intent-phone">
+            </article>
+            <article class="intent-step reveal" style="--i:5">
+              <div class="intent-step-label">引导 - 弥补不确定的体验</div>
+              <img src="Content/3332.webp" alt="引导 - 弥补不确定的体验" class="intent-phone">
+            </article>
+          </div>
+          <div class="intent-axis reveal" style="--i:6"><span>意图模糊</span><i></i><span>意图清晰</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide content-slide intent-reduce-slide" data-control="light" data-motion="rise">
+      <img src="assets/MAI Logo.svg" alt="MAI" class="slide-logo">
+      <div class="slide-shell">
+        <div class="section-tag reveal" style="--i:0">Intent during input</div>
+        <div class="intent-complex-layout">
+          <aside class="blocking-panel reveal" style="--i:1">
+            <h2 class="intent-reduce-title">长程任务占比持续上升</h2>
+            <div class="blocking-sub">过去12个月 - 困难Query占比 19.23% → 46.45%</div>
+            <div class="before-label">Before: Blocking</div>
+            <img src="Content/354.webp" alt="Before Blocking" class="complex-phone">
+          </aside>
+          <div class="phase-panel">
+            <h2 class="intent-reduce-title reveal" style="--i:2">输入中：需求变化、多意图混合...</h2>
+            <div class="phase-grid">
+              <article class="phase-step reveal" style="--i:3">
+                <div class="phase-label">Phase1: Type allowed</div>
+                <img src="Content/Blocking - Type allowed.webp" alt="Phase1 Type allowed" class="complex-phone">
+              </article>
+              <article class="phase-step reveal" style="--i:4">
+                <div class="phase-label">Phase2: Queue</div>
+                <img src="Content/Queue.webp" alt="Phase2 Queue" class="complex-phone">
+              </article>
+              <article class="phase-step reveal" style="--i:5">
+                <div class="phase-label">Phase3: Steer</div>
+                <img src="Content/Steer.webp" alt="Phase3 Steer" class="complex-phone">
+              </article>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide content-slide intent-reduce-slide intent-impact-slide" data-control="dark" data-motion="fade-blur">
+      <img src="assets/MAI Logo on dark.svg" alt="MAI" class="slide-logo">
+      <div class="section-tag reveal" style="--i:0">Intent impact</div>
+      <div class="intent-impact-bg" aria-hidden="true">
+        <div class="intent-complex-layout">
+          <aside class="blocking-panel">
+            <h2 class="intent-reduce-title">长程任务占比持续上升</h2>
+            <div class="blocking-sub">过去12个月 - 困难Query占比 19.23% → 46.45%</div>
+            <div class="before-label">Before: Blocking</div>
+            <img src="Content/354.webp" alt="" class="complex-phone">
+          </aside>
+          <div class="phase-panel">
+            <h2 class="intent-reduce-title">输入中：需求变化、多意图混合...</h2>
+            <div class="phase-grid">
+              <article class="phase-step"><div class="phase-label">Phase1: Type allowed</div><img src="Content/Blocking - Type allowed.webp" alt="" class="complex-phone"></article>
+              <article class="phase-step"><div class="phase-label">Phase2: Queue</div><img src="Content/Queue.webp" alt="" class="complex-phone"></article>
+              <article class="phase-step"><div class="phase-label">Phase3: Steer</div><img src="Content/Steer.webp" alt="" class="complex-phone"></article>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="intent-impact-shade" aria-hidden="true"></div>
+      <div class="intent-impact-layer reveal" style="--i:1">
+        <div class="intent-impact-metrics">
+          <div class="intent-impact-metric">
+            <h3 class="intent-impact-title">互动意愿提升</h3>
+            <div class="intent-impact-row"><div class="intent-impact-pie" style="--slice:60.7%"></div><div class="intent-impact-copy"><div class="intent-impact-values"><span>48%</span><strong>→ 60.7%</strong></div><small>首次互动率</small></div></div>
+          </div>
+          <div class="intent-impact-metric">
+            <h3 class="intent-impact-title">生成中断降低</h3>
+            <div class="intent-impact-row"><div class="intent-impact-pie" style="--slice:1.13%"></div><div class="intent-impact-copy"><div class="intent-impact-values"><span>10.1%</span><strong>→ 1.13%</strong></div><small>生成终止率 (轻量)</small></div></div>
+          </div>
+          <div class="intent-impact-metric">
+            <h3 class="intent-impact-title">信任感提升</h3>
+            <div class="intent-impact-row"><div class="intent-impact-pie" style="--slice:13.33%"></div><div class="intent-impact-copy"><div class="intent-impact-values"><span>2.74%</span><strong>→ 13.33%</strong></div><small>Turn N 点击率</small></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide content-slide process-slide" data-control="light" data-motion="zoom-in">
+      <img src="assets/MAI Logo.svg" alt="MAI" class="slide-logo">
+      <div class="slide-shell">
+        <div class="section-tag reveal" style="--i:0">Intent process</div>
+        <div class="process-layout reveal" style="--i:1">
+          <div class="process-flow-board" role="img" aria-label="Input 阶段缩小意图表达偏差，Output 阶段优化不确定性结果的 LLM Agent 流程图">
+            <svg class="process-connectors" viewBox="0 0 1600 900" preserveAspectRatio="none" aria-hidden="true">
+              <defs>
+                <marker id="processArrow9" viewBox="0 0 10 10" markerWidth="7" markerHeight="7" refX="8.4" refY="5" orient="auto">
+                  <path d="M1.5 1.5 L8.5 5 L1.5 8.5" fill="none" stroke="rgba(95,78,65,.6)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path>
+                </marker>
+              </defs>
+              <path d="M270 145 H552" marker-end="url(#processArrow9)"></path>
+              <path d="M655 145 H944" marker-end="url(#processArrow9)"></path>
+              <path d="M1048 145 H1325" marker-end="url(#processArrow9)"></path>
+              <path d="M552 285 H580" marker-end="url(#processArrow9)"></path>
+              <path d="M1024 285 H1052" marker-end="url(#processArrow9)"></path>
+              <path d="M345 360 V389" class="dashed" marker-end="url(#processArrow9)"></path>
+              <path d="M1266 360 V389" marker-end="url(#processArrow9)"></path>
+              <path d="M334 479 V498"></path>
+              <path d="M1266 486 V490 Q1266 498 1254 498 H346 Q334 498 334 510" marker-end="url(#processArrow9)"></path>
+              <path d="M552 592 H580" marker-end="url(#processArrow9)"></path>
+              <path d="M1024 592 H1052" marker-end="url(#processArrow9)"></path>
+              <path d="M334 676 V688 Q334 700 322 700 H242 Q230 700 230 716" class="dashed" marker-end="url(#processArrow9)"></path>
+              <path d="M1266 676 V688 Q1266 700 1278 700 H1350 Q1362 700 1362 716" marker-end="url(#processArrow9)"></path>
+              <path d="M270 756 H552" marker-end="url(#processArrow9)"></path>
+              <path d="M655 756 H944" marker-end="url(#processArrow9)"></path>
+              <path d="M1048 756 H1325" marker-end="url(#processArrow9)"></path>
+            </svg>
+
+            <div class="process-flow-title">Input 阶段 - 缩小意图表达偏差</div>
+            <div class="process-flow-subtitle">Output 阶段 - 优化不确定性结果</div>
+            <div class="process-axis-label" style="left:9.3%;top:16.2%">模糊</div>
+            <div class="process-axis-label" style="left:91.2%;top:16.2%">清晰</div>
+            <div class="process-axis-label" style="left:9.2%;top:84.4%">随机</div>
+            <div class="process-axis-label" style="left:91.2%;top:84.4%">确定</div>
+
+            <div class="process-avatar is-blur" style="left:13.7%;top:16.1%"><img src="Content/Gemini_Generated_Image_w27igw27igw27igw 1.webp" alt="模糊头像"></div>
+            <div class="process-avatar" style="left:38%;top:16.1%"><img src="Content/Gemini_Generated_Image_w27igw27igw27igw 4.webp" alt="草图头像"></div>
+            <div class="process-avatar" style="left:62.2%;top:16.1%"><img src="Content/Gemini_Generated_Image_w27igw27igw27igw 5.webp" alt="清晰头像"></div>
+            <div class="process-avatar" style="left:86.3%;top:16.1%"><img src="Content/Gemini_Generated_Image_w27igw27igw27igw 2.webp" alt="清晰头像"></div>
+
+            <div class="process-card noise" style="left:8.3%;top:23.2%;width:25.2%;height:16.7%">
+              <span class="process-chip" style="left:6%;top:15%">上下文缺失</span>
+              <span class="process-chip" style="left:27%;top:34%">意图模糊</span>
+              <span class="process-chip" style="left:66%;top:16%">推理偏差</span>
+              <span class="process-chip" style="left:88%;top:12%">...</span>
+              <span class="process-chip" style="left:9%;top:69%">多意图混合</span>
+              <span class="process-chip" style="left:45%;top:58%">长程任务</span>
+              <span class="process-chip" style="left:78%;top:70%">需求变化</span>
+            </div>
+            <div class="process-card harness" style="left:37%;top:23.2%;width:26%;height:16.7%"><span class="process-card-label small">产品层Harness &amp; 设计策略</span></div>
+            <div class="process-card output" style="left:66.5%;top:23.2%;width:25.2%;height:16.7%">
+              <span class="process-card-label">意图表达</span><span class="process-chip-group"><span class="process-chip static">清晰</span><span class="process-chip static">及时</span><span class="process-chip static">有逻辑</span></span>
+            </div>
+
+            <div class="process-agent-bar">LLM</div>
+
+            <div class="process-card noise" style="left:8.3%;top:57.5%;width:25.2%;height:16.7%">
+              <span class="process-chip" style="left:6%;top:15%">可读性差</span>
+              <span class="process-chip" style="left:27%;top:34%">置信度低</span>
+              <span class="process-chip" style="left:63%;top:16%">上下文缺失</span>
+              <span class="process-chip" style="left:88%;top:12%">...</span>
+              <span class="process-chip" style="left:8%;top:69%">真实/时效性</span>
+              <span class="process-chip" style="left:45%;top:58%">个人偏好</span>
+              <span class="process-chip" style="left:76%;top:70%">结果高风险</span>
+            </div>
+            <div class="process-card harness" style="left:37%;top:57.5%;width:26%;height:16.7%"><span class="process-card-label small">产品层Harness &amp; 设计策略</span></div>
+            <div class="process-card output" style="left:66.5%;top:57.5%;width:25.2%;height:16.7%">
+              <span class="process-card-label">结果输出</span><span class="process-chip-group"><span class="process-chip static">稳定</span><span class="process-chip static">可靠</span><span class="process-chip static">个性化</span></span>
+            </div>
+
+            <div class="process-puzzle" style="left:13.7%;top:84.4%"><img src="Content/91446644-2877-4542-b348-45f98432e0c6.webp" alt="随机拼图碎片"></div>
+            <div class="process-puzzle" style="left:38%;top:84.4%"><img src="Content/9fc0c127-f758-4ad5-9730-9830f17e3714.webp" alt="逐步组合的拼图"></div>
+            <div class="process-puzzle" style="left:62.2%;top:84.4%"><img src="Content/f157df71-7017-4e0e-ab6b-322fb6d8d197.webp" alt="接近完成的拼图"></div>
+            <div class="process-puzzle" style="left:86.3%;top:84.4%"><img src="Content/c899271f-691d-4702-bcdf-69498c31d062.webp" alt="确定的拼图结果"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide hide content-slide intent-slide" data-control="light" data-motion="drift-left">
+      <img src="assets/MAI Logo.svg" alt="MAI" class="slide-logo">
+      <div class="slide-shell">
+        <div class="section-tag reveal" style="--i:0">Intent alignment</div>
+        <div class="intent-flow">
+          <h2 class="intent-title reveal" style="--i:1">对齐意图</h2>
+          <div class="phone-stages">
+            <article class="phone-stage reveal" style="--i:2">
+              <div class="stage-label has-arrow">Before chat</div>
+              <img src="Content/4244.webp" alt="Copilot before chat entry" class="stage-phone">
+            </article>
+            <article class="phone-stage reveal" style="--i:3">
+              <div class="stage-label has-arrow">Typing</div>
+              <img src="Content/4455.webp" alt="Copilot typing and prompt entry" class="stage-phone">
+            </article>
+            <article class="phone-stage reveal" style="--i:4">
+              <div class="stage-label has-arrow">Follow-up</div>
+              <img src="Content/332.webp" alt="Copilot follow-up question" class="stage-phone">
+            </article>
+            <article class="phone-stage reveal" style="--i:5">
+              <div class="stage-label has-arrow">Suggestions</div>
+              <img src="Content/3332.webp" alt="Copilot suggested next actions" class="stage-phone">
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide hide content-slide intent-slide" data-control="light" data-motion="rise">
+      <img src="assets/MAI Logo.svg" alt="MAI" class="slide-logo">
+      <div class="slide-shell">
+        <div class="section-tag reveal" style="--i:0">Interaction patterns</div>
+        <div class="intent-flow interaction-flow">
+          <h2 class="intent-title reveal" style="--i:1">用户和模型交互的模式</h2>
+          <div class="phone-stages">
+            <article class="phone-stage reveal" style="--i:2">
+              <div class="stage-label">Blocking</div>
+              <img src="Content/Blocking.webp" alt="Blocking interaction pattern" class="stage-phone">
+            </article>
+            <article class="phone-stage reveal" style="--i:3">
+              <div class="stage-label">Blocking - Type allowed</div>
+              <img src="Content/Blocking - Type allowed.webp" alt="Blocking while type allowed interaction pattern" class="stage-phone">
+            </article>
+            <article class="phone-stage reveal" style="--i:4">
+              <div class="stage-label">Queue</div>
+              <img src="Content/Queue.webp" alt="Queue interaction pattern" class="stage-phone">
+            </article>
+            <article class="phone-stage reveal" style="--i:5">
+              <div class="stage-label">Steer</div>
+              <img src="Content/Steer.webp" alt="Steer interaction pattern" class="stage-phone">
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide hide content-slide intent-slide" data-control="light" data-motion="zoom-in">
+      <img src="assets/MAI Logo.svg" alt="MAI" class="slide-logo">
+      <div class="slide-shell">
+        <div class="section-tag reveal" style="--i:0">Context carry-in</div>
+        <div class="context-pair">
+          <h2 class="intent-title reveal" style="--i:1">主动带入已知信息</h2>
+          <div class="context-grid">
+            <article class="context-card reveal" style="--i:2">
+              <div class="context-label">带入地点</div>
+              <img src="Content/2222.webp" alt="Copilot response using location context">
+            </article>
+            <article class="context-card reveal" style="--i:3">
+              <div class="context-label">带入收件人信息</div>
+              <img src="Content/3333.webp" alt="Copilot response using recipient context">
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide section-divider dark" data-control="dark" data-motion="fade-blur">
+      <img src="assets/MAI Logo on dark.svg" alt="MAI" class="slide-logo">
+      <div class="slide-shell" style="align-items:center;justify-content:center"><div class="divider-num reveal" style="--i:0">02</div><h2 class="divider-title reveal" style="--i:1">优化不确定性结果</h2></div>
+    </section>
+
+    <section class="slide content-slide intent-slide" data-control="light" data-motion="drift-right">
+      <img src="assets/MAI Logo.svg" alt="MAI" class="slide-logo">
+      <div class="slide-shell">
+        <div class="section-tag reveal" style="--i:0">Waiting states</div>
+        <div class="intent-flow interaction-flow">
+          <h2 class="intent-title reveal" style="--i:1">根据不同的任务类型设计“等待”</h2>
+          <div class="phone-stages">
+            <article class="phone-stage reveal" style="--i:2">
+              <div class="stage-label has-arrow">Creating task</div>
+              <iframe class="stage-phone" title="Creating task prototype" src="prototype-runtime/dist/index.html?keyscreen=creating&amp;theme=light-v2" style="border:0"></iframe>
+            </article>
+            <article class="phone-stage reveal" style="--i:3">
+              <div class="stage-label has-arrow">Running task — folded</div>
+              <iframe class="stage-phone" title="Running task folded prototype" src="prototype-runtime/dist/index.html?keyscreen=running&amp;theme=light-v2" style="border:0"></iframe>
+            </article>
+            <article class="phone-stage reveal" style="--i:4">
+              <div class="stage-label has-arrow">Generated</div>
+              <img src="Content/Output-2.webp" alt="Generated response state" class="stage-phone">
+            </article>
+            <article class="phone-stage reveal" style="--i:5">
+              <div class="stage-label">Reasoning completed</div>
+              <img src="Content/Output-3.webp" alt="Reasoning completed detail sheet" class="stage-phone">
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide content-slide intent-slide" data-control="light" data-motion="drift-left">
+      <img src="assets/MAI Logo.svg" alt="MAI" class="slide-logo">
+      <div class="slide-shell">
+        <div class="section-tag reveal" style="--i:0">Task handoff</div>
+        <div class="intent-flow interaction-flow handoff-flow">
+          <h2 class="intent-title reveal" style="--i:1">不把用户留在对话中</h2>
+          <div class="before-after-rail reveal" style="--i:2">
+            <div class="rail-segment before">Before</div>
+            <div class="rail-segment after">After</div>
+          </div>
+          <div class="phone-stages">
+            <article class="phone-stage reveal" style="--i:3">
+              <img src="Content/1312.webp" alt="Long task running inside the conversation" class="stage-phone">
+            </article>
+            <article class="phone-stage reveal" style="--i:4">
+              <img src="Content/213.webp" alt="Repeated waiting state keeps user in chat" class="stage-phone">
+            </article>
+            <article class="phone-stage reveal" style="--i:5">
+              <img src="Content/1243.webp" alt="Copilot home with completed task notification" class="stage-phone">
+            </article>
+            <article class="phone-stage reveal" style="--i:6">
+              <img src="Content/Output-2.webp" alt="Completed answer after returning to the conversation" class="stage-phone">
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide content-slide legacy-answer-slide" data-control="light" data-motion="rise">
+      <img src="assets/MAI Logo.svg" alt="MAI" class="slide-logo">
+      <div class="legacy-answer-layout">
+        <h2 class="legacy-answer-title reveal" style="--i:1">1.5年前的回答内容：可读性差、置信度低、上下文缺失</h2>
+        <div class="legacy-answer-grid">
+          <article class="legacy-answer-item reveal" style="--i:2">
+            <div class="legacy-answer-label">可读性差</div>
+            <img src="Content/01. Recent/Section View.webp" alt="Text-only weather answer with dense content" class="legacy-answer-phone">
+          </article>
+          <article class="legacy-answer-item reveal" style="--i:3">
+            <div class="legacy-answer-label">置信度低</div>
+            <img src="Content/01. Recent/Section View-1.webp" alt="Text-only credit card answer with low confidence" class="legacy-answer-phone">
+          </article>
+          <article class="legacy-answer-item reveal" style="--i:4">
+            <div class="legacy-answer-label">上下文缺失</div>
+            <img src="Content/iPhone 14 - 3.webp" alt="Email drafting answer missing context" class="legacy-answer-phone">
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide content-slide conversation-distribution-slide" data-control="light" data-motion="rise">
+      <div class="conversation-distribution-layout">
+        <h2 class="conversation-main-title reveal" style="--i:1">Copilot 高频对话分布</h2>
+        <div class="conversation-panels">
+          <article class="conversation-panel reveal" style="--i:2">
+            <h3 class="conversation-panel-title">Enterprise Copilot.</h3>
+            <div class="conversation-chart-wrap">
+              <div class="enterprise-chart-card" aria-label="Enterprise Copilot mobile feature usage distribution chart">
+                <h4 class="enterprise-chart-title">Mobile Feature Usage Distribution - Latest Week (Jun 25)</h4>
+                <div class="chart-meta"><span>Metric: Queries by Tool/Feature</span><span>Platform: Mobile</span><span>Note: Grouped by functional category</span></div>
+                <div class="enterprise-bars">
+                  <div class="enterprise-bar-row"><span>Enterprise Search (Emails, Files, Chats, Meetings)</span><i class="enterprise-bar-track"><i style="--v:100;--c:#FF8A00"></i></i><strong>3.22M</strong></div>
+                  <div class="enterprise-bar-row"><span>Web Search</span><i class="enterprise-bar-track"><i style="--v:84;--c:#5B7BFF"></i></i><strong>2.71M</strong></div>
+                  <div class="enterprise-bar-row"><span>Enterprise Core Search</span><i class="enterprise-bar-track"><i style="--v:85;--c:#F044A6"></i></i><strong>2.74M</strong></div>
+                  <div class="enterprise-bar-row"><span>Email Read/Fetch</span><i class="enterprise-bar-track"><i style="--v:72;--c:#18B7B4"></i></i><strong>2.32M</strong></div>
+                  <div class="enterprise-bar-row"><span>File Fetch/Access</span><i class="enterprise-bar-track"><i style="--v:51;--c:#C7501B"></i></i><strong>1.63M</strong></div>
+                  <div class="enterprise-bar-row"><span>Content Generation</span><i class="enterprise-bar-track"><i style="--v:32;--c:#2487D1"></i></i><strong>1.03M</strong></div>
+                  <div class="enterprise-bar-row"><span>Image Generation</span><i class="enterprise-bar-track"><i style="--v:29;--c:#7754D8"></i></i><strong>931.9K</strong></div>
+                  <div class="enterprise-bar-row"><span>Code Interpreter</span><i class="enterprise-bar-track"><i style="--v:26;--c:#6CA52A"></i></i><strong>844.7K</strong></div>
+                </div>
+                <div class="enterprise-table" aria-hidden="true">
+                  <span class="head">Feature Category</span><span class="head">Queries</span><span class="head">Share</span><span class="head">Description</span>
+                  <span>Enterprise Search</span><span>3.22M</span><span>20.2%</span><span>M365 data</span>
+                  <span>Web Search</span><span>2.71M</span><span>17.0%</span><span>Web</span>
+                  <span>Enterprise Core Search</span><span>2.74M</span><span>17.2%</span><span>Core search</span>
+                  <span>Email Read/Fetch</span><span>2.32M</span><span>14.6%</span><span>Email results</span>
+                </div>
+              </div>
+            </div>
+          </article>
+          <article class="conversation-panel reveal" style="--i:3">
+            <h3 class="conversation-panel-title">Consumer Copilot.</h3>
+            <div class="conversation-chart-wrap">
+              <div class="consumer-chart-card" aria-label="Consumer Copilot high-frequency conversation bar chart">
+                <div class="consumer-chart">
+                  <div class="consumer-bar-plot">
+                    <div class="consumer-column" style="--v:9.9"><span>9.9%</span><i></i></div>
+                    <div class="consumer-column" style="--v:7.8"><span>7.8%</span><i></i></div>
+                    <div class="consumer-column" style="--v:7.5"><span>7.5%</span><i></i></div>
+                    <div class="consumer-column" style="--v:5.7"><span>5.7%</span><i></i></div>
+                    <div class="consumer-column" style="--v:5.6"><span>5.6%</span><i></i></div>
+                    <div class="consumer-column" style="--v:4.5"><span>4.5%</span><i></i></div>
+                  </div>
+                  <div class="consumer-labels" aria-hidden="true"><span>Technology</span><span>Business&amp; Industry</span><span>Career</span><span>Health</span><span>Money</span><span>Sports</span></div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+        <div class="mini-deck-footer"><span>Copilot Discover</span><span>Cycle 1</span></div>
+      </div>
+    </section>
+
+    <section class="slide content-slide disappointment-slide" data-control="light" data-motion="depth">
+      <div class="disappointment-layout">
+        <div class="disappointment-main">
+          <div class="disappointment-copy reveal" style="--i:1">
+            <h2 class="disappointment-title">然而，有些对话让人失望</h2>
+            <p class="disappointment-lead">用户带着明确意图来，却只得到一段“还行”的文字。不够结构化、不够个性化、不够可操作，表现在：</p>
+            <div class="disappointment-bullets">
+              <p>100%的金融产品提问用户最终离开Copilot去别处比价，导致每周18.3万用户流失</p>
+              <p>体育内容时效性差 - 且实时比分、赛程等结构化信息被挤在纯文字里</p>
+              <p>工作上下文断裂 - 无法查看和回应近期的工作会议和邮件</p>
+              <p>个人金融给出通用建议而非个性化产品匹配</p>
+            </div>
+          </div>
+          <div class="disappointment-card-stack" aria-label="Examples of disappointing Copilot text answers">
+            <img src="Content/image 2065417115.webp" alt="Recent NBA answer compressed into one text response" class="disappointment-card-img card-nba reveal" style="--i:2">
+            <img src="Content/image 2065417119.webp" alt="Recent meeting summary failed because no meeting context was returned" class="disappointment-card-img card-meeting reveal" style="--i:3">
+            <img src="Content/image 2065417117.webp" alt="Credit card answer gives generic setup advice instead of a personalized match" class="disappointment-card-img card-credit reveal" style="--i:4">
+            <img src="Content/Rectangle 346608448.webp" alt="Stock answer card gives a generic conclusion before actionable context" class="disappointment-card-img card-stock reveal" style="--i:5">
+          </div>
+        </div>
+        <div class="mini-deck-footer"><span>Copilot Discover</span><span>Cycle 1</span></div>
+      </div>
+    </section>
+
+    <section class="slide content-slide cream" data-control="light" data-motion="zoom-in">
+      <img src="assets/MAI Logo.svg" alt="MAI" class="slide-logo">
+      <div class="slide-shell"><div class="title-zone"><div class="section-tag reveal" style="--i:0">User research</div><h2 class="page-title reveal" style="--i:1">只有文字的回答难以阅读</h2></div>
+        <div class="content-zone"><div class="research-grid">
+          <article class="research-card research-text-card reveal" style="--i:2">
+            <p class="body-text">用户不会读完整个回答，而会“扫读”回答。在大段文字中寻找相关信息，过高的认知负荷和跳跃的重点，会降低用户对 AI 回答的信任感。</p>
+            <p class="quote">“I will 100% miss information. I never read the whole response, I’m skimming through it.”</p>
+          </article>
+          <article class="research-card reveal" style="--i:3">
+            <h3 class="research-card-title">AI 输出内容的“易懂”是最重要的</h3>
+            <div class="readability-bar-card" aria-label="AI 输出易懂度因素占比">
+              <div class="readability-bar-plot">
+                <div class="readability-y" aria-hidden="true"><span>80%</span><span>60%</span><span>40%</span><span>20%</span><span>0%</span></div>
+                <div class="readability-bar" style="--v:.9125"><i aria-hidden="true"></i></div>
+                <div class="readability-bar" style="--v:.5"><i aria-hidden="true"></i></div>
+                <div class="readability-bar" style="--v:.3375"><i aria-hidden="true"></i></div>
+                <div class="readability-bar" style="--v:.1625"><i aria-hidden="true"></i></div>
+              </div>
+              <div class="readability-bar-labels"><span>易于理解</span><span>相关性</span><span>熟悉格式</span><span>趣味性</span></div>
+            </div>
+          </article>
+          <article class="research-card reveal" style="--i:4">
+            <h3 class="research-card-title">结构化、信息分层更有帮助</h3>
+            <div class="readability-donut-card">
+              <div class="readability-donut" aria-hidden="true"></div>
+              <div class="readability-donut-copy"><strong>89%</strong><span>更易理解</span><small>11% 中立</small></div>
+            </div>
+          </article>
+        </div></div>
+      </div>
+    </section>
+
+    <section class="slide content-slide" data-control="light" data-motion="drift-left">
+      <img src="assets/MAI Logo.svg" alt="MAI" class="slide-logo">
+      <div class="slide-shell"><div class="title-zone"><div class="section-tag reveal" style="--i:0">Generative UI</div><h2 class="page-title reveal" style="--i:1">GenUI，是 AI 时代的人机界面</h2></div>
+        <div class="content-zone"><div class="split-layout">
+          <div class="split-copy reveal" style="--i:2"><p class="body-text">GenUI 是由 AI 实时动态生成的用户界面。AI 输出的是结构化、可交互的 UI，而不只是 Text-based 回答：</p><div class="feature-list"><p>回答不仅有内容，还有视觉结构和重点</p><p>可交互，用户有更高的互动意愿</p><p>用户对回答和 agent 都有更强的信任感</p></div></div>
+          <div class="demo-frame reveal" style="--i:3"><img src="Content/640.gif" alt="Generative UI hotel example"></div>
+        </div></div>
+      </div>
+    </section>
+
+    <section class="slide content-slide cream" data-control="light" data-motion="rise">
+      <img src="assets/MAI Logo.svg" alt="MAI" class="slide-logo">
+      <div class="slide-shell"><div class="title-zone"><div class="section-tag reveal" style="--i:0">Design space</div><h2 class="page-title reveal" style="--i:1">表达自由度</h2></div>
+        <div class="content-zone"><div class="freedom-grid">
+          <article class="freedom-card reveal" style="--i:2"><h3>Fixed system</h3><p class="body-text">AI 仅允许调用有限的系统预设组件，不允许结构突破。</p><img src="Content/e3c11247-694b-491b-a30b-d17ef5dbcb85.webp" alt="Fixed block system"></article>
+          <article class="freedom-card reveal" style="--i:3"><h3>Composable system</h3><p class="body-text">AI 调用有限组件，但允许不同组件拼装与组合。</p><img src="Content/467163ee-a38a-4587-94cd-72a65a47ae99.webp" alt="Composable rocking horse"></article>
+          <article class="freedom-card reveal" style="--i:4"><h3>Open-ended system</h3><p class="body-text">AI 自由决定组件结构和样式，实现未被规划的设计。</p><img src="Content/dbbc8c64-53b5-4637-a3f3-7ba3349672b3.webp" alt="Open-ended winged horse"></article>
+        </div><div class="freedom-axis reveal" style="--i:5"><span>Less freedom</span><div class="axis-line"></div><span>More freedom</span></div></div>
+      </div>
+    </section>
+
+    <section class="slide content-slide cream" data-control="light" data-motion="drift-right">
+      <img src="assets/MAI Logo.svg" alt="MAI" class="slide-logo">
+      <div class="slide-shell"><div class="title-zone"><div class="section-tag reveal" style="--i:0">Consumer scenario</div></div>
+        <div class="content-zone"><div class="showcase">
+          <div><h2 class="showcase-title reveal" style="--i:1">End-to-End Sports Experience</h2><p class="section-label reveal" style="--i:2">Query → answer card → consumption</p></div>
+          <div class="screen-strip reveal" style="--i:3"><img src="Content/home.webp" alt=""><img src="Content/deep research.webp" alt=""><img src="Content/BottomSheet_Regular-season.webp" alt=""></div>
+        </div></div>
+      </div>
+    </section>
+
+    <section class="slide content-slide" data-control="light" data-motion="zoom-in">
+      <img src="assets/MAI Logo.svg" alt="MAI" class="slide-logo">
+      <div class="slide-shell"><div class="title-zone"><div class="section-tag reveal" style="--i:0">Enterprise scenario</div></div>
+        <div class="content-zone"><div class="showcase">
+          <div><h2 class="showcase-title reveal" style="--i:1">To B Charts, Video and Documents</h2><p class="section-label reveal" style="--i:2">Generated UI inside the conversation</p></div>
+          <div class="screen-strip reveal" style="--i:3"><img src="Content/286.webp" alt=""><img src="Content/iOS.webp" alt=""><img src="Content/1.webp" alt=""></div>
+        </div></div>
+      </div>
+    </section>
+
+    <section class="slide content-slide cream" data-control="light" data-motion="depth">
+      <img src="assets/MAI Logo.svg" alt="MAI" class="slide-logo">
+      <div class="slide-shell"><div class="title-zone"><div class="section-tag reveal" style="--i:0">Guided intent alignment</div></div>
+        <div class="content-zone"><div class="showcase">
+          <div><h2 class="showcase-title reveal" style="--i:1">从 Discover 到个性化信用卡推荐</h2><p class="body-text reveal" style="--i:2">通过 intake、澄清问题和规划过程，把模糊意图变成可执行结果。</p></div>
+          <div class="screen-strip four reveal" style="--i:3"><img src="Content/Aware card.webp" alt=""><img src="Content/intake.webp" alt=""><img src="Content/intake1.webp" alt=""><img src="Content/intake-1.webp" alt=""></div>
+        </div></div>
+      </div>
+    </section>
+
+    <section class="slide content-slide" data-control="light" data-motion="zoom-out">
+      <img src="assets/MAI Logo.svg" alt="MAI" class="slide-logo">
+      <div class="slide-shell"><div class="title-zone"><div class="section-tag reveal" style="--i:0">Enterprise outputs</div></div>
+        <div class="content-zone"><div class="showcase">
+          <div><h2 class="showcase-title reveal" style="--i:1">To B Copilot Calendar, chat and data</h2><p class="body-text reveal" style="--i:2">让工作上下文直接成为回答中的可操作界面。</p></div>
+          <div class="screen-strip reveal" style="--i:3"><img src="Content/1.webp" alt=""><img src="Content/2.webp" alt=""><img src="Content/3.webp" alt=""></div>
+        </div></div>
+      </div>
+    </section>
+
+    <section class="slide asset-only" data-control="light" data-motion="drift-left">
+      <div class="asset-gallery reveal" style="--i:0">
+        <div class="asset-strip">
+          <div class="asset-strip-track">
+            <img src="Content/Frame 2147238861.webp" alt="Light component column 1">
+            <img src="Content/Frame 2147238861.webp" alt="" aria-hidden="true">
+          </div>
+        </div>
+        <div class="asset-strip">
+          <div class="asset-strip-track">
+            <img src="Content/Frame 2147238862.webp" alt="Light component column 2">
+            <img src="Content/Frame 2147238862.webp" alt="" aria-hidden="true">
+          </div>
+        </div>
+        <div class="asset-strip">
+          <div class="asset-strip-track">
+            <img src="Content/Frame 2147238863.webp" alt="Light component column 3">
+            <img src="Content/Frame 2147238863.webp" alt="" aria-hidden="true">
+          </div>
+        </div>
+        <div class="asset-strip">
+          <div class="asset-strip-track">
+            <img src="Content/Frame 2147238864.webp" alt="Light component column 4">
+            <img src="Content/Frame 2147238864.webp" alt="" aria-hidden="true">
+          </div>
+        </div>
+        <div class="asset-strip dark-strip">
+          <div class="asset-strip-track">
+            <img src="Content/44.webp" alt="Dark component column 1">
+            <img src="Content/44.webp" alt="" aria-hidden="true">
+          </div>
+        </div>
+        <div class="asset-strip dark-strip">
+          <div class="asset-strip-track">
+            <img src="Content/444.webp" alt="Dark component column 2">
+            <img src="Content/444.webp" alt="" aria-hidden="true">
+          </div>
+        </div>
+        <div class="asset-strip dark-strip">
+          <div class="asset-strip-track">
+            <img src="Content/4444.webp" alt="Dark component column 3">
+            <img src="Content/4444.webp" alt="" aria-hidden="true">
+          </div>
+        </div>
+        <div class="asset-strip dark-strip">
+          <div class="asset-strip-track">
+            <img src="Content/44444.webp" alt="Dark component column 4">
+            <img src="Content/44444.webp" alt="" aria-hidden="true">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide content-slide cream" data-control="light" data-motion="rise">
+      <img src="assets/MAI Logo.svg" alt="MAI" class="slide-logo">
+      <div class="slide-shell"><div class="title-zone"><div class="section-tag reveal" style="--i:0">Transparency framework · Draft</div><h2 class="page-title reveal" style="--i:1">让用户知道 AI 正在做什么</h2></div>
+        <div class="content-zone"><div class="principle-grid">
+          <article class="principle reveal" style="--i:2"><div class="principle-num">01</div><h3>过程可见</h3><p>把检索、规划、调用工具和生成结果拆成用户能理解的阶段。</p></article>
+          <article class="principle reveal" style="--i:3"><div class="principle-num">02</div><h3>证据可追溯</h3><p>明确数据来源、更新时间和推断依据，帮助用户判断可信度。</p></article>
+          <article class="principle reveal" style="--i:4"><div class="principle-num">03</div><h3>边界可理解</h3><p>当能力不足、上下文缺失或结果不确定时，提供清晰的下一步。</p></article>
+        </div></div>
+      </div>
+    </section>
+
+    <section class="slide content-slide cream impact-slide" data-control="light" data-motion="zoom-in">
+      <img src="assets/MAI Logo.svg" alt="MAI" class="slide-logo">
+      <div class="slide-shell"><div class="title-zone"><div class="section-tag reveal" style="--i:0">Product impact</div><div class="impact-tabs reveal" style="--i:1" role="tablist" aria-label="Product impact views"><button class="impact-tab is-active" type="button" role="tab" aria-selected="true" data-impact-tab="overall">整体数据</button><button class="impact-tab" type="button" role="tab" aria-selected="false" data-impact-tab="bc">B/C 端差异</button></div></div>
+        <div class="content-zone"><div class="impact-panels">
+          <div class="impact-panel is-active" data-impact-panel="overall">
+            <div class="impact-board">
+              <section class="overall-band reveal" style="--i:2">
+                <h3 class="overall-title">Overall</h3>
+                <div class="overall-rule"></div>
+                <div class="overall-metrics">
+                  <p>活跃用户数 <strong>+117.6%</strong></p>
+                  <p>使用频率 <strong>+24.7%</strong></p>
+                  <p>新用户留存率 <strong>+12.3%</strong></p>
+                  <p>付费席位活跃率 <strong>+10.3%</strong></p>
+                </div>
+              </section>
+              <div class="impact-cards">
+                <article class="impact-card reveal" style="--i:3">
+                  <div>
+                    <h3>Intent</h3>
+                    <div class="card-rule"></div>
+                    <p>首次互动率 <strong>+41%</strong></p>
+                  </div>
+                  <div class="card-screens">
+                    <img src="Content/1244.webp" alt="Copilot home prompt suggestions">
+                    <img src="Content/124.webp" alt="Copilot typed prompt" class="tall">
+                  </div>
+                </article>
+                <article class="impact-card reveal" style="--i:4">
+                  <div>
+                    <h3>Execution</h3>
+                    <div class="card-rule"></div>
+                    <p>生成中终止率</p>
+                    <p>Express Queries (轻量) <strong>-15.2%</strong></p>
+                    <p>Overall (大盘) <strong>+370%</strong></p>
+                  </div>
+                  <div class="card-screens">
+                    <img src="Content/213.webp" alt="Copilot researching">
+                    <img src="Content/22.webp" alt="Copilot selection bottom sheet" class="tall">
+                  </div>
+                </article>
+                <article class="impact-card reveal" style="--i:5">
+                  <div>
+                    <h3>Response</h3>
+                    <div class="card-rule"></div>
+                    <p>企业相关对话满意度 <strong>+5.4%</strong>（较大盘）</p>
+                  </div>
+                  <div class="card-screens">
+                    <img src="Content/11.webp" alt="Copilot drafted email">
+                    <img src="Content/3332-.webp" alt="Copilot response with data" class="tall">
+                  </div>
+                </article>
+              </div>
+            </div>
+          </div>
+          <div class="impact-panel" data-impact-panel="bc">
+            <div class="bc-board">
+              <article class="bc-card bc-card-c">
+                <h3 class="bc-card-title">To C</h3>
+                <img src="Content/deep research.webp" alt="Consumer answer card example" class="bc-phone">
+                <div class="bc-copy">
+                  <div class="bc-stat">
+                    <div class="bc-stat-title"><strong>1.17 x</strong><span>对话点赞率</span></div>
+                    <div class="bc-compare dither-mount" data-dither-chart="bc-like-c"></div>
+                  </div>
+                  <div class="bc-genui">
+                    <div class="bc-genui-copy"><strong>2.8%</strong><span>GenUI 点击率</span></div>
+                    <div class="bc-pie-mount dither-mount" data-dither-chart="bc-genui-c"></div>
+                  </div>
+                </div>
+              </article>
+              <article class="bc-card bc-card-b">
+                <h3 class="bc-card-title">To B</h3>
+                <img src="Content/1.webp" alt="Enterprise calendar answer card example" class="bc-phone">
+                <div class="bc-copy">
+                  <div class="bc-stat">
+                    <div class="bc-stat-title"><strong>+8.1%</strong><span>功能留存率</span></div>
+                    <div class="bc-compare dither-mount" data-dither-chart="bc-retention-b"></div>
+                  </div>
+                  <div class="bc-stat">
+                    <div class="bc-stat-title"><strong>2.26 x</strong><span>对话点赞率</span></div>
+                    <div class="bc-compare dither-mount" data-dither-chart="bc-like-b"></div>
+                  </div>
+                  <div class="bc-genui">
+                    <div class="bc-genui-copy"><strong>3.59%</strong><span>GenUI 点击率</span></div>
+                    <div class="bc-pie-mount dither-mount" data-dither-chart="bc-genui-b"></div>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div></div>
+      </div>
+    </section>
+
+    <section class="slide slide-closing" data-control="light" data-motion="fade-blur">
+      <img src="Content/Frame.webp" alt="" class="closing-bg">
+      <img src="assets/MAI Logo.svg" alt="MAI" class="cover-logo reveal" style="--i:0">
+      <div class="closing-content"><div class="closing-tag reveal" style="--i:1">Working thesis</div><h2 class="closing-title reveal" style="--i:2">Designing with uncertainty.</h2><p class="closing-sub reveal" style="--i:3">对齐意图、呈现过程、解释边界，并为不确定结果保留可行动的下一步。</p></div>
+    </section>
+  </div></div></div></div>
+
+  <div class="stage-controls">
+    <div class="controls-left"><button class="btn" id="menuBtn" title="Slides" aria-label="Slides"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button><div class="font-controls"><button class="btn" id="fontDown" aria-label="Decrease font size">A-</button><span class="slide-counter" id="fontPct">100%</span><button class="btn" id="fontUp" aria-label="Increase font size">A+</button></div></div>
+    <div class="controls-center"><div class="nav-bar"><button class="btn" id="prev" aria-label="Previous slide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button><span class="slide-counter" id="counter">01 / 29</span><button class="btn" id="next" aria-label="Next slide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></button></div></div>
+    <div class="controls-right"><button class="lang-btn" id="langToggle" type="button" title="Switch language" aria-label="Switch language" aria-pressed="false">EN</button><button class="present-btn" id="presentBtn" title="Present (F)"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg><span>Present</span></button></div>
+  </div>
+  <div class="sidebar-overlay" id="sbOverlay"></div><aside class="sidebar" id="sidebar"><div class="sidebar-head">Slides</div><div class="sidebar-list" id="sbList"></div></aside>
 </div>
-
-<nav><div class="container">
-<a href="#bg">背景</a><a href="#problem">问题</a><a href="#strategy">策略</a><a href="#framework">GenUI框架</a><a href="#impl">落地</a><a href="#result">结果</a>
-</div></nav>
-
-<div class="container">
-
-<!-- Hero -->
-<section class="hero" id="bg">
-<div class="label">Microsoft Copilot · Mobile · 2024-2026</div>
-<h1>在AI产品里定义GenUI设计范式</h1>
-<p>从"纯文字对话"到"AI根据场景动态生成最合适的界面"——我在Copilot Mobile端的设计实践。</p>
-</section>
-
-<hr>
-
-<!-- Ch1: Background -->
-<section>
-<div class="label">第一章</div>
-<h2>产品背景</h2>
-<p>Microsoft Copilot是微软的AI助手产品，覆盖Windows、Mobile、Web全平台。我负责移动端（iOS/Android）的2B+2C全链路体验设计。</p>
-
-<div class="stat-row">
-<div class="stat"><div class="num">43M</div><div class="desc">周活跃用户</div></div>
-<div class="stat"><div class="num">20M+</div><div class="desc">付费企业席位</div></div>
-<div class="stat"><div class="num">Top 3</div><div class="desc">北美AI App</div></div>
-<div class="stat"><div class="num">90%+</div><div class="desc">Fortune 500使用</div></div>
-</div>
-
-<div class="two-col">
-<div>
-<h4>🧑 Consumer（2C）</h4>
-<p>生活陪伴 — 健康咨询、财务规划、体育赛事、学习辅导、日常问答</p>
-</div>
-<div>
-<h4>💼 Enterprise（2B）</h4>
-<p>办公效率 — 邮件摘要、会议准备、数据分析、文档生成、任务管理</p>
-</div>
-</div>
-</section>
-
-<hr>
-
-<!-- Ch2: Problem -->
-<section id="problem">
-<div class="label">第二章</div>
-<h2>有些对话让人失望</h2>
-
-<h3>对话场景集中</h3>
-<p>Consumer端高频场景：体育（实时比分）、娱乐（推荐）、财务（理财/税务/保险）、健康（症状评估）。Enterprise端：邮件、会议、数据分析。</p>
-
-<h3>纯文字的代价</h3>
-
-<div class="stat-row">
-<div class="stat"><div class="num">73%</div><div class="desc">用户认为"易懂"比"全面"重要</div></div>
-<div class="stat"><div class="num">89%</div><div class="desc">用户认为GenUI比纯文字更好理解</div></div>
-<div class="stat"><div class="num">82%</div><div class="desc">付费用户同时在用其他AI工具</div></div>
-</div>
-
-<blockquote>"I will 100% miss information in a long text response. I need structure, I need hierarchy."<br><span style="font-style:normal;font-size:0.85rem;color:var(--text2)">— Copilot用户调研</span></blockquote>
-
-<h3>关键失败数据</h3>
-<table>
-<tr><th>场景</th><th>问题</th><th>影响</th></tr>
-<tr><td>金融产品搜索</td><td>18.3万用户/周来找产品</td><td><strong>100%流失</strong>到竞品比价</td></tr>
-<tr><td>税务计算</td><td>回答失败率</td><td>~30%</td></tr>
-<tr><td>房贷计算</td><td>计算失败率</td><td>38.9%</td></tr>
-<tr><td>工资计算</td><td>计算失败率</td><td>25.9%</td></tr>
-</table>
-
-<div class="highlight">
-<h4>根本问题</h4>
-<p style="margin:0;font-size:1.1rem"><strong>Copilot把"好的回答"当作产品，但用户需要的是"好的结果"。</strong><br>50.4%的个人金融用户intent超越"学习"——他们要评估、决策、购物、执行。纯对话满足不了。</p>
-</div>
-</section>
-
-<hr>
-
-<!-- Ch3: Strategy -->
-<section id="strategy">
-<div class="label">第三章</div>
-<h2>不是每个场景都需要相同的回答</h2>
-
-<h3>用户期待因问题类型而异</h3>
-<div class="two-col">
-<div>
-<h4>宽泛问题</h4>
-<p>"什么是ETF" → 简洁、高效、清晰</p>
-</div>
-<div>
-<h4>具体问题</h4>
-<p>"我能负担25万的房子吗" → 深入、个性化、可行动</p>
-</div>
-</div>
-
-<p>4个体验维度：<strong>简洁度</strong>（Succinctness）、<strong>启发性</strong>（Intrigue）、<strong>视觉吸引</strong>（Visual Appeal）、<strong>任务效率</strong>（Task Efficiency）。不同问题权重不同。</p>
-
-<h3>设计策略三角</h3>
-<div class="card-row">
-<div class="card purple"><div class="icon">📖</div><h4>阅读效率</h4><p>→ 满意度</p></div>
-<div class="card blue"><div class="icon">👆</div><h4>互动意愿</h4><p>→ 点击率/对话轮数/时长</p></div>
-<div class="card green"><div class="icon">🤝</div><h4>信任感</h4><p>→ 留存/满意度/付费续订</p></div>
-</div>
-
-<h3>竞品差距与机会</h3>
-<p>对比ChatGPT/Gemini，Copilot最大差距在 <strong>"Better personalization"</strong>。但Copilot的独特优势是能接入微软生态的用户数据（日历、邮件、文件）——做真正的个性化GenUI。</p>
-</section>
-
-<hr>
-
-<!-- Ch4: Framework -->
-<section id="framework">
-<div class="label">第四章 · 核心</div>
-<h2>了解模型边界，在边界内优雅设计</h2>
-<p style="font-size:1.1rem;color:var(--text)">GenUI Design Framework</p>
-
-<h3>什么是GenUI</h3>
-<p><strong>GenUI = Generative UI</strong> — 由AI根据场景和用户context实时动态生成的用户界面。不是画死的静态页面，是模型根据理解"组装"出来的界面。是AI时代的人机界面。</p>
-
-<h3>GenUI的3种产品形态</h3>
-<div class="card-row">
-<div class="card purple"><div class="icon">💬</div><h4>Chat</h4><p>对话即产品。GenUI以内嵌卡片、图表形式出现在对话流中。</p></div>
-<div class="card blue"><div class="icon">💬+</div><h4>Chat+</h4><p>对话+工作区协作。GenUI在侧边面板或主区域展开。</p></div>
-<div class="card green"><div class="icon">✨</div><h4>Chatless</h4><p>无对话窗口。系统根据输入直接用GenUI呈现结果。</p></div>
-</div>
-
-<h3>Freedom of Expression — 3种自由度</h3>
-<p>2个影响GenUI行为的关键维度：<strong>表达的自由度</strong>（系统允许多大变化空间）和 <strong>谁来控制表达</strong>（产品规定 vs 模型自主）。</p>
-
-<div class="card-row">
-<div class="card" style="border-top:3px solid var(--purple)">
-<div class="icon">🔒</div>
-<h4>固定组件系统<br><span class="tag tag-purple">Low Freedom</span></h4>
-<p>预设组件库（卡片/列表/图表），模型只能选择+填充数据。确定性最高，风险最低。</p>
-<p style="font-size:0.85rem;opacity:0.7">类比：乐高积木 — 形状固定，按说明书拼</p>
-</div>
-<div class="card" style="border-top:3px solid var(--blue);position:relative">
-<span style="position:absolute;top:12px;right:12px" class="tag tag-blue">🎯 甜蜜点</span>
-<div class="icon">🧩</div>
-<h4>扩展组件系统<br><span class="tag tag-blue">Medium Freedom</span></h4>
-<p>模型从组件库中选择并自由组合、排列。在边界内创造，兼顾创意和可控。</p>
-<p style="font-size:0.85rem;opacity:0.7">类比：摇摇马 — 用标准件拼出新东西</p>
-</div>
-<div class="card" style="border-top:3px solid var(--green)">
-<div class="icon">🎨</div>
-<h4>开放生成系统<br><span class="tag tag-green">High Freedom</span></h4>
-<p>模型可生成完整HTML/自由布局。创造力最大，但风险也最大（可能失控）。</p>
-<p style="font-size:0.85rem;opacity:0.7">类比：飞马 — 自由创造，但可能"断裂"</p>
-</div>
-</div>
-
-<h3>谁来控制表达</h3>
-<div class="highlight">
-<p><strong style="color:var(--purple)">Product Controls：</strong>开发者定义规则（只能用哪些组件），产品规定结构，模型只填数据。</p>
-<p><strong style="color:var(--blue)">Model Controls：</strong>模型自己决定呈现方式（表格/Grouping/HTML），产品只负责渲染。</p>
-<p style="margin:0"><strong>现实定位：</strong>大多数产品在中间——应用设定边界，模型在边界内自适应。Copilot当前处于Medium Freedom，正在向High Freedom演进。</p>
-</div>
-
-<h3>模型能力决定自由度上限</h3>
-<p>模型能力越强 → 给予更高自由度。模型能力弱时 → 限制在Fixed System内。这不是一次性选择，是随模型迭代<strong>持续调整的动态决策</strong>。</p>
-</section>
-
-<hr>
-
-<!-- Ch5: Implementation -->
-<section id="impl">
-<div class="label">第五章</div>
-<h2>从框架到产品</h2>
-
-<h3>实现机制：数据 × 组件 × 决策</h3>
-<div class="card-row">
-<div class="card"><h4>1. 了解Context</h4><p>用户偏好、设备、时间、历史对话、微软生态数据</p></div>
-<div class="card"><h4>2. 组件框架</h4><p>原子组件库：卡片、图表、列表、表格、计算器等</p></div>
-<div class="card"><h4>3. AI组装</h4><p>模型根据context选择组件 → 排列 → 填充数据 → 渲染</p></div>
-</div>
-
-<p>两类场景策略：<strong>Mainline场景</strong>（沉浸式交互：体育直播、健康追踪）vs <strong>Catalyst场景</strong>（轻量操作：快速计算、简单查询）。</p>
-
-<h3 style="color:var(--purple)">Low Freedom落地 — 固定卡片系统</h3>
-<p>标准化信息展示：赛程卡片、天气卡片、新闻摘要。<br>例：MAI Sports — 问候→赛程卡片→比分详情→球员数据，每步用标准化卡片逐步展开。</p>
-
-<h3 style="color:var(--blue)">Medium Freedom落地 — Mosaic组合系统</h3>
-<p>组件可拼装组合、自适应布局、内容密度动态调整。</p>
-<ul>
-<li><strong>To B：</strong>日历+邮件摘要+任务清单 → 组合成"今日工作面板"</li>
-<li><strong>Finance：</strong>信用卡推荐→个性化问卷→资格检查→结果对比表</li>
-<li><strong>To B Task：</strong>Discover文章+股票图表+Teams邮件+代码+Offsite Planning</li>
-</ul>
-
-<h3 style="color:var(--green)">High Freedom落地 — 开放生成</h3>
-<p>Tax场景：AI生成完整省税方案（Discover→问卷→计算→"You could save $472"）。用户全程不需要离开Copilot。</p>
-
-<h3>组件系统全览</h3>
-<p>沉淀了完整移动端组件库（亮色/暗色主题），涵盖：对话气泡、内容卡片、数据图表、代码块、日历、媒体播放器、表格、评分等。支持2B和2C两套主题无缝切换。</p>
-
-<h3>AI Workflow工具 — GenUI时代的新挑战</h3>
-<div class="highlight">
-<h4>问题</h4>
-<p>GenUI时代，Figma不再可行——每次生成结果不同，无法穷尽所有组合场景来"手搓"。理想的GenUI是摇摇马（稳定可控），失控的GenUI是断裂的飞马。</p>
-</div>
-
-<p><strong>我的解法：</strong></p>
-<ol style="padding-left:1.5rem;margin:1rem 0">
-<li>找到开源GenUI库，理出技术架构</li>
-<li>定义GenUI Design System（组件+规则）</li>
-<li>和LLM约定返回内容带GenUI Tag</li>
-<li>Agent根据规则，将带Tag的信息渲染成UI</li>
-</ol>
-<p>效果：日本旅行规划 — 纯文本（大段难读）vs GenUI版本（结构化、带地图/图片/行程卡片，视觉吸引力显著提升）。甚至输入信用卡问题，AI直接生成了可交互的申请流程。</p>
-</section>
-
-<hr>
-
-<!-- Ch6: Results -->
-<section id="result">
-<div class="label">第六章</div>
-<h2>影响与未来</h2>
-
-<h3>数据结果</h3>
-<p><strong>To C — Answer Card：</strong></p>
-<div class="stat-row">
-<div class="stat"><div class="num">4%</div><div class="desc">GenUI卡片CTR</div></div>
-<div class="stat"><div class="num">~10K</div><div class="desc">日曝光次数</div></div>
-</div>
-
-<p><strong>To B — Copilot整体（2026 H1）：</strong></p>
-<div class="stat-row">
-<div class="stat"><div class="num">+145.7%</div><div class="desc">DAU增长（半年）</div></div>
-<div class="stat"><div class="num">+117.6%</div><div class="desc">WAU增长（半年）</div></div>
-<div class="stat"><div class="num">70.1%</div><div class="desc">新用户周留存（+12.3pts）</div></div>
-<div class="stat"><div class="num">24.1次/周</div><div class="desc">人均使用频次（+24.7%）</div></div>
-</div>
-
-<h3>系统性影响</h3>
-<ul>
-<li>沉淀了移动端GenUI组件库，被多个场景复用</li>
-<li>建立了GenUI设计框架，成为团队的共同语言</li>
-<li>GenUI测试工具改变了团队工作方式：从"手搓每个UI"到"定义规则让AI生成"</li>
-</ul>
-
-<h3>未来方向：Agentic UX</h3>
-<p>当前Copilot是无状态的——用户走了就忘。下周同一个人问同一个问题，从零开始。<br>未来需要：<strong>有记忆、能主动触达、能跨session关联上下文</strong>。</p>
-
-<p>用户和AI交互正在从简单的问答走向持续关系：</p>
-<table>
-<tr><th>模式</th><th>行为</th><th>代表</th></tr>
-<tr><td>Blocking</td><td>等AI回完才能发下一条</td><td>ChatGPT</td></tr>
-<tr><td>Queue</td><td>可以提前输入，排队处理</td><td>Cursor</td></tr>
-<tr><td>Steer</td><td>AI执行中可改变方向</td><td>Claude Code</td></tr>
-<tr><td>Interrupt</td><td>强制停止当前生成</td><td>Stop按钮</td></tr>
-<tr><td>Append</td><td>追加上下文不打断</td><td>Agent产品</td></tr>
-<tr><td>Batch</td><td>多条合并处理</td><td>Devin</td></tr>
-<tr><td>Branch</td><td>创建并行分支</td><td>编辑消息</td></tr>
-<tr><td>Delegate</td><td>完全委托AI自主执行</td><td>Manus</td></tr>
-</table>
-
-<p style="margin-top:2rem;font-size:1.1rem;color:var(--text)"><strong>从"回答问题"到"陪伴决策全程"——这是Copilot和所有AI产品的下一章。</strong></p>
-</section>
-
-<div style="padding:60px 0;text-align:center;color:var(--text2);font-size:0.85rem">
-Jesse Lai · Microsoft Copilot Mobile Design · 2024-2026
-</div>
-
-</div>
-
 <script>
-function checkPw(){var p=document.getElementById('pw').value;if(p==='copilot2026'){document.getElementById('gate').classList.add('hidden');localStorage.setItem('cp_auth','1');return false}document.getElementById('err').style.display='block';return false}
-if(localStorage.getItem('cp_auth')==='1')document.getElementById('gate').classList.add('hidden');
-const obs=new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})},{threshold:0.1});
-document.querySelectorAll('section').forEach(s=>obs.observe(s));
+const slides = [...document.querySelectorAll('.slide')];
+let cur = 0;
+const counter = document.getElementById('counter');
+const root = document.documentElement;
+const langToggle = document.getElementById('langToggle');
+const ZH_DOCUMENT_TITLE = 'Copilot - AI不完美，但可以被优雅地设计';
+const EN_DOCUMENT_TITLE = "Copilot - AI isn't perfect, but it can be designed gracefully";
+const TRANSLATIONS = {
+  'AI不完美，但可以被优雅地设计': "AI isn't perfect, but it can be designed gracefully",
+  'Microsoft Copilot 是微软最重要、增长最快的产品线之一。从 2023 年底发布到 2026 年初，已达到 1.5 亿月活用户，超过 2,000 万付费用户，是北美市场 Top 3 的 AI 产品。': "Microsoft Copilot is one of Microsoft's most important and fastest-growing product lines. From its late-2023 launch to early 2026, it reached 150M monthly active users and over 20M paid users, becoming a Top 3 AI product in North America.",
+  'Copilot 移动端是微软中国最重要的核心业务之一。我在团队中设计 Copilot To B 和 To C 的双端体验。': "Copilot Mobile is one of Microsoft China's most important core businesses. On the team, I designed both the To B and To C Copilot experiences.",
+  'Copilot 产品定位: To C 个人陪伴, To B 效率工具': 'Copilot Positioning: To C Personal Companion, To B Productivity Tool',
+  '产品现状堪忧': 'Product Reality Is Concerning',
+  '新用户留存率': 'New-user retention',
+  '付费席位活跃率': 'Paid seat activity',
+  '付费用户有其他 AI 订阅': 'Paid users with other AI subscriptions',
+  '为了搞清楚问题，做了调研': 'Research to understand the problem',
+  '用户意图识别不准': 'User intent is misread',
+  '执行过程不透明': 'Execution is opaque',
+  '产出结果很随机': 'Outputs feel random',
+  '时间回到 1.5 年前': 'Back to 1.5 Years Ago',
+  '信息量过载的首屏界面': 'Overloaded first screen',
+  '输入中没有任何引导': 'No guidance while typing',
+  '等待过程漫长': 'Long waiting process',
+  '回答可读性差': 'Poor answer readability',
+  '不会问': "Don't know what to ask",
+  '不想等': "Don't want to wait",
+  '推不准': 'Poor recommendation fit',
+  '生成终止率': 'Generation abandonment rate',
+  'Turn N 点击率': 'Turn N click-through rate',
+  '1.5年前的回答内容：可读性差、置信度低、上下文缺失': 'Answers from 1.5 years ago: poor readability, low confidence, missing context',
+  '缩小意图表达偏差': 'Reduce Intent Expression Drift',
+  '输入前：意图模糊、上下文缺失': 'Before input: vague intent and missing context',
+  '推荐 - 基于工作习惯': 'Suggestions - based on work habits',
+  '联想 - 基于工作文件': 'Association - based on work files',
+  '澄清 - 缩小意图偏差': 'Clarification - reduce intent drift',
+  '引导 - 弥补不确定的体验': 'Guidance - bridge uncertain experiences',
+  '意图清晰': 'Clear intent',
+  '长程任务占比持续上升': 'Long-running task share keeps rising',
+  '过去12个月 - 困难Query占比 19.23% → 46.45%': 'Past 12 months - difficult query share 19.23% → 46.45%',
+  '输入中：需求变化、多意图混合...': 'During input: changing needs and mixed intents...',
+  '互动意愿提升': 'Higher interaction willingness',
+  '生成中断降低': 'Lower generation abandonment',
+  '信任感提升': 'Higher trust',
+  '生成终止率 (轻量)': 'Generation abandonment rate (lightweight)',
+  '设计人与模型的意图对齐方式': 'Designing Intent Alignment Between People and Models',
+  'Input 阶段 - 缩小意图表达偏差': 'Input Stage - Reduce Intent Expression Drift',
+  'Output 阶段 - 优化不确定性结果': 'Output Stage - Improve Uncertain Outcomes',
+  'Input 阶段缩小意图表达偏差，Output 阶段优化不确定性结果的 LLM Agent 流程图': 'LLM Agent flow: reduce intent-expression drift in input, improve uncertain outcomes in output',
+  '模糊': 'Vague',
+  '清晰': 'Clear',
+  '随机': 'Random',
+  '确定': 'Certain',
+  '上下文缺失': 'Missing context',
+  '意图模糊': 'Vague intent',
+  '推理偏差': 'Reasoning bias',
+  '多意图混合': 'Mixed intents',
+  '长程任务': 'Long-running task',
+  '需求变化': 'Changing needs',
+  '产品层Harness & 设计策略': 'Product Harness & Design Strategy',
+  '产品层Harness &amp; 设计策略': 'Product Harness & Design Strategy',
+  '意图表达': 'Intent expression',
+  '及时': 'Timely',
+  '有逻辑': 'Logical',
+  '可读性差': 'Poor readability',
+  '置信度低': 'Low confidence',
+  '真实/时效性': 'Truth / timeliness',
+  '个人偏好': 'Personal preference',
+  '结果高风险': 'High-risk output',
+  '结果输出': 'Output result',
+  '稳定': 'Stable',
+  '可靠': 'Reliable',
+  '个性化': 'Personalized',
+  '模糊头像': 'vague avatar',
+  '草图头像': 'sketched avatar',
+  '清晰头像': 'clear avatar',
+  '随机拼图碎片': 'random puzzle fragments',
+  '逐步组合的拼图': 'gradually assembled puzzle',
+  '接近完成的拼图': 'nearly complete puzzle',
+  '确定的拼图结果': 'certain puzzle result',
+  '对齐意图': 'Align intent',
+  '用户和模型交互的模式': 'User-model interaction patterns',
+  '主动带入已知信息': 'Proactively carry known context',
+  '带入地点': 'Carry in location',
+  '带入收件人信息': 'Carry in recipient information',
+  '优化不确定性结果': 'Improve Uncertain Outcomes',
+  '透明化 AI 思考过程、能力和局限': 'Make AI reasoning, capabilities, and limits transparent',
+  '根据不同的任务类型设计“等待”': 'Design waiting states for different task types',
+  '不把用户留在对话中': 'Do not leave users stuck in the conversation',
+  '设计不确定的结果': 'Designing Uncertain Outcomes',
+  'Copilot 高频对话分布': 'Copilot High-frequency Conversation Distribution',
+  'Copilot 对话分布': 'Copilot Conversation Distribution',
+  'To C 场景中的高频对话占比': 'Share of high-frequency To C conversations',
+  'To B 场景中的高频对话占比': 'Share of high-frequency To B conversations',
+  '然而，有些对话让人失望': 'But some conversations disappoint',
+  '用户带着明确意图来，却只得到一段“还行”的文字。不够结构化、不够个性化、不够可操作，表现在：': 'Users arrive with clear intent, but only receive a merely acceptable block of text. It is not structured enough, not personalized enough, and not actionable enough:',
+  '100%的金融产品提问用户最终离开Copilot去别处比价，导致每周18.3万用户流失': '100% of financial-product questioners eventually leave Copilot to compare elsewhere, causing 183K users to drop off each week',
+  '体育内容时效性差 - 且实时比分、赛程等结构化信息被挤在纯文字里': 'Sports content lacks timeliness, and structured information like live scores and schedules is squeezed into plain text',
+  '工作上下文断裂 - 无法查看和回应近期的工作会议和邮件': 'Work context is broken, making recent meetings and emails impossible to review or act on',
+  '个人金融给出通用建议而非个性化产品匹配': 'Personal finance gives generic advice instead of personalized product matching',
+  '用户带着明确意图来，却只得到一段“还行”的文字。': 'Users arrive with clear intent, but only receive a merely acceptable block of text.',
+  '金融产品提问后，用户仍需离开 Copilot 去别处比价。': 'After asking about financial products, users still have to leave Copilot to compare elsewhere.',
+  '体育内容时效性差，实时比分和赛程被挤在纯文字里。': 'Sports content lacks timeliness, with live scores and schedules compressed into plain text.',
+  '工作上下文断裂，无法查看和回应近期会议与邮件。': 'Work context breaks, so recent meetings and emails cannot be reviewed or acted on.',
+  '个人金融给出通用建议，而非个性化产品匹配。': 'Personal finance returns generic advice instead of personalized product matching.',
+  '最近的 NBA 比赛': 'Recent NBA games',
+  '最近的比赛结果已经出炉……用一段文字压缩比分、赛程和球队信息。': 'The latest results are available, but scores, schedules, and team details are compressed into a paragraph.',
+  '最近的会议总结？': 'Recent meeting summary?',
+  '我尝试检索你最近的会议信息，但当前没有返回任何会议结果。': 'I tried to retrieve your recent meetings, but no meeting results were returned.',
+  '我要办一张信用卡': 'I want to apply for a credit card',
+  '先决定你想办哪家银行、哪种卡，再开始办理。': 'First decide which bank and card type you want, then start the application.',
+  '只有文字的回答难以阅读': 'Text-only answers are hard to read',
+  '用户不会读完整个回答，而会“扫读”回答。在大段文字中寻找相关信息，过高的认知负荷和跳跃的重点，会降低用户对 AI 回答的信任感。': 'Users do not read the full answer; they scan it. Searching dense text for relevant information creates cognitive load and weakens trust in AI responses.',
+  'GenUI，是 AI 时代的人机界面': 'GenUI, the human-computer interface for the AI era',
+  'GenUI 是由 AI 实时动态生成的用户界面。AI 输出的是结构化、可交互的 UI，而不只是 Text-based 回答：': 'GenUI is an interface dynamically generated by AI in real time. AI outputs structured, interactive UI, not just text-based answers:',
+  '回答不仅有内容，还有视觉结构和重点': 'Answers have not only content, but also visual structure and emphasis',
+  '可交互，用户有更高的互动意愿': 'Interactive responses make users more willing to engage',
+  '用户对回答和 agent 都有更强的信任感': 'Users build stronger trust in both the answer and the agent',
+  '表达自由度': 'Expression freedom',
+  'AI 仅允许调用有限的系统预设组件，不允许结构突破。': 'AI can only call a limited set of predefined system components, with no structural breaks.',
+  'AI 调用有限组件，但允许不同组件拼装与组合。': 'AI calls a limited component set, but can assemble and combine components in different ways.',
+  'AI 自由决定组件结构和样式，实现未被规划的设计。': 'AI freely decides component structure and style, enabling designs that were not preplanned.',
+  '从 Discover 到个性化信用卡推荐': 'From Discover to personalized credit-card recommendations',
+  '通过 intake、澄清问题和规划过程，把模糊意图变成可执行结果。': 'Use intake, clarification, and planning to turn vague intent into executable results.',
+  '让工作上下文直接成为回答中的可操作界面。': 'Turn work context directly into actionable UI inside the answer.',
+  '让用户知道 AI 正在做什么': 'Show users what AI is doing',
+  '过程可见': 'Visible process',
+  '把检索、规划、调用工具和生成结果拆成用户能理解的阶段。': 'Break retrieval, planning, tool use, and generation into stages users can understand.',
+  '证据可追溯': 'Traceable evidence',
+  '明确数据来源、更新时间和推断依据，帮助用户判断可信度。': 'Clarify sources, update times, and reasoning evidence so users can judge credibility.',
+  '边界可理解': 'Understandable boundaries',
+  '当能力不足、上下文缺失或结果不确定时，提供清晰的下一步。': 'When capability is limited, context is missing, or results are uncertain, provide a clear next step.',
+  '整体数据': 'Overall metrics',
+  'B/C 端差异': 'B/C differences',
+  '活跃用户数': 'Active users',
+  '使用频率': 'Usage frequency',
+  '首次互动率': 'First interaction rate',
+  '生成中终止率': 'In-generation abandonment rate',
+  '轻量': 'lightweight',
+  '大盘': 'overall',
+  '企业相关对话满意度': 'Enterprise conversation satisfaction',
+  '（较大盘）': '(vs. overall)',
+  '对话点赞率': 'Conversation like rate',
+  'GenUI 点击率': 'GenUI click-through rate',
+  '功能留存率': 'Feature retention',
+  '对齐意图、呈现过程、解释边界，并为不确定结果保留可行动的下一步。': 'Align intent, reveal the process, explain boundaries, and keep an actionable next step for uncertain outcomes.',
+  '用户从模糊意图开始表达。': 'Users start from vague intent.',
+  '推荐问': 'Suggested question',
+  '用推荐问题降低用户从零表达的成本。': 'Use suggested questions to lower the cost of starting from zero.',
+  '联想': 'Association',
+  '把用户的片段输入延展成更完整的任务方向。': 'Expand fragments of user input into a fuller task direction.',
+  '意图识别': 'Intent recognition',
+  '判断当前表达是否足够清晰。': 'Determine whether the current expression is clear enough.',
+  '澄清': 'Clarification',
+  '当意图模糊时，先追问关键条件。': 'When intent is vague, ask for the key conditions first.',
+  '带入已知 context': 'Carry in known context',
+  '用已有上下文减少结果的不确定性。': 'Use existing context to reduce uncertainty in the result.',
+  '优化不确定的结果': 'Improve uncertain results',
+  '通过 context、可编辑回答、多答案等方式提高回答质量。': 'Improve answer quality through context, editable responses, multiple answers, and similar patterns.',
+  'AI 输出内容的“易懂”是最重要的': 'Understandability is the most important quality of AI output',
+  '易于理解': 'Easy to understand',
+  '相关性': 'Relevance',
+  '熟悉格式': 'Familiar format',
+  '趣味性': 'Interest',
+  '占比': 'Share',
+  '结构化、信息分层更有帮助': 'Structured, layered information is more helpful',
+  '更易理解': 'Easier to understand',
+  '中立': 'Neutral',
+  '11% 中立': '11% neutral',
+  '继续深入': 'Continue deeper',
+  '未继续': 'Did not continue',
+  '用户点击 279 / 9810': 'User clicks 279 / 9810',
+  '首周留存': 'Week-one retention',
+  'License 活跃': 'License activity',
+  '影响': 'Impact',
+  '对话满意度': 'Conversation satisfaction',
+  'Answer card 点击率': 'Answer card click-through rate',
+  '当前 23.1%': 'Current 23.1%',
+  '去年同期 15.0%': 'Same period last year 15.0%',
+  '首次互动': 'First interaction',
+  '多轮对话': 'Multi-turn conversation',
+  '离开': 'Exit',
+  '指标': 'Metric',
+  '新用户留存': 'New-user retention',
+  '首周回来继续使用': 'Returned in week one',
+  '付费企业使用率': 'Paid enterprise usage',
+  'license 转化为真实使用': 'Licenses converted into real usage'
+};
+const TRANSLATION_KEYS = Object.keys(TRANSLATIONS).sort((a, b) => b.length - a.length);
+const TRANSLATABLE_ATTRS = ['alt', 'aria-label', 'title'];
+let currentLanguage = 'zh';
+
+function hasChinese(value) {
+  return /[\u3400-\u9fff]/.test(value || '');
+}
+
+function translateZhValue(value) {
+  return TRANSLATION_KEYS.reduce((text, zh) => text.split(zh).join(TRANSLATIONS[zh]), value);
+}
+
+function applyLanguageToTextNode(node) {
+  if (!node.__zhText && hasChinese(node.nodeValue)) node.__zhText = node.nodeValue;
+  if (!node.__zhText) return;
+  node.nodeValue = currentLanguage === 'en' ? translateZhValue(node.__zhText) : node.__zhText;
+}
+
+function applyLanguageToAttributes(element) {
+  TRANSLATABLE_ATTRS.forEach(attr => {
+    if (!element.hasAttribute || !element.hasAttribute(attr)) return;
+    const key = `zh${attr.replace(/[^a-z0-9]/gi, '')}`;
+    const value = element.getAttribute(attr);
+    if (!element.dataset[key] && hasChinese(value)) element.dataset[key] = value;
+    if (!element.dataset[key]) return;
+    element.setAttribute(attr, currentLanguage === 'en' ? translateZhValue(element.dataset[key]) : element.dataset[key]);
+  });
+}
+
+function applyLanguageToElement(scope = deck) {
+  if (!scope) return;
+  if (scope.nodeType === Node.TEXT_NODE) {
+    applyLanguageToTextNode(scope);
+    return;
+  }
+  if (scope.nodeType !== Node.DOCUMENT_NODE && scope.nodeType !== Node.ELEMENT_NODE) return;
+  if (scope.nodeType === Node.ELEMENT_NODE) applyLanguageToAttributes(scope);
+  const walker = document.createTreeWalker(scope, NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT, {
+    acceptNode(node) {
+      if (node.nodeType === Node.ELEMENT_NODE) {
+        return ['SCRIPT', 'STYLE'].includes(node.tagName) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
+      }
+      return node.nodeValue.trim() ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+    }
+  });
+  const nodes = [];
+  while (walker.nextNode()) nodes.push(walker.currentNode);
+  nodes.forEach(node => {
+    if (node.nodeType === Node.TEXT_NODE) applyLanguageToTextNode(node);
+    else applyLanguageToAttributes(node);
+  });
+}
+
+function updateLanguageButton() {
+  if (!langToggle) return;
+  const isEnglish = currentLanguage === 'en';
+  langToggle.textContent = isEnglish ? '中' : 'EN';
+  langToggle.classList.toggle('is-active', isEnglish);
+  langToggle.setAttribute('aria-pressed', isEnglish ? 'true' : 'false');
+  langToggle.title = isEnglish ? 'Switch to Chinese' : 'Switch to English';
+  langToggle.setAttribute('aria-label', langToggle.title);
+}
+
+function setLanguage(language, options = {}) {
+  currentLanguage = language === 'en' ? 'en' : 'zh';
+  root.lang = currentLanguage === 'en' ? 'en' : 'zh-CN';
+  document.title = currentLanguage === 'en' ? EN_DOCUMENT_TITLE : ZH_DOCUMENT_TITLE;
+  applyLanguageToElement(deck);
+  updateLanguageButton();
+  if (options.store !== false) localStorage.setItem('copilot-deck-language', currentLanguage);
+  if (options.rebuild !== false && typeof buildThumbs === 'function') {
+    buildThumbs();
+    show(cur);
+  }
+}
+
+function initLanguage() {
+  const requestedLanguage = new URLSearchParams(location.search).get('lang');
+  const initialLanguage = requestedLanguage || localStorage.getItem('copilot-deck-language') || 'zh';
+  langToggle.onclick = () => setLanguage(currentLanguage === 'en' ? 'zh' : 'en');
+  setLanguage(initialLanguage, { store: Boolean(requestedLanguage), rebuild: false });
+  const observer = new MutationObserver(records => {
+    if (currentLanguage !== 'en') return;
+    records.forEach(record => {
+      record.addedNodes.forEach(node => applyLanguageToElement(node));
+    });
+  });
+  observer.observe(deck, { childList: true, subtree: true });
+}
+
+function syncPageIndices() {
+  let visibleIndex = 0;
+  slides.forEach((slide) => {
+    let pageIndex = slide.querySelector(':scope > .page-index');
+    if (!pageIndex) {
+      pageIndex = document.createElement('div');
+      pageIndex.className = 'page-index';
+      slide.prepend(pageIndex);
+    }
+    const tag = slide.querySelector('.section-tag');
+    const tagText = tag ? tag.textContent.trim() : '';
+    slide.classList.toggle('bound-meta', Boolean(tagText));
+    if (!slide.classList.contains('hide')) visibleIndex += 1;
+    pageIndex.textContent = tagText ? `${String(Math.max(visibleIndex, 1)).padStart(2, '0')} · ${tagText}` : String(Math.max(visibleIndex, 1)).padStart(2, '0');
+  });
+}
+
+function updateAssetStripLoops(scope = document) {
+  scope.querySelectorAll('.asset-strip').forEach(strip => {
+    const track = strip.querySelector('.asset-strip-track');
+    const first = track && track.querySelector('img');
+    if (!track || !first) return;
+    const setDistance = () => {
+      track.querySelectorAll('img[data-generated-loop-copy="true"]').forEach(img => img.remove());
+      const styles = getComputedStyle(track);
+      const gap = parseFloat(styles.rowGap || styles.gap) || 12;
+      const height = first.getBoundingClientRect().height;
+      const stripHeight = strip.getBoundingClientRect().height;
+      if (height <= 0 || stripHeight <= 0) return;
+      const loopDistance = height + gap;
+      track.style.setProperty('--loop-distance', `${loopDistance}px`);
+
+      const neededHeight = stripHeight + loopDistance + gap;
+      let trackHeight = track.scrollHeight;
+      let guard = 0;
+      while (trackHeight < neededHeight && guard < 12) {
+        const clone = first.cloneNode(true);
+        clone.alt = '';
+        clone.setAttribute('aria-hidden', 'true');
+        clone.dataset.generatedLoopCopy = 'true';
+        track.appendChild(clone);
+        trackHeight = track.scrollHeight;
+        guard += 1;
+      }
+    };
+    if (first.complete) setDistance();
+    else first.addEventListener('load', setDistance, { once: true });
+  });
+}
+
+function applyControl(i) {
+  document.body.classList.toggle('asset-only-active', slides[i].classList.contains('asset-only'));
+  const c = slides[i].dataset.control;
+  if (c === 'dark') {
+    root.style.setProperty('--control-fg', 'var(--cream-light)');
+    root.style.setProperty('--control-border', 'rgba(254,249,237,.4)');
+    root.style.setProperty('--control-border-hover', 'rgba(254,249,237,.7)');
+    root.style.setProperty('--control-hover-bg', 'rgba(254,249,237,.1)');
+  } else {
+    root.style.setProperty('--control-fg', 'var(--dark-brown)');
+    root.style.setProperty('--control-border', 'rgba(59,35,14,.28)');
+    root.style.setProperty('--control-border-hover', 'rgba(59,35,14,.6)');
+    root.style.setProperty('--control-hover-bg', 'rgba(59,35,14,.06)');
+  }
+}
+
+function replayChartEntrances(scope) {
+  if (!scope) return;
+  const charts = [...scope.querySelectorAll('.dither-mount')].filter(chart => chart.offsetParent !== null);
+  charts.forEach((chart, index) => {
+    chart.style.setProperty('--chart-i', index);
+    chart.classList.remove('chart-enter');
+    void chart.offsetWidth;
+    chart.classList.add('chart-enter');
+  });
+}
+
+function show(i) {
+  cur = Math.max(0, Math.min(slides.length - 1, i));
+  slides.forEach((s, n) => s.classList.toggle('active', n === cur));
+  const vis = slides.filter(s => !s.classList.contains('hide'));
+  const vpos = vis.indexOf(slides[cur]) + 1;
+  counter.textContent = String(Math.max(vpos, 1)).padStart(2, '0') + ' / ' + String(vis.length).padStart(2, '0');
+  document.getElementById('prev').disabled = !hasNeighbor(-1);
+  document.getElementById('next').disabled = !hasNeighbor(1);
+  applyControl(cur);
+  requestAnimationFrame(() => replayChartEntrances(slides[cur]));
+}
+
+function hasNeighbor(d) {
+  for (let n = cur + d; n >= 0 && n < slides.length; n += d) {
+    if (!slides[n].classList.contains('hide')) return true;
+  }
+  return false;
+}
+
+function step(d) {
+  for (let n = cur + d; n >= 0 && n < slides.length; n += d) {
+    if (!slides[n].classList.contains('hide')) {
+      show(n);
+      return;
+    }
+  }
+}
+
+document.getElementById('next').onclick = () => step(1);
+document.getElementById('prev').onclick = () => step(-1);
+document.addEventListener('keydown', e => {
+  if (['ArrowRight', 'PageDown', ' '].includes(e.key)) step(1);
+  else if (['ArrowLeft', 'PageUp'].includes(e.key)) step(-1);
+  else if (e.key === 'Home') show(0);
+  else if (e.key === 'End') show(slides.length - 1);
+  else if (e.key === 'f' || e.key === 'F') {
+    e.preventDefault();
+    togglePresent();
+  }
+});
+document.addEventListener('pointermove', e => {
+  document.body.classList.toggle('controls-hot', e.clientY >= window.innerHeight - 90);
+});
+
+let fs = 1;
+const pct = document.getElementById('fontPct');
+function setFs(v) {
+  fs = Math.max(.7, Math.min(1.4, v));
+  root.style.setProperty('--font-scale', fs);
+  pct.textContent = Math.round(fs * 100) + '%';
+}
+document.getElementById('fontUp').onclick = () => setFs(fs + .1);
+document.getElementById('fontDown').onclick = () => setFs(fs - .1);
+
+const stage = document.getElementById('stage');
+const presentBtn = document.getElementById('presentBtn');
+function isFull() {
+  return !!(document.fullscreenElement || document.webkitFullscreenElement);
+}
+function togglePresent() {
+  const el = stage;
+  isFull()
+    ? (document.exitFullscreen || document.webkitExitFullscreen).call(document)
+    : (el.requestFullscreen || el.webkitRequestFullscreen).call(el);
+}
+presentBtn.onclick = togglePresent;
+['fullscreenchange', 'webkitfullscreenchange'].forEach(e => {
+  document.addEventListener(e, () => document.body.classList.toggle('is-presenting', isFull()));
+});
+
+function initImpactTabs() {
+  document.querySelectorAll('.impact-slide').forEach(slide => {
+    const tabs = [...slide.querySelectorAll('[data-impact-tab]')];
+    const panels = [...slide.querySelectorAll('[data-impact-panel]')];
+    const activate = view => {
+      tabs.forEach(tab => {
+        const active = tab.dataset.impactTab === view;
+        tab.classList.toggle('is-active', active);
+        tab.setAttribute('aria-selected', active ? 'true' : 'false');
+      });
+      panels.forEach(panel => panel.classList.toggle('is-active', panel.dataset.impactPanel === view));
+      const activePanel = panels.find(panel => panel.dataset.impactPanel === view);
+      requestAnimationFrame(() => replayChartEntrances(activePanel || slide));
+    };
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', e => {
+        e.stopPropagation();
+        activate(tab.dataset.impactTab);
+      });
+      tab.addEventListener('keydown', e => {
+        if (![' ', 'Enter', 'ArrowLeft', 'ArrowRight'].includes(e.key)) return;
+        e.preventDefault();
+        e.stopPropagation();
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+          const delta = e.key === 'ArrowRight' ? 1 : -1;
+          const next = tabs[(index + delta + tabs.length) % tabs.length];
+          next.focus();
+          activate(next.dataset.impactTab);
+        } else {
+          activate(tab.dataset.impactTab);
+        }
+      });
+    });
+  });
+}
+
+function initProcessFlow() {
+  const copy = {
+    user: ['User', '用户从模糊意图开始表达。'],
+    recommend: ['推荐问', '用推荐问题降低用户从零表达的成本。'],
+    associate: ['联想', '把用户的片段输入延展成更完整的任务方向。'],
+    recognize: ['意图识别', '判断当前表达是否足够清晰。'],
+    clarify: ['澄清', '当意图模糊时，先追问关键条件。'],
+    context: ['带入已知 context', '用已有上下文减少结果的不确定性。'],
+    optimize: ['优化不确定的结果', '通过 context、可编辑回答、多答案等方式提高回答质量。']
+  };
+  document.querySelectorAll('.process-map').forEach(map => {
+    const detail = map.querySelector('[data-flow-detail]');
+    const nodes = [...map.querySelectorAll('[data-flow-node]')];
+    const activate = node => {
+      nodes.forEach(n => n.classList.toggle('is-selected', n === node));
+      map.dataset.active = node.dataset.flowNode;
+      const [label, text] = copy[node.dataset.flowNode] || copy.optimize;
+      detail.innerHTML = `<span>${label}</span><p>${text}</p>`;
+      applyLanguageToElement(detail);
+    };
+    nodes.forEach(node => {
+      node.addEventListener('click', e => {
+        e.stopPropagation();
+        activate(node);
+      });
+      node.addEventListener('focus', () => activate(node));
+    });
+    activate(nodes.find(n => n.dataset.flowNode === 'optimize') || nodes[0]);
+  });
+}
+
+const deck = document.getElementById('deck');
+const sbList = document.getElementById('sbList');
+const sidebar = document.getElementById('sidebar');
+const sbOverlay = document.getElementById('sbOverlay');
+const menuBtn = document.getElementById('menuBtn');
+
+function makeThumb(s, n) {
+  const btn = document.createElement('button');
+  btn.className = 'thumb';
+  btn.draggable = true;
+  const fr = document.createElement('div');
+  fr.className = 'thumb-frame';
+  const dk = document.createElement('div');
+  dk.className = 'deck';
+  dk.appendChild(s.cloneNode(true));
+  fr.appendChild(dk);
+  const cap = document.createElement('span');
+  cap.className = 'thumb-cap';
+  const ttl = s.querySelector('.cover-title,.closing-title,.page-title,.divider-title,.showcase-title');
+  cap.textContent = String(n + 1).padStart(2, '0') + ' · ' + (ttl ? ttl.textContent.slice(0, 22) : 'Slide');
+
+  const tools = document.createElement('div');
+  tools.className = 'thumb-tools';
+  const dup = document.createElement('button');
+  dup.className = 'thumb-tool dup';
+  dup.title = 'Duplicate';
+  dup.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>';
+  const eye = document.createElement('button');
+  eye.className = 'thumb-tool eye';
+  eye.title = 'Hide / show';
+  eye.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>';
+  const del = document.createElement('button');
+  del.className = 'thumb-tool del';
+  del.title = 'Delete';
+  del.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 21 6"/><path d="M8 6V4h8v2M6 6l1 14h10l1-14"/></svg>';
+  dup.onclick = e => { e.stopPropagation(); dupSlide(s); };
+  del.onclick = e => { e.stopPropagation(); delSlide(s); };
+  eye.onclick = e => { e.stopPropagation(); toggleHide(s); };
+  tools.append(dup, eye, del);
+  fr.appendChild(tools);
+
+  if (s.classList.contains('hide')) btn.classList.add('hide');
+  btn.append(fr, cap);
+  btn.onclick = () => { if (!btn._drag) show(slides.indexOf(s)); };
+  const c = dk.querySelector('.slide');
+  if (c) {
+    c.classList.add('active');
+    c.style.opacity = '1';
+  }
+  requestAnimationFrame(() => fr.querySelector('.deck').style.transform = 'scale(' + (fr.clientWidth / 1280) + ')');
+  btn.addEventListener('dragstart', e => {
+    btn._drag = true;
+    dragFrom = slides.indexOf(s);
+    btn.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+  });
+  btn.addEventListener('dragend', () => {
+    btn.classList.remove('dragging');
+    setTimeout(() => btn._drag = false, 0);
+  });
+  btn.addEventListener('dragover', e => {
+    e.preventDefault();
+    const to = slides.indexOf(s);
+    sbList.querySelectorAll('.thumb').forEach(t => t.classList.remove('over'));
+    if (to !== dragFrom) btn.classList.add('over');
+  });
+  btn.addEventListener('drop', e => {
+    e.preventDefault();
+    const to = slides.indexOf(s);
+    reorder(dragFrom, to);
+  });
+  return btn;
+}
+
+let thumbs = [];
+let dragFrom = -1;
+function buildThumbs() {
+  syncPageIndices();
+  sbList.innerHTML = '';
+  thumbs = slides.map((s, n) => {
+    const t = makeThumb(s, n);
+    sbList.appendChild(t);
+    return t;
+  });
+  syncThumbs();
+  updateAssetStripLoops(sbList);
+}
+function reorder(from, to) {
+  if (from < 0 || to < 0 || from === to) return;
+  const curEl = slides[cur];
+  const [m] = slides.splice(from, 1);
+  slides.splice(to, 0, m);
+  deck.insertBefore(m, slides[to + 1] || null);
+  buildThumbs();
+  show(slides.indexOf(curEl));
+}
+function dupSlide(s) {
+  const i = slides.indexOf(s);
+  const clone = s.cloneNode(true);
+  clone.classList.remove('active');
+  clone.style.opacity = '';
+  slides.splice(i + 1, 0, clone);
+  deck.insertBefore(clone, s.nextSibling);
+  buildThumbs();
+  show(i + 1);
+}
+function delSlide(s) {
+  if (slides.length <= 1) return;
+  const i = slides.indexOf(s);
+  slides.splice(i, 1);
+  s.remove();
+  buildThumbs();
+  show(Math.min(cur, slides.length - 1));
+}
+function toggleHide(s) {
+  s.classList.toggle('hide');
+  buildThumbs();
+  const i = slides.indexOf(s);
+  if (s.classList.contains('hide') && i === cur) {
+    if (hasNeighbor(1)) step(1);
+    else if (hasNeighbor(-1)) step(-1);
+    else show(i);
+  } else {
+    show(i);
+  }
+}
+function syncThumbs() {
+  thumbs.forEach((t, n) => t.classList.toggle('active', n === cur));
+}
+function openSb() {
+  sidebar.classList.add('open');
+  sbOverlay.classList.add('open');
+  syncThumbs();
+}
+function closeSb() {
+  sidebar.classList.remove('open');
+  sbOverlay.classList.remove('open');
+}
+menuBtn.onclick = () => sidebar.classList.contains('open') ? closeSb() : openSb();
+sbOverlay.onclick = closeSb;
+const _show = show;
+show = function (i) {
+  _show(i);
+  syncThumbs();
+};
+initLanguage();
+buildThumbs();
+initImpactTabs();
+initProcessFlow();
+if (currentLanguage === 'en') applyLanguageToElement(deck);
+updateAssetStripLoops();
+window.addEventListener('load', () => updateAssetStripLoops());
+window.addEventListener('resize', () => updateAssetStripLoops());
+slides.forEach(s => s.classList.remove('active'));
+const requestedSlide = Math.max(1, Math.min(slides.length, Number(new URLSearchParams(location.search).get('slide')) || 1)) - 1;
+requestAnimationFrame(() => requestAnimationFrame(() => show(requestedSlide)));
 </script>
+<script src="assets/react-islands/mai-dither-charts.v2.js"></script>
 </body>
 </html>
