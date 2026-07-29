@@ -44,7 +44,7 @@
           },
           {
             "type": "text",
-            "text": "• 连续5年优秀绩效"
+            "text": "• 连续4年优秀绩效"
           },
           {
             "type": "text",
@@ -53,6 +53,11 @@
           {
             "type": "text",
             "text": "微软："
+          },
+          {
+            "type": "image",
+            "src": "content_images/copilot.png",
+            "caption": ""
           },
           {
             "type": "text",
@@ -135,7 +140,7 @@
           },
           {
             "type": "text",
-            "text": "• Consistently excellent performance for 5 years"
+            "text": "• Consistently excellent performance for 4 years"
           },
           {
             "type": "text",
@@ -144,6 +149,11 @@
           {
             "type": "text",
             "text": "Microsoft:"
+          },
+          {
+            "type": "image",
+            "src": "content_images/copilot.png",
+            "caption": ""
           },
           {
             "type": "text",

@@ -1,5 +1,5 @@
 // atoms-renderer.js — Shared atom rendering module
-console.log('[atoms-renderer] v=211 loaded');
+console.log('[atoms-renderer] v=216 loaded');
 // All atom types are rendered from here. Both atoms.html and wall.js import this.
 import { streamChat, chatSync, buildSystemPrompt } from './ai-client.js?v=166';
 
@@ -2384,6 +2384,21 @@ export class FocusOverlay {
     this._wallFocusItems.push({ item, key });
   }
 
+  _isArticleLabel(text) {
+    return ['阿里巴巴：', '微软：', 'Alibaba:', 'Microsoft:'].includes(String(text || '').trim());
+  }
+
+  _renderArticleText(section, marginBottom, previousSection) {
+    const text = String(section.text || '');
+    const previousText = String(previousSection?.text || '');
+    const isLabel = this._isArticleLabel(text);
+    const color = isLabel ? 'var(--text-secondary, #333)' : 'var(--text-body, #444)';
+    const weight = isLabel ? '700' : '400';
+    const mb = marginBottom || (text.trimStart().startsWith('•') ? '6px' : '24px');
+    const mt = isLabel && previousText.trimStart().startsWith('•') ? '24px' : '0';
+    return `<p style="font-family:var(--body-font, -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif);font-size:16px;color:${color};font-weight:${weight};line-height:1.85;margin-top:${mt};margin-bottom:${mb};">${text.replace(/\n/g, '<br>')}</p>`;
+  }
+
   // 在文章模式下切换到另一篇文章（保持 overlay + mesh 不动）
   _swapArticle(focusData) {
     if (!this._articleMode || !this._articleWrap) return;
@@ -2402,14 +2417,14 @@ export class FocusOverlay {
     }
     const _sections = (this._lang === 'en' && article.sections_en) ? article.sections_en : article.sections;
     if (_sections) {
-      for (const section of _sections) {
+      for (let i = 0; i < _sections.length; i++) {
+        const section = _sections[i];
         if (section.type === 'subtitle') {
           html += `<h2 style="font-family:var(--title-font, Special Elite);font-size:20px;color:var(--text-secondary, #333);margin:48px 0 16px;line-height:1.4;">${section.text}</h2>`;
         } else if (section.type === 'text') {
-          const _mb = section.text.trimStart().startsWith('•') ? '6px' : '24px';
-          html += `<p style="font-family:var(--body-font, -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif);font-size:16px;color:var(--text-body, #444);line-height:1.85;margin-bottom:${_mb};">${section.text.replace(/\n/g, '<br>')}</p>`;
+          html += this._renderArticleText(section, undefined, _sections[i - 1]);
         } else if (section.type === 'image') {
-          html += `<img src="${section.src}" alt="${section.alt || ''}" style="width:100%;border-radius:6px;margin:32px 0 8px;">`;
+          html += `<img src="${section.src}" alt="${section.alt || ''}" style="width:100%;border-radius:6px;margin:8px 0 8px;">`;
           if (section.caption) {
             html += `<p style="font-family:Red Hat Mono,monospace;font-size:11px;color:var(--text-caption, #555);text-align:center;margin:0 0 32px;">${section.caption}</p>`;
           }
@@ -2902,14 +2917,14 @@ export class FocusOverlay {
 
       if (article?.sections) {
         const _secs = (this._lang === 'en' && article.sections_en) ? article.sections_en : article.sections;
-        for (const section of _secs) {
+        for (let i = 0; i < _secs.length; i++) {
+          const section = _secs[i];
           if (section.type === 'subtitle') {
             html += `<h2 style="font-family:var(--title-font, Special Elite);font-size:20px;color:var(--text-secondary, #333);margin:48px 0 16px;line-height:1.4;">${section.text}</h2>`;
           } else if (section.type === 'text') {
-            const _mb = section.text.trimStart().startsWith('•') ? '6px' : '24px';
-            html += `<p style="font-family:var(--body-font, -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif);font-size:16px;color:var(--text-body, #444);line-height:1.85;margin-bottom:${_mb};">${section.text.replace(/\n/g, '<br>')}</p>`;
+            html += this._renderArticleText(section, undefined, _secs[i - 1]);
           } else if (section.type === 'image') {
-            html += `<img src="${section.src}" alt="${section.alt || ''}" style="width:100%;border-radius:6px;margin:32px 0 8px;">`;
+            html += `<img src="${section.src}" alt="${section.alt || ''}" style="width:100%;border-radius:6px;margin:8px 0 8px;">`;
             if (section.caption) {
               html += `<p style="font-family:Red Hat Mono,monospace;font-size:11px;color:var(--text-caption, #555);text-align:center;margin:0 0 32px;">${section.caption}</p>`;
             }
@@ -3630,11 +3645,12 @@ export class FocusOverlay {
         if (title) html += `<h1 style="font-family:var(--title-font, Special Elite);font-size:28px;color:var(--text-primary, #1a1a1a);letter-spacing:0.5px;line-height:1.4;margin:0 0 32px;padding-bottom:24px;border-bottom:1px solid var(--border-divider, rgba(0,0,0,0.08));">${title}</h1>`;
         const _secs3 = (this._lang === 'en' && article.sections_en) ? article.sections_en : article.sections;
         if (_secs3) {
-          for (const s of _secs3) {
+          for (let i = 0; i < _secs3.length; i++) {
+            const s = _secs3[i];
             if (s.type === 'subtitle') html += `<h2 style="font-family:var(--title-font, Special Elite);font-size:20px;color:var(--text-secondary, #333);margin:48px 0 16px;line-height:1.4;">${s.text}</h2>`;
-            else if (s.type === 'text') html += `<p style="font-family:var(--body-font, -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif);font-size:16px;color:var(--text-body, #444);line-height:1.85;margin-bottom:24px;">${s.text}</p>`;
+            else if (s.type === 'text') html += this._renderArticleText(s, '24px', _secs3[i - 1]);
             else if (s.type === 'image') {
-              html += `<img src="${s.src}" alt="${s.alt || ''}" style="width:100%;border-radius:6px;margin:32px 0 8px;">`;
+              html += `<img src="${s.src}" alt="${s.alt || ''}" style="width:100%;border-radius:6px;margin:8px 0 8px;">`;
               if (s.caption) html += `<p style="font-family:Red Hat Mono,monospace;font-size:11px;color:var(--text-caption, #555);text-align:center;margin:0 0 32px;">${s.caption}</p>`;
             }
           }
