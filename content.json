@@ -27,8 +27,18 @@
             "text": "幸运的是，我曾多次被公司官方媒体作为 <a href=\"https://mp.weixin.qq.com/s/5FFKYeLy22Bx1S-b4z8UKw\">优秀案例</a> 报道。在工作之余，我偶尔也会在 <a href=\"https://mp.weixin.qq.com/s/hbqhQS9mMXhLmtFRbWKDEQ\">微信公众号</a> 和 <a href=\"https://medium.com/@laijianxun123\">Medium</a> 上写一些关于 AI 时代产品设计的思考。"
           },
           {
+            "type": "image",
+            "src": "content_images/writing.png",
+            "caption": ""
+          },
+          {
             "type": "text",
             "text": "对了，如果我不在做设计和Vibe coding，那大概率是在创作脱口秀 🤣"
+          },
+          {
+            "type": "image",
+            "src": "content_images/comedy.png",
+            "caption": ""
           },
           {
             "type": "subtitle",
@@ -62,6 +72,11 @@
           {
             "type": "text",
             "text": "• 将 Vibe Coding 工作流融入产品开发，交付从设计到前端开发的全链路体验"
+          },
+          {
+            "type": "image",
+            "src": "content_images/designtocode.png",
+            "caption": ""
           },
           {
             "type": "text",
@@ -119,8 +134,18 @@
             "text": "Fortunately, I've been recognised multiple times by company official media as an <a href=\"https://mp.weixin.qq.com/s/5FFKYeLy22Bx1S-b4z8UKw\">outstanding employee</a>. Outside of work, I occasionally write about product design in the AI era on <a href=\"https://mp.weixin.qq.com/s/5FFKYeLy22Bx1S-b4z8UKw\">WeChat Blog</a> and <a href=\"https://medium.com/@laijianxun123\">Medium</a>."
           },
           {
+            "type": "image",
+            "src": "content_images/writing.png",
+            "caption": ""
+          },
+          {
             "type": "text",
             "text": "Oh, and if I'm not designing or vibe coding, I'm probably doing stand-up comedy 🤣"
+          },
+          {
+            "type": "image",
+            "src": "content_images/comedy.png",
+            "caption": ""
           },
           {
             "type": "subtitle",
@@ -154,6 +179,11 @@
           {
             "type": "text",
             "text": "• Integrating Vibe Coding workflow into product development, delivering full-chain experiences from design to front-end code"
+          },
+          {
+            "type": "image",
+            "src": "content_images/designtocode.png",
+            "caption": ""
           },
           {
             "type": "text",
