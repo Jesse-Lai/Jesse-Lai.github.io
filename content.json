@@ -1084,6 +1084,23 @@
           },
           {
             "type": "subtitle",
+            "text": "JesseAgent"
+          },
+          {
+            "type": "text",
+            "text": "时间：2026.7"
+          },
+          {
+            "type": "text",
+            "text": "基于对 Claude Code 源码的学习，搭建了自己的 Coding Agent。它接通了我的办公数据，能够帮我汇总反馈，并帮我基于反馈出设计方案。"
+          },
+          {
+            "type": "image",
+            "src": "content_images/JesseAgent.png",
+            "caption": ""
+          },
+          {
+            "type": "subtitle",
             "text": "Mini games platform"
           },
           {
@@ -1219,6 +1236,23 @@
           {
             "type": "video",
             "src": "https://www.youtube.com/embed/RdJ2Dw87F2c"
+          },
+          {
+            "type": "subtitle",
+            "text": "JesseAgent"
+          },
+          {
+            "type": "text",
+            "text": "Date: 2026.7"
+          },
+          {
+            "type": "text",
+            "text": "Based on what I learned from the Claude Code source code, I built my own Coding Agent. It connects to my work data, helps me summarize feedback, and turns that feedback into design proposals."
+          },
+          {
+            "type": "image",
+            "src": "content_images/JesseAgent.png",
+            "caption": ""
           },
           {
             "type": "subtitle",
