@@ -1,5 +1,5 @@
 // atoms-renderer.js — Shared atom rendering module
-console.log('[atoms-renderer] v=216 loaded');
+console.log('[atoms-renderer] v=217 loaded');
 // All atom types are rendered from here. Both atoms.html and wall.js import this.
 import { streamChat, chatSync, buildSystemPrompt } from './ai-client.js?v=166';
 
@@ -2348,14 +2348,9 @@ export class FocusOverlay {
     this.dimLayer.visible = false;
     this.blurFilter = new PIXI.BlurFilter({ strength: 0, quality: 4 });
 
-    this.backdrop.addEventListener('click', () => {
-      if (this._articleMode) this.closeArticle();
-      else this.close();
-    });
-    this.closeBtn.addEventListener('click', () => {
-      if (this._articleMode) this.closeArticle();
-      else this.close();
-    });
+    this.onCloseRequest = null;
+    this.backdrop.addEventListener('click', () => this.requestClose());
+    this.closeBtn.addEventListener('click', () => this.requestClose());
 
     // Article element (lives inside overlay)
     this.articleEl = document.getElementById('focus-article');
@@ -2382,6 +2377,19 @@ export class FocusOverlay {
 
   registerFocusItem(item, key) {
     this._wallFocusItems.push({ item, key });
+  }
+
+  requestClose() {
+    if (this.onCloseRequest) {
+      this.onCloseRequest();
+      return;
+    }
+    this.dismiss();
+  }
+
+  dismiss() {
+    if (this._articleMode) this.closeArticle();
+    else this.close();
   }
 
   _isArticleLabel(text) {

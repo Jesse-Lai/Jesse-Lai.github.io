@@ -1,5 +1,5 @@
 // wall.js — Main view, uses atoms-renderer.js
-import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, renderTearoffCard, makeDraggable, FocusOverlay, getOrCreateVideo, loadAllVideosSequentially, animateTo, fadeIn } from "./atoms-renderer-v211.js?v=216";
+import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, renderTearoffCard, makeDraggable, FocusOverlay, getOrCreateVideo, loadAllVideosSequentially, animateTo, fadeIn } from "./atoms-renderer-v211.js?v=217";
 import { WallArticle } from "./wall-article.js?v=151";
 
 (async () => {
@@ -61,6 +61,7 @@ import { WallArticle } from "./wall-article.js?v=151";
   // ─── Load content from Notion-synced content.json ───
   const contentResp = await fetch('content.json');
   const contentData = await contentResp.json();
+  const contentBySlug = new Map(contentData.filter(entry => entry.slug).map(entry => [entry.slug, entry]));
   setProgress(12);
 
   // ─── Language ───
@@ -185,6 +186,7 @@ import { WallArticle } from "./wall-article.js?v=151";
       const pc = photoCaptions[entry.title] || { caption: entry.title, date: '' };
       wallItems.push({
         type: 'photo',
+        slug: entry.slug,
         category: entry.category,
         src: entry.cover_image,
         caption: pc.caption,
@@ -194,6 +196,7 @@ import { WallArticle } from "./wall-article.js?v=151";
     } else if (entry.atom === 'sticky') {
       wallItems.push({
         type: 'sticky',
+        slug: entry.slug,
         category: entry.category,
         title: t(entry, 'title') || entry.title,
         body: t(entry, 'body') || entry.body || '',
@@ -225,6 +228,105 @@ import { WallArticle } from "./wall-article.js?v=151";
 
   // ─── Focus Overlay ───
   const focusOverlay = new FocusOverlay(app, contentData, LANG, photoSystem);
+  const routeItems = new Map();
+  const SITE_ORIGIN = 'https://jesseos.com';
+  const HOME_DESCRIPTION = "Jesse Lai's personal space for AI product design, creative coding, and experiments.";
+
+  function getRouteSlug() {
+    const parts = decodeURIComponent(window.location.pathname).split('/').filter(Boolean);
+    return parts.length === 1 && contentBySlug.has(parts[0]) ? parts[0] : null;
+  }
+
+  function setMetaContent(selector, value) {
+    const element = document.head.querySelector(selector);
+    if (element) element.setAttribute('content', value);
+  }
+
+  function getShareDescription(entry) {
+    const raw = entry?.focus?.description || entry?.body || entry?.title || HOME_DESCRIPTION;
+    const text = String(raw).replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+    return text.length > 180 ? `${text.slice(0, 177).trimEnd()}...` : text;
+  }
+
+  function updatePageMeta(entry = null) {
+    const articleTitle = entry?.focus?.article?.title || entry?.focus?.title || entry?.title;
+    const pageTitle = articleTitle ? `${articleTitle} — JesseOS` : 'JesseOS';
+    const description = entry ? getShareDescription(entry) : HOME_DESCRIPTION;
+    const url = entry ? `${SITE_ORIGIN}/${entry.slug}/` : `${SITE_ORIGIN}/`;
+    const image = entry?.cover_image ? new URL(entry.cover_image, `${SITE_ORIGIN}/`).href : `${SITE_ORIGIN}/photo_portrait.webp`;
+
+    document.title = pageTitle;
+    const canonical = document.head.querySelector('link[rel="canonical"]');
+    if (canonical) canonical.setAttribute('href', url);
+    setMetaContent('meta[name="description"]', description);
+    setMetaContent('meta[property="og:type"]', entry ? 'article' : 'website');
+    setMetaContent('meta[property="og:title"]', articleTitle || 'JesseOS');
+    setMetaContent('meta[property="og:description"]', description);
+    setMetaContent('meta[property="og:image"]', image);
+    setMetaContent('meta[property="og:url"]', url);
+    setMetaContent('meta[name="twitter:title"]', articleTitle || 'JesseOS');
+    setMetaContent('meta[name="twitter:description"]', description);
+    setMetaContent('meta[name="twitter:image"]', image);
+  }
+
+  function dismissActiveArticle() {
+    if (focusOverlay.activeItem || focusOverlay._articleMode) focusOverlay.dismiss();
+  }
+
+  function openRoute(slug) {
+    const route = routeItems.get(slug);
+    if (!route) return;
+    updatePageMeta(route.entry);
+
+    if (focusOverlay._closing) {
+      setTimeout(() => openRoute(slug), 80);
+      return;
+    }
+    if (focusOverlay.activeItem === route.item) return;
+    if (focusOverlay.activeItem) {
+      dismissActiveArticle();
+      setTimeout(() => openRoute(slug), 1100);
+      return;
+    }
+    focusOverlay.open(route.item);
+  }
+
+  function navigateToAtom(item) {
+    const slug = item?._routeSlug;
+    if (!slug || item._isClipGroupFocus) {
+      focusOverlay.open(item);
+      return;
+    }
+    const entry = contentBySlug.get(slug);
+    history.pushState({ jesseAtom: true, slug, fromWall: true }, '', `/${slug}/`);
+    updatePageMeta(entry);
+    focusOverlay.open(item);
+  }
+
+  focusOverlay.onCloseRequest = () => {
+    const slug = getRouteSlug();
+    if (!slug) {
+      dismissActiveArticle();
+      return;
+    }
+    if (history.state?.jesseAtom && history.state?.fromWall) {
+      history.back();
+      return;
+    }
+    history.replaceState({ jesseHome: true }, '', '/');
+    updatePageMeta();
+    dismissActiveArticle();
+  };
+
+  window.addEventListener('popstate', () => {
+    const slug = getRouteSlug();
+    if (slug) {
+      openRoute(slug);
+      return;
+    }
+    updatePageMeta();
+    dismissActiveArticle();
+  });
 
   setProgress(15);
 
@@ -348,7 +450,7 @@ import { WallArticle } from "./wall-article.js?v=151";
   // 注册所有有文章的 wall items，供 chat 推荐使用
   for (const { wallItem, focusableItem } of renderedItems) {
     if (wallItem.focus?.article && focusableItem) {
-      const key = wallItem.title;
+      const key = wallItem.title || wallItem.caption || wallItem.slug;
       focusOverlay.registerWallItem(key, {
         ...wallItem.focus,
         caption: wallItem.caption,
@@ -361,9 +463,16 @@ import { WallArticle } from "./wall-article.js?v=151";
         colorScheme: wallItem.colorScheme,
       });
       focusOverlay.registerFocusItem(focusableItem, key);
+      if (wallItem.slug) {
+        focusableItem._routeSlug = wallItem.slug;
+        routeItems.set(wallItem.slug, { item: focusableItem, entry: contentBySlug.get(wallItem.slug) });
+      }
     }
   }
-  photoSystem.onFocus = (item) => { track('atom-click', { title: item.focusData?.title || '' }); focusOverlay.open(item); };
+  photoSystem.onFocus = (item) => {
+    track('atom-click', { title: item.focusData?.title || '' });
+    navigateToAtom(item);
+  };
 
   // ─── Load all video blobs sequentially (ordered by atom position, top first) ───
   const videoSrcsByPosition = rendered
@@ -380,6 +489,15 @@ import { WallArticle } from "./wall-article.js?v=151";
       loadingScreen.classList.add('hidden');
       setTimeout(() => loadingScreen.remove(), 600);
     }, 300);
+  }
+
+  const initialSlug = getRouteSlug();
+  if (initialSlug) {
+    history.replaceState({ jesseAtom: true, slug: initialSlug, direct: true }, '', window.location.href);
+    setTimeout(() => openRoute(initialSlug), loadingScreen ? 360 : 0);
+  } else if (window.location.pathname === '/') {
+    history.replaceState({ jesseHome: true }, '', window.location.href);
+    updatePageMeta();
   }
 
   // ─── Mobile scroll hover for clip labels ───

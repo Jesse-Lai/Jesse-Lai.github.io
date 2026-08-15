@@ -1,6 +1,7 @@
 [
   {
     "id": "116400ee-0cf5-8029-ba88-e9288932ff8d",
+    "slug": "hello-jesse",
     "title": "Hello I’m Jesse Lai",
     "category": "who_i_am",
     "atom": "photo",
@@ -236,6 +237,7 @@
   },
   {
     "id": "copilot-bc-001",
+    "slug": "microsoft",
     "title": "Microsoft",
     "category": "design_projects",
     "atom": "sticky",
@@ -354,6 +356,7 @@
   },
   {
     "id": "116400ee-0cf5-8156-9ca8-fbc4ded84bda",
+    "slug": "alibaba",
     "title": "Alibaba",
     "category": "design_projects",
     "atom": "sticky",
@@ -456,6 +459,7 @@
   },
   {
     "id": "30d400ee-0cf5-805a-ab9d-cf4d576901da",
+    "slug": "genui-design-guide",
     "title": "GenUI 设计指南",
     "category": "design_thought",
     "atom": "sticky",
@@ -1072,6 +1076,7 @@
   },
   {
     "id": "vibe-coding-001",
+    "slug": "vibe-coding",
     "title": "Vibe Coding",
     "category": "design_projects",
     "atom": "photo",
@@ -1400,6 +1405,7 @@
   },
   {
     "id": "360400ee-0cf5-80e4-ae1c-ccb2760bb841",
+    "slug": "drawing",
     "title": "Drawing",
     "category": "hobby",
     "atom": "photo",
@@ -1504,6 +1510,7 @@
   },
   {
     "id": "358400ee-0cf5-81e1-aff1-ee6de5859ccd",
+    "slug": "ai-design-principles",
     "title": "AI产品设计原则",
     "category": "design_thought",
     "atom": "sticky",
@@ -1628,6 +1635,7 @@
   },
   {
     "id": "146400ee-0cf5-808f-87e8-d536e92e21ee",
+    "slug": "stand-up-comedian",
     "title": "Stand-up Comedian",
     "category": "hobby",
     "atom": "photo",
@@ -1762,6 +1770,7 @@
   },
   {
     "id": "arduino-light-001",
+    "slug": "born-builder",
     "title": "Born Builder",
     "category": "design_projects",
     "atom": "photo",
