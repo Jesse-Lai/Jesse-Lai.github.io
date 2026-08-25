@@ -6,6 +6,8 @@
     "category": "who_i_am",
     "atom": "photo",
     "body": "嗨👋 我是微软的一个 AI Builder，一边设计 AI Native 产品，一边把我的设计在生产环境coding出来，直接交付产品的线上体验。 过去5年我先后在阿里巴巴和微软工作，并且在生成式AI的早期，就开始为 ToC 和 ToB 用户设计各种 AI Native产品。",
+    "ai_context": "语言：中文是母语；英语可以用于工作交流；中文和英语都可以讲脱口秀。会讲长沙话，但说得不标准。",
+    "ai_context_en": "Languages: Chinese is my native language; I can use English for work communication; I can perform stand-up comedy in both Chinese and English. I speak Changsha dialect, though not in a standard way.",
     "cover_image": "photo_portrait.webp",
     "focus": {
       "title": "Hello I'm Jesse Lai",
@@ -69,6 +71,10 @@
           {
             "type": "text",
             "text": "• 与global团队一起，设计 To C/B 两端的 Copilot 产品体验，专注于 GenUI 和 Agent 体验"
+          },
+          {
+            "type": "text",
+            "text": "• 在过去几年的职业生涯中，我在做同一件事：如何用简单的基本元素，组成多变的复杂系统"
           },
           {
             "type": "text",
@@ -180,6 +186,10 @@
           {
             "type": "text",
             "text": "• Designing Copilot experiences for both C-end and B-end with global team, focusing on GenUI and Agent experiences"
+          },
+          {
+            "type": "text",
+            "text": "• Over the past few years of my career, I’ve been focused on the same thing: how to combine simple building blocks into diverse, complex systems"
           },
           {
             "type": "text",
@@ -1093,6 +1103,23 @@
         "sections": [
           {
             "type": "subtitle",
+            "text": "JesseAgent"
+          },
+          {
+            "type": "text",
+            "text": "时间：2026.7"
+          },
+          {
+            "type": "text",
+            "text": "基于对 Claude Code 源码的学习，搭建了自己的 Coding Agent。它接通了我的办公数据，能够帮我汇总反馈，并帮我基于反馈出设计方案。"
+          },
+          {
+            "type": "image",
+            "src": "content_images/JesseAgent.png",
+            "caption": ""
+          },
+          {
+            "type": "subtitle",
             "text": "Storyteller"
           },
           {
@@ -1120,23 +1147,6 @@
           {
             "type": "text",
             "text": "项目视频：<a href=\"https://youtu.be/RdJ2Dw87F2c\">https://youtu.be/RdJ2Dw87F2c</a>"
-          },
-          {
-            "type": "subtitle",
-            "text": "JesseAgent"
-          },
-          {
-            "type": "text",
-            "text": "时间：2026.7"
-          },
-          {
-            "type": "text",
-            "text": "基于对 Claude Code 源码的学习，搭建了自己的 Coding Agent。它接通了我的办公数据，能够帮我汇总反馈，并帮我基于反馈出设计方案。"
-          },
-          {
-            "type": "image",
-            "src": "content_images/JesseAgent.png",
-            "caption": ""
           },
           {
             "type": "subtitle",
@@ -1248,6 +1258,23 @@
         "sections_en": [
           {
             "type": "subtitle",
+            "text": "JesseAgent"
+          },
+          {
+            "type": "text",
+            "text": "Date: 2026.7"
+          },
+          {
+            "type": "text",
+            "text": "Based on what I learned from the Claude Code source code, I built my own Coding Agent. It connects to my work data, helps me summarize feedback, and turns that feedback into design proposals."
+          },
+          {
+            "type": "image",
+            "src": "content_images/JesseAgent.png",
+            "caption": ""
+          },
+          {
+            "type": "subtitle",
             "text": "Storyteller"
           },
           {
@@ -1275,23 +1302,6 @@
           {
             "type": "video",
             "src": "https://www.youtube.com/embed/RdJ2Dw87F2c"
-          },
-          {
-            "type": "subtitle",
-            "text": "JesseAgent"
-          },
-          {
-            "type": "text",
-            "text": "Date: 2026.7"
-          },
-          {
-            "type": "text",
-            "text": "Based on what I learned from the Claude Code source code, I built my own Coding Agent. It connects to my work data, helps me summarize feedback, and turns that feedback into design proposals."
-          },
-          {
-            "type": "image",
-            "src": "content_images/JesseAgent.png",
-            "caption": ""
           },
           {
             "type": "subtitle",
@@ -1888,6 +1898,938 @@
       "title_en": "Born Builder"
     },
     "title_en": "Born Builder"
+  },
+  {
+    "id": "3bd400ee-0cf5-8022-9b0d-ebdc40f74691",
+    "slug": "deepseek-harness",
+    "title": "DeepSeek Harness",
+    "category": "design_thought",
+    "atom": "sticky",
+    "body": "从设计一个 Agent，到设计一套可复用、可组合的创造系统。",
+    "body_en": "From designing one agent to designing a reusable, composable creation system.",
+    "cover_image": "hands.webp",
+    "video_src": "hands.mp4",
+    "keywords": "DeepSeek Harness ● Agent Design ● Everything is an Atom ● Context ● Plugin Ecosystem ● 2026",
+    "focus": {
+      "title": "DeepSeek Harness",
+      "description": "从设计一个 Agent，到设计可复用、可组合的创造系统：上手体验、创造路径与生态维护。",
+      "description_en": "From designing one agent to a reusable, composable creation system spanning onboarding, creation pathways, and ecosystem governance.",
+      "link": "#",
+      "linkText": "Read more",
+      "article": {
+        "title": "DeepSeek Harness 的产品设计思考",
+        "title_en": "Product Design Thoughts on DeepSeek Harness",
+        "sections_latest": [
+          {
+            "type": "text",
+            "text": "DeepSeek Harness 发布以后，基于 “Everything is a plugin” 的理念，我在想：如果我是它的产品设计师，会如何设计？我认为设计策略是：把界面拆解成基础原子，一切复杂界面都由基础原子组成，通过定义原子的组合规则，实现灵活而多变的系统。"
+          },
+          {
+            "type": "text",
+            "text": "幸运的是，在过去几年的职业生涯中，我正好就在做这件事：利用简单的基本元素，搭建多变的复杂系统。"
+          },
+          {
+            "type": "text",
+            "text": "这会让产品设计的重心，从设计一个 Agent，变成设计一个可复用、可组合的创造系统。作为产品设计师，需要深度参与和打磨这个系统的“上手体验、创造途径、生态维护”，让不同阶段的用户都容易理解、易于创造、乐于开源。"
+          },
+          {
+            "type": "subtitle",
+            "text": "阶段 1：上手体验——把复杂界面拆解为原子结构"
+          },
+          {
+            "type": "text",
+            "text": "良好的上手体验，是通过官方推出经过打磨的产品，降低最广泛用户的使用门槛，让用户长期留在 DeepSeek Harness 生态内。它像乐高积木套装，用户可以根据自己的任务类型选择合适的积木组合。"
+          },
+          {
+            "type": "text",
+            "text": "• 面向人群：最广泛的普通用户、第一次接触 DeepSeek Harness 的人。\n• 产品目标：开箱即用，默认就有最优秀的 Coding 体验。"
+          },
+          {
+            "type": "image",
+            "src": "content_images/deepseek-harness-01-hands.webp",
+            "caption": "",
+            "alt": "DeepSeek Harness 原子化视觉"
+          },
+          {
+            "type": "subtitle",
+            "text": "阶段 1 的挑战：灵活插件带来了复杂度"
+          },
+          {
+            "type": "text",
+            "text": "产品“Everything is a plugin”的理念，意味着用户界面也需要应对更多复杂度：如何让界面适应用户和 Agent 不断变化的插件？如果这个问题不解决，产品设计会随着插件体系变得越来越臃肿和复杂，最终成为产品进化的瓶颈。"
+          },
+          {
+            "type": "subtitle",
+            "text": "阶段 1 的设计策略：原子化设计"
+          },
+          {
+            "type": "image",
+            "src": "content_images/deepseek-harness-02-strategy.webp",
+            "caption": "",
+            "alt": "从灵活插件体系到原子化设计策略"
+          },
+          {
+            "type": "text",
+            "text": "我相信“形式追随功能”，插件体系也需要对应的产品设计策略。带着这个问题，我重新设计并开源了 DeepSeek Harness 客户端版本，并针对当前主流 Coding Agent 用户面临的几个问题——长程任务、Context、思维链——设计了新的解决方案。"
+          },
+          {
+            "type": "subtitle",
+            "text": "设计理念——Everything is an atom"
+          },
+          {
+            "type": "text",
+            "text": "我从 Notion 文档的设计理念中得到启发。Notion 的基础原子是“Block”：无论多复杂的 Notion 页面，都是由最基础的 Block 组成，也有点像 Web 开发中的“盒模型”。Notion 在早期定义清楚了原子结构 Block 的行为和边界，系统的复杂度就变得可以被管理。"
+          },
+          {
+            "type": "image",
+            "src": "content_images/deepseek-harness-02-notion-blocks.webp",
+            "caption": "最基础的 Block 元素，就可以组成所有复杂的 Notion 页面",
+            "alt": "Notion Block 组合示意"
+          },
+          {
+            "type": "text",
+            "text": "那么 Agent 产品的基础元素是什么？我的第一个答案是“Session”。"
+          },
+          {
+            "type": "text",
+            "text": "回想主流 Coding Agent 的一切：每一个 Query、每个任务、每个项目，都是由多个 Sessions 组成的。还能再拆分吗？Session 还能被拆分为 Query 和 Response，但它们单独拿出来不足以组成完整体验。"
+          },
+          {
+            "type": "image",
+            "src": "content_images/deepseek-harness-03-session.webp",
+            "caption": "Session 是 Agent 的最小单位",
+            "alt": "Session 原子示意"
+          },
+          {
+            "type": "text",
+            "text": "那么，不论多复杂的 Agent 界面，都可以由可复用、可组合的原子单位 Session 组成，实现像插件一样自由的组合布局。原子种类是有限的，而组合出的界面是无限的。"
+          },
+          {
+            "type": "text",
+            "text": "比如，用户可以在一个界面中同时打开多个 Session，并行修改同一个项目。这也让 Agent 在运行中可以自主开启多个 Session 或 Sub-agent 执行任务，完成后再退出；整个过程中，用户都可以随时观察并介入。"
+          },
+          {
+            "type": "video",
+            "src": "content_images/deepseek-multi-session.mp4",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "甚至可以将 Session 拖到 Agent 外作为独立窗口；它们彼此之间也可以像插件一样灵活拼接，特别适合使用多个显示器的场景。"
+          },
+          {
+            "type": "video",
+            "src": "content_images/deepseek-detachable-nav.mp4",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "导航区也是可拆卸的灵活结构，可以与 Session 在不同位置组合，展示出不同形态，以适应用户的个性化需求。"
+          },
+          {
+            "type": "video",
+            "src": "content_images/deepseek-navigation-layouts.mp4",
+            "caption": ""
+          },
+          {
+            "type": "subtitle",
+            "text": "使用场景和 Agent 分离问题"
+          },
+          {
+            "type": "text",
+            "text": "目前主流 Coding Agent 最大的问题，仍然是使用场景和 Context 分离。典型场景是：用户在办公软件或浏览器中工作，把要处理的 Context 多次来回复制粘贴到 Coding Agent；处理完成后，再把结果放回原来的使用场景，浪费了很多注意力。"
+          },
+          {
+            "type": "image",
+            "src": "content_images/deepseek-harness-04-context.webp",
+            "caption": "在各种软件与 Agent 之间切换",
+            "alt": "应用与 Agent 之间的上下文切换"
+          },
+          {
+            "type": "text",
+            "text": "受到 Mac 快捷方式应用的启发，我给 Agent 设计了一只更长的“手”——一只可以随时在使用场景中唤起、帮你把 Context 抓到 Agent 里的手。"
+          },
+          {
+            "type": "video",
+            "src": "https://www.youtube.com/embed/XNQWsm3vSEo",
+            "caption": "介绍视频"
+          },
+          {
+            "type": "text",
+            "text": "这是一个可以在任何应用中唤起的快捷方式。你只管输入指令，不用增加繁琐的 Context 信息，它都能看到。"
+          },
+          {
+            "type": "video",
+            "src": "content_images/deepseek-overview.mp4",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "从简单的跨国合作中，对 Teams 里的消息进行润色和翻译："
+          },
+          {
+            "type": "video",
+            "src": "content_images/deepseek-teams.mp4",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "写文档时，基于内容进行配图："
+          },
+          {
+            "type": "video",
+            "src": "content_images/deepseek-doc-image.mp4",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "看到 GitHub 中感兴趣的开源项目，可以直接进行开发："
+          },
+          {
+            "type": "video",
+            "src": "content_images/deepseek-github.mp4",
+            "caption": ""
+          },
+          {
+            "type": "subtitle",
+            "text": "长程任务——Human in the loop"
+          },
+          {
+            "type": "subheading",
+            "text": "1）思维链的可读性"
+          },
+          {
+            "type": "text",
+            "text": "思维链对长程任务至关重要，用户会据此判断 Agent 的推理过程是否符合预期。它的一个挑战是：普通用户看不懂，而专业用户又觉得不够细。这两种情况都无法帮助各自用户做出有效判断。因此，一个能够根据不同用户层次变化的、灵活的思维链非常重要。"
+          },
+          {
+            "type": "video",
+            "src": "content_images/deepseek-cot-levels.mp4",
+            "caption": ""
+          },
+          {
+            "type": "subheading",
+            "text": "2）长程任务的意图漂移"
+          },
+          {
+            "type": "text",
+            "text": "随着持续数小时的大型任务越来越多，每一次任务失败的结果也越难承受。有时回顾 Agent 的执行过程，会发现只是最后几步推理出错，却要重新执行整个任务，大量时间和 Token 都被浪费了。"
+          },
+          {
+            "type": "text",
+            "text": "针对这个问题，我的设计允许用户在任务执行中或完成后，从思维链的任意节点重新开始推理。这个操作会保留该节点之前的推理过程和产出结果，放弃该节点之后的所有推理思路和结果，并基于用户反馈重新推理。"
+          },
+          {
+            "type": "video",
+            "src": "content_images/deepseek-steer-from-here.mp4",
+            "caption": ""
+          },
+          {
+            "type": "subtitle",
+            "text": "阶段 2：创造途径——激发开发者的创造力"
+          },
+          {
+            "type": "text",
+            "text": "针对已有成熟定制需求的开发者，产品需要帮助他们了解和使用 DeepSeek Harness 灵活的插件理念。这时，设计师不再是设计某一个产品，而是像乐高积木设计师一样，把组成产品的基础原子和搭建方法交给玩家，从而激发社区玩家的创造力。"
+          },
+          {
+            "type": "text",
+            "text": "• 面向人群：有自定义需求的进阶用户、开发者。\n• 产品目标：基于核心理念，帮助用户创造高质量的插件能力并进行深度改造。"
+          },
+          {
+            "type": "image",
+            "src": "content_images/deepseek-harness-05-creation.webp",
+            "caption": "",
+            "alt": "DeepSeek Harness 创造路径"
+          },
+          {
+            "type": "text",
+            "text": "从目前社区的用户反馈中，我发现了这个阶段在产品设计上的挑战："
+          },
+          {
+            "type": "text",
+            "text": "• 好的插件淹没在插件市场中，难以被发现。\n• 用户 Vibe 出来的插件在交互模式和 UI 上都不一致，反而破坏了核心体验。"
+          },
+          {
+            "type": "text",
+            "text": "我通过调研 VS Code 开源生态的治理方式获得了一些启发。VS Code 本质上是一个可扩展编辑器平台，语言支持、调试器、主题、面板、工具等能力都通过 Extension API 挂载，很多核心功能本身也是以 Extension 方式实现。核心有三层："
+          },
+          {
+            "type": "text",
+            "text": "• Extension API：定义能力可以插入哪里。\n• Marketplace：负责分发与管理。\n• UX Guidelines：告诉用户，交互行为如何尽量“像 VS Code”。"
+          },
+          {
+            "type": "image",
+            "src": "content_images/deepseek-harness-06-vscode.webp",
+            "caption": "",
+            "alt": "VS Code 扩展生态"
+          },
+          {
+            "type": "text",
+            "text": "在这个阶段，产品设计师可以将内部使用的“设计资产”产品化，包括："
+          },
+          {
+            "type": "text",
+            "text": "• 开放、可复用、可组合的“积木系统”（Design Library／Tokens）。\n• 帮助开发者进行创作的“搭建规则”（UX Guidelines）。\n• 开发者 Onboarding 体验：开发者第一次制作插件的体验。"
+          },
+          {
+            "type": "text",
+            "text": "让开发者不再担心 Vibe Coding 的交互体验，把更多精力放在插件的核心价值上，提升社区创新效率，帮助开发者搭建出体验优秀的插件。"
+          },
+          {
+            "type": "subtitle",
+            "text": "阶段 3：生态维护"
+          },
+          {
+            "type": "text",
+            "text": "随着社区壮大，我们需要让优质插件被更多人看到和使用，同时保持用户创造的积极性。从目前社区反馈中，我发现了这个阶段在产品设计上的挑战："
+          },
+          {
+            "type": "text",
+            "text": "• 好的插件淹没在插件市场中，难以被发现。\n• 用户 Vibe 出来的插件在交互模式和 UI 上都不一致，反而破坏了核心体验。"
+          },
+          {
+            "type": "text",
+            "text": "我通过调研 Steam 开源生态的治理方式获得了一些启发。Steam 创意工坊本质上是一个 UGC 分发系统：玩家或创作者上传模组、地图、物品、外观等内容，其他玩家订阅、下载并更新。它有两种模式："
+          },
+          {
+            "type": "text",
+            "text": "• Ready-to-use Workshop：（1）任何人都能上传；（2）玩家可以直接下载使用。\n• Curated Workshop：（1）开发者逐个审批；（2）社区内容先进入投票或筛选队列。"
+          },
+          {
+            "type": "image",
+            "src": "content_images/deepseek-harness-07-steam.webp",
+            "caption": "",
+            "alt": "Steam 创意工坊治理模式"
+          },
+          {
+            "type": "text",
+            "text": "这个阶段在产品设计上可以："
+          },
+          {
+            "type": "text",
+            "text": "• 参与构建一个完善而繁荣的社区生态，建设插件市场和插件筛选机制。\n• 从社区创新中发现优化官方产品的思路。"
+          },
+          {
+            "type": "subtitle",
+            "text": "最后，我还能做什么"
+          },
+          {
+            "type": "text",
+            "text": "健康的生态是：更好的用户体验能帮助产品获得更多基础用户，这些用户可以逐渐转化成生态内的创作者；繁荣生态中的许多好想法，又会反哺基础用户体验的提升。"
+          },
+          {
+            "type": "image",
+            "src": "content_images/deepseek-harness-08-flywheel.webp",
+            "caption": "1. 用户留在生态内　2. 用户开始创作　3. 社区反哺 Harness",
+            "alt": "DeepSeek Harness 生态飞轮"
+          },
+          {
+            "type": "text",
+            "text": "综上，我认为 DeepSeek Harness 团队需要的不只是懂某一领域、拥有单一经验的设计专家，而是在产品发展的各个阶段，对不同领域都有了解、强调系统性思维的通才。我的过往经历和技能，与团队构建开放、可复用、可组合的基础设施和开发者生态的目标非常契合："
+          },
+          {
+            "type": "text",
+            "highlight_leading_labels": true,
+            "text": "（1）Agent 设计：Coding Agent 的设计和开发经历让我充分了解 Agent 产品设计。\n（2）处理复杂：微软的 GenUI 及 Copilot 设计系统项目，让我理解复杂系统如何由简单原子组成。\n（3）AI Native：搭建数十个 AI 产品和工作流，让我对 AI Native 研发流程拥有足够经验和热情。\n（4）全球化：Copilot 产品设计经历，让我具备面向全球数亿用户打磨产品品质、帮助产品走向全球市场的经验。\n（5）涉猎广泛：交互体验、视觉创意、原型开发、用户调研，甚至插画等综合能力。\n（6）好奇心：我对写作和喜剧的热情，以及 AI Native 的创作流程（构思—实践—评估），让我积累了 Agent 任务质量评估经验，也让我在 AI 时代依然保持好奇。"
+          },
+          {
+            "type": "signature",
+            "text": "Jesse 2026.8"
+          }
+        ],
+        "sections_en_latest": [
+          {
+            "type": "text",
+            "text": "After DeepSeek Harness launched, the idea that “Everything is a plugin” made me ask: if I were its product designer, how would I design it? My strategy would be to decompose the interface into foundational atoms, build every complex interface from those atoms, and define composition rules that create a flexible, evolving system."
+          },
+          {
+            "type": "text",
+            "text": "Fortunately, this is exactly what I have been doing throughout the past few years of my career: using simple building blocks to construct varied, complex systems."
+          },
+          {
+            "type": "text",
+            "text": "This shifts product design from designing one agent to designing a reusable, composable creation system. Product designers should deeply shape and refine its onboarding experience, paths to creation, and ecosystem stewardship, so people at every stage can understand it, create with it, and contribute openly."
+          },
+          {
+            "type": "subtitle",
+            "text": "Stage 1: Onboarding — Decompose Complex Interfaces into Atomic Structures"
+          },
+          {
+            "type": "text",
+            "text": "A strong onboarding experience comes from polished first-party products that lower the barrier for the broadest audience and keep users within the DeepSeek Harness ecosystem. Like a LEGO set, users can choose the right combination of pieces for each task."
+          },
+          {
+            "type": "text",
+            "text": "• Audience: mainstream users and people encountering DeepSeek Harness for the first time.\n• Product goal: work out of the box and provide the best possible coding experience by default."
+          },
+          {
+            "type": "image",
+            "src": "content_images/deepseek-harness-01-hands.webp",
+            "caption": "",
+            "alt": "Atomic visual language for DeepSeek Harness"
+          },
+          {
+            "type": "subtitle",
+            "text": "Stage 1 Challenge — Flexible Plugins Create Complexity"
+          },
+          {
+            "type": "text",
+            "text": "“Everything is a plugin” also means the interface must absorb greater complexity. How can it adapt to plugins that continuously change for both users and agents? If this remains unresolved, the product will become increasingly bloated as the plugin system grows, eventually limiting its evolution."
+          },
+          {
+            "type": "subtitle",
+            "text": "Stage 1 Design Strategy — Atomic Design"
+          },
+          {
+            "type": "image",
+            "src": "content_images/deepseek-harness-02-strategy.webp",
+            "caption": "",
+            "alt": "From a flexible plugin system to an atomic design strategy"
+          },
+          {
+            "type": "text",
+            "text": "I believe form follows function, so a plugin system needs a corresponding product-design strategy. With that question in mind, I redesigned and open-sourced a DeepSeek Harness client and developed new solutions for major coding-agent challenges: long-running tasks, context, and chains of thought."
+          },
+          {
+            "type": "subtitle",
+            "text": "Design Principle — Everything Is an Atom"
+          },
+          {
+            "type": "text",
+            "text": "I drew inspiration from Notion’s design philosophy. Its foundational atom is the Block: no matter how complex a Notion page becomes, it is assembled from basic Blocks, much like the box model on the web. By defining the behavior and boundaries of Blocks early, Notion made system complexity manageable."
+          },
+          {
+            "type": "image",
+            "src": "content_images/deepseek-harness-02-notion-blocks.webp",
+            "caption": "The most basic Block elements can compose every complex Notion page.",
+            "alt": "How Notion Blocks compose into pages"
+          },
+          {
+            "type": "text",
+            "text": "So what is the foundational element of an agent product? My first answer is the Session."
+          },
+          {
+            "type": "text",
+            "text": "Think about mainstream coding agents: every query, task, and project consists of multiple Sessions. Can we break one down further? A Session can be split into a Query and a Response, but neither can form a complete experience on its own."
+          },
+          {
+            "type": "image",
+            "src": "content_images/deepseek-harness-03-session.webp",
+            "caption": "A Session is the smallest complete unit of an agent.",
+            "alt": "Session as an atomic agent unit"
+          },
+          {
+            "type": "text",
+            "text": "Any agent interface, no matter how complex, can therefore be composed from reusable Session atoms and arranged freely, just like plugins. The types of atoms are finite, but the interfaces they can compose are infinite."
+          },
+          {
+            "type": "text",
+            "text": "For example, users can open multiple Sessions in one interface and modify the same project in parallel. This also lets an Agent autonomously launch multiple Sessions or Sub-agents while it runs, close them when their work is done, and keep users free to observe or intervene at any time."
+          },
+          {
+            "type": "video",
+            "src": "content_images/deepseek-multi-session.mp4",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "A Session can even be dragged outside the agent into its own window. Sessions can still snap together flexibly like plugins, which is especially useful across multiple displays."
+          },
+          {
+            "type": "video",
+            "src": "content_images/deepseek-detachable-nav.mp4",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "Navigation can also be a detachable, flexible structure that combines with Sessions in different positions and forms to match personal needs."
+          },
+          {
+            "type": "video",
+            "src": "content_images/deepseek-navigation-layouts.mp4",
+            "caption": ""
+          },
+          {
+            "type": "subtitle",
+            "text": "Separating the Work Surface from the Agent"
+          },
+          {
+            "type": "text",
+            "text": "A major problem with today’s coding agents is still the separation between the work surface and its context. Users work in office apps or browsers, repeatedly copy context into a coding agent, and then move the result back into the original app, wasting a great deal of attention."
+          },
+          {
+            "type": "image",
+            "src": "content_images/deepseek-harness-04-context.webp",
+            "caption": "Switching between applications and the agent.",
+            "alt": "Context switching between apps and an agent"
+          },
+          {
+            "type": "text",
+            "text": "Inspired by the Mac Shortcuts app, I designed a longer “hand” for the agent—one that can be invoked from any work surface and pull the surrounding context directly into the agent."
+          },
+          {
+            "type": "video",
+            "src": "https://www.youtube.com/embed/XNQWsm3vSEo",
+            "caption": "Introduction video"
+          },
+          {
+            "type": "text",
+            "text": "It is a shortcut that can be invoked from any application. You provide the instruction without manually adding tedious context; the agent can already see it."
+          },
+          {
+            "type": "video",
+            "src": "content_images/deepseek-overview.mp4",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "It can begin with something simple, such as polishing and translating Teams messages during cross-border collaboration:"
+          },
+          {
+            "type": "video",
+            "src": "content_images/deepseek-teams.mp4",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "While writing a document, it can create visuals from the existing content:"
+          },
+          {
+            "type": "video",
+            "src": "content_images/deepseek-doc-image.mp4",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "When you discover an interesting open-source project on GitHub, it can move directly into development:"
+          },
+          {
+            "type": "video",
+            "src": "content_images/deepseek-github.mp4",
+            "caption": ""
+          },
+          {
+            "type": "subtitle",
+            "text": "Long-Running Tasks — Human in the Loop"
+          },
+          {
+            "type": "subheading",
+            "text": "1) Readability of the chain of thought"
+          },
+          {
+            "type": "text",
+            "text": "Chains of thought are crucial in long-running tasks because users rely on them to judge whether the agent is reasoning as expected. One challenge is that the reasoning may be incomprehensible to general users yet insufficiently detailed for experts. Neither group can make an effective judgment. A flexible chain of thought that adapts to the user’s level is therefore essential."
+          },
+          {
+            "type": "video",
+            "src": "content_images/deepseek-cot-levels.mp4",
+            "caption": ""
+          },
+          {
+            "type": "subheading",
+            "text": "2) Intent drift in long-running tasks"
+          },
+          {
+            "type": "text",
+            "text": "As multi-hour tasks become more common, each failure becomes harder to absorb. Sometimes only the final reasoning steps are wrong, yet the entire task must be rerun, wasting substantial time and tokens."
+          },
+          {
+            "type": "text",
+            "text": "My design lets users restart reasoning from any point in the chain, during or after execution. It preserves the reasoning and outputs before that point, discards everything after it, and reasons again from the user’s feedback."
+          },
+          {
+            "type": "video",
+            "src": "content_images/deepseek-steer-from-here.mp4",
+            "caption": ""
+          },
+          {
+            "type": "subtitle",
+            "text": "Stage 2: Creation — Inspire Developers"
+          },
+          {
+            "type": "text",
+            "text": "For developers with mature customization needs, the product should help them understand and use DeepSeek Harness’s flexible plugin philosophy. The designer is no longer designing a single product; like a LEGO designer, they give players the foundational atoms and building methods that unlock community creativity."
+          },
+          {
+            "type": "text",
+            "text": "• Audience: advanced users and developers with custom needs.\n• Product goal: use the core philosophy to help people create high-quality plugin capabilities and deeply modify the system."
+          },
+          {
+            "type": "image",
+            "src": "content_images/deepseek-harness-05-creation.webp",
+            "caption": "",
+            "alt": "Creation pathways in DeepSeek Harness"
+          },
+          {
+            "type": "text",
+            "text": "Current community feedback reveals two product-design challenges at this stage:"
+          },
+          {
+            "type": "text",
+            "text": "• Strong plugins are buried in the marketplace and difficult to discover.\n• Vibe-coded plugins use inconsistent interaction patterns and UI, damaging the core experience."
+          },
+          {
+            "type": "text",
+            "text": "Research into the governance of the VS Code open-source ecosystem offers a useful model. VS Code is an extensible editor platform: language support, debuggers, themes, panels, and tools plug in through Extension APIs, and many core capabilities are themselves extensions. It has three layers:"
+          },
+          {
+            "type": "text",
+            "text": "• Extension API: defines where capabilities can plug in.\n• Marketplace: handles distribution and management.\n• UX Guidelines: help interaction patterns continue to feel like VS Code."
+          },
+          {
+            "type": "image",
+            "src": "content_images/deepseek-harness-06-vscode.webp",
+            "caption": "",
+            "alt": "The VS Code extension ecosystem"
+          },
+          {
+            "type": "text",
+            "text": "At this stage, product designers can turn internal design assets into products, including:"
+          },
+          {
+            "type": "text",
+            "text": "• An open, reusable, composable building system (Design Library and Tokens).\n• Building rules that help developers create (UX Guidelines).\n• Developer onboarding: the end-to-end experience of making a first plugin."
+          },
+          {
+            "type": "text",
+            "text": "Developers can then stop worrying about the interaction quality of vibe coding and focus on the unique value of their plugins, improving community innovation and helping the ecosystem produce excellent experiences."
+          },
+          {
+            "type": "subtitle",
+            "text": "Stage 3: Ecosystem Stewardship"
+          },
+          {
+            "type": "text",
+            "text": "As the community grows, high-quality plugins must become easier to discover and use without weakening creators’ motivation. Current community feedback reveals two challenges:"
+          },
+          {
+            "type": "text",
+            "text": "• Strong plugins are buried in the marketplace and difficult to discover.\n• Vibe-coded plugins use inconsistent interaction patterns and UI, damaging the core experience."
+          },
+          {
+            "type": "text",
+            "text": "Research into Steam’s ecosystem offers another model. Steam Workshop is a UGC distribution system where players and creators upload mods, maps, items, and skins while others subscribe, download, and receive updates. It supports two modes:"
+          },
+          {
+            "type": "text",
+            "text": "• Ready-to-use Workshop: (1) anyone can upload; (2) players can download and use content directly.\n• Curated Workshop: (1) developers approve submissions one by one; (2) community content first enters a voting or filtering queue."
+          },
+          {
+            "type": "image",
+            "src": "content_images/deepseek-harness-07-steam.webp",
+            "caption": "",
+            "alt": "Steam Workshop governance models"
+          },
+          {
+            "type": "text",
+            "text": "Product design at this stage can:"
+          },
+          {
+            "type": "text",
+            "text": "• Help build a complete, thriving ecosystem with a plugin marketplace and curation mechanisms.\n• Discover ideas from community innovation that improve the official product."
+          },
+          {
+            "type": "subtitle",
+            "text": "Finally, What Else Can I Contribute?"
+          },
+          {
+            "type": "text",
+            "text": "A healthy ecosystem works like this: a better user experience brings more people into the product; some gradually become ecosystem creators; and the best ideas from a thriving ecosystem flow back into the foundational experience."
+          },
+          {
+            "type": "image",
+            "src": "content_images/deepseek-harness-08-flywheel.webp",
+            "caption": "1. Users stay in the ecosystem　2. Users begin creating　3. The community gives back to Harness",
+            "alt": "DeepSeek Harness ecosystem flywheel"
+          },
+          {
+            "type": "text",
+            "text": "In short, DeepSeek Harness needs more than a specialist in one design domain. It needs a systems-minded generalist who understands different disciplines across every stage of product development. My background aligns closely with the goal of building open, reusable, composable infrastructure and a developer ecosystem:"
+          },
+          {
+            "type": "text",
+            "highlight_leading_labels": true,
+            "text": "(1) Agent design: designing and building coding agents gives me a strong understanding of agent product design.\n(2) Managing complexity: Microsoft GenUI and Copilot design-system work taught me how complex systems emerge from simple atoms.\n(3) AI Native: building dozens of AI products and workflows gave me deep experience and enthusiasm for AI-native development.\n(4) Global scale: designing Copilot for hundreds of millions of users taught me how to refine quality for a worldwide market.\n(5) Breadth: interaction design, visual creativity, prototyping, user research, and even illustration.\n(6) Curiosity: my passion for writing and comedy, together with the AI-native cycle of ideation, execution, and evaluation, has given me experience evaluating agent-task quality—and keeps me curious in the AI era."
+          },
+          {
+            "type": "signature",
+            "text": "Jesse 2026.8"
+          }
+        ],
+        "sections": [
+          {
+            "type": "text",
+            "text": "DeepSeek Harness 发布以后，我做了很多尝试，发布了一个客户端和多个插件。基于“Everything is a plugin”的理念，我认为它的产品设计策略应该是：把界面拆解成基础原子，一切复杂界面都由基础原子组成，再通过原子的组合规则实现灵活而多变的系统。"
+          },
+          {
+            "type": "text",
+            "text": "过去几年，我一直在做同一件事：如何用简单的基本元素搭建多变的复杂系统。产品设计的重心也会从设计一个好用的 Agent，转向设计一个可复用、可组合的创造系统。"
+          },
+          {
+            "type": "text",
+            "text": "作为产品设计师，需要深度参与这个系统的上手体验、创造途径和生态维护，让不同阶段的用户都容易理解、易于创造、乐于开源。"
+          },
+          {
+            "type": "subtitle",
+            "text": "阶段 1：上手体验——把复杂界面拆成原子结构"
+          },
+          {
+            "type": "text",
+            "text": "良好的上手体验来自官方打磨过的产品：降低最广泛用户的使用门槛，让第一次接触 DeepSeek Harness 的人也能开箱即用，并默认获得优秀的 Coding 体验。它像乐高套装，用户可以根据任务选择合适的积木组合。"
+          },
+          {
+            "type": "text",
+            "text": "“Everything is a plugin”也意味着 UI 必须承载用户和 Agent 不断变化的需求。如果不先定义清楚基础结构，界面会随插件体系变得臃肿复杂，最终成为产品进化的瓶颈。"
+          },
+          {
+            "type": "text",
+            "text": "带着这些问题，我重新设计并开源了一个 DeepSeek Harness 客户端，也围绕 Coding Agent 的长程任务、Context 和思维链等问题提出了新的设计方案。"
+          },
+          {
+            "type": "subtitle",
+            "text": "设计理念：Everything is an Atom"
+          },
+          {
+            "type": "text",
+            "text": "这个思路受到 Notion Block 的启发：千变万化的页面都由 Block 组成，也像 Web 开发中的盒模型。只要定义清楚基础元素的行为和边界，系统复杂度就可以被管理。"
+          },
+          {
+            "type": "text",
+            "text": "那么 Agent 产品的基础元素是什么？我目前的答案是 Session。每个 query、任务和项目都由多个 sessions 组成；Query 与 Response 还能继续拆分，但它们单独并不足以组成完整体验。"
+          },
+          {
+            "type": "text",
+            "text": "用户可以基于原子自由调整界面布局，Agent 也可以像使用插件一样自行组合。有限的原子，可以拼出无限的界面：导航能换边，一个界面能容纳多个 sessions，也能把 session 独立成新窗口。"
+          },
+          {
+            "type": "text",
+            "text": "如果模型是大脑，Agent 就是灵活的手。因此我用“手”作为 Agent 的视觉意象；复杂的图标和插画，也同样由更基础、可复用、可组合的原子拼接而成。"
+          },
+          {
+            "type": "subtitle",
+            "text": "让 Agent 更靠近 Context"
+          },
+          {
+            "type": "text",
+            "text": "当前 Coding Agent 的典型问题，是使用场景与 Context 分离：用户在办公软件或浏览器里工作，却要把上下文反复复制到 Coding Agent，处理完成后再把结果搬回原来的场景。"
+          },
+          {
+            "type": "text",
+            "text": "受到 macOS 快捷指令的启发，我给 Agent 设计了一只更长的“手”——一个可在任何应用中唤起的快捷入口。用户只管输入指令，不必手动补齐繁琐的 Context，Agent 就能看到当前场景。"
+          },
+          {
+            "type": "text",
+            "text": "它可以在 Teams 中润色和翻译跨国协作消息，在 Notion 写作时基于已有内容配图，也可以看到 GitHub 上感兴趣的项目后直接进入开发。"
+          },
+          {
+            "type": "subtitle",
+            "text": "继续探索的 Agent 体验"
+          },
+          {
+            "type": "text",
+            "text": "• 长程任务中的意图漂移，以及任务结束后的 Steer from here"
+          },
+          {
+            "type": "text",
+            "text": "• 思维链专业度调节与时序贡献度分配"
+          },
+          {
+            "type": "text",
+            "text": "• 项目内记忆与多模型调度，在节省 tokens 的同时保持上下文连续"
+          },
+          {
+            "type": "text",
+            "text": "• 在对话内直接调用 Harness 页面"
+          },
+          {
+            "type": "text",
+            "text": "对于硬核 builder、开源开发者和希望重新定义 Agent 工作方式的人，还需要开放 loop、session、memory、tool、UI surface、desktop bridge 等可插拔层，并提供清晰的扩展表面、调试工具、文档、沙箱、示例和回滚机制。最后，让人真正能造。"
+          },
+          {
+            "type": "subtitle",
+            "text": "阶段 2：创造途径——激发开发者的创造力"
+          },
+          {
+            "type": "text",
+            "text": "面向有定制需求的进阶用户和开发者，设计师不再只设计某个产品，而要像乐高积木设计师一样，把组成产品的基础原子和搭建方法交给玩家，帮助他们创造高质量插件和更深入的改造。"
+          },
+          {
+            "type": "text",
+            "text": "目前的挑战是：优秀插件容易淹没在市场中；不同开发者 Vibe 出来的交互和 UI 缺乏一致性，反而会破坏核心体验。"
+          },
+          {
+            "type": "text",
+            "text": "VS Code 的开源生态提供了三层启发：Extension API 定义能力插入点，Marketplace 负责分发与管理，UX Guidelines 帮助扩展保持一致的平台心智。"
+          },
+          {
+            "type": "text",
+            "text": "因此，产品设计师可以把内部设计资产产品化：开放可组合的 Design Library 与 Tokens、面向插件的 UX Guidelines，以及插件模板和案例教学。开发者可以把精力集中到插件的核心价值上，而不是重复解决基础交互问题。"
+          },
+          {
+            "type": "subtitle",
+            "text": "阶段 3：生态维护"
+          },
+          {
+            "type": "text",
+            "text": "随着社区壮大，需要让优质插件被更多人发现和使用，同时保持创作者的积极性。Steam 创意工坊提供了两种治理方式：任何人都能发布、用户直接订阅的 Ready-to-use Workshop，以及由开发者审批、社区先投票筛选的 Curated Workshop。"
+          },
+          {
+            "type": "text",
+            "text": "这个阶段的设计工作，是参与构建繁荣且可持续的社区生态，包括插件市场、发现机制、质量筛选与体验评估框架。评估可以关注：是否容易理解、是否符合平台心智、是否清楚暴露权限与风险、是否破坏任务流、能否与其他插件共存，以及是否具备合理的 fallback、empty state 和 error state。"
+          },
+          {
+            "type": "subtitle",
+            "text": "我还能做什么"
+          },
+          {
+            "type": "text",
+            "text": "更好的基础体验会带来更多用户，其中一部分会成长为生态创作者；繁荣生态中的优秀想法，又会反哺基础体验。这形成了“留在生态—制作插件—深入创作—提升体验”的飞轮。"
+          },
+          {
+            "type": "text",
+            "text": "我与这个目标的契合点包括：Coding Agent 的设计与开发经历；微软多个 GenUI 项目与 Copilot 设计系统经验；数十个 Vibe Coding 产品和 AI 工作流实践；以及写作与喜剧带来的创作、实践和评估能力。"
+          }
+        ],
+        "sections_en": [
+          {
+            "type": "text",
+            "text": "After DeepSeek Harness launched, I experimented extensively, publishing a client and several plugins. Building on the idea that “Everything is a plugin,” I believe its product strategy should decompose interfaces into foundational atoms, then use clear composition rules to create a flexible, evolving system."
+          },
+          {
+            "type": "text",
+            "text": "For the past few years, I have been working on the same question: how can simple building blocks create many complex systems? The focus of product design shifts from making one useful agent to designing a reusable, composable creation system."
+          },
+          {
+            "type": "text",
+            "text": "Product designers should help shape onboarding, paths to creation, and ecosystem stewardship, so people at every stage can understand the system, create with it, and contribute back."
+          },
+          {
+            "type": "subtitle",
+            "text": "Stage 1: Onboarding — Decompose Complex Interfaces into Atoms"
+          },
+          {
+            "type": "text",
+            "text": "A strong onboarding experience begins with polished first-party products. They lower the barrier for new users, provide an excellent coding experience out of the box, and work like LEGO sets: people choose the right combination of pieces for each task."
+          },
+          {
+            "type": "text",
+            "text": "“Everything is a plugin” also means the UI must absorb constantly changing user and agent needs. Without a clearly defined foundation, the interface will become increasingly bloated as the plugin ecosystem grows, eventually limiting the product itself."
+          },
+          {
+            "type": "text",
+            "text": "With these questions in mind, I redesigned and open-sourced a DeepSeek Harness client, while exploring new approaches to long-running tasks, context, and chains of thought in coding agents."
+          },
+          {
+            "type": "subtitle",
+            "text": "Design Principle: Everything Is an Atom"
+          },
+          {
+            "type": "text",
+            "text": "The idea is inspired by Notion blocks: infinitely varied pages are built from a small set of blocks, much like the box model on the web. Once the behavior and boundaries of those primitives are clear, system complexity becomes manageable."
+          },
+          {
+            "type": "text",
+            "text": "What is the foundational atom of an agent product? My current answer is the session. Every query, task, and project is made of sessions. Queries and responses can be split further, but neither can form a complete experience alone."
+          },
+          {
+            "type": "text",
+            "text": "Users can rearrange the interface from these atoms, and agents can compose them just like plugins. A finite set of atoms can produce infinite interfaces: navigation can move, several sessions can share one surface, and any session can become its own window."
+          },
+          {
+            "type": "text",
+            "text": "If the model is the brain, the agent is a flexible hand. That is why the visual language uses a hand—and why even complex icons and illustrations can themselves be assembled from smaller reusable atoms."
+          },
+          {
+            "type": "subtitle",
+            "text": "Bring the Agent Closer to Context"
+          },
+          {
+            "type": "text",
+            "text": "A core problem with today's coding agents is the separation between the work surface and its context. People work in office apps or browsers, repeatedly copy information into the agent, and then move the result back into the original app."
+          },
+          {
+            "type": "text",
+            "text": "Inspired by macOS Shortcuts, I designed a longer “hand” for the agent: an entry point that can be invoked from any app. The user provides the intent while the agent can already see the surrounding context."
+          },
+          {
+            "type": "text",
+            "text": "It can polish and translate cross-border Teams messages, create visuals from an existing Notion draft, or move directly from discovering an interesting GitHub project into development."
+          },
+          {
+            "type": "subtitle",
+            "text": "Further Agent Experience Explorations"
+          },
+          {
+            "type": "text",
+            "text": "• Intent drift in long-running tasks, including “Steer from here” after completion"
+          },
+          {
+            "type": "text",
+            "text": "• Adjusting the expertise level of reasoning and assigning contribution across time"
+          },
+          {
+            "type": "text",
+            "text": "• Project memory and multi-model orchestration that preserve continuity while saving tokens"
+          },
+          {
+            "type": "text",
+            "text": "• Calling Harness pages directly inside a conversation"
+          },
+          {
+            "type": "text",
+            "text": "For power builders, open-source developers, and people redefining agent workflows, the system should also expose pluggable layers such as the loop, session, memory, tools, UI surfaces, and desktop bridge—backed by clear extension points, debugging tools, documentation, sandboxes, examples, and rollback. Ultimately, people should be able to build."
+          },
+          {
+            "type": "subtitle",
+            "text": "Stage 2: Creation — Inspire Developers"
+          },
+          {
+            "type": "text",
+            "text": "For advanced users and developers with custom needs, the designer no longer designs a single product. Like a LEGO designer, they provide the foundational pieces and building methods that help the community create high-quality plugins and deeper modifications."
+          },
+          {
+            "type": "text",
+            "text": "Two challenges already stand out: great plugins are easily buried in the marketplace, while inconsistent interaction patterns and UI from vibe-coded plugins can damage the core experience."
+          },
+          {
+            "type": "text",
+            "text": "The VS Code ecosystem offers a useful three-layer model: Extension APIs define where capabilities plug in, the Marketplace handles distribution and management, and UX Guidelines help extensions feel consistent with the platform."
+          },
+          {
+            "type": "text",
+            "text": "Design teams can productize their internal assets as an open, composable Design Library and token system, plugin UX guidelines, templates, and practical examples. Developers can then focus on the unique value of their plugins instead of repeatedly solving basic interaction problems."
+          },
+          {
+            "type": "subtitle",
+            "text": "Stage 3: Ecosystem Stewardship"
+          },
+          {
+            "type": "text",
+            "text": "As the community grows, strong plugins need to become easier to discover without weakening creators' motivation. Steam Workshop suggests two governance modes: a ready-to-use model where anyone can publish and users subscribe directly, and a curated model where submissions pass through review and community selection."
+          },
+          {
+            "type": "text",
+            "text": "Design work at this stage means building a healthy plugin marketplace, discovery and curation mechanisms, and an experience-quality framework. That framework can ask whether a plugin is understandable, fits the platform's mental model, exposes permissions and risks, protects task flow, coexists with other plugins, and provides sensible fallback, empty, and error states."
+          },
+          {
+            "type": "subtitle",
+            "text": "What I Can Contribute"
+          },
+          {
+            "type": "text",
+            "text": "A better core experience brings in more users; some become ecosystem creators; the best ideas from that ecosystem then improve the core experience. This creates a flywheel from adoption, to plugin creation, to deeper invention, and back to a better product."
+          },
+          {
+            "type": "text",
+            "text": "My fit with this goal comes from designing and building coding agents; working across GenUI projects and the Copilot design system at Microsoft; creating dozens of vibe-coded products and AI workflows; and practicing the cycle of creation, performance, and evaluation through writing and comedy."
+          }
+        ]
+      }
+    },
+    "title_en": "DeepSeek Harness",
+    "subtitle": "从 Session 原子到开放生态的产品设计构想",
+    "subtitle_en": "A product vision from session atoms to an open creator ecosystem."
   },
   {
     "id": "tearoff-agent-card",

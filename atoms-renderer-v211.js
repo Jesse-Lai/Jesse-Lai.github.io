@@ -2402,9 +2402,49 @@ export class FocusOverlay {
     const isLabel = this._isArticleLabel(text);
     const color = isLabel ? 'var(--text-secondary, #333)' : 'var(--text-body, #444)';
     const weight = isLabel ? '700' : '400';
+    const lines = text.split('\n');
+    if (lines.length > 1 && lines.every(line => /^\d+\.\s+/.test(line.trim()))) {
+      const items = lines.map(line => line.trim().replace(/^\d+\.\s+/, ''));
+      return `<ol style="font-family:var(--body-font, -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif);font-size:16px;color:${color};font-weight:${weight};line-height:1.85;margin:0 0 ${marginBottom || '24px'};padding-left:1.6em;">${items.map(item => `<li style="padding-left:0.25em;">${item}</li>`).join('')}</ol>`;
+    }
     const mb = marginBottom || (text.trimStart().startsWith('•') ? '6px' : '24px');
     const mt = isLabel && previousText.trimStart().startsWith('•') ? '24px' : '0';
-    return `<p style="font-family:var(--body-font, -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif);font-size:16px;color:${color};font-weight:${weight};line-height:1.85;margin-top:${mt};margin-bottom:${mb};">${text.replace(/\n/g, '<br>')}</p>`;
+    const renderedText = section.highlight_leading_labels
+      ? lines.map(line => line.replace(/^([（(]\d+[）)]\s*[^：:\n]+[：:])/, '<span style="color:var(--text-primary, #1a1a1a);">$1</span>')).join('<br>')
+      : text.replace(/\n/g, '<br>');
+    return `<p style="font-family:var(--body-font, -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif);font-size:16px;color:${color};font-weight:${weight};line-height:1.85;margin-top:${mt};margin-bottom:${mb};">${renderedText}</p>`;
+  }
+
+  _renderArticleSubheading(section, previousSection) {
+    const previousType = String(previousSection?.type || '');
+    const marginTop = ['subtitle', 'image', 'video'].includes(previousType) ? '0' : '32px';
+    return `<h3 style="font-family:var(--body-font, -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif);font-size:18px;color:var(--text-primary, #1a1a1a);font-weight:700;line-height:1.5;margin:${marginTop} 0 16px;">${section.text}</h3>`;
+  }
+
+  _renderArticleSignature(section) {
+    return `<p aria-label="Article signature" style="font-family:Schoolbell,cursive;font-size:22px;color:var(--text-secondary, #333);text-align:right;letter-spacing:0.04em;line-height:1.4;margin:56px 8% 24px 0;">${section.text}</p>`;
+  }
+
+  _renderArticleImage(section) {
+    const bottomMargin = section.caption ? '0' : '40px';
+    const caption = section.caption
+      ? `<p style="font-family:Red Hat Mono,monospace;font-size:11px;color:var(--text-caption, #555);text-align:center;margin:8px 0 40px;">${section.caption}</p>`
+      : '';
+    return `<img src="${section.src}" alt="${section.alt || ''}" style="display:block;width:100%;border-radius:6px;margin:32px 0 ${bottomMargin};">${caption}`;
+  }
+
+  _renderArticleVideo(section) {
+    const src = String(section.src || '');
+    const caption = section.caption
+      ? `<p style="font-family:Red Hat Mono,monospace;font-size:11px;color:var(--text-caption, #555);text-align:center;margin:8px 0 40px;">${section.caption}</p>`
+      : '';
+    const bottomMargin = section.caption ? '0' : '40px';
+    if (/\.(?:mp4|webm|mov)(?:[?#]|$)/i.test(src)) {
+      const poster = section.poster ? ` poster="${section.poster}"` : '';
+      const label = section.caption || 'Article demo video';
+      return `<video src="${src}"${poster} aria-label="${label}" autoplay muted loop playsinline preload="metadata" style="display:block;width:100%;height:auto;border-radius:6px;margin:32px 0 ${bottomMargin};background:#000;"></video>${caption}`;
+    }
+    return `<div style="position:relative;width:100%;padding-bottom:56.25%;margin:32px 0 ${bottomMargin};"><iframe src="${src}" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:6px;" allowfullscreen></iframe></div>${caption}`;
   }
 
   // 在文章模式下切换到另一篇文章（保持 overlay + mesh 不动）
@@ -2419,25 +2459,28 @@ export class FocusOverlay {
 
     // 重建文章内容
     let html = '';
-    const title = article.title || focusData.title || '';
+    const title = (this._lang === 'en' && article.title_en) ? article.title_en : (article.title || focusData.title || '');
     if (title) {
       html += `<h1 style="font-family:var(--title-font, Special Elite);font-size:28px;color:var(--text-primary, #1a1a1a);letter-spacing:0.5px;line-height:1.4;margin:0 0 32px;padding-bottom:24px;border-bottom:1px solid var(--border-divider, rgba(0,0,0,0.08));">${title}</h1>`;
     }
-    const _sections = (this._lang === 'en' && article.sections_en) ? article.sections_en : article.sections;
+    const _sections = this._lang === 'en'
+      ? (article.sections_en_latest || article.sections_en || article.sections_latest || article.sections)
+      : (article.sections_latest || article.sections);
     if (_sections) {
       for (let i = 0; i < _sections.length; i++) {
         const section = _sections[i];
         if (section.type === 'subtitle') {
           html += `<h2 style="font-family:var(--title-font, Special Elite);font-size:20px;color:var(--text-secondary, #333);margin:48px 0 16px;line-height:1.4;">${section.text}</h2>`;
+        } else if (section.type === 'subheading') {
+          html += this._renderArticleSubheading(section, _sections[i - 1]);
+        } else if (section.type === 'signature') {
+          html += this._renderArticleSignature(section);
         } else if (section.type === 'text') {
           html += this._renderArticleText(section, undefined, _sections[i - 1]);
         } else if (section.type === 'image') {
-          html += `<img src="${section.src}" alt="${section.alt || ''}" style="width:100%;border-radius:6px;margin:8px 0 8px;">`;
-          if (section.caption) {
-            html += `<p style="font-family:Red Hat Mono,monospace;font-size:11px;color:var(--text-caption, #555);text-align:center;margin:0 0 32px;">${section.caption}</p>`;
-          }
+          html += this._renderArticleImage(section);
         } else if (section.type === 'video') {
-          html += `<div style="position:relative;width:100%;padding-bottom:56.25%;margin:32px 0;"><iframe src="${section.src}" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:6px;" allowfullscreen></iframe></div>`;
+          html += this._renderArticleVideo(section);
         }
       }
     }
@@ -2918,26 +2961,29 @@ export class FocusOverlay {
       articleWrap.style.cssText = `position:absolute;top:${meshBottom + 48}px;left:0;right:0;max-width:640px;margin:0 auto;padding:0 24px 80px;opacity:0;transform:translateY(30px);transition:opacity 0.5s ease,transform 0.5s ease;`;
 
       let html = '';
-      const title = article?.title || data.title || '';
+      const title = (this._lang === 'en' && article?.title_en) ? article.title_en : (article?.title || data.title || '');
       if (title) {
         html += `<h1 style="font-family:var(--title-font, Special Elite);font-size:28px;color:var(--text-primary, #1a1a1a);letter-spacing:0.5px;line-height:1.4;margin:0 0 32px;padding-bottom:24px;border-bottom:1px solid var(--border-divider, rgba(0,0,0,0.08));">${title}</h1>`;
       }
 
       if (article?.sections) {
-        const _secs = (this._lang === 'en' && article.sections_en) ? article.sections_en : article.sections;
+        const _secs = this._lang === 'en'
+          ? (article.sections_en_latest || article.sections_en || article.sections_latest || article.sections)
+          : (article.sections_latest || article.sections);
         for (let i = 0; i < _secs.length; i++) {
           const section = _secs[i];
           if (section.type === 'subtitle') {
             html += `<h2 style="font-family:var(--title-font, Special Elite);font-size:20px;color:var(--text-secondary, #333);margin:48px 0 16px;line-height:1.4;">${section.text}</h2>`;
+          } else if (section.type === 'subheading') {
+            html += this._renderArticleSubheading(section, _secs[i - 1]);
+          } else if (section.type === 'signature') {
+            html += this._renderArticleSignature(section);
           } else if (section.type === 'text') {
             html += this._renderArticleText(section, undefined, _secs[i - 1]);
           } else if (section.type === 'image') {
-            html += `<img src="${section.src}" alt="${section.alt || ''}" style="width:100%;border-radius:6px;margin:8px 0 8px;">`;
-            if (section.caption) {
-              html += `<p style="font-family:Red Hat Mono,monospace;font-size:11px;color:var(--text-caption, #555);text-align:center;margin:0 0 32px;">${section.caption}</p>`;
-            }
+            html += this._renderArticleImage(section);
           } else if (section.type === 'video') {
-            html += `<div style="position:relative;width:100%;padding-bottom:56.25%;margin:32px 0;"><iframe src="${section.src}" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:6px;" allowfullscreen></iframe></div>`;
+            html += this._renderArticleVideo(section);
           }
         }
       }
@@ -3649,18 +3695,21 @@ export class FocusOverlay {
         articleWrap.style.cssText = `position:absolute;top:${meshBottom + 48}px;left:0;right:0;max-width:640px;margin:0 auto;padding:0 24px 160px;opacity:0;transform:translateY(30px);transition:opacity 0.5s ease,transform 0.5s ease;`;
 
         let html = '';
-        const title = article.title || focusData.title || '';
+        const title = (this._lang === 'en' && article.title_en) ? article.title_en : (article.title || focusData.title || '');
         if (title) html += `<h1 style="font-family:var(--title-font, Special Elite);font-size:28px;color:var(--text-primary, #1a1a1a);letter-spacing:0.5px;line-height:1.4;margin:0 0 32px;padding-bottom:24px;border-bottom:1px solid var(--border-divider, rgba(0,0,0,0.08));">${title}</h1>`;
-        const _secs3 = (this._lang === 'en' && article.sections_en) ? article.sections_en : article.sections;
+        const _secs3 = this._lang === 'en'
+          ? (article.sections_en_latest || article.sections_en || article.sections_latest || article.sections)
+          : (article.sections_latest || article.sections);
         if (_secs3) {
           for (let i = 0; i < _secs3.length; i++) {
             const s = _secs3[i];
             if (s.type === 'subtitle') html += `<h2 style="font-family:var(--title-font, Special Elite);font-size:20px;color:var(--text-secondary, #333);margin:48px 0 16px;line-height:1.4;">${s.text}</h2>`;
+            else if (s.type === 'subheading') html += this._renderArticleSubheading(s, _secs3[i - 1]);
+            else if (s.type === 'signature') html += this._renderArticleSignature(s);
             else if (s.type === 'text') html += this._renderArticleText(s, '24px', _secs3[i - 1]);
             else if (s.type === 'image') {
-              html += `<img src="${s.src}" alt="${s.alt || ''}" style="width:100%;border-radius:6px;margin:8px 0 8px;">`;
-              if (s.caption) html += `<p style="font-family:Red Hat Mono,monospace;font-size:11px;color:var(--text-caption, #555);text-align:center;margin:0 0 32px;">${s.caption}</p>`;
-            }
+              html += this._renderArticleImage(s);
+            } else if (s.type === 'video') html += this._renderArticleVideo(s);
           }
         }
         articleWrap.innerHTML = html;

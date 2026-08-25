@@ -1,5 +1,5 @@
 // wall.js — Main view, uses atoms-renderer.js
-import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, renderTearoffCard, makeDraggable, FocusOverlay, getOrCreateVideo, loadAllVideosSequentially, animateTo, fadeIn } from "./atoms-renderer-v211.js?v=217";
+import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, renderTearoffCard, makeDraggable, FocusOverlay, getOrCreateVideo, loadAllVideosSequentially, animateTo, fadeIn } from "./atoms-renderer-v211.js?v=221";
 import { WallArticle } from "./wall-article.js?v=151";
 
 (async () => {
@@ -59,7 +59,7 @@ import { WallArticle } from "./wall-article.js?v=151";
   const isPortrait = H > W;
 
   // ─── Load content from Notion-synced content.json ───
-  const contentResp = await fetch('content.json');
+  const contentResp = await fetch('content.json', { cache: 'no-store' });
   const contentData = await contentResp.json();
   const contentBySlug = new Map(contentData.filter(entry => entry.slug).map(entry => [entry.slug, entry]));
   setProgress(12);
@@ -135,6 +135,10 @@ import { WallArticle } from "./wall-article.js?v=151";
       zh: { title: 'AI产品设计原则', body: 'AI产品设计原则，以及这个网站会如何跟着模型迭代' },
       en: { title: 'My AI Design Principles', body: 'My AI product design principles, and how this website will evolve with model iterations.' }
     },
+    'DeepSeek Harness': {
+      zh: { title: 'DeepSeek Harness', body: '从设计一个 Agent，到设计一套可复用、可组合的创造系统。' },
+      en: { title: 'DeepSeek Harness', body: 'From designing one agent to designing a reusable, composable creation system.' }
+    },
     'Born Builder': {
       zh: { title: '天生创造者', body: '这个项目提醒我——我是一个创造者。无论是否在AI时代，让东西活起来都让我兴奋！' },
       en: { title: 'Born Builder', body: 'This project reminds me — I\'m a builder. Whether or not we\'re in the AI era, making things come to life excites me!' }
@@ -168,17 +172,19 @@ import { WallArticle } from "./wall-article.js?v=151";
     'Drawing': { zh: '画画让我进入心流，经常一不小心就发现已经天亮了。这些古法绘画作品，绝不含AI。', en: 'Drawing puts me in a flow state — I\'d often look up and realize it was already morning. These artworks are 100% hand-made, zero AI.' },
     'GenUI 设计指南': { zh: '为什么Figma不再能设计GenUI？这篇聊聊生成式UI的形态、行为，以及我自己的工作流。', en: 'Why can\'t Figma design GenUI anymore? This article explores the forms and behaviors of generative UI, plus my own workflow.' },
     'AI产品设计原则': { zh: '做AI产品就像钓鱼——来太早或太晚都没有收获，要在模型能力的边界处让产品发光。', en: 'Building AI products is like fishing — timing is everything. The product should shine right at the frontier of what models can do.' },
+    'DeepSeek Harness': { zh: '从 Session 原子到插件生态：设计一套开放、可复用、可组合的创造系统。', en: 'From Session atoms to a plugin ecosystem: an open, reusable, composable creation system.' },
   };
 
   // Stamp image overrides
   const stampOverrides = {
     'GenUI 设计指南': 'genui.webp',
     'AI产品设计原则': 'aidesign.webp',
+    'DeepSeek Harness': 'hands.webp',
     'Microsoft': 'Microsoft.webp',
     'Alibaba': 'alibaba.webp',
   };
 
-  const coolStickies = ['Alibaba', 'GenUI 设计指南', 'AI产品设计原则'];
+  const coolStickies = ['Alibaba', 'GenUI 设计指南', 'AI产品设计原则', 'DeepSeek Harness'];
 
   const wallItems = [];
   for (const entry of contentData) {
@@ -189,6 +195,7 @@ import { WallArticle } from "./wall-article.js?v=151";
         slug: entry.slug,
         category: entry.category,
         src: entry.cover_image,
+        videoSrc: entry.video_src === null ? null : (entry.video_src || entry.cover_image.replace(/\.(png|jpg|jpeg|webp)$/i, '.mp4')),
         caption: pc.caption,
         date: pc.date,
         keywords: entry.keywords, focus: entry.focus || { title: entry.title, description: entry.body || entry.title, link: '#', linkText: 'Read more', article: { title: entry.title, sections: (entry.full_text || []).map(t => ({type:'text',text:t})) } },
@@ -200,8 +207,9 @@ import { WallArticle } from "./wall-article.js?v=151";
         category: entry.category,
         title: t(entry, 'title') || entry.title,
         body: t(entry, 'body') || entry.body || '',
-        date: ({ 'GenUI 设计指南': "11 20 '25", 'AI产品设计原则': "05 20 '26", 'Microsoft': "02 27 '25", 'Alibaba': "06 29 '20" })[entry.title] || "05 01 '26",
+        date: ({ 'GenUI 设计指南': "11 20 '25", 'AI产品设计原则': "05 20 '26", 'DeepSeek Harness': "08 23 '26", 'Microsoft': "02 27 '25", 'Alibaba': "06 29 '20" })[entry.title] || "05 01 '26",
         stampSrc: stampOverrides[entry.title] || entry.cover_image || 'stamp1.webp',
+        videoSrc: entry.video_src === null ? null : (entry.video_src || (stampOverrides[entry.title] || entry.cover_image || 'stamp1.webp').replace(/\.(png|jpg|jpeg|webp)$/i, '.mp4')),
         colorScheme: coolStickies.includes(entry.title) ? 'cool' : 'warm',
         _origTitle: entry.title, keywords: entry.keywords, focus: entry.focus || { title: entry.title, description: entry.body || entry.title, link: '#', linkText: 'Read more', article: { title: entry.title, sections: (entry.full_text || []).map(t => ({type:'text',text:t})) } },
       });
@@ -249,7 +257,9 @@ import { WallArticle } from "./wall-article.js?v=151";
   }
 
   function updatePageMeta(entry = null) {
-    const articleTitle = entry?.focus?.article?.title || entry?.focus?.title || entry?.title;
+    const articleTitle = (LANG === 'en' && entry?.focus?.article?.title_en)
+      ? entry.focus.article.title_en
+      : (entry?.focus?.article?.title || entry?.focus?.title || entry?.title);
     const pageTitle = articleTitle ? `${articleTitle} — JesseOS` : 'JesseOS';
     const description = entry ? getShareDescription(entry) : HOME_DESCRIPTION;
     const url = entry ? `${SITE_ORIGIN}/${entry.slug}/` : `${SITE_ORIGIN}/`;
@@ -348,7 +358,8 @@ import { WallArticle } from "./wall-article.js?v=151";
   // Pre-fetch all video blobs during loading (parallel with atom rendering, no decode)
   const allVideoSrcs = contentData
     .filter(e => e.cover_image)
-    .map(e => e.cover_image.replace(/\.(png|jpg|jpeg|webp)$/i, '.mp4'));
+    .map(e => e.video_src === null ? null : (e.video_src || e.cover_image.replace(/\.(png|jpg|jpeg|webp)$/i, '.mp4')))
+    .filter(Boolean);
   Promise.all(allVideoSrcs.map(async src => {
     const entry = getOrCreateVideo(src);
     if (!entry.blobUrl) {
@@ -370,8 +381,8 @@ import { WallArticle } from "./wall-article.js?v=151";
       const targetW = colW * 0.6;
       const photoScale = targetW / imgData.w;
       const photoItem = await photoSystem.addPhoto(item.src, 0, 0, photoScale, item, imgData);
-      photoItem.videoSrc = item.src.replace(/\.(png|jpg|jpeg|webp)$/i, '.mp4');
-      getOrCreateVideo(photoItem.videoSrc);
+      photoItem.videoSrc = item.videoSrc;
+      if (photoItem.videoSrc) getOrCreateVideo(photoItem.videoSrc);
       if (item.focus) { photoItem.focusData = item.focus; const fd = focusDesc[item.caption] || focusDesc[item.title]; photoItem.focusData.description = fd ? fd[LANG] : (item.keywords || item.focus.description); }
       const b = photoItem.group.getBounds();
       rendered.push({ group: photoItem.group, bounds: b, wallItem: item, focusableItem: photoItem });
@@ -384,11 +395,10 @@ import { WallArticle } from "./wall-article.js?v=151";
       if (item.focus) { stickyItem.focusData = item.focus; stickyItem.focusData.title = item.title; const fd = focusDesc[item._origTitle] || focusDesc[item.title]; stickyItem.focusData.description = fd ? fd[LANG] : (item.keywords || item.focus.description); }
       stickyItem._stickyTitle = { tx: stickyResult.titleX, ty: stickyResult.titleY, tw: stickyResult.titleW, th: stickyResult.titleH };
       // Stamp video: swap stamp sprite texture on hover
-      if (stickyResult.stampSprite && item.stampSrc) {
-        const videoSrc = item.stampSrc.replace(/\.(png|jpg|jpeg|webp)$/i, '.mp4');
-        stickyItem.videoSrc = videoSrc;
+      if (stickyResult.stampSprite && item.videoSrc) {
+        stickyItem.videoSrc = item.videoSrc;
         stickyItem.sprite = stickyResult.stampSprite;
-        getOrCreateVideo(videoSrc);
+        getOrCreateVideo(item.videoSrc);
       }
       rendered.push({ group: stickyResult.group, bounds: b, wallItem: item, focusableItem: stickyItem });
     } else if (item.type === 'stamp') {
@@ -429,6 +439,30 @@ import { WallArticle } from "./wall-article.js?v=151";
     colTops[col] += boundsH + itemGap;
 
     if (r.focusableItem) renderedItems.push({ wallItem: r.wallItem, focusableItem: r.focusableItem });
+  }
+
+  // Rotate the three existing visual slots after masonry has laid out the
+  // wall, so each atom lands at the exact position shown in the previous
+  // layout: DeepSeek → GenUI → AI Principles → DeepSeek.
+  const renderedItemKey = item => item.wallItem._origTitle || item.wallItem.caption || item.wallItem.title;
+  const findRenderedItem = title => rendered.find(item => renderedItemKey(item) === title);
+  const genuiRendered = findRenderedItem('GenUI 设计指南');
+  const aiPrinciplesRendered = findRenderedItem('AI产品设计原则');
+  const deepSeekRendered = findRenderedItem('DeepSeek Harness');
+  if (genuiRendered && aiPrinciplesRendered && deepSeekRendered) {
+    const genuiBounds = genuiRendered.group.getBounds();
+    const aiPrinciplesBounds = aiPrinciplesRendered.group.getBounds();
+    const deepSeekBounds = deepSeekRendered.group.getBounds();
+
+    const moveToSlot = (item, slotBounds) => {
+      const itemBounds = item.group.getBounds();
+      item.group.x += slotBounds.x + slotBounds.width / 2 - (itemBounds.x + itemBounds.width / 2);
+      item.group.y += slotBounds.y - itemBounds.y;
+    };
+
+    moveToSlot(deepSeekRendered, genuiBounds);
+    moveToSlot(genuiRendered, aiPrinciplesBounds);
+    moveToSlot(aiPrinciplesRendered, deepSeekBounds);
   }
 
   // Save initial positions for shuffle reset
