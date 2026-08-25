@@ -1,5 +1,5 @@
 // wall.js — Main view, uses atoms-renderer.js
-import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, renderTearoffCard, makeDraggable, FocusOverlay, getOrCreateVideo, loadAllVideosSequentially, animateTo, fadeIn } from "./atoms-renderer-v211.js?v=221";
+import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, renderTearoffCard, makeDraggable, FocusOverlay, getOrCreateVideo, loadAllVideosSequentially, animateTo, fadeIn } from "./atoms-renderer-v211.js?v=224";
 import { WallArticle } from "./wall-article.js?v=151";
 
 (async () => {

@@ -1919,10 +1919,12 @@
       "article": {
         "title": "DeepSeek Harness 的产品设计思考",
         "title_en": "Product Design Thoughts on DeepSeek Harness",
+        "author": "赖健勋 Jesse",
         "sections_latest": [
           {
             "type": "text",
-            "text": "DeepSeek Harness 发布以后，基于 “Everything is a plugin” 的理念，我在想：如果我是它的产品设计师，会如何设计？我认为设计策略是：把界面拆解成基础原子，一切复杂界面都由基础原子组成，通过定义原子的组合规则，实现灵活而多变的系统。"
+            "text": "DeepSeek Harness 发布以后，基于 “Everything is a plugin” 的理念，我在想：如果我是它的产品设计师，会如何设计？我认为设计策略是：把界面拆解成基础原子，一切复杂界面都由基础原子组成，通过定义原子的组合规则，实现灵活而多变的系统。",
+            "highlight_text": "把界面拆解成基础原子，一切复杂界面都由基础原子组成，通过定义原子的组合规则，实现灵活而多变的系统。"
           },
           {
             "type": "text",
@@ -2241,7 +2243,8 @@
         "sections_en_latest": [
           {
             "type": "text",
-            "text": "After DeepSeek Harness launched, the idea that “Everything is a plugin” made me ask: if I were its product designer, how would I design it? My strategy would be to decompose the interface into foundational atoms, build every complex interface from those atoms, and define composition rules that create a flexible, evolving system."
+            "text": "After DeepSeek Harness launched, the idea that “Everything is a plugin” made me ask: if I were its product designer, how would I design it? My strategy would be to decompose the interface into foundational atoms, build every complex interface from those atoms, and define composition rules that create a flexible, evolving system.",
+            "highlight_text": "decompose the interface into foundational atoms, build every complex interface from those atoms, and define composition rules that create a flexible, evolving system."
           },
           {
             "type": "text",

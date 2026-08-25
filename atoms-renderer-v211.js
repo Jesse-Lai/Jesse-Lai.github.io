@@ -2412,7 +2412,10 @@ export class FocusOverlay {
     const renderedText = section.highlight_leading_labels
       ? lines.map(line => line.replace(/^([（(]\d+[）)]\s*[^：:\n]+[：:])/, '<span style="color:var(--text-primary, #1a1a1a);">$1</span>')).join('<br>')
       : text.replace(/\n/g, '<br>');
-    return `<p style="font-family:var(--body-font, -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif);font-size:16px;color:${color};font-weight:${weight};line-height:1.85;margin-top:${mt};margin-bottom:${mb};">${renderedText}</p>`;
+    const highlightedText = section.highlight_text
+      ? renderedText.replace(section.highlight_text, `<span style="color:var(--text-primary, #1a1a1a);">${section.highlight_text}</span>`)
+      : renderedText;
+    return `<p style="font-family:var(--body-font, -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif);font-size:16px;color:${color};font-weight:${weight};line-height:1.85;margin-top:${mt};margin-bottom:${mb};">${highlightedText}</p>`;
   }
 
   _renderArticleSubheading(section, previousSection) {
@@ -2423,6 +2426,14 @@ export class FocusOverlay {
 
   _renderArticleSignature(section) {
     return `<p aria-label="Article signature" style="font-family:Schoolbell,cursive;font-size:22px;color:var(--text-secondary, #333);text-align:right;letter-spacing:0.04em;line-height:1.4;margin:56px 8% 24px 0;">${section.text}</p>`;
+  }
+
+  _renderArticleHeader(title, article) {
+    const author = article?.author;
+    if (!author) {
+      return `<h1 style="font-family:var(--title-font, Special Elite);font-size:28px;color:var(--text-primary, #1a1a1a);letter-spacing:0.5px;line-height:1.4;margin:0 0 32px;padding-bottom:24px;border-bottom:1px solid var(--border-divider, rgba(0,0,0,0.08));">${title}</h1>`;
+    }
+    return `<h1 style="font-family:var(--title-font, Special Elite);font-size:28px;color:var(--text-primary, #1a1a1a);letter-spacing:0.5px;line-height:1.4;margin:0 0 14px;">${title}</h1><p style="font-family:var(--body-font, -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif);font-size:16px;font-weight:400;color:var(--text-body, #444);line-height:1.85;margin:0 0 16px;">${author}</p><div aria-hidden="true" style="width:100%;height:1px;background:var(--border-divider, rgba(0,0,0,0.08));margin:0 0 32px;"></div>`;
   }
 
   _renderArticleImage(section) {
@@ -2461,7 +2472,7 @@ export class FocusOverlay {
     let html = '';
     const title = (this._lang === 'en' && article.title_en) ? article.title_en : (article.title || focusData.title || '');
     if (title) {
-      html += `<h1 style="font-family:var(--title-font, Special Elite);font-size:28px;color:var(--text-primary, #1a1a1a);letter-spacing:0.5px;line-height:1.4;margin:0 0 32px;padding-bottom:24px;border-bottom:1px solid var(--border-divider, rgba(0,0,0,0.08));">${title}</h1>`;
+      html += this._renderArticleHeader(title, article);
     }
     const _sections = this._lang === 'en'
       ? (article.sections_en_latest || article.sections_en || article.sections_latest || article.sections)
@@ -2963,7 +2974,7 @@ export class FocusOverlay {
       let html = '';
       const title = (this._lang === 'en' && article?.title_en) ? article.title_en : (article?.title || data.title || '');
       if (title) {
-        html += `<h1 style="font-family:var(--title-font, Special Elite);font-size:28px;color:var(--text-primary, #1a1a1a);letter-spacing:0.5px;line-height:1.4;margin:0 0 32px;padding-bottom:24px;border-bottom:1px solid var(--border-divider, rgba(0,0,0,0.08));">${title}</h1>`;
+        html += this._renderArticleHeader(title, article);
       }
 
       if (article?.sections) {
@@ -3696,7 +3707,7 @@ export class FocusOverlay {
 
         let html = '';
         const title = (this._lang === 'en' && article.title_en) ? article.title_en : (article.title || focusData.title || '');
-        if (title) html += `<h1 style="font-family:var(--title-font, Special Elite);font-size:28px;color:var(--text-primary, #1a1a1a);letter-spacing:0.5px;line-height:1.4;margin:0 0 32px;padding-bottom:24px;border-bottom:1px solid var(--border-divider, rgba(0,0,0,0.08));">${title}</h1>`;
+        if (title) html += this._renderArticleHeader(title, article);
         const _secs3 = this._lang === 'en'
           ? (article.sections_en_latest || article.sections_en || article.sections_latest || article.sections)
           : (article.sections_latest || article.sections);
