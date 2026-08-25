@@ -65,7 +65,29 @@ import { WallArticle } from "./wall-article.js?v=151";
   setProgress(12);
 
   // ─── Language ───
-  const LANG = localStorage.getItem('wall-lang') || 'en';
+  const pageUrl = new URL(window.location.href);
+  const sharedLang = pageUrl.searchParams.get('lang');
+  const storedLang = localStorage.getItem('wall-lang');
+  const LANG = ['en', 'zh'].includes(sharedLang)
+    ? sharedLang
+    : (['en', 'zh'].includes(storedLang) ? storedLang : 'en');
+
+  // Keep the active language in the URL so copied/shared links always open
+  // in the sender's language. URL language wins over the recipient's local
+  // preference, and legacy links are upgraded without dropping other params.
+  localStorage.setItem('wall-lang', LANG);
+  document.documentElement.lang = LANG === 'zh' ? 'zh-CN' : 'en';
+  if (sharedLang !== LANG) {
+    pageUrl.searchParams.set('lang', LANG);
+    history.replaceState(history.state, '', `${pageUrl.pathname}${pageUrl.search}${pageUrl.hash}`);
+  }
+
+  function urlForPath(path) {
+    const url = new URL(window.location.href);
+    url.pathname = path;
+    url.searchParams.set('lang', LANG);
+    return `${url.pathname}${url.search}${url.hash}`;
+  }
 
   // Language toggle
   const langBtn = document.getElementById('lang-toggle');
@@ -89,9 +111,12 @@ import { WallArticle } from "./wall-article.js?v=151";
   const track = (event, data) => { if (window.umami) umami.track(event, data); };
 
   window._toggleLang = () => {
-    const next = (localStorage.getItem('wall-lang') || 'en') === 'en' ? 'zh' : 'en';
+    const next = LANG === 'en' ? 'zh' : 'en';
     localStorage.setItem('wall-lang', next);
     track('lang-toggle', { lang: next });
+    const nextUrl = new URL(window.location.href);
+    nextUrl.searchParams.set('lang', next);
+    history.replaceState(history.state, '', `${nextUrl.pathname}${nextUrl.search}${nextUrl.hash}`);
     location.reload();
   };
 
@@ -308,7 +333,7 @@ import { WallArticle } from "./wall-article.js?v=151";
       return;
     }
     const entry = contentBySlug.get(slug);
-    history.pushState({ jesseAtom: true, slug, fromWall: true }, '', `/${slug}/`);
+    history.pushState({ jesseAtom: true, slug, fromWall: true }, '', urlForPath(`/${slug}/`));
     updatePageMeta(entry);
     focusOverlay.open(item);
   }
@@ -323,7 +348,7 @@ import { WallArticle } from "./wall-article.js?v=151";
       history.back();
       return;
     }
-    history.replaceState({ jesseHome: true }, '', '/');
+    history.replaceState({ jesseHome: true }, '', urlForPath('/'));
     updatePageMeta();
     dismissActiveArticle();
   };
