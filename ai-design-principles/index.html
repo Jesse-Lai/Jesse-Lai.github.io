@@ -78,6 +78,7 @@
       background-color: #1D183B;
     }
     html.night-mode body { background-color: #1D183B; }
+    html:not(.night-mode) .article-highlight { font-weight: 600 !important; }
     canvas { display: block; margin-top: calc(-1 * env(safe-area-inset-top, 0px)); }
 
     /* ── Sunlight overlay ── */
@@ -253,9 +254,13 @@
     #focus-overlay.visible { pointer-events: auto; }
     body:has(#focus-overlay.visible:not(.article-open)) #top-bar { display: none; }
     body:has(#focus-overlay.article-open) #top-bar,
-    body:has(#wall-article.visible) #top-bar { z-index: 10001; right: 72px; }
+    body:has(#wall-article.visible) #top-bar,
+    body.article-mode-active #top-bar,
+    body.wall-article-active #top-bar { z-index: 10001; right: 72px; }
     body:has(#focus-overlay.article-open) #time-toggle,
-    body:has(#wall-article.visible) #time-toggle { display: none; }
+    body:has(#wall-article.visible) #time-toggle,
+    body.article-mode-active #time-toggle,
+    body.wall-article-active #time-toggle { display: none; }
     body:has(#focus-overlay.article-open) canvas { pointer-events: none; }
     body.focus-active #sunlight-overlay,
     body.focus-active #night-gradient,
@@ -303,6 +308,7 @@
     /* Shared glass dismiss button */
     .glass-dismiss {
       pointer-events: auto;
+      touch-action: manipulation;
       position: relative; overflow: hidden;
       background: none; border: none;
       color: rgba(0,0,0,0.3); width: 36px; height: 36px;
@@ -340,6 +346,7 @@
     }
     #focus-close {
       position: absolute; top: 20px; right: 20px;
+      z-index: 2;
     }
 
     /* Article mode — article content lives INSIDE the focus overlay */
@@ -664,7 +671,7 @@
       box-sizing: border-box;
     }
     #wall-article-close {
-      position: fixed; top: 20px; right: 20px; z-index: 10000;
+      position: fixed; top: 20px; right: 20px; z-index: 2;
     }
 
     /* Canvas fade transition */
@@ -919,6 +926,6 @@
   <script src="lib/pixi.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/roughjs@4.6.6/bundled/rough.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/rough-notation@0.5.1/lib/rough-notation.iife.min.js"></script>
-  <script type="module" src="wall.js?v=228"></script>
+  <script type="module" src="wall.js?v=232"></script>
 </body>
 </html>

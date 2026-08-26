@@ -2400,22 +2400,26 @@ export class FocusOverlay {
     const text = String(section.text || '');
     const previousText = String(previousSection?.text || '');
     const isLabel = this._isArticleLabel(text);
-    const color = isLabel ? 'var(--text-secondary, #333)' : 'var(--text-body, #444)';
+    const color = section.highlight_all
+      ? 'var(--text-primary, #1a1a1a)'
+      : (isLabel ? 'var(--text-secondary, #333)' : 'var(--text-body, #444)');
     const weight = isLabel ? '700' : '400';
     const lines = text.split('\n');
     if (lines.length > 1 && lines.every(line => /^\d+\.\s+/.test(line.trim()))) {
       const items = lines.map(line => line.trim().replace(/^\d+\.\s+/, ''));
-      return `<ol style="font-family:var(--body-font, -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif);font-size:16px;color:${color};font-weight:${weight};line-height:1.85;margin:0 0 ${marginBottom || '24px'};padding-left:1.6em;">${items.map(item => `<li style="padding-left:0.25em;">${item}</li>`).join('')}</ol>`;
+      const highlightClass = section.highlight_all ? ' class="article-highlight"' : '';
+      return `<ol${highlightClass} style="font-family:var(--body-font, -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif);font-size:16px;color:${color};font-weight:${weight};line-height:1.85;margin:0 0 ${marginBottom || '24px'};padding-left:1.6em;">${items.map(item => `<li style="padding-left:0.25em;">${item}</li>`).join('')}</ol>`;
     }
     const mb = marginBottom || (text.trimStart().startsWith('•') ? '6px' : '24px');
     const mt = isLabel && previousText.trimStart().startsWith('•') ? '24px' : '0';
     const renderedText = section.highlight_leading_labels
-      ? lines.map(line => line.replace(/^([（(]\d+[）)]\s*[^：:\n]+[：:])/, '<span style="color:var(--text-primary, #1a1a1a);">$1</span>')).join('<br>')
+      ? lines.map(line => line.replace(/^([（(]\d+[）)]\s*[^：:\n]+[：:])/, '<span class="article-highlight" style="color:var(--text-primary, #1a1a1a);">$1</span>')).join('<br>')
       : text.replace(/\n/g, '<br>');
     const highlightedText = section.highlight_text
-      ? renderedText.replace(section.highlight_text, `<span style="color:var(--text-primary, #1a1a1a);">${section.highlight_text}</span>`)
+      ? renderedText.replace(section.highlight_text, `<span class="article-highlight" style="color:var(--text-primary, #1a1a1a);">${section.highlight_text}</span>`)
       : renderedText;
-    return `<p style="font-family:var(--body-font, -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif);font-size:16px;color:${color};font-weight:${weight};line-height:1.85;margin-top:${mt};margin-bottom:${mb};">${highlightedText}</p>`;
+    const highlightClass = section.highlight_all ? ' class="article-highlight"' : '';
+    return `<p${highlightClass} style="font-family:var(--body-font, -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif);font-size:16px;color:${color};font-weight:${weight};line-height:1.85;margin-top:${mt};margin-bottom:${mb};">${highlightedText}</p>`;
   }
 
   _renderArticleSubheading(section, previousSection) {
@@ -2458,6 +2462,21 @@ export class FocusOverlay {
     return `<div style="position:relative;width:100%;padding-bottom:56.25%;margin:32px 0 ${bottomMargin};"><iframe src="${src}" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:6px;" allowfullscreen></iframe></div>${caption}`;
   }
 
+  _getArticleSections(article) {
+    const isEnglish = this._lang === 'en';
+    const base = isEnglish
+      ? (article.sections_en_latest || article.sections_en || article.sections_latest || article.sections)
+      : (article.sections_latest || article.sections);
+    const plan = isEnglish ? article.notion_en : article.notion_zh;
+    if (!plan) return base;
+
+    return plan.map(item => {
+      if (typeof item === 'number') return base[item];
+      const [type, text, extras = {}] = item;
+      return { type, text, ...extras };
+    });
+  }
+
   // 在文章模式下切换到另一篇文章（保持 overlay + mesh 不动）
   _swapArticle(focusData) {
     if (!this._articleMode || !this._articleWrap) return;
@@ -2474,9 +2493,7 @@ export class FocusOverlay {
     if (title) {
       html += this._renderArticleHeader(title, article);
     }
-    const _sections = this._lang === 'en'
-      ? (article.sections_en_latest || article.sections_en || article.sections_latest || article.sections)
-      : (article.sections_latest || article.sections);
+    const _sections = this._getArticleSections(article);
     if (_sections) {
       for (let i = 0; i < _sections.length; i++) {
         const section = _sections[i];
@@ -2978,9 +2995,7 @@ export class FocusOverlay {
       }
 
       if (article?.sections) {
-        const _secs = this._lang === 'en'
-          ? (article.sections_en_latest || article.sections_en || article.sections_latest || article.sections)
-          : (article.sections_latest || article.sections);
+        const _secs = this._getArticleSections(article);
         for (let i = 0; i < _secs.length; i++) {
           const section = _secs[i];
           if (section.type === 'subtitle') {
@@ -3015,6 +3030,7 @@ export class FocusOverlay {
       this._articleWrap = articleWrap;
 
       this.overlay.classList.add('article-open');
+      document.body.classList.add('article-mode-active');
       document.body.style.overflow = 'hidden';
       document.documentElement.style.overflow = 'hidden';
 
@@ -3103,6 +3119,7 @@ export class FocusOverlay {
     this.overlay.appendChild(articleWrap);
     this._articleWrap = articleWrap;
     this.overlay.classList.add('article-open');
+    document.body.classList.add('article-mode-active');
     document.body.style.overflow = 'hidden';
     this.overlay.style.overflowY = 'auto';
     this.closeBtn.style.position = 'fixed';
@@ -3269,6 +3286,7 @@ export class FocusOverlay {
     this.overlay.scrollTop = 0;
     this.overlay.style.overflowY = '';
     this.overlay.classList.remove('article-open');
+    document.body.classList.remove('article-mode-active');
     document.body.style.overflow = '';
     document.documentElement.style.overflow = '';
     this.closeBtn.style.position = '';
@@ -3708,9 +3726,7 @@ export class FocusOverlay {
         let html = '';
         const title = (this._lang === 'en' && article.title_en) ? article.title_en : (article.title || focusData.title || '');
         if (title) html += this._renderArticleHeader(title, article);
-        const _secs3 = this._lang === 'en'
-          ? (article.sections_en_latest || article.sections_en || article.sections_latest || article.sections)
-          : (article.sections_latest || article.sections);
+        const _secs3 = this._getArticleSections(article);
         if (_secs3) {
           for (let i = 0; i < _secs3.length; i++) {
             const s = _secs3[i];

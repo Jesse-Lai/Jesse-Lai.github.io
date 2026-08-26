@@ -77,6 +77,7 @@ export class WallArticle {
     this.canvas.classList.add('faded');
     if (this.atomsBtn) { this._atomsBtnWasVisible = this.atomsBtn.style.display !== 'none'; this.atomsBtn.style.display = 'none'; }
     this.overlay.style.display = 'block';
+    document.body.classList.add('wall-article-active');
     requestAnimationFrame(() => {
       requestAnimationFrame(() => this.overlay.classList.add('visible'));
     });
@@ -116,6 +117,7 @@ export class WallArticle {
     this._atomApps = [];
     this._pendingAtoms = [];
     this.overlay.classList.remove('visible');
+    document.body.classList.remove('wall-article-active');
     setTimeout(() => {
       this.overlay.style.display = 'none';
       this.content.innerHTML = '';
