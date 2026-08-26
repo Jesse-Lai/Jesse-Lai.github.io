@@ -2429,7 +2429,7 @@ export class FocusOverlay {
   }
 
   _renderArticleSignature(section) {
-    return `<p aria-label="Article signature" style="font-family:Schoolbell,cursive;font-size:22px;color:var(--text-secondary, #333);text-align:right;letter-spacing:0.04em;line-height:1.4;margin:56px 8% 24px 0;">${section.text}</p>`;
+    return `<p aria-label="Article signature" style="font-family:Schoolbell,cursive;font-size:22px;color:var(--text-secondary, #333);text-align:right;letter-spacing:0.04em;line-height:1.4;margin:56px 0 24px;">${section.text}</p>`;
   }
 
   _renderArticleHeader(title, article) {
