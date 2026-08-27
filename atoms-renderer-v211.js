@@ -4017,6 +4017,9 @@ export class FocusOverlay {
 
   _buildTOC(headings) {
     this._destroyTOC();
+    if (this.activeItem?.focusData?.title === 'DeepSeek Harness') {
+      headings = headings.filter(({ text }) => /^(?:阶段\s*[123]\s*[:：]|最后[，,]?\s*我还能做什么|Stage\s*[123]\s*[:：]|Finally,?\s*What Else Can I Contribute\??)/i.test(text.trim()));
+    }
     if (!headings.length) return;
     const toc = document.createElement('div');
     toc.className = 'article-toc';
