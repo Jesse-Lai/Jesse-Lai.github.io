@@ -2469,7 +2469,7 @@ export class FocusOverlay {
       const label = section.caption || 'Article demo video';
       if (this._isWeChat) {
         const posterSrc = section.poster || src.replace(/\.(?:mp4|webm|mov)(?=[?#]|$)/i, '-poster.jpg');
-        return `<div data-wechat-video style="position:relative;display:block;width:100%;margin:32px 0 ${bottomMargin};overflow:hidden;border-radius:6px;background:#000;"><video src="${src}" poster="${posterSrc}" aria-label="${label}" muted loop playsinline webkit-playsinline x5-playsinline preload="metadata" style="display:block;width:100%;height:auto;background:#000;"></video><button type="button" data-video-play aria-label="Play video" style="position:absolute;inset:0;display:grid;width:100%;height:100%;padding:0;place-items:center;border:0;background:transparent;cursor:pointer;-webkit-tap-highlight-color:transparent;"><span aria-hidden="true" style="display:grid;width:56px;height:56px;place-items:center;border:1px solid rgba(255,255,255,.5);border-radius:50%;background:rgba(0,0,0,.48);box-shadow:0 4px 18px rgba(0,0,0,.24);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left:3px;"><path d="M7.5 5.6a1 1 0 0 1 1.52-.85l10 6.4a1 1 0 0 1 0 1.7l-10 6.4a1 1 0 0 1-1.52-.85V5.6Z" fill="white"/></svg></span></button></div>${caption}`;
+        return `<div data-wechat-video style="position:relative;display:block;width:100%;margin:32px 0 ${bottomMargin};overflow:hidden;border-radius:6px;background:#000;"><img src="${posterSrc}" alt="" aria-hidden="true" draggable="false" style="display:block;width:100%;height:auto;pointer-events:none;"><video src="${src}" poster="${posterSrc}" aria-label="${label}" muted loop playsinline webkit-playsinline x5-playsinline preload="metadata" style="position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover;background:transparent;"></video><button type="button" data-video-play aria-label="Play video" style="position:absolute;inset:0;display:grid;width:100%;height:100%;padding:0;place-items:center;border:0;background:transparent;cursor:pointer;-webkit-tap-highlight-color:transparent;"><span aria-hidden="true" style="display:grid;width:56px;height:56px;place-items:center;border:1px solid rgba(255,255,255,.32);border-radius:50%;background:rgba(17,17,17,.62);box-shadow:0 5px 20px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.12);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);"><img src="icons/ic_fluent_play_24_filled.svg" alt="" width="30" height="30" style="display:block;width:30px;height:30px;filter:brightness(0) invert(1);transform:translateX(-1px);"></span></button><button type="button" data-video-fullscreen aria-label="View video fullscreen" style="position:absolute;right:12px;bottom:12px;display:none;width:42px;height:42px;padding:0;place-items:center;border:1px solid rgba(255,255,255,.28);border-radius:50%;background:rgba(17,17,17,.58);box-shadow:0 3px 14px rgba(0,0,0,.22);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);cursor:pointer;-webkit-tap-highlight-color:transparent;"><img src="icons/ic_fluent_full_screen_maximize_24_regular.svg" alt="" width="24" height="24" style="display:block;width:24px;height:24px;filter:brightness(0) invert(1);"></button></div>${caption}`;
       }
       const poster = section.poster ? ` poster="${section.poster}"` : '';
       return `<video src="${src}"${poster} aria-label="${label}" autoplay muted loop playsinline preload="metadata" style="display:block;width:100%;height:auto;border-radius:6px;margin:32px 0 ${bottomMargin};background:#000;"></video>${caption}`;
@@ -2482,7 +2482,8 @@ export class FocusOverlay {
     container.querySelectorAll('[data-wechat-video]').forEach(shell => {
       const video = shell.querySelector('video');
       const playButton = shell.querySelector('[data-video-play]');
-      if (!video || !playButton) return;
+      const fullscreenButton = shell.querySelector('[data-video-fullscreen]');
+      if (!video || !playButton || !fullscreenButton) return;
 
       video.muted = true;
       video.defaultMuted = true;
@@ -2491,9 +2492,26 @@ export class FocusOverlay {
       const showPlayButton = () => {
         playButton.disabled = false;
         playButton.style.display = 'grid';
+        fullscreenButton.style.display = 'none';
       };
       const hidePlayButton = () => {
         playButton.style.display = 'none';
+        fullscreenButton.style.display = 'grid';
+      };
+
+      const enterFullscreen = async () => {
+        if (video.requestFullscreen) {
+          try { await video.requestFullscreen(); return; } catch (error) { /* Try WebKit below. */ }
+        }
+        if (video.webkitEnterFullscreen) {
+          try { video.webkitEnterFullscreen(); return; } catch (error) { /* Try the next API. */ }
+        }
+        if (video.webkitRequestFullscreen) {
+          try { video.webkitRequestFullscreen(); return; } catch (error) { /* Try the container. */ }
+        }
+        if (shell.requestFullscreen) {
+          try { await shell.requestFullscreen(); } catch (error) { /* Keep inline playback available. */ }
+        }
       };
 
       playButton.addEventListener('click', async () => {
@@ -2504,6 +2522,13 @@ export class FocusOverlay {
         } catch (error) {
           showPlayButton();
         }
+      });
+      fullscreenButton.addEventListener('click', (event) => {
+        event.stopPropagation();
+        enterFullscreen();
+      });
+      video.addEventListener('click', () => {
+        if (!video.paused) enterFullscreen();
       });
       video.addEventListener('play', hidePlayButton);
       video.addEventListener('pause', showPlayButton);
