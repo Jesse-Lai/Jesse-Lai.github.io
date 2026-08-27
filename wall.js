@@ -161,7 +161,7 @@ import { WallArticle } from "./wall-article.js?v=152";
       en: { title: 'My AI Design Principles', body: 'My AI product design principles, and how this website will evolve with model iterations.' }
     },
     'DeepSeek Harness': {
-      zh: { title: 'DeepSeek Harness', body: '从设计一个 Agent，到设计一套可复用、可组合的创造系统。' },
+      zh: { title: 'DeepSeek Harness', body: '设计一套可复用、可组合的创造系统。' },
       en: { title: 'DeepSeek Harness', body: 'From designing one agent to designing a reusable, composable creation system.' }
     },
     'Born Builder': {

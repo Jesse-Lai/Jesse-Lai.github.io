@@ -385,7 +385,7 @@
     }
     #focus-article .article-subtitle {
       font-family: var(--title-font, 'Special Elite', cursive);
-      font-size: 20px; color: #333; letter-spacing: 0.3px;
+      font-size: 20px; color: var(--text-primary); letter-spacing: 0.3px;
       margin: 48px 0 16px; line-height: 1.4;
     }
     #focus-overlay p a, #focus-article p a, #wall-article-content p a {
@@ -423,7 +423,7 @@
     .chat-msg.ai .chat-bubble { color: #444; }
     .chat-msg.ai .chat-bubble h2 {
       font-family: var(--title-font, 'Special Elite', cursive);
-      font-size: 20px; color: #333; margin: 48px 0 16px; line-height: 1.4;
+      font-size: 20px; color: var(--text-primary); margin: 48px 0 16px; line-height: 1.4;
     }
     .chat-msg.ai .chat-bubble h2:first-child { margin-top: 0; }
     .chat-msg.ai .chat-bubble p {
@@ -702,14 +702,14 @@
 
     /* Article content */
     html.night-mode #focus-article .article-title { color: var(--text-primary); border-bottom-color: var(--border-divider); }
-    html.night-mode #focus-article .article-subtitle { color: var(--text-secondary); }
+    html.night-mode #focus-article .article-subtitle { color: var(--text-primary); }
     html.night-mode #focus-article .article-text { color: var(--text-body); }
     html.night-mode #focus-article .article-caption { color: var(--text-caption); }
 
     /* Chat messages */
     html.night-mode .chat-msg.user .chat-bubble { color: var(--text-primary); }
     html.night-mode .chat-msg.ai .chat-bubble { color: var(--text-body); }
-    html.night-mode .chat-msg.ai .chat-bubble h2 { color: var(--text-secondary); }
+    html.night-mode .chat-msg.ai .chat-bubble h2 { color: var(--text-primary); }
     html.night-mode .chat-msg.ai .chat-bubble p { color: var(--text-body); }
     html.night-mode .chat-msg.ai .chat-bubble .img-caption { color: var(--text-caption); }
     html.night-mode .article-chat { border-top-color: var(--border-divider); }

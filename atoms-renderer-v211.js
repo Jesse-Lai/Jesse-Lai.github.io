@@ -2547,7 +2547,7 @@ export class FocusOverlay {
       for (let i = 0; i < _sections.length; i++) {
         const section = _sections[i];
         if (section.type === 'subtitle') {
-          html += `<h2 style="font-family:var(--title-font, Special Elite);font-size:20px;color:var(--text-secondary, #333);margin:48px 0 16px;line-height:1.4;">${section.text}</h2>`;
+          html += `<h2 style="font-family:var(--title-font, Special Elite);font-size:20px;color:var(--text-primary, #1a1a1a);margin:48px 0 16px;line-height:1.4;">${section.text}</h2>`;
         } else if (section.type === 'subheading') {
           html += this._renderArticleSubheading(section, _sections[i - 1]);
         } else if (section.type === 'signature') {
@@ -3049,7 +3049,7 @@ export class FocusOverlay {
         for (let i = 0; i < _secs.length; i++) {
           const section = _secs[i];
           if (section.type === 'subtitle') {
-            html += `<h2 style="font-family:var(--title-font, Special Elite);font-size:20px;color:var(--text-secondary, #333);margin:48px 0 16px;line-height:1.4;">${section.text}</h2>`;
+            html += `<h2 style="font-family:var(--title-font, Special Elite);font-size:20px;color:var(--text-primary, #1a1a1a);margin:48px 0 16px;line-height:1.4;">${section.text}</h2>`;
           } else if (section.type === 'subheading') {
             html += this._renderArticleSubheading(section, _secs[i - 1]);
           } else if (section.type === 'signature') {
@@ -3262,7 +3262,7 @@ export class FocusOverlay {
           if (headingMatch) {
             flushAtomBuffer();
             currentEl = document.createElement('h2');
-            currentEl.style.cssText = 'font-family:var(--title-font, Special Elite);font-size:20px;color:var(--text-secondary, #333);margin:48px 0 16px;line-height:1.4;';
+            currentEl.style.cssText = 'font-family:var(--title-font, Special Elite);font-size:20px;color:var(--text-primary, #1a1a1a);margin:48px 0 16px;line-height:1.4;';
             aiContent.appendChild(currentEl);
             currentEl.textContent = headingMatch[1];
             this._addTOCEntry(headingMatch[1], currentEl);
@@ -3781,7 +3781,7 @@ export class FocusOverlay {
         if (_secs3) {
           for (let i = 0; i < _secs3.length; i++) {
             const s = _secs3[i];
-            if (s.type === 'subtitle') html += `<h2 style="font-family:var(--title-font, Special Elite);font-size:20px;color:var(--text-secondary, #333);margin:48px 0 16px;line-height:1.4;">${s.text}</h2>`;
+            if (s.type === 'subtitle') html += `<h2 style="font-family:var(--title-font, Special Elite);font-size:20px;color:var(--text-primary, #1a1a1a);margin:48px 0 16px;line-height:1.4;">${s.text}</h2>`;
             else if (s.type === 'subheading') html += this._renderArticleSubheading(s, _secs3[i - 1]);
             else if (s.type === 'signature') html += this._renderArticleSignature(s);
             else if (s.type === 'text') html += this._renderArticleText(s, '24px', _secs3[i - 1]);
