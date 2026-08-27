@@ -1019,14 +1019,24 @@ function generateRoughPaperTexture(w, h) {
     const blob = new Blob([svgStr], { type: 'image/svg+xml;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const img = new Image();
+    let settled = false;
+    const finish = (canvas) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timeoutId);
+      URL.revokeObjectURL(url);
+      resolve(canvas);
+    };
+    // Some WeChat WebViews never emit load/error for filtered SVG blob images.
+    // The paper grain is decorative, so continue without it instead of blocking startup.
+    const timeoutId = setTimeout(() => finish(null), 1500);
     img.onload = () => {
       const c = document.createElement('canvas');
       c.width = w; c.height = h;
       c.getContext('2d').drawImage(img, 0, 0);
-      URL.revokeObjectURL(url);
-      resolve(c);
+      finish(c);
     };
-    img.onerror = () => { URL.revokeObjectURL(url); resolve(null); };
+    img.onerror = () => finish(null);
     img.src = url;
   });
 }
@@ -2334,6 +2344,7 @@ export class FocusOverlay {
     this._photoSystem = photoSystem || null;
     this._contentData = contentData || [];
     this._lang = lang || 'en';
+    this._isWeChat = /MicroMessenger/i.test(navigator.userAgent || '');
     this.overlay = document.getElementById('focus-overlay');
     this.backdrop = document.getElementById('focus-backdrop');
     this.titleEl = document.getElementById('focus-title');
@@ -2455,11 +2466,49 @@ export class FocusOverlay {
       : '';
     const bottomMargin = section.caption ? '0' : '40px';
     if (/\.(?:mp4|webm|mov)(?:[?#]|$)/i.test(src)) {
-      const poster = section.poster ? ` poster="${section.poster}"` : '';
       const label = section.caption || 'Article demo video';
+      if (this._isWeChat) {
+        const posterSrc = section.poster || src.replace(/\.(?:mp4|webm|mov)(?=[?#]|$)/i, '-poster.jpg');
+        return `<div data-wechat-video style="position:relative;display:block;width:100%;margin:32px 0 ${bottomMargin};overflow:hidden;border-radius:6px;background:#000;"><video src="${src}" poster="${posterSrc}" aria-label="${label}" muted loop playsinline webkit-playsinline x5-playsinline preload="metadata" style="display:block;width:100%;height:auto;background:#000;"></video><button type="button" data-video-play aria-label="Play video" style="position:absolute;inset:0;display:grid;width:100%;height:100%;padding:0;place-items:center;border:0;background:transparent;cursor:pointer;-webkit-tap-highlight-color:transparent;"><span aria-hidden="true" style="display:grid;width:56px;height:56px;place-items:center;border:1px solid rgba(255,255,255,.5);border-radius:50%;background:rgba(0,0,0,.48);box-shadow:0 4px 18px rgba(0,0,0,.24);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left:3px;"><path d="M7.5 5.6a1 1 0 0 1 1.52-.85l10 6.4a1 1 0 0 1 0 1.7l-10 6.4a1 1 0 0 1-1.52-.85V5.6Z" fill="white"/></svg></span></button></div>${caption}`;
+      }
+      const poster = section.poster ? ` poster="${section.poster}"` : '';
       return `<video src="${src}"${poster} aria-label="${label}" autoplay muted loop playsinline preload="metadata" style="display:block;width:100%;height:auto;border-radius:6px;margin:32px 0 ${bottomMargin};background:#000;"></video>${caption}`;
     }
     return `<div style="position:relative;width:100%;padding-bottom:56.25%;margin:32px 0 ${bottomMargin};"><iframe src="${src}" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:6px;" allowfullscreen></iframe></div>${caption}`;
+  }
+
+  _bindWeChatArticleVideos(container) {
+    if (!this._isWeChat || !container) return;
+    container.querySelectorAll('[data-wechat-video]').forEach(shell => {
+      const video = shell.querySelector('video');
+      const playButton = shell.querySelector('[data-video-play]');
+      if (!video || !playButton) return;
+
+      video.muted = true;
+      video.defaultMuted = true;
+      video.playsInline = true;
+
+      const showPlayButton = () => {
+        playButton.disabled = false;
+        playButton.style.display = 'grid';
+      };
+      const hidePlayButton = () => {
+        playButton.style.display = 'none';
+      };
+
+      playButton.addEventListener('click', async () => {
+        playButton.disabled = true;
+        try {
+          await video.play();
+          hidePlayButton();
+        } catch (error) {
+          showPlayButton();
+        }
+      });
+      video.addEventListener('play', hidePlayButton);
+      video.addEventListener('pause', showPlayButton);
+      video.addEventListener('error', showPlayButton);
+    });
   }
 
   _getArticleSections(article) {
@@ -2519,6 +2568,7 @@ export class FocusOverlay {
     this._articleWrap.innerHTML = html;
     this._articleWrap.querySelectorAll('a').forEach(a => { a.setAttribute('target', '_blank'); a.style.color = 'inherit'; a.style.textDecoration = 'underline'; a.style.textUnderlineOffset = '3px'; a.style.textDecorationThickness = '1px'; });
     this._articleWrap.style.paddingBottom = '160px';
+    this._bindWeChatArticleVideos(this._articleWrap);
     this._bindImageLightbox();
 
     // 重建 chat 容器
@@ -3019,6 +3069,7 @@ export class FocusOverlay {
       articleWrap.innerHTML = html;
       articleWrap.querySelectorAll('a').forEach(a => { a.setAttribute('target', '_blank'); a.style.color = 'inherit'; a.style.textDecoration = 'underline'; a.style.textUnderlineOffset = '3px'; a.style.textDecorationThickness = '1px'; });
       articleWrap.style.paddingBottom = '160px';
+      this._bindWeChatArticleVideos(articleWrap);
 
       const chatContainer = document.createElement('div');
       chatContainer.className = 'article-chat';
@@ -3740,6 +3791,7 @@ export class FocusOverlay {
           }
         }
         articleWrap.innerHTML = html;
+        this._bindWeChatArticleVideos(articleWrap);
         nestedOverlay.appendChild(articleWrap);
         nestedOverlay.style.overflowY = 'auto';
         nestedOverlay.scrollTop = 0;
