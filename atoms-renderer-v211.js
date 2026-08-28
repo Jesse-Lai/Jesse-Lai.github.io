@@ -833,10 +833,7 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg, o
     wrapper._titleW = titleText.width; wrapper._titleH = titleText.height;
   }
 
-  // ── Body text with obstacle avoidance (wraps around stamp) ──
-  // Build obstacles list from stamp position (calculated below)
-
-  // ── Stamp (lower area, random position) — reuses renderStamp() ──
+  // ── Prepare stamp — its final position depends on the body text height ──
   let stampRect = null;
   let stampW = 0, stampH = 0;
   let stampContainer = null;
@@ -849,39 +846,15 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg, o
     stampH = stampResult.stampH;
     var stampSeed = stampResult.seed;
 
-    // Random position near an edge (not center), always below title
-    const stampMinY = titleBottom + 4;
-    const edge = Math.floor(Math.random() * 4); // 0=right, 1=bottom, 2=left, 3=bottom-right
-    let sx, sy;
-    if (edge === 0) { // right edge
-      sx = noteW - stampW * (0.6 + Math.random()*0.2);
-      sy = stampMinY + Math.random() * 100;
-    } else if (edge === 1) { // bottom edge
-      sx = padding + Math.random() * (noteW - stampW - padding);
-      sy = Math.max(stampMinY, 200 - stampH * (0.3 + Math.random()*0.3));
-    } else if (edge === 2) { // left edge
-      sx = -stampW * (0.1 + Math.random()*0.15);
-      sy = stampMinY + Math.random() * 100;
-    } else { // bottom-right corner
-      sx = noteW - stampW * (0.7 + Math.random()*0.2);
-      sy = Math.max(stampMinY, 200 - stampH * (0.2 + Math.random()*0.3));
-    }
-    stampContainer.x = sx;
-    stampContainer.y = sy;
-    // renderStamp already applies random rotation
-    wrapper.addChild(stampContainer);
-    stampRect = {x: sx, y: sy, w: stampW, h: stampH};
   }
 
-  // ── Now render body text, wrapping around stamp obstacle ──
+  // ── Body text always gets the full note width ──
   if (noteData.body) {
-    const obstacles = stampRect ? [stampRect] : [];
     const bodyLines = layoutTextWithObstacles(noteData.body, {
       areaX: padding, areaY: titleBottom,
       areaW: noteW - padding*2,
-      areaH: 250 - titleBottom, // max text area before stamp
+      areaH: 250 - titleBottom,
       fontSize: 17, fontFamily: getCSSFont('--atom-font', 'Special Elite'), fill: palette.body,
-      obstacles,
     });
     renderTextLines(wrapper, bodyLines);
     // Track bottom of body text
@@ -889,6 +862,27 @@ export async function renderStickyNote(app, x, y, noteData, stampImgData, cfg, o
       const lastLine = bodyLines[bodyLines.length - 1];
       bodyBottom = lastLine.y + (lastLine.fontSize || 17) * 1.4;
     }
+  }
+
+  // ── Stamp: keep the random edge treatment, but never overlap the body text ──
+  if (stampContainer) {
+    const edge = Math.floor(Math.random() * 4); // 0=right, 1=inset, 2=left, 3=right-overlap
+    let sx;
+    const sy = bodyBottom + 8 + Math.random() * 12;
+    if (edge === 0) { // right edge
+      sx = noteW - stampW * (0.6 + Math.random()*0.2);
+    } else if (edge === 1) { // inset horizontally
+      sx = padding + Math.random() * (noteW - stampW - padding);
+    } else if (edge === 2) { // left edge
+      sx = -stampW * (0.1 + Math.random()*0.15);
+    } else { // stronger right overlap
+      sx = noteW - stampW * (0.7 + Math.random()*0.2);
+    }
+    stampContainer.x = sx;
+    stampContainer.y = sy;
+    // renderStamp already applies random rotation
+    wrapper.addChild(stampContainer);
+    stampRect = {x: sx, y: sy, w: stampW, h: stampH};
   }
 
   // ── Date (always below body text and stamp) ──
