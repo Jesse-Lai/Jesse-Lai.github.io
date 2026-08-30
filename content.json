@@ -2518,7 +2518,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/deepseek-harness-01-hands.webp",
+            "src": "content_images/deepseek-harness-01-hands.webp?v=notion-20260830",
             "caption": "",
             "alt": "DeepSeek Harness 原子化视觉"
           },
@@ -2536,7 +2536,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/deepseek-harness-02-strategy.webp",
+            "src": "content_images/deepseek-harness-02-strategy.webp?v=notion-20260830",
             "caption": "",
             "alt": "从灵活插件体系到原子化设计策略"
           },
@@ -2554,7 +2554,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/deepseek-harness-02-notion-blocks.webp",
+            "src": "content_images/deepseek-harness-02-notion-blocks.webp?v=notion-20260830",
             "caption": "最基础的 Block 元素，就可以组成所有复杂的 Notion 页面",
             "alt": "Notion Block 组合示意"
           },
@@ -2568,7 +2568,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/deepseek-harness-03-session.webp",
+            "src": "content_images/deepseek-harness-03-session.webp?v=notion-20260830",
             "caption": "Session 是 Agent 的最小单位",
             "alt": "Session 原子示意"
           },
@@ -2613,7 +2613,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/deepseek-harness-04-context.webp",
+            "src": "content_images/deepseek-harness-04-context.webp?v=notion-20260830",
             "caption": "在各种软件与 Agent 之间切换",
             "alt": "应用与 Agent 之间的上下文切换"
           },
@@ -2710,7 +2710,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/deepseek-harness-05-creation.webp",
+            "src": "content_images/deepseek-harness-05-creation.webp?v=notion-20260830",
             "caption": "",
             "alt": "DeepSeek Harness 创造路径"
           },
@@ -2732,7 +2732,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/deepseek-harness-06-vscode.webp",
+            "src": "content_images/deepseek-harness-06-vscode.webp?v=notion-20260830",
             "caption": "",
             "alt": "VS Code 扩展生态"
           },
@@ -2770,7 +2770,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/deepseek-harness-07-steam.webp",
+            "src": "content_images/deepseek-harness-07-steam.webp?v=notion-20260830",
             "caption": "",
             "alt": "Steam 创意工坊治理模式"
           },
@@ -2792,7 +2792,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/deepseek-harness-08-flywheel.webp",
+            "src": "content_images/deepseek-harness-08-flywheel.webp?v=notion-20260830",
             "caption": "1. 用户留在生态内　2. 用户开始创作　3. 社区反哺 Harness",
             "alt": "DeepSeek Harness 生态飞轮"
           },
@@ -2811,13 +2811,13 @@
           },
           {
             "type": "image",
-            "src": "content_images/deepseek-harness-context-sources.webp",
+            "src": "content_images/deepseek-harness-context-sources.webp?v=notion-20260830",
             "caption": "",
             "alt": "多源上下文与 Agent 的关系"
           },
           {
             "type": "image",
-            "src": "content_images/deepseek-harness-long-task-control.webp",
+            "src": "content_images/deepseek-harness-long-task-control.webp?v=notion-20260830",
             "caption": "",
             "alt": "长程任务中思维链的可读与可控"
           }
@@ -2850,7 +2850,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/deepseek-harness-01-hands.webp",
+            "src": "content_images/deepseek-harness-01-hands.webp?v=notion-20260830",
             "caption": "",
             "alt": "Atomic visual language for DeepSeek Harness"
           },
@@ -2868,7 +2868,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/deepseek-harness-02-strategy.webp",
+            "src": "content_images/deepseek-harness-02-strategy.webp?v=notion-20260830",
             "caption": "",
             "alt": "From a flexible plugin system to an atomic design strategy"
           },
@@ -2886,7 +2886,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/deepseek-harness-02-notion-blocks.webp",
+            "src": "content_images/deepseek-harness-02-notion-blocks.webp?v=notion-20260830",
             "caption": "The most basic Block elements can compose every complex Notion page.",
             "alt": "How Notion Blocks compose into pages"
           },
@@ -2900,7 +2900,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/deepseek-harness-03-session.webp",
+            "src": "content_images/deepseek-harness-03-session.webp?v=notion-20260830",
             "caption": "A Session is the smallest complete unit of an agent.",
             "alt": "Session as an atomic agent unit"
           },
@@ -2945,7 +2945,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/deepseek-harness-04-context.webp",
+            "src": "content_images/deepseek-harness-04-context.webp?v=notion-20260830",
             "caption": "Switching between applications and the agent.",
             "alt": "Context switching between apps and an agent"
           },
@@ -3042,7 +3042,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/deepseek-harness-05-creation.webp",
+            "src": "content_images/deepseek-harness-05-creation.webp?v=notion-20260830",
             "caption": "",
             "alt": "Creation pathways in DeepSeek Harness"
           },
@@ -3064,7 +3064,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/deepseek-harness-06-vscode.webp",
+            "src": "content_images/deepseek-harness-06-vscode.webp?v=notion-20260830",
             "caption": "",
             "alt": "The VS Code extension ecosystem"
           },
@@ -3102,7 +3102,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/deepseek-harness-07-steam.webp",
+            "src": "content_images/deepseek-harness-07-steam.webp?v=notion-20260830",
             "caption": "",
             "alt": "Steam Workshop governance models"
           },
@@ -3124,7 +3124,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/deepseek-harness-08-flywheel.webp",
+            "src": "content_images/deepseek-harness-08-flywheel.webp?v=notion-20260830",
             "caption": "1. Users stay in the ecosystem　2. Users begin creating　3. The community gives back to Harness",
             "alt": "DeepSeek Harness ecosystem flywheel"
           },
@@ -3143,13 +3143,13 @@
           },
           {
             "type": "image",
-            "src": "content_images/deepseek-harness-context-sources.webp",
+            "src": "content_images/deepseek-harness-context-sources.webp?v=notion-20260830",
             "caption": "",
             "alt": "The relationship between multiple context sources and the agent"
           },
           {
             "type": "image",
-            "src": "content_images/deepseek-harness-long-task-control.webp",
+            "src": "content_images/deepseek-harness-long-task-control.webp?v=notion-20260830",
             "caption": "",
             "alt": "Readable and controllable reasoning in long-running tasks"
           }
