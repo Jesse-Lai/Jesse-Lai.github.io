@@ -1945,11 +1945,7 @@
           ],
           [
             "text",
-            "我通过对主流 Agent 产品发展趋势的分析，以及结合 DeepSeek Harness “Everything is a plugin” 的理念，梳理出了在下一个阶段，Agent 产品设计上的挑战和我的解法。"
-          ],
-          [
-            "text",
-            "影响 Agent 产品发展趋势的，有 可塑性软件 (Malleable software)、长程任务和多源上下文。",
+            "我通过对主流 Agent 产品发展趋势的分析，以及结合 DeepSeek Harness “Everything is a plugin” 的理念，梳理出了在下一个阶段，Agent 产品设计上的挑战和我的解法。当前 Agent 产品的发展趋势有：可塑性软件 (Malleable software)、长程任务和多源上下文。",
             {
               "highlight_text": "可塑性软件 (Malleable software)、长程任务和多源上下文。"
             }
