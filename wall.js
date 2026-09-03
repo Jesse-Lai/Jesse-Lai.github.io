@@ -70,7 +70,7 @@ import { WallArticle } from "./wall-article.js?v=152";
   const storedLang = localStorage.getItem('wall-lang');
   const LANG = ['en', 'zh'].includes(sharedLang)
     ? sharedLang
-    : (['en', 'zh'].includes(storedLang) ? storedLang : 'en');
+    : (['en', 'zh'].includes(storedLang) ? storedLang : 'zh');
 
   // Keep the active language in the URL so copied/shared links always open
   // in the sender's language. URL language wins over the recipient's local
