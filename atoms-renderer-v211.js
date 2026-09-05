@@ -4043,7 +4043,16 @@ export class FocusOverlay {
   _buildTOC(headings) {
     this._destroyTOC();
     if (this.activeItem?.focusData?.title === 'DeepSeek Harness') {
-      headings = headings.filter(({ text }) => /^(?:阶段\s*[123]\s*[:：]|最后[，,]?\s*我还能做什么|Stage\s*[123]\s*[:：]|Finally,?\s*What Else Can I Contribute\??)/i.test(text.trim()));
+      headings = headings
+        .filter(({ text }) => /^(?:趋势\s*[123]\s*[:：]|DeepSeek Harness 的不同阶段$|最后[，,]?\s*我还?能做什么$|Trend\s*[123]\s*[:：]|The Different Stages of DeepSeek Harness$|Finally,?\s*What Else Can I Contribute\??$)/i.test(text.trim()))
+        .map(heading => ({
+          ...heading,
+          tocText: /^趋势\s*1\s*[:：]/i.test(heading.text.trim())
+            ? '趋势1：Agent 越来越灵活'
+            : /^最后[，,]?\s*我还?能做什么$/i.test(heading.text.trim())
+              ? '最后，我能做什么'
+              : heading.text
+        }));
     }
     if (!headings.length) return;
     const toc = document.createElement('div');
@@ -4054,7 +4063,7 @@ export class FocusOverlay {
       item.className = 'article-toc-item';
       const txt = document.createElement('div');
       txt.className = 'toc-text';
-      txt.textContent = this._tocText(h.text);
+      txt.textContent = this._tocText(h.tocText || h.text);
       item.appendChild(txt);
       item.addEventListener('click', () => {
         const elTop = h.el.getBoundingClientRect().top;

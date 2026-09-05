@@ -1945,19 +1945,19 @@
           ],
           [
             "text",
-            "我通过对主流 Agent 产品发展趋势的分析，以及结合 DeepSeek Harness “Everything is a plugin” 的理念，梳理出了在下一个阶段，Agent 产品设计上的挑战和我的解法。当前 Agent 产品的发展趋势有：可塑性软件 (Malleable software)、长程任务和多源上下文。",
+            "我通过对主流 Agent 产品趋势分析，结合 DeepSeek Harness “Everything is a plugin” 的理念，梳理了下一个阶段 Agent 产品体验上的挑战和解法。当前 Agent 在产品体验上的主要挑战有：越灵活复杂度越高、意图漂移和上下文分散",
             {
-              "highlight_text": "可塑性软件 (Malleable software)、长程任务和多源上下文。"
+              "highlight_text": "越灵活复杂度越高、意图漂移和上下文分散"
             }
           ],
           10,
           [
             "subtitle",
-            "趋势 1：可塑性软件"
+            "趋势1：Agent 越来越灵活 - Everything is a plugin"
           ],
           [
             "text",
-            "越来越多的个人／企业开始搭建自己的 Agent，每个人的 Agent 和工作流都不一样。这会带来的结果是，在未来每个人的 Agent 长得都不一样，我们不能再设计一套固定的产品扔给用户，而应该设计一套灵活的框架，让用户能轻松地组装成自己想要的样子。"
+            "越来越多的个人/企业开始搭建自己的Agent，每个人的 Agent 和工作流都不一样。这会带来的结果是，在未来每个人的 Agent 长得都不一样，我们不能再设计一套固定的产品扔给用户。而应该设计一套灵活的框架，让用户能轻松的组装成自己想要的样子。"
           ],
           [
             "subheading",
@@ -2031,12 +2031,12 @@
           24,
           [
             "subtitle",
-            "趋势 2：多源上下文"
+            "趋势2：上下文越来越多"
           ],
           72,
           [
             "text",
-            "主流 Coding Agent 最大的体验问题之一，是使用场景和 Context 分离。一个典型场景是：用户在使用自己的办公软件或浏览器时，把这些 App 中的 Context 多次来回复制粘贴到 Coding Agent；Coding Agent 处理完以后，再把结果复制回 App 中，注意力很分散。"
+            "主流 Coding Agent 最大的体验问题之一，是使用场景和 Context 分散。一个典型场景是：用户在使用自己的办公软件或浏览器时，把这些 App 中的 Context 多次来回复制粘贴到 Coding Agent；Coding Agent 处理完以后，再把结果复制回 App 中。导致用户效率降低，注意力分散。"
           ],
           27,
           [
@@ -2066,7 +2066,7 @@
           37,
           [
             "subtitle",
-            "趋势 3：长程任务增加"
+            "趋势3：任务越来越长"
           ],
           [
             "text",
@@ -2528,7 +2528,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/deepseek-harness-02-strategy.webp?v=notion-20260830",
+            "src": "content_images/deepseek-harness-02-strategy.webp?v=notion-20260905",
             "caption": "",
             "alt": "从灵活插件体系到原子化设计策略"
           },
@@ -2803,13 +2803,13 @@
           },
           {
             "type": "image",
-            "src": "content_images/deepseek-harness-context-sources.webp?v=notion-20260830",
+            "src": "content_images/deepseek-harness-context-sources.webp?v=notion-20260905",
             "caption": "",
             "alt": "多源上下文与 Agent 的关系"
           },
           {
             "type": "image",
-            "src": "content_images/deepseek-harness-long-task-control.webp?v=notion-20260830",
+            "src": "content_images/deepseek-harness-long-task-control.webp?v=notion-20260905",
             "caption": "",
             "alt": "长程任务中思维链的可读与可控"
           }
@@ -2860,7 +2860,7 @@
           },
           {
             "type": "image",
-            "src": "content_images/deepseek-harness-02-strategy.webp?v=notion-20260830",
+            "src": "content_images/deepseek-harness-02-strategy.webp?v=notion-20260905",
             "caption": "",
             "alt": "From a flexible plugin system to an atomic design strategy"
           },
@@ -3135,13 +3135,13 @@
           },
           {
             "type": "image",
-            "src": "content_images/deepseek-harness-context-sources.webp?v=notion-20260830",
+            "src": "content_images/deepseek-harness-context-sources.webp?v=notion-20260905",
             "caption": "",
             "alt": "The relationship between multiple context sources and the agent"
           },
           {
             "type": "image",
-            "src": "content_images/deepseek-harness-long-task-control.webp?v=notion-20260830",
+            "src": "content_images/deepseek-harness-long-task-control.webp?v=notion-20260905",
             "caption": "",
             "alt": "Readable and controllable reasoning in long-running tasks"
           }
