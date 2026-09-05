@@ -365,7 +365,7 @@
     }
     #focus-article {
       display: none;
-      max-width: 640px; margin: 0 auto;
+      max-width: clamp(640px, 46vw, 760px); margin: 0 auto;
       padding: 0 24px 100px;
       opacity: 0; transform: translateY(30px);
       transition: opacity 0.5s ease, transform 0.5s ease;
@@ -442,7 +442,7 @@
     /* Article TOC */
     .article-toc {
       position: fixed;
-      right: calc(50% + 360px);
+      right: calc(50% + clamp(360px, calc(23vw + 40px), 420px));
       width: 196px;
       padding-top: 6px;
       font-family: 'Red Hat Mono', monospace;
@@ -501,7 +501,7 @@
     .composer-bar .composer-box {
       pointer-events: auto;
       position: relative;
-      flex: 1; max-width: 640px; margin: 0 auto; box-sizing: border-box;
+      flex: 1; max-width: clamp(640px, 46vw, 760px); margin: 0 auto; box-sizing: border-box;
       display: flex; align-items: center; gap: 8px;
       border-radius: 36px;
       padding: 10px 12px 10px 16px;
@@ -666,7 +666,7 @@
     }
     #wall-article.visible { opacity: 1; }
     #wall-article-content {
-      max-width: 640px; margin: 0 auto;
+      max-width: clamp(640px, 46vw, 760px); margin: 0 auto;
       padding: 80px 24px 160px;
       box-sizing: border-box;
     }
@@ -926,6 +926,6 @@
   <script src="lib/pixi.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/roughjs@4.6.6/bundled/rough.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/rough-notation@0.5.1/lib/rough-notation.iife.min.js"></script>
-  <script type="module" src="wall.js?v=239"></script>
+  <script type="module" src="wall.js?v=240"></script>
 </body>
 </html>

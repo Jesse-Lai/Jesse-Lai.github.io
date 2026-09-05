@@ -3009,7 +3009,7 @@ export class FocusOverlay {
       const meshBottom = 80 + mesh.height;
 
       const articleWrap = document.createElement('div');
-      articleWrap.style.cssText = `position:absolute;top:${meshBottom + 48}px;left:0;right:0;max-width:640px;margin:0 auto;padding:0 24px 80px;opacity:0;transform:translateY(30px);transition:opacity 0.5s ease,transform 0.5s ease;`;
+      articleWrap.style.cssText = `position:absolute;top:${meshBottom + 48}px;left:0;right:0;max-width:clamp(640px, 46vw, 760px);margin:0 auto;padding:0 24px 80px;opacity:0;transform:translateY(30px);transition:opacity 0.5s ease,transform 0.5s ease;`;
 
       let html = '';
       const title = (this._lang === 'en' && article?.title_en) ? article.title_en : (article?.title || data.title || '');
@@ -3130,7 +3130,7 @@ export class FocusOverlay {
 
     // Article container
     const articleWrap = document.createElement('div');
-    articleWrap.style.cssText = `position:absolute;top:${meshBottom + 48}px;left:0;right:0;max-width:640px;margin:0 auto;padding:0 24px 160px;opacity:0;transform:translateY(30px);transition:opacity 0.5s ease,transform 0.5s ease;`;
+    articleWrap.style.cssText = `position:absolute;top:${meshBottom + 48}px;left:0;right:0;max-width:clamp(640px, 46vw, 760px);margin:0 auto;padding:0 24px 160px;opacity:0;transform:translateY(30px);transition:opacity 0.5s ease,transform 0.5s ease;`;
 
     // Title
     const title = data.title || 'Collection';
@@ -3745,7 +3745,7 @@ export class FocusOverlay {
         const meshBottom = 80 + mesh.height;
 
         const articleWrap = document.createElement('div');
-        articleWrap.style.cssText = `position:absolute;top:${meshBottom + 48}px;left:0;right:0;max-width:640px;margin:0 auto;padding:0 24px 160px;opacity:0;transform:translateY(30px);transition:opacity 0.5s ease,transform 0.5s ease;`;
+        articleWrap.style.cssText = `position:absolute;top:${meshBottom + 48}px;left:0;right:0;max-width:clamp(640px, 46vw, 760px);margin:0 auto;padding:0 24px 160px;opacity:0;transform:translateY(30px);transition:opacity 0.5s ease,transform 0.5s ease;`;
 
         let html = '';
         const title = (this._lang === 'en' && article.title_en) ? article.title_en : (article.title || focusData.title || '');
