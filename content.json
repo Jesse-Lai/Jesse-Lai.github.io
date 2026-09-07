@@ -151,27 +151,33 @@
           },
           {
             "type": "text",
-            "text": "（1）专注 Agent 设计：从早期的 Chat Bot，到 Copilot，再到 Coding Agent。我参与的项目经历了完整的 Agent 多个发展阶段，让我对设计 Agent 产品有更多经验和更深入的思考。"
+            "text": "（1）专注 Agent 设计：从早期的 Chat Bot，到 Copilot，再到 Coding Agent。我参与的项目经历了完整的 Agent 多个发展阶段，让我对设计 Agent 产品有更多经验和更深入的思考。",
+            "highlight_leading_labels": true
           },
           {
             "type": "text",
-            "text": "（2）系统思维：微软的 GenUI 及 Copilot 设计系统项目，让我理解如何拆解复杂系统为基本原子，做产品设计的基础设施。"
+            "text": "（2）系统思维：微软的 GenUI 及 Copilot 设计系统项目，让我理解如何拆解复杂系统为基本原子，做产品设计的基础设施。",
+            "highlight_leading_labels": true
           },
           {
             "type": "text",
-            "text": "（3）AI Native：设计/开发数十个 AI 产品，和早已 AI Native 的工作流，让我对 AI Native 工作方式很熟悉，也让我能更好地与各个职能协作。"
+            "text": "（3）AI Native：设计/开发数十个 AI 产品，和早已 AI Native 的工作流，让我对 AI Native 工作方式很熟悉，也让我能更好地与各个职能协作。",
+            "highlight_leading_labels": true
           },
           {
             "type": "text",
-            "text": "（4）全球化：Copilot 产品设计经历，让我有为全球数亿用户设计的品质、适应全球化市场的设计经验，以及和全球用户沟通的能力。"
+            "text": "（4）全球化：Copilot 产品设计经历，让我有为全球数亿用户设计的品质、适应全球化市场的设计经验，以及和全球用户沟通的能力。",
+            "highlight_leading_labels": true
           },
           {
             "type": "text",
-            "text": "（5）产品设计品味：综合交互体验、视觉创意、原型开发、用户调研等能力。有将前沿的技术和产品转化为用户友好体验的追求。"
+            "text": "（5）产品设计品味：综合交互体验、视觉创意、原型开发、用户调研等能力。有将前沿的技术和产品转化为用户友好体验的追求。",
+            "highlight_leading_labels": true
           },
           {
             "type": "text",
-            "text": "（6）好奇心：除了产品设计的前沿探索，生活中我对写作和单口喜剧的热爱，让我在 AI 时代依然是一个有趣的人。"
+            "text": "（6）好奇心：除了产品设计的前沿探索，生活中我对写作和单口喜剧的热爱，让我在 AI 时代依然是一个有趣的人。",
+            "highlight_leading_labels": true
           },
           {
             "type": "subtitle",
@@ -345,27 +351,33 @@
           },
           {
             "type": "text",
-            "text": "(1) Agent design: from early chatbots to Copilot and Coding Agents, my projects have spanned the full evolution of Agent products, giving me more experience and deeper insight into designing them."
+            "text": "(1) Agent design: from early chatbots to Copilot and Coding Agents, my projects have spanned the full evolution of Agent products, giving me more experience and deeper insight into designing them.",
+            "highlight_leading_labels": true
           },
           {
             "type": "text",
-            "text": "(2) Systems thinking: Microsoft’s GenUI and Copilot design-system work taught me how to break complex systems into foundational atoms and build product-design infrastructure."
+            "text": "(2) Systems thinking: Microsoft’s GenUI and Copilot design-system work taught me how to break complex systems into foundational atoms and build product-design infrastructure.",
+            "highlight_leading_labels": true
           },
           {
             "type": "text",
-            "text": "(3) AI Native: designing and building dozens of AI products—and working in an AI-native workflow for years—has made this way of working second nature and helps me collaborate effectively across functions."
+            "text": "(3) AI Native: designing and building dozens of AI products—and working in an AI-native workflow for years—has made this way of working second nature and helps me collaborate effectively across functions.",
+            "highlight_leading_labels": true
           },
           {
             "type": "text",
-            "text": "(4) Global reach: my Copilot experience has taught me how to design quality products for hundreds of millions of users, adapt them for global markets, and communicate with users around the world."
+            "text": "(4) Global reach: my Copilot experience has taught me how to design quality products for hundreds of millions of users, adapt them for global markets, and communicate with users around the world.",
+            "highlight_leading_labels": true
           },
           {
             "type": "text",
-            "text": "(5) Product-design taste: I bring together interaction design, visual creativity, prototyping, and user research, with a drive to turn frontier technology into friendly, usable experiences."
+            "text": "(5) Product-design taste: I bring together interaction design, visual creativity, prototyping, and user research, with a drive to turn frontier technology into friendly, usable experiences.",
+            "highlight_leading_labels": true
           },
           {
             "type": "text",
-            "text": "(6) Curiosity: beyond exploring the frontier of product design, my love of writing and stand-up comedy keeps me interesting—and curious—in the AI era."
+            "text": "(6) Curiosity: beyond exploring the frontier of product design, my love of writing and stand-up comedy keeps me interesting—and curious—in the AI era.",
+            "highlight_leading_labels": true
           },
           {
             "type": "subtitle",
@@ -2970,7 +2982,7 @@
           },
           {
             "type": "interactive",
-            "src": "demos/reasoning-detail-slider.html?v=1",
+            "src": "demos/reasoning-detail-slider.html?v=2",
             "title": "思维链可读：点击或拖动滑杆切换简洁、专业、深入三档",
             "aspectRatio": "736 / 520",
             "caption": ""
@@ -3305,7 +3317,7 @@
           },
           {
             "type": "interactive",
-            "src": "demos/reasoning-detail-slider.html?v=1",
+            "src": "demos/reasoning-detail-slider.html?v=2",
             "title": "Reasoning readability: click or drag the slider to change detail level",
             "aspectRatio": "736 / 520",
             "caption": ""

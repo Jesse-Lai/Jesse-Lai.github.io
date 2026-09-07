@@ -16,7 +16,7 @@ for (const lang of ['zh', 'en']) {
     const sections = article[`notion_${lang}`].map(item => typeof item === 'number' ? base[item] : { type: item[0], text: item[1] });
     const demos = sections.filter(section => section.type === 'interactive');
     assert.equal(demos.length, 1);
-    assert.equal(demos[0].src, 'demos/reasoning-detail-slider.html?v=1');
+    assert.equal(demos[0].src, 'demos/reasoning-detail-slider.html?v=2');
     assert.equal(demos[0].aspectRatio, '736 / 520');
     assert(existsSync(new URL(demos[0].src.split('?')[0], root)));
     assert(!sections.some(section => section.src?.includes('deepseek-cot-levels.mp4')));
@@ -26,7 +26,7 @@ for (const lang of ['zh', 'en']) {
 test('interactive media renders a labelled, isolated iframe with existing media spacing', () => {
   const method = renderer.slice(renderer.indexOf('  _renderArticleInteractive(section) {'), renderer.indexOf('  _renderArticleVideo(section) {'));
   const render = new Function(`return ({ ${method} });`)()._renderArticleInteractive;
-  const html = render({ src: 'demos/reasoning-detail-slider.html?v=1', title: '思维链可读', aspectRatio: '736 / 520' });
+  const html = render({ src: 'demos/reasoning-detail-slider.html?v=2', title: '思维链可读', aspectRatio: '736 / 520' });
   assert.match(html, /title="思维链可读"/);
   assert.match(html, /sandbox="allow-scripts"/);
   assert.match(html, /aspect-ratio:736 \/ 520/);
@@ -44,4 +44,12 @@ test('prototype retains all three levels, manual input and original reveal anima
   assert.match(demo, /prefers-reduced-motion: reduce/);
   assert.match(demo, /data:image\/jpeg;base64,/);
   assert.doesNotMatch(demo, /setInterval|autoplay|<video/);
+});
+
+test('background crops its pale source edge and covers fractional iframe dimensions', () => {
+  assert.match(demo, /background-size: auto calc\(100% \+ 4px\)/);
+  assert.match(demo, /background-position: center top/);
+  assert.match(demo, /background-repeat: no-repeat/);
+  assert.match(demo, /document\.documentElement\.getBoundingClientRect\(\)/);
+  assert.match(demo, /Math\.max\(viewport\.width \/ 736, viewport\.height \/ 520\)/);
 });

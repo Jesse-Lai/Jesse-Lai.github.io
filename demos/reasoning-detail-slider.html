@@ -365,6 +365,11 @@
     height: 520px;
     min-height: 520px;
     padding: 51.52px;
+    /* The source JPEG has a pale last row. Crop only that image edge,
+       without scaling the card or exposing a seam around the canvas. */
+    background-size: auto calc(100% + 4px);
+    background-position: center top;
+    background-repeat: no-repeat;
   }
   #figma-reasoning-detail .detail-card {
     padding: 30px 36px 34px;
@@ -374,7 +379,11 @@
 </style>
 <script>
   (() => {
-    const fit = () => document.documentElement.style.setProperty('--demo-scale', window.innerWidth / 736);
+    const fit = () => {
+      const viewport = document.documentElement.getBoundingClientRect();
+      const scale = Math.max(viewport.width / 736, viewport.height / 520);
+      document.documentElement.style.setProperty('--demo-scale', scale);
+    };
     fit();
     window.addEventListener('resize', fit);
   })();
