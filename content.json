@@ -3113,9 +3113,9 @@
           },
           {
             "type": "image",
-            "src": "content_images/deepseek-harness-long-task-control.webp?v=notion-20260905",
+            "src": "content_images/deepseek-harness-long-task-strategy.png?v=20260907",
             "caption": "",
-            "alt": "长程任务中思维链的可读与可控"
+            "alt": "长程任务、意图漂移与可控思维链的设计策略"
           }
         ],
         "sections_en_latest": [
@@ -3448,9 +3448,9 @@
           },
           {
             "type": "image",
-            "src": "content_images/deepseek-harness-long-task-control.webp?v=notion-20260905",
+            "src": "content_images/deepseek-harness-long-task-strategy.png?v=20260907",
             "caption": "",
-            "alt": "Readable and controllable reasoning in long-running tasks"
+            "alt": "Long-running tasks, intent drift, and controllable reasoning as a design strategy"
           }
         ],
         "sections": [
