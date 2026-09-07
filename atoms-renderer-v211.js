@@ -2471,6 +2471,50 @@ export class FocusOverlay {
     return `<img src="${section.src}" alt="${section.alt || ''}"${dimensions} loading="lazy" decoding="async" style="display:block;width:100%;height:auto;border-radius:6px;margin:32px 0 ${bottomMargin};">${caption}`;
   }
 
+  _renderArticleAtom(section) {
+    const entry = this._contentData.find(item => item.slug === section.slug);
+    if (!entry?.focus?.article || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(entry.slug)) return '';
+    return `<div data-article-atom="${entry.slug}" style="margin:32px 0 40px;"></div>`;
+  }
+
+  _bindArticleAtoms(root) {
+    root.querySelectorAll('[data-article-atom]:not([data-atom-bound])').forEach(placeholder => {
+      placeholder.dataset.atomBound = 'true';
+      const slug = placeholder.dataset.articleAtom;
+      const registered = this._wallFocusItems.find(({ item }) => item._routeSlug === slug);
+      const meta = registered && this._wallItemRegistry[registered.key];
+      const href = `/${slug}/?lang=${this._lang}`;
+      // Keep a usable link while the shared renderer loads, or if it fails.
+      const fallback = document.createElement('a');
+      fallback.href = href;
+      fallback.textContent = meta?.title || this._contentData.find(item => item.slug === slug)?.title || slug;
+      placeholder.appendChild(fallback);
+      if (!meta) return;
+      this._createAtomEntry(meta, { href, trackInChat: false }).then(entry => {
+        if (!entry) return;
+        if (placeholder._atomDisposed || !placeholder.isConnected) {
+          entry.app.destroy();
+          return;
+        }
+        placeholder._articleAtomApp = entry.app;
+        entry.container.style.margin = '0 auto';
+        entry.container.style.width = 'max-content';
+        entry.container.style.maxWidth = '100%';
+        entry.app.canvas.style.maxWidth = '100%';
+        entry.app.canvas.style.height = 'auto';
+        placeholder.replaceChildren(entry.container);
+      }).catch(error => console.warn('Failed to render article atom:', slug, error));
+    });
+  }
+
+  _disposeArticleAtoms(root) {
+    root?.querySelectorAll('[data-article-atom]').forEach(placeholder => {
+      placeholder._atomDisposed = true;
+      placeholder._articleAtomApp?.destroy();
+      placeholder._articleAtomApp = null;
+    });
+  }
+
   _renderImageCarousel(section) {
     const images = Array.isArray(section.images) ? section.images.filter(image => image?.src) : [];
     if (!images.length) return '';
@@ -2601,6 +2645,7 @@ export class FocusOverlay {
   _bindArticleMedia(container) {
     if (!container) return;
     bindArticleMedia(container);
+    this._bindArticleAtoms(container);
     if (!this._isWeChat) return;
     container.querySelectorAll('[data-wechat-video]').forEach(shell => {
       const video = shell.querySelector('video');
@@ -2660,6 +2705,8 @@ export class FocusOverlay {
           html += this._renderArticleImage(section);
         } else if (section.type === 'image-carousel') {
           html += this._renderImageCarousel(section);
+        } else if (section.type === 'atom') {
+          html += this._renderArticleAtom(section);
         } else if (section.type === 'interactive') {
           html += this._renderArticleInteractive(section);
         } else if (section.type === 'video') {
@@ -2671,6 +2718,7 @@ export class FocusOverlay {
     // 更新 DOM — 给所有 <a> 标签添加外链箭头图标
     const _arrowSvg = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="display:inline;vertical-align:middle;margin-left:2px;margin-top:-2px;"><path d="m12.497 3.002 7.555.001.121.014.088.02.104.034.09.04.063.036.063.042.064.05.063.058.094.11.072.11.053.114.035.105.016.065.01.053.01.148v7.504a1 1 0 0 1-1.993.117l-.007-.117v-5.09L4.706 20.708a1 1 0 0 1-1.32.083l-.094-.083a1 1 0 0 1-.083-1.32l.083-.095L17.583 5.002h-5.086a1 1 0 0 1-.993-.883l-.007-.117a1 1 0 0 1 1-1Z"/></svg>';
     html = html.replace(/<\/a>/g, _arrowSvg + '</a>');
+    this._disposeArticleAtoms(this._articleWrap);
     this._articleWrap.innerHTML = html;
     this._articleWrap.querySelectorAll('a').forEach(a => { a.setAttribute('target', '_blank'); a.style.color = 'inherit'; a.style.textDecoration = 'underline'; a.style.textUnderlineOffset = '3px'; a.style.textDecorationThickness = '1px'; });
     this._articleWrap.style.paddingBottom = '160px';
@@ -3167,6 +3215,8 @@ export class FocusOverlay {
             html += this._renderArticleImage(section);
           } else if (section.type === 'image-carousel') {
             html += this._renderImageCarousel(section);
+          } else if (section.type === 'atom') {
+            html += this._renderArticleAtom(section);
           } else if (section.type === 'interactive') {
             html += this._renderArticleInteractive(section);
           } else if (section.type === 'video') {
@@ -3443,6 +3493,7 @@ export class FocusOverlay {
 
     // 清理文章内容
     if (this._articleWrap) {
+      this._disposeArticleAtoms(this._articleWrap);
       disposeArticleMedia(this._articleWrap);
       this._articleWrap.remove();
       this._articleWrap = null;
@@ -3902,6 +3953,8 @@ export class FocusOverlay {
               html += this._renderArticleImage(s);
             } else if (s.type === 'image-carousel') {
               html += this._renderImageCarousel(s);
+            } else if (s.type === 'atom') {
+              html += this._renderArticleAtom(s);
             } else if (s.type === 'video') html += this._renderArticleVideo(s);
           }
         }
@@ -3938,6 +3991,7 @@ export class FocusOverlay {
     const nestedOverlay = document.getElementById('nested-overlay');
     nestedOverlay.classList.remove('visible');
     if (ns.articleWrap) {
+      this._disposeArticleAtoms(ns.articleWrap);
       disposeArticleMedia(ns.articleWrap);
       ns.articleWrap.remove();
     }
@@ -4001,7 +4055,7 @@ export class FocusOverlay {
     return div.innerHTML;
   }
 
-  async _createAtomEntry(meta) {
+  async _createAtomEntry(meta, { href = null, trackInChat = true } = {}) {
     // 加载 atoms config（缓存）
     if (!this._atomsConfig) {
       const resp = await fetch('atoms-config.json');
@@ -4069,12 +4123,18 @@ export class FocusOverlay {
     }
 
     // 容器
-    const container = document.createElement('div');
+    const container = document.createElement(href ? 'a' : 'div');
     container.className = 'atom-entry';
     container.appendChild(app.canvas);
 
     // 点击 → 打开嵌套 focus（移动端挂在容器上，桌面端挂在canvas上）
-    (isMobile ? container : app.canvas).addEventListener('click', () => this._openNestedFocus(meta, app, result));
+    if (href) {
+      container.href = href;
+      container.setAttribute('aria-label', meta.title || meta.caption || 'Open article');
+      container.style.textDecoration = 'none';
+    } else {
+      (isMobile ? container : app.canvas).addEventListener('click', () => this._openNestedFocus(meta, app, result));
+    }
 
     // Video hover for photo atoms (desktop only)
     if (!isMobile && meta.atomType === 'photo' && meta.src && result.sprite) {
@@ -4098,8 +4158,10 @@ export class FocusOverlay {
     }
 
     // 保存引用以便清理
-    if (!this._chatAtomApps) this._chatAtomApps = [];
-    this._chatAtomApps.push(app);
+    if (trackInChat) {
+      if (!this._chatAtomApps) this._chatAtomApps = [];
+      this._chatAtomApps.push(app);
+    }
 
     return { container, app };
   }

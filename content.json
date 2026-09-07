@@ -168,6 +168,14 @@
             "height": 698
           },
           {
+            "type": "text",
+            "text": "DeepSeek harness 发布以后，我也马上做了很多尝试，写下了我的 DeepSeek Harness 的产品设计思考。"
+          },
+          {
+            "type": "atom",
+            "slug": "deepseek-harness"
+          },
+          {
             "type": "subtitle",
             "text": "生活中的我"
           },
@@ -420,6 +428,14 @@
             "caption": "",
             "width": 2048,
             "height": 698
+          },
+          {
+            "type": "text",
+            "text": "As soon as DeepSeek Harness was released, I started experimenting with it and wrote down my thoughts on its product design."
+          },
+          {
+            "type": "atom",
+            "slug": "deepseek-harness"
           },
           {
             "type": "subtitle",
