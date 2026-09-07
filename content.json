@@ -31,9 +31,11 @@
           },
           {
             "type": "image",
-            "src": "content_images/hello-jesse/notion-01.png",
+            "src": "content_images/hello-jesse/notion-01.webp",
             "alt": "阿里巴巴官方公众号和小红书",
-            "caption": "阿里巴巴官方公众号和小红书"
+            "caption": "阿里巴巴官方公众号和小红书",
+            "width": 2048,
+            "height": 1205
           },
           {
             "type": "subtitle",
@@ -45,9 +47,11 @@
           },
           {
             "type": "image",
-            "src": "content_images/hello-jesse/notion-02.png",
+            "src": "content_images/hello-jesse/notion-02.webp",
             "alt": "Microsoft Copilot 产品设计",
-            "caption": ""
+            "caption": "",
+            "width": 1794,
+            "height": 1000
           },
           {
             "type": "text",
@@ -55,9 +59,11 @@
           },
           {
             "type": "image",
-            "src": "content_images/hello-jesse/notion-03.png",
+            "src": "content_images/hello-jesse/notion-03.webp",
             "alt": "Copilot 设计系统和组件库",
-            "caption": ""
+            "caption": "",
+            "width": 1920,
+            "height": 1080
           },
           {
             "type": "text",
@@ -65,9 +71,11 @@
           },
           {
             "type": "image",
-            "src": "content_images/hello-jesse/notion-04.png",
+            "src": "content_images/hello-jesse/notion-04.webp",
             "alt": "Generative UI 项目",
-            "caption": ""
+            "caption": "",
+            "width": 1920,
+            "height": 1008
           },
           {
             "type": "text",
@@ -85,14 +93,54 @@
             "type": "image-carousel",
             "aspectRatio": "16 / 9",
             "images": [
-              { "src": "content_images/JesseAgent.png", "alt": "JesseAgent" },
-              { "src": "content_images/vibe_zh_1.webp", "alt": "Storyteller 项目" },
-              { "src": "content_images/vibe_zh_2.webp", "alt": "Storyteller 多媒体生成" },
-              { "src": "content_images/vibe_zh_3.webp", "alt": "Mini games platform" },
-              { "src": "content_images/vibe_zh_4.webp", "alt": "Copilot Chatting games hub" },
-              { "src": "content_images/vibe_zh_5.webp", "alt": "Insight finder" },
-              { "src": "content_images/vibe_zh_6.webp", "alt": "GenUI Lab" },
-              { "src": "content_images/vibe_zh_8.webp", "alt": "Vibe Coding 项目" }
+              {
+                "src": "content_images/JesseAgent.webp",
+                "alt": "JesseAgent",
+                "width": 3726,
+                "height": 2060
+              },
+              {
+                "src": "content_images/vibe_zh_1.webp",
+                "alt": "Storyteller 项目",
+                "width": 7340,
+                "height": 4790
+              },
+              {
+                "src": "content_images/vibe_zh_2.webp",
+                "alt": "Storyteller 多媒体生成",
+                "width": 5248,
+                "height": 4004
+              },
+              {
+                "src": "content_images/vibe_zh_3.webp",
+                "alt": "Mini games platform",
+                "width": 1920,
+                "height": 1210
+              },
+              {
+                "src": "content_images/vibe_zh_4.webp",
+                "alt": "Copilot Chatting games hub",
+                "width": 2138,
+                "height": 1722
+              },
+              {
+                "src": "content_images/vibe_zh_5.webp",
+                "alt": "Insight finder",
+                "width": 1723,
+                "height": 970
+              },
+              {
+                "src": "content_images/vibe_zh_6.webp",
+                "alt": "GenUI Lab",
+                "width": 3000,
+                "height": 1711
+              },
+              {
+                "src": "content_images/vibe_zh_8.webp",
+                "alt": "Vibe Coding 项目",
+                "width": 2129,
+                "height": 1206
+              }
             ]
           },
           {
@@ -113,9 +161,11 @@
           },
           {
             "type": "image",
-            "src": "content_images/hello-jesse/notion-05.png",
+            "src": "content_images/hello-jesse/notion-05.webp",
             "alt": "使用 Xcode 和 Android Studio 交付设计与代码",
-            "caption": ""
+            "caption": "",
+            "width": 2048,
+            "height": 698
           },
           {
             "type": "subtitle",
@@ -127,9 +177,11 @@
           },
           {
             "type": "image",
-            "src": "content_images/hello-jesse/notion-06.png",
+            "src": "content_images/hello-jesse/notion-06.webp",
             "alt": "写作与设计文章",
-            "caption": ""
+            "caption": "",
+            "width": 1726,
+            "height": 454
           },
           {
             "type": "text",
@@ -137,9 +189,11 @@
           },
           {
             "type": "image",
-            "src": "content_images/hello-jesse/notion-07.png",
+            "src": "content_images/hello-jesse/notion-07.webp",
             "alt": "脱口秀演出",
-            "caption": ""
+            "caption": "",
+            "width": 1590,
+            "height": 434
           },
           {
             "type": "subtitle",
@@ -231,9 +285,11 @@
           },
           {
             "type": "image",
-            "src": "content_images/hello-jesse/notion-01.png",
+            "src": "content_images/hello-jesse/notion-01.webp",
             "alt": "Alibaba official WeChat and Xiaohongshu features",
-            "caption": "Alibaba official WeChat and Xiaohongshu"
+            "caption": "Alibaba official WeChat and Xiaohongshu",
+            "width": 2048,
+            "height": 1205
           },
           {
             "type": "subtitle",
@@ -245,9 +301,11 @@
           },
           {
             "type": "image",
-            "src": "content_images/hello-jesse/notion-02.png",
+            "src": "content_images/hello-jesse/notion-02.webp",
             "alt": "Microsoft Copilot product design",
-            "caption": ""
+            "caption": "",
+            "width": 1794,
+            "height": 1000
           },
           {
             "type": "text",
@@ -255,9 +313,11 @@
           },
           {
             "type": "image",
-            "src": "content_images/hello-jesse/notion-03.png",
+            "src": "content_images/hello-jesse/notion-03.webp",
             "alt": "Copilot design system and component library",
-            "caption": ""
+            "caption": "",
+            "width": 1920,
+            "height": 1080
           },
           {
             "type": "text",
@@ -265,9 +325,11 @@
           },
           {
             "type": "image",
-            "src": "content_images/hello-jesse/notion-04.png",
+            "src": "content_images/hello-jesse/notion-04.webp",
             "alt": "Generative UI project",
-            "caption": ""
+            "caption": "",
+            "width": 1920,
+            "height": 1008
           },
           {
             "type": "text",
@@ -285,14 +347,54 @@
             "type": "image-carousel",
             "aspectRatio": "16 / 9",
             "images": [
-              { "src": "content_images/JesseAgent.png", "alt": "JesseAgent" },
-              { "src": "content_images/vibe_en_1.webp", "alt": "Storyteller project" },
-              { "src": "content_images/vibe_en_2.webp", "alt": "Storyteller multimedia generation" },
-              { "src": "content_images/vibe_en_3.webp", "alt": "Mini games platform" },
-              { "src": "content_images/vibe_en_4.webp", "alt": "Copilot Chatting games hub" },
-              { "src": "content_images/vibe_en_5.webp", "alt": "Insight finder" },
-              { "src": "content_images/vibe_en_6.webp", "alt": "GenUI Lab" },
-              { "src": "content_images/vibe_en_8.webp", "alt": "Vibe Coding project" }
+              {
+                "src": "content_images/JesseAgent.webp",
+                "alt": "JesseAgent",
+                "width": 3726,
+                "height": 2060
+              },
+              {
+                "src": "content_images/vibe_en_1.webp",
+                "alt": "Storyteller project",
+                "width": 7340,
+                "height": 4790
+              },
+              {
+                "src": "content_images/vibe_en_2.webp",
+                "alt": "Storyteller multimedia generation",
+                "width": 5248,
+                "height": 4004
+              },
+              {
+                "src": "content_images/vibe_en_3.webp",
+                "alt": "Mini games platform",
+                "width": 1920,
+                "height": 1210
+              },
+              {
+                "src": "content_images/vibe_en_4.webp",
+                "alt": "Copilot Chatting games hub",
+                "width": 2138,
+                "height": 1722
+              },
+              {
+                "src": "content_images/vibe_en_5.webp",
+                "alt": "Insight finder",
+                "width": 1723,
+                "height": 970
+              },
+              {
+                "src": "content_images/vibe_en_6.webp",
+                "alt": "GenUI Lab",
+                "width": 3000,
+                "height": 1711
+              },
+              {
+                "src": "content_images/vibe_en_8.webp",
+                "alt": "Vibe Coding project",
+                "width": 2129,
+                "height": 1206
+              }
             ]
           },
           {
@@ -313,9 +415,11 @@
           },
           {
             "type": "image",
-            "src": "content_images/hello-jesse/notion-05.png",
+            "src": "content_images/hello-jesse/notion-05.webp",
             "alt": "Shipping design and code with Xcode and Android Studio",
-            "caption": ""
+            "caption": "",
+            "width": 2048,
+            "height": 698
           },
           {
             "type": "subtitle",
@@ -327,9 +431,11 @@
           },
           {
             "type": "image",
-            "src": "content_images/hello-jesse/notion-06.png",
+            "src": "content_images/hello-jesse/notion-06.webp",
             "alt": "Writing and design articles",
-            "caption": ""
+            "caption": "",
+            "width": 1726,
+            "height": 454
           },
           {
             "type": "text",
@@ -337,9 +443,11 @@
           },
           {
             "type": "image",
-            "src": "content_images/hello-jesse/notion-07.png",
+            "src": "content_images/hello-jesse/notion-07.webp",
             "alt": "Stand-up comedy performances",
-            "caption": ""
+            "caption": "",
+            "width": 1590,
+            "height": 434
           },
           {
             "type": "subtitle",
@@ -2115,7 +2223,9 @@
             {
               "src": "content_images/deepseek-harness-01-hands.webp?v=notion-20260906",
               "caption": "复杂的乐高玩具，都由基础模块组成",
-              "alt": "由基础模块组成的乐高手部视觉"
+              "alt": "由基础模块组成的乐高手部视觉",
+              "width": 1448,
+              "height": 1086
             }
           ],
           [
@@ -2137,9 +2247,11 @@
             "image",
             "",
             {
-              "src": "content_images/deepseek-harness-agent-stages.webp?v=notion-20260906",
+              "src": "content_images/deepseek-harness-agent-stages-optimized.webp?v=notion-20260906",
               "caption": "",
-              "alt": "Agent 产品形态发展阶段"
+              "alt": "Agent 产品形态发展阶段",
+              "width": 2048,
+              "height": 2492
             }
           ],
           [
@@ -2163,7 +2275,9 @@
             {
               "src": "content_images/deepseek-harness-agent-trends.webp?v=notion-20260906",
               "caption": "",
-              "alt": "Agent 发展趋势、产品体验挑战与产品设计策略"
+              "alt": "Agent 发展趋势、产品体验挑战与产品设计策略",
+              "width": 2048,
+              "height": 1868
             }
           ],
           [
@@ -2180,7 +2294,9 @@
             {
               "src": "content_images/deepseek-harness-custom-agents.webp?v=notion-20260907",
               "caption": "每个人/组织都有自己的 Agent",
-              "alt": "不同个人与组织拥有不同形态的 Agent"
+              "alt": "不同个人与组织拥有不同形态的 Agent",
+              "width": 2048,
+              "height": 1156
             }
           ],
           [
@@ -2220,7 +2336,9 @@
             {
               "src": "content_images/deepseek-harness-02-notion-blocks.webp?v=notion-20260907",
               "caption": "最基础的 Block 元素，就可以组成所有复杂的 Notion 页面",
-              "alt": "Notion 页面由基础 Block 元素组成"
+              "alt": "Notion 页面由基础 Block 元素组成",
+              "width": 2048,
+              "height": 2175
             }
           ],
           [
@@ -2237,7 +2355,9 @@
             {
               "src": "content_images/deepseek-harness-agent-concepts.webp?v=notion-20260907",
               "caption": "Agent 由太多概念组成",
-              "alt": "Agent 产品中的多种界面和功能概念"
+              "alt": "Agent 产品中的多种界面和功能概念",
+              "width": 2048,
+              "height": 1156
             }
           ],
           [
@@ -2265,7 +2385,9 @@
             {
               "src": "content_images/deepseek-harness-03-session.webp?v=notion-20260907",
               "caption": "Task / Session 是 Agent 的最小单位",
-              "alt": "Task 和 Session 作为 Agent 的基础原子"
+              "alt": "Task 和 Session 作为 Agent 的基础原子",
+              "width": 2048,
+              "height": 1156
             }
           ],
           [
@@ -2448,7 +2570,9 @@
             {
               "src": "content_images/deepseek-harness-08-flywheel.webp?v=notion-20260830",
               "caption": "",
-              "alt": "DeepSeek Harness 生态飞轮"
+              "alt": "DeepSeek Harness 生态飞轮",
+              "width": 1536,
+              "height": 1024
             }
           ],
           [
@@ -2516,7 +2640,9 @@
             {
               "src": "content_images/deepseek-harness-custom-agents.webp?v=notion-20260907",
               "caption": "Every person and organization has its own Agent",
-              "alt": "Different Agent interfaces for different people and organizations"
+              "alt": "Different Agent interfaces for different people and organizations",
+              "width": 2048,
+              "height": 1156
             }
           ],
           [
@@ -2556,7 +2682,9 @@
             {
               "src": "content_images/deepseek-harness-02-notion-blocks.webp?v=notion-20260907",
               "caption": "The most basic Block elements can compose every complex Notion page",
-              "alt": "A Notion page composed from foundational Block elements"
+              "alt": "A Notion page composed from foundational Block elements",
+              "width": 2048,
+              "height": 2175
             }
           ],
           [
@@ -2573,7 +2701,9 @@
             {
               "src": "content_images/deepseek-harness-agent-concepts.webp?v=notion-20260907",
               "caption": "An Agent is made up of too many concepts",
-              "alt": "The many interface and feature concepts in an Agent product"
+              "alt": "The many interface and feature concepts in an Agent product",
+              "width": 2048,
+              "height": 1156
             }
           ],
           [
@@ -2601,7 +2731,9 @@
             {
               "src": "content_images/deepseek-harness-03-session.webp?v=notion-20260907",
               "caption": "Task / Session is the smallest unit of an Agent",
-              "alt": "Task and Session as the foundational unit of an Agent"
+              "alt": "Task and Session as the foundational unit of an Agent",
+              "width": 2048,
+              "height": 1156
             }
           ],
           [
@@ -2825,7 +2957,9 @@
             "type": "image",
             "src": "content_images/deepseek-harness-01-hands.webp?v=notion-20260830",
             "caption": "",
-            "alt": "DeepSeek Harness 原子化视觉"
+            "alt": "DeepSeek Harness 原子化视觉",
+            "width": 1448,
+            "height": 1086
           },
           {
             "type": "subtitle",
@@ -2843,7 +2977,9 @@
             "type": "image",
             "src": "content_images/deepseek-harness-02-strategy.webp?v=notion-20260905",
             "caption": "",
-            "alt": "从灵活插件体系到原子化设计策略"
+            "alt": "从灵活插件体系到原子化设计策略",
+            "width": 1408,
+            "height": 1286
           },
           {
             "type": "text",
@@ -2862,7 +2998,9 @@
             "src": "content_images/deepseek-harness-02-notion-blocks.webp?v=notion-20260830",
             "caption": "有限的原子组件，可以组合出无限的应用场景",
             "alt": "原子组件组合为多种应用场景的动态示意",
-            "interactive": "atomic-design"
+            "interactive": "atomic-design",
+            "width": 2048,
+            "height": 2175
           },
           {
             "type": "text",
@@ -2876,7 +3014,9 @@
             "type": "image",
             "src": "content_images/deepseek-harness-03-session.webp?v=notion-20260830",
             "caption": "Session 是 Agent 的最小单位",
-            "alt": "Session 原子示意"
+            "alt": "Session 原子示意",
+            "width": 2048,
+            "height": 1156
           },
           {
             "type": "text",
@@ -2889,7 +3029,10 @@
           {
             "type": "video",
             "src": "content_images/deepseek-multi-session.mp4",
-            "caption": ""
+            "caption": "",
+            "width": 1280,
+            "height": 704,
+            "poster": "content_images/deepseek-multi-session-poster.jpg"
           },
           {
             "type": "text",
@@ -2898,7 +3041,10 @@
           {
             "type": "video",
             "src": "content_images/deepseek-detachable-nav.mp4",
-            "caption": ""
+            "caption": "",
+            "width": 1280,
+            "height": 704,
+            "poster": "content_images/deepseek-detachable-nav-poster.jpg"
           },
           {
             "type": "text",
@@ -2907,7 +3053,10 @@
           {
             "type": "video",
             "src": "content_images/deepseek-navigation-layouts.mp4",
-            "caption": ""
+            "caption": "",
+            "width": 1280,
+            "height": 704,
+            "poster": "content_images/deepseek-navigation-layouts-poster.jpg"
           },
           {
             "type": "subtitle",
@@ -2921,7 +3070,9 @@
             "type": "image",
             "src": "content_images/deepseek-harness-04-context.webp?v=notion-20260830",
             "caption": "在各种软件与 Agent 之间切换",
-            "alt": "应用与 Agent 之间的上下文切换"
+            "alt": "应用与 Agent 之间的上下文切换",
+            "width": 2048,
+            "height": 1156
           },
           {
             "type": "text",
@@ -2939,7 +3090,10 @@
           {
             "type": "video",
             "src": "content_images/deepseek-overview.mp4",
-            "caption": ""
+            "caption": "",
+            "width": 1280,
+            "height": 700,
+            "poster": "content_images/deepseek-overview-poster.jpg"
           },
           {
             "type": "text",
@@ -2948,7 +3102,10 @@
           {
             "type": "video",
             "src": "content_images/deepseek-teams.mp4",
-            "caption": ""
+            "caption": "",
+            "width": 1280,
+            "height": 700,
+            "poster": "content_images/deepseek-teams-poster.jpg"
           },
           {
             "type": "text",
@@ -2957,7 +3114,10 @@
           {
             "type": "video",
             "src": "content_images/deepseek-doc-image.mp4",
-            "caption": ""
+            "caption": "",
+            "width": 1280,
+            "height": 700,
+            "poster": "content_images/deepseek-doc-image-poster.jpg"
           },
           {
             "type": "text",
@@ -2966,7 +3126,10 @@
           {
             "type": "video",
             "src": "content_images/deepseek-github.mp4",
-            "caption": ""
+            "caption": "",
+            "width": 1280,
+            "height": 700,
+            "poster": "content_images/deepseek-github-poster.jpg"
           },
           {
             "type": "subtitle",
@@ -3002,7 +3165,10 @@
           {
             "type": "video",
             "src": "content_images/deepseek-steer-from-here.mp4",
-            "caption": ""
+            "caption": "",
+            "width": 1280,
+            "height": 704,
+            "poster": "content_images/deepseek-steer-from-here-poster.jpg"
           },
           {
             "type": "subtitle",
@@ -3020,7 +3186,9 @@
             "type": "image",
             "src": "content_images/deepseek-harness-05-creation.webp?v=notion-20260830",
             "caption": "",
-            "alt": "DeepSeek Harness 创造路径"
+            "alt": "DeepSeek Harness 创造路径",
+            "width": 1448,
+            "height": 1086
           },
           {
             "type": "text",
@@ -3042,7 +3210,9 @@
             "type": "image",
             "src": "content_images/deepseek-harness-06-vscode.webp?v=notion-20260830",
             "caption": "",
-            "alt": "VS Code 扩展生态"
+            "alt": "VS Code 扩展生态",
+            "width": 1448,
+            "height": 1086
           },
           {
             "type": "text",
@@ -3080,7 +3250,9 @@
             "type": "image",
             "src": "content_images/deepseek-harness-07-steam.webp?v=notion-20260830",
             "caption": "",
-            "alt": "Steam 创意工坊治理模式"
+            "alt": "Steam 创意工坊治理模式",
+            "width": 1448,
+            "height": 1086
           },
           {
             "type": "text",
@@ -3102,7 +3274,9 @@
             "type": "image",
             "src": "content_images/deepseek-harness-08-flywheel.webp?v=notion-20260830",
             "caption": "1. 用户留在生态内　2. 用户开始创作　3. 社区反哺 Harness",
-            "alt": "DeepSeek Harness 生态飞轮"
+            "alt": "DeepSeek Harness 生态飞轮",
+            "width": 1536,
+            "height": 1024
           },
           {
             "type": "text",
@@ -3119,15 +3293,19 @@
           },
           {
             "type": "image",
-            "src": "content_images/deepseek-harness-context-strategy.png?v=20260907",
+            "src": "content_images/deepseek-harness-context-strategy.webp?v=20260907",
             "caption": "",
-            "alt": "上下文越来越多、上下文分散与场景化 Agent 的设计策略"
+            "alt": "上下文越来越多、上下文分散与场景化 Agent 的设计策略",
+            "width": 2835,
+            "height": 1146
           },
           {
             "type": "image",
-            "src": "content_images/deepseek-harness-long-task-strategy.png?v=20260907",
+            "src": "content_images/deepseek-harness-long-task-strategy.webp?v=20260907",
             "caption": "",
-            "alt": "长程任务、意图漂移与可控思维链的设计策略"
+            "alt": "长程任务、意图漂移与可控思维链的设计策略",
+            "width": 2835,
+            "height": 1146
           }
         ],
         "sections_en_latest": [
@@ -3160,7 +3338,9 @@
             "type": "image",
             "src": "content_images/deepseek-harness-01-hands.webp?v=notion-20260830",
             "caption": "",
-            "alt": "Atomic visual language for DeepSeek Harness"
+            "alt": "Atomic visual language for DeepSeek Harness",
+            "width": 1448,
+            "height": 1086
           },
           {
             "type": "subtitle",
@@ -3178,7 +3358,9 @@
             "type": "image",
             "src": "content_images/deepseek-harness-02-strategy.webp?v=notion-20260905",
             "caption": "",
-            "alt": "From a flexible plugin system to an atomic design strategy"
+            "alt": "From a flexible plugin system to an atomic design strategy",
+            "width": 1408,
+            "height": 1286
           },
           {
             "type": "text",
@@ -3197,7 +3379,9 @@
             "src": "content_images/deepseek-harness-02-notion-blocks.webp?v=notion-20260830",
             "caption": "A finite set of atomic components can compose infinite application scenarios.",
             "alt": "Animated atomic components composing multiple application scenarios",
-            "interactive": "atomic-design"
+            "interactive": "atomic-design",
+            "width": 2048,
+            "height": 2175
           },
           {
             "type": "text",
@@ -3211,7 +3395,9 @@
             "type": "image",
             "src": "content_images/deepseek-harness-03-session.webp?v=notion-20260830",
             "caption": "A Session is the smallest complete unit of an agent.",
-            "alt": "Session as an atomic agent unit"
+            "alt": "Session as an atomic agent unit",
+            "width": 2048,
+            "height": 1156
           },
           {
             "type": "text",
@@ -3224,7 +3410,10 @@
           {
             "type": "video",
             "src": "content_images/deepseek-multi-session.mp4",
-            "caption": ""
+            "caption": "",
+            "width": 1280,
+            "height": 704,
+            "poster": "content_images/deepseek-multi-session-poster.jpg"
           },
           {
             "type": "text",
@@ -3233,7 +3422,10 @@
           {
             "type": "video",
             "src": "content_images/deepseek-detachable-nav.mp4",
-            "caption": ""
+            "caption": "",
+            "width": 1280,
+            "height": 704,
+            "poster": "content_images/deepseek-detachable-nav-poster.jpg"
           },
           {
             "type": "text",
@@ -3242,7 +3434,10 @@
           {
             "type": "video",
             "src": "content_images/deepseek-navigation-layouts.mp4",
-            "caption": ""
+            "caption": "",
+            "width": 1280,
+            "height": 704,
+            "poster": "content_images/deepseek-navigation-layouts-poster.jpg"
           },
           {
             "type": "subtitle",
@@ -3256,7 +3451,9 @@
             "type": "image",
             "src": "content_images/deepseek-harness-04-context.webp?v=notion-20260830",
             "caption": "Switching between applications and the agent.",
-            "alt": "Context switching between apps and an agent"
+            "alt": "Context switching between apps and an agent",
+            "width": 2048,
+            "height": 1156
           },
           {
             "type": "text",
@@ -3274,7 +3471,10 @@
           {
             "type": "video",
             "src": "content_images/deepseek-overview.mp4",
-            "caption": ""
+            "caption": "",
+            "width": 1280,
+            "height": 700,
+            "poster": "content_images/deepseek-overview-poster.jpg"
           },
           {
             "type": "text",
@@ -3283,7 +3483,10 @@
           {
             "type": "video",
             "src": "content_images/deepseek-teams.mp4",
-            "caption": ""
+            "caption": "",
+            "width": 1280,
+            "height": 700,
+            "poster": "content_images/deepseek-teams-poster.jpg"
           },
           {
             "type": "text",
@@ -3292,7 +3495,10 @@
           {
             "type": "video",
             "src": "content_images/deepseek-doc-image.mp4",
-            "caption": ""
+            "caption": "",
+            "width": 1280,
+            "height": 700,
+            "poster": "content_images/deepseek-doc-image-poster.jpg"
           },
           {
             "type": "text",
@@ -3301,7 +3507,10 @@
           {
             "type": "video",
             "src": "content_images/deepseek-github.mp4",
-            "caption": ""
+            "caption": "",
+            "width": 1280,
+            "height": 700,
+            "poster": "content_images/deepseek-github-poster.jpg"
           },
           {
             "type": "subtitle",
@@ -3337,7 +3546,10 @@
           {
             "type": "video",
             "src": "content_images/deepseek-steer-from-here.mp4",
-            "caption": ""
+            "caption": "",
+            "width": 1280,
+            "height": 704,
+            "poster": "content_images/deepseek-steer-from-here-poster.jpg"
           },
           {
             "type": "subtitle",
@@ -3355,7 +3567,9 @@
             "type": "image",
             "src": "content_images/deepseek-harness-05-creation.webp?v=notion-20260830",
             "caption": "",
-            "alt": "Creation pathways in DeepSeek Harness"
+            "alt": "Creation pathways in DeepSeek Harness",
+            "width": 1448,
+            "height": 1086
           },
           {
             "type": "text",
@@ -3377,7 +3591,9 @@
             "type": "image",
             "src": "content_images/deepseek-harness-06-vscode.webp?v=notion-20260830",
             "caption": "",
-            "alt": "The VS Code extension ecosystem"
+            "alt": "The VS Code extension ecosystem",
+            "width": 1448,
+            "height": 1086
           },
           {
             "type": "text",
@@ -3415,7 +3631,9 @@
             "type": "image",
             "src": "content_images/deepseek-harness-07-steam.webp?v=notion-20260830",
             "caption": "",
-            "alt": "Steam Workshop governance models"
+            "alt": "Steam Workshop governance models",
+            "width": 1448,
+            "height": 1086
           },
           {
             "type": "text",
@@ -3437,7 +3655,9 @@
             "type": "image",
             "src": "content_images/deepseek-harness-08-flywheel.webp?v=notion-20260830",
             "caption": "1. Users stay in the ecosystem　2. Users begin creating　3. The community gives back to Harness",
-            "alt": "DeepSeek Harness ecosystem flywheel"
+            "alt": "DeepSeek Harness ecosystem flywheel",
+            "width": 1536,
+            "height": 1024
           },
           {
             "type": "text",
@@ -3454,15 +3674,19 @@
           },
           {
             "type": "image",
-            "src": "content_images/deepseek-harness-context-strategy.png?v=20260907",
+            "src": "content_images/deepseek-harness-context-strategy.webp?v=20260907",
             "caption": "",
-            "alt": "Growing context, fragmented context, and context-aware agents as a design strategy"
+            "alt": "Growing context, fragmented context, and context-aware agents as a design strategy",
+            "width": 2835,
+            "height": 1146
           },
           {
             "type": "image",
-            "src": "content_images/deepseek-harness-long-task-strategy.png?v=20260907",
+            "src": "content_images/deepseek-harness-long-task-strategy.webp?v=20260907",
             "caption": "",
-            "alt": "Long-running tasks, intent drift, and controllable reasoning as a design strategy"
+            "alt": "Long-running tasks, intent drift, and controllable reasoning as a design strategy",
+            "width": 2835,
+            "height": 1146
           }
         ],
         "sections": [

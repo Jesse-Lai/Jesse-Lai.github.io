@@ -2,7 +2,7 @@
 // https://github.com/veltman/flubber
 
 const FLUBBER_SRC = 'lib/flubber.min.js';
-const BACKGROUND_SRC = 'content_images/deepseek-atomic-bg.jpg';
+const BACKGROUND_SRC = 'content_images/deepseek-atomic-bg.webp';
 const CIRCLE_SRC = 'content_images/deepseek-atomic-circle.svg';
 const TRIANGLE_SRC = 'content_images/deepseek-atomic-triangle.svg';
 const STAR_SRC = 'content_images/deepseek-atomic-star.svg';

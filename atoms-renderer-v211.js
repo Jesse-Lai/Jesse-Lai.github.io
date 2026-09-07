@@ -3,7 +3,8 @@ console.log('[atoms-renderer] v=223 loaded');
 // All atom types are rendered from here. Both atoms.html and wall.js import this.
 import { streamChat, chatSync, buildSystemPrompt } from './ai-client.js?v=166';
 import './lib/embla-carousel.umd.js?v=860';
-import './atomic-design-diagram.js?v=14';
+import './atomic-design-diagram.js?v=15';
+import { bindArticleMedia, disposeArticleMedia } from './article-media.js?v=1';
 
 const _SEND_SVG = '<svg width="14" height="14" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4.284 10.296A1 1 0 0 0 5.709 11.7L11 6.33V20a1 1 0 1 0 2 0V6.336l5.285 5.364a1 1 0 0 0 1.425-1.404l-6.823-6.924a1.25 1.25 0 0 0-1.78 0l-6.823 6.924Z" fill="currentColor"/></svg>';
 const _STOP_SVG = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>';
@@ -2466,7 +2467,8 @@ export class FocusOverlay {
     if (section.interactive === 'atomic-design') {
       return `<atomic-design-diagram lang="${this._lang}" reference="content_images/deepseek-atomic-design-static.png"></atomic-design-diagram>${caption}`;
     }
-    return `<img src="${section.src}" alt="${section.alt || ''}" style="display:block;width:100%;border-radius:6px;margin:32px 0 ${bottomMargin};">${caption}`;
+    const dimensions = section.width && section.height ? ` width="${section.width}" height="${section.height}"` : '';
+    return `<img src="${section.src}" alt="${section.alt || ''}"${dimensions} loading="lazy" decoding="async" style="display:block;width:100%;height:auto;border-radius:6px;margin:32px 0 ${bottomMargin};">${caption}`;
   }
 
   _renderImageCarousel(section) {
@@ -2480,7 +2482,7 @@ export class FocusOverlay {
     const buttonStyle = 'width:27px;height:27px;min-width:27px;padding:0;';
     const previousIcon = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m14.5 18-6-6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
     const nextIcon = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m9.5 6 6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-    const slides = images.map((image, index) => `<div data-carousel-slide role="group" aria-roledescription="slide" aria-label="${index + 1} / ${images.length}" style="flex:0 0 calc(82% + 12px);height:100%;min-width:0;padding-left:12px;box-sizing:border-box;"><div data-carousel-frame style="width:100%;height:100%;overflow:hidden;border:1px solid var(--border-divider,rgba(0,0,0,.08));border-radius:8px;background:var(--overlay-bg,#fffdfa);"><img src="${image.src}" alt="${image.alt || ''}" loading="${index === 0 ? 'eager' : 'lazy'}" draggable="false" style="display:block;width:100%;height:100%;object-fit:contain;margin:0;border-radius:0;user-select:none;"></div></div>`).join('');
+    const slides = images.map((image, index) => `<div data-carousel-slide role="group" aria-roledescription="slide" aria-label="${index + 1} / ${images.length}" style="flex:0 0 calc(82% + 12px);height:100%;min-width:0;padding-left:12px;box-sizing:border-box;"><div data-carousel-frame style="width:100%;height:100%;overflow:hidden;border:1px solid var(--border-divider,rgba(0,0,0,.08));border-radius:8px;background:var(--overlay-bg,#fffdfa);"><img src="${image.src}" alt="${image.alt || ''}"${image.width && image.height ? ` width="${image.width}" height="${image.height}"` : ''} decoding="async" loading="${index === 0 ? 'eager' : 'lazy'}" draggable="false" style="display:block;width:100%;height:100%;object-fit:contain;margin:0;border-radius:0;user-select:none;"></div></div>`).join('');
     const dots = images.map((_, index) => `<button type="button" data-carousel-dot="${index}" aria-label="${this._lang === 'en' ? `Go to image ${index + 1}` : `跳转到第 ${index + 1} 张图片`}" style="display:block;width:7px;height:7px;padding:0;border-radius:999px;border:${index === 0 ? '1.5px solid var(--text-primary,#1a1a1a)' : '1px solid color-mix(in srgb,var(--text-primary,#1a1a1a) 18%,transparent)'};background:transparent;cursor:pointer;transition:border-color .2s ease,transform .2s ease;"></button>`).join('');
     return `<div data-image-carousel tabindex="0" role="region" aria-roledescription="carousel" aria-label="${this._lang === 'en' ? 'Project image carousel' : '项目图片轮播'}" style="position:relative;margin:32px 0 42px;outline:none;">
       <div data-carousel-viewport data-carousel-fallback-ratio="${fallbackRatio}" style="width:100%;aspect-ratio:${viewportRatio};overflow:hidden;-webkit-mask-image:linear-gradient(to right,transparent 0%,#000 5%,#000 95%,transparent 100%);mask-image:linear-gradient(to right,transparent 0%,#000 5%,#000 95%,transparent 100%);">
@@ -2584,18 +2586,22 @@ export class FocusOverlay {
     const bottomMargin = section.caption ? '0' : '40px';
     if (/\.(?:mp4|webm|mov)(?:[?#]|$)/i.test(src)) {
       const label = section.caption || 'Article demo video';
+      const dimensions = section.width && section.height ? `width="${section.width}" height="${section.height}"` : '';
+      const ratio = section.width && section.height ? `${section.width} / ${section.height}` : '16 / 9';
       if (this._isWeChat) {
         const posterSrc = section.poster || src.replace(/\.(?:mp4|webm|mov)(?=[?#]|$)/i, '-poster.jpg');
-        return `<div data-wechat-video style="position:relative;display:block;width:100%;margin:32px 0 ${bottomMargin};overflow:hidden;border-radius:6px;background:#000;"><img src="${posterSrc}" alt="" aria-hidden="true" draggable="false" style="display:block;width:100%;height:auto;pointer-events:none;"><video src="${src}" poster="${posterSrc}" aria-label="${label}" controls muted loop playsinline webkit-playsinline x5-playsinline preload="metadata" style="position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover;background:transparent;"></video></div>${caption}`;
+        return `<div data-wechat-video style="position:relative;display:block;width:100%;margin:32px 0 ${bottomMargin};overflow:hidden;border-radius:6px;background:#000;"><img src="${posterSrc}" ${dimensions} loading="lazy" decoding="async" alt="" aria-hidden="true" draggable="false" style="display:block;width:100%;height:auto;pointer-events:none;"><video data-article-src="${src}" data-article-poster="${posterSrc}" ${dimensions} aria-label="${label}" controls muted loop playsinline webkit-playsinline x5-playsinline preload="none" style="position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover;background:transparent;"></video></div>${caption}`;
       }
-      const poster = section.poster ? ` poster="${section.poster}"` : '';
-      return `<video src="${src}"${poster} aria-label="${label}" autoplay muted loop playsinline preload="metadata" style="display:block;width:100%;height:auto;border-radius:6px;margin:32px 0 ${bottomMargin};background:#000;"></video>${caption}`;
+      const poster = section.poster ? ` data-article-poster="${section.poster}"` : '';
+      return `<video data-article-src="${src}"${poster} ${dimensions} data-article-autoplay="true" aria-label="${label}" muted loop playsinline preload="none" style="display:block;width:100%;height:auto;aspect-ratio:${ratio};border-radius:6px;margin:32px 0 ${bottomMargin};background:#000;"></video>${caption}`;
     }
-    return `<div style="position:relative;width:100%;padding-bottom:56.25%;margin:32px 0 ${bottomMargin};"><iframe src="${src}" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:6px;" allowfullscreen></iframe></div>${caption}`;
+    return `<div style="position:relative;width:100%;padding-bottom:56.25%;margin:32px 0 ${bottomMargin};"><iframe src="${src}" loading="lazy" title="${section.caption || 'Article video'}" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:6px;" allowfullscreen></iframe></div>${caption}`;
   }
 
-  _bindWeChatArticleVideos(container) {
-    if (!this._isWeChat || !container) return;
+  _bindArticleMedia(container) {
+    if (!container) return;
+    bindArticleMedia(container);
+    if (!this._isWeChat) return;
     container.querySelectorAll('[data-wechat-video]').forEach(shell => {
       const video = shell.querySelector('video');
       if (!video) return;
@@ -2668,7 +2674,7 @@ export class FocusOverlay {
     this._articleWrap.innerHTML = html;
     this._articleWrap.querySelectorAll('a').forEach(a => { a.setAttribute('target', '_blank'); a.style.color = 'inherit'; a.style.textDecoration = 'underline'; a.style.textUnderlineOffset = '3px'; a.style.textDecorationThickness = '1px'; });
     this._articleWrap.style.paddingBottom = '160px';
-    this._bindWeChatArticleVideos(this._articleWrap);
+    this._bindArticleMedia(this._articleWrap);
     this._bindImageCarousels();
     this._bindImageLightbox();
 
@@ -3174,7 +3180,7 @@ export class FocusOverlay {
       articleWrap.innerHTML = html;
       articleWrap.querySelectorAll('a').forEach(a => { a.setAttribute('target', '_blank'); a.style.color = 'inherit'; a.style.textDecoration = 'underline'; a.style.textUnderlineOffset = '3px'; a.style.textDecorationThickness = '1px'; });
       articleWrap.style.paddingBottom = '160px';
-      this._bindWeChatArticleVideos(articleWrap);
+      this._bindArticleMedia(articleWrap);
 
       const chatContainer = document.createElement('div');
       chatContainer.className = 'article-chat';
@@ -3437,6 +3443,7 @@ export class FocusOverlay {
 
     // 清理文章内容
     if (this._articleWrap) {
+      disposeArticleMedia(this._articleWrap);
       this._articleWrap.remove();
       this._articleWrap = null;
     }
@@ -3899,7 +3906,7 @@ export class FocusOverlay {
           }
         }
         articleWrap.innerHTML = html;
-        this._bindWeChatArticleVideos(articleWrap);
+        this._bindArticleMedia(articleWrap);
         nestedOverlay.appendChild(articleWrap);
         nestedOverlay.style.overflowY = 'auto';
         nestedOverlay.scrollTop = 0;
@@ -3930,7 +3937,10 @@ export class FocusOverlay {
     // 1. 隐藏 nested overlay HTML
     const nestedOverlay = document.getElementById('nested-overlay');
     nestedOverlay.classList.remove('visible');
-    if (ns.articleWrap) ns.articleWrap.remove();
+    if (ns.articleWrap) {
+      disposeArticleMedia(ns.articleWrap);
+      ns.articleWrap.remove();
+    }
     if (ns.onScroll) nestedOverlay.removeEventListener('scroll', ns.onScroll);
     nestedOverlay.style.overflowY = '';
     document.getElementById('nested-content').style.display = '';
