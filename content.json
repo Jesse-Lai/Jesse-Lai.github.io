@@ -19,80 +19,159 @@
         "sections": [
           {
             "type": "text",
-            "text": "嗨👋 我是微软的一个 AI Builder，一边设计 AI Native 产品，一边把我的设计在生产环境coding出来，直接交付产品的线上体验。"
+            "text": "嗨 👋 我是赖健勋 Jesse，我是一个有创造力的 AI Native 产品设计师，同时对 Agent 产品特别有热情。过去几年，我先后在阿里巴巴和微软工作，并且在生成式 AI 的早期，就开始为 ToC 和 ToB 用户设计各种 AI Native 产品。"
+          },
+          {
+            "type": "subtitle",
+            "text": "阿里巴巴"
           },
           {
             "type": "text",
-            "text": "过去5年，我先后在阿里巴巴和微软工作，并且在生成式AI的早期，就开始为 ToC 和 ToB 用户设计各种 AI Native产品。"
-          },
-          {
-            "type": "text",
-            "text": "幸运的是，我曾多次被公司官方媒体作为 <a href=\"https://mp.weixin.qq.com/s/5FFKYeLy22Bx1S-b4z8UKw\">优秀案例</a> 报道。在工作之余，我偶尔也会在 <a href=\"https://mp.weixin.qq.com/s/hbqhQS9mMXhLmtFRbWKDEQ\">微信公众号</a> 和 <a href=\"https://medium.com/@laijianxun123\">Medium</a> 上写一些关于 AI 时代产品设计的思考。"
+            "text": "20 年毕业后我开始在阿里工作，在 LLM 流行的早期（23 年那会儿～），就开始为中小商家设计 AI Agent 产品。工作期间的成果得到了大家的认可，曾多次被 <a href=\"https://mp.weixin.qq.com/s/5FFKYeLy22Bx1S-b4z8UKw\">公司官方媒体</a> 作为优秀员工案例进行宣传。"
           },
           {
             "type": "image",
-            "src": "content_images/writing.png",
+            "src": "content_images/hello-jesse/notion-01.png",
+            "alt": "阿里巴巴官方公众号和小红书",
+            "caption": "阿里巴巴官方公众号和小红书"
+          },
+          {
+            "type": "subtitle",
+            "text": "微软"
+          },
+          {
+            "type": "text",
+            "text": "在微软工作期间，参与了 To C/B 两端 Copilot 产品设计，打磨面向全球数亿用户的产品体验。这也是微软目前最核心、增长最快的产品。"
+          },
+          {
+            "type": "image",
+            "src": "content_images/hello-jesse/notion-02.png",
+            "alt": "Microsoft Copilot 产品设计",
             "caption": ""
           },
           {
             "type": "text",
-            "text": "对了，如果我不在做设计和Vibe coding，那大概率是在创作脱口秀 🤣"
+            "text": "此外，我也参与了很多锻炼“将复杂系统拆解为基础原子结构”能力的项目。比如和全球的团队一起搭建了 Copilot 设计系统和组件库，确保产品在更大规模、更多场景下，视觉和交互体验依旧稳定。"
           },
           {
             "type": "image",
-            "src": "content_images/comedy.png",
+            "src": "content_images/hello-jesse/notion-03.png",
+            "alt": "Copilot 设计系统和组件库",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "我还参与了 Generative UI 项目，也是通过定义基础元素，让 Agent 的回复不只是大段文字，而是组合成各种丰富的结构化 UI，让 Agent 回答的可读性更强。"
+          },
+          {
+            "type": "image",
+            "src": "content_images/hello-jesse/notion-04.png",
+            "alt": "Generative UI 项目",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "在过去一年里，Copilot 的付费用户数翻倍了。"
+          },
+          {
+            "type": "subtitle",
+            "text": "AI Native 工作流"
+          },
+          {
+            "type": "text",
+            "text": "我深度使用了各种 Coding Agent，做了数十个工具/插件，还开发了自己的 Coding Agent 和 AI Native 的个人网站。"
+          },
+          {
+            "type": "image-carousel",
+            "aspectRatio": "16 / 9",
+            "images": [
+              { "src": "content_images/JesseAgent.png", "alt": "JesseAgent" },
+              { "src": "content_images/vibe_zh_1.webp", "alt": "Storyteller 项目" },
+              { "src": "content_images/vibe_zh_2.webp", "alt": "Storyteller 多媒体生成" },
+              { "src": "content_images/vibe_zh_3.webp", "alt": "Mini games platform" },
+              { "src": "content_images/vibe_zh_4.webp", "alt": "Copilot Chatting games hub" },
+              { "src": "content_images/vibe_zh_5.webp", "alt": "Insight finder" },
+              { "src": "content_images/vibe_zh_6.webp", "alt": "GenUI Lab" },
+              { "src": "content_images/vibe_zh_8.webp", "alt": "Vibe Coding 项目" }
+            ]
+          },
+          {
+            "type": "text",
+            "text": "我也将 AI 深度结合在我的工作流中。打破了传统的职能边界，现在我们叫往前走一步和往后走一步："
+          },
+          {
+            "type": "text",
+            "text": "1. 往前走：是指用 Agent 分析数据库和用户反馈。以前可能比较依赖数据分析师、用户研究的分析报告才能做的设计决策，现在我们可以结合 AI 做判断，让每一个设计决策都有依据，迭代速度也更快了。"
+          },
+          {
+            "type": "text",
+            "text": "2. 往后走：是指做完设计后，我还会在代码库开发出来，提交 PR 给开发审核。验收环节也是直接修改 code 和开发一起 Debug（感谢我的开发同事们！）。现在我对上线的产品设计品质把控度更强了。"
+          },
+          {
+            "type": "text",
+            "text": "3. 设计的流程也发生了变化，我不只用 Figma 来产出方案了。我们还构建了一个 Baby Copilot，设计师可以用来快速构建新功能。很多功能（比如 GenUI 和交互动画）Figma 其实不好表达，这个工具能更好地交付设计 + 代码。"
+          },
+          {
+            "type": "image",
+            "src": "content_images/hello-jesse/notion-05.png",
+            "alt": "使用 Xcode 和 Android Studio 交付设计与代码",
             "caption": ""
           },
           {
             "type": "subtitle",
-            "text": "工作经历"
+            "text": "生活中的我"
           },
           {
             "type": "text",
-            "text": "阿里巴巴："
-          },
-          {
-            "type": "text",
-            "text": "• 23年初大模型刚刚兴起时，作为主设计师负责商家端生成式 AI 产品体验，从0-1搭建 AI 产品框架"
-          },
-          {
-            "type": "text",
-            "text": "• 作为mentor指导团队新成员"
-          },
-          {
-            "type": "text",
-            "text": "微软："
+            "text": "在工作之余，我很喜欢写作，会在 <a href=\"https://mp.weixin.qq.com/s/hbqhQS9mMXhLmtFRbWKDEQ\">微信公众号</a>、<a href=\"https://medium.com/@laijianxun123\">Medium</a> 和推特上分享一些产品设计的想法。"
           },
           {
             "type": "image",
-            "src": "content_images/copilot.png",
+            "src": "content_images/hello-jesse/notion-06.png",
+            "alt": "写作与设计文章",
             "caption": ""
           },
           {
             "type": "text",
-            "text": "• 与global团队一起，设计 To C/B 两端的 Copilot 产品体验，专注于 GenUI 和 Agent 体验"
-          },
-          {
-            "type": "text",
-            "text": "• 在过去几年的职业生涯中，我在做同一件事：如何用简单的基本元素，组成多变的复杂系统"
-          },
-          {
-            "type": "text",
-            "text": "• 将 Vibe Coding 工作流融入产品开发，交付从设计到前端开发的全链路体验"
+            "text": "对了，如果我不在做设计和 Vibe coding，那大概率是在创作<a href=\"https://app.notion.com/p/146400ee0cf5808f87e8d536e92e21ee?pvs=25\">脱口秀</a> 🤣"
           },
           {
             "type": "image",
-            "src": "content_images/designtocode.png",
+            "src": "content_images/hello-jesse/notion-07.png",
+            "alt": "脱口秀演出",
             "caption": ""
+          },
+          {
+            "type": "subtitle",
+            "text": "总的来说"
           },
           {
             "type": "text",
-            "text": "• 25年完成了10+个 Vibe Coding 产品插件和原型"
+            "text": "我觉得我的过往经历和技能，与 DeepSeek Harness 团队构建开放、可复用、可组合的基础设施和开发者生态的目标非常契合："
           },
           {
-            "type": "image",
-            "src": "content_images/vibe_en_8.webp",
-            "caption": ""
+            "type": "text",
+            "text": "（1）专注 Agent 设计：从早期的 Chat Bot，到 Copilot，再到 Coding Agent。我参与的项目经历了完整的 Agent 多个发展阶段，让我对设计 Agent 产品有更多经验和更深入的思考。"
+          },
+          {
+            "type": "text",
+            "text": "（2）系统思维：微软的 GenUI 及 Copilot 设计系统项目，让我理解如何拆解复杂系统为基本原子，做产品设计的基础设施。"
+          },
+          {
+            "type": "text",
+            "text": "（3）AI Native：设计/开发数十个 AI 产品，和早已 AI Native 的工作流，让我对 AI Native 工作方式很熟悉，也让我能更好地与各个职能协作。"
+          },
+          {
+            "type": "text",
+            "text": "（4）全球化：Copilot 产品设计经历，让我有为全球数亿用户设计的品质、适应全球化市场的设计经验，以及和全球用户沟通的能力。"
+          },
+          {
+            "type": "text",
+            "text": "（5）产品设计品味：综合交互体验、视觉创意、原型开发、用户调研等能力。有将前沿的技术和产品转化为用户友好体验的追求。"
+          },
+          {
+            "type": "text",
+            "text": "（6）好奇心：除了产品设计的前沿探索，生活中我对写作和单口喜剧的热爱，让我在 AI 时代依然是一个有趣的人。"
           },
           {
             "type": "subtitle",
@@ -134,80 +213,159 @@
         "sections_en": [
           {
             "type": "text",
-            "text": "Hi 👋 I'm an AI Builder at Microsoft — I design AI-native products and code my designs into production, delivering live product experiences end-to-end."
+            "text": "Hi 👋 I’m Jesse Lai, a creative AI-native product designer with a particular passion for Agent products. Over the past few years, I’ve worked at Alibaba and Microsoft. Since the early days of generative AI, I’ve been designing AI-native products for both consumer and enterprise users."
+          },
+          {
+            "type": "subtitle",
+            "text": "Alibaba"
           },
           {
             "type": "text",
-            "text": "Over the past 5 years, I've worked at Alibaba and Microsoft. Since the early days of generative AI, I've been designing AI-native products for both consumer and enterprise users."
-          },
-          {
-            "type": "text",
-            "text": "Fortunately, I've been recognised multiple times by company official media as an <a href=\"https://mp.weixin.qq.com/s/5FFKYeLy22Bx1S-b4z8UKw\">outstanding employee</a>. Outside of work, I occasionally write about product design in the AI era on <a href=\"https://mp.weixin.qq.com/s/5FFKYeLy22Bx1S-b4z8UKw\">WeChat Blog</a> and <a href=\"https://medium.com/@laijianxun123\">Medium</a>."
+            "text": "After graduating in 2020, I joined Alibaba. Early in the LLM wave (around 2023), I began designing AI Agent products for small and medium-sized businesses. My work was recognized across the company and featured several times by its <a href=\"https://mp.weixin.qq.com/s/5FFKYeLy22Bx1S-b4z8UKw\">official media</a> as an outstanding employee story."
           },
           {
             "type": "image",
-            "src": "content_images/writing.png",
+            "src": "content_images/hello-jesse/notion-01.png",
+            "alt": "Alibaba official WeChat and Xiaohongshu features",
+            "caption": "Alibaba official WeChat and Xiaohongshu"
+          },
+          {
+            "type": "subtitle",
+            "text": "Microsoft"
+          },
+          {
+            "type": "text",
+            "text": "At Microsoft, I’ve worked on both consumer and enterprise Copilot experiences, refining products used by hundreds of millions of people worldwide. Copilot is now one of Microsoft’s most important and fastest-growing products."
+          },
+          {
+            "type": "image",
+            "src": "content_images/hello-jesse/notion-02.png",
+            "alt": "Microsoft Copilot product design",
             "caption": ""
           },
           {
             "type": "text",
-            "text": "Oh, and if I'm not designing or vibe coding, I'm probably doing stand-up comedy 🤣"
+            "text": "I also worked on projects that strengthened my ability to break complex systems into foundational atoms. Together with global teams, I helped build the Copilot design system and component library, keeping visual and interaction quality consistent across more scenarios and at greater scale."
           },
           {
             "type": "image",
-            "src": "content_images/comedy.png",
+            "src": "content_images/hello-jesse/notion-03.png",
+            "alt": "Copilot design system and component library",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "I also contributed to the Generative UI project. By defining foundational elements, we enabled Agent responses to go beyond long passages of text and compose rich, structured interfaces that are easier to read."
+          },
+          {
+            "type": "image",
+            "src": "content_images/hello-jesse/notion-04.png",
+            "alt": "Generative UI project",
+            "caption": ""
+          },
+          {
+            "type": "text",
+            "text": "Over the past year, Copilot’s paid user base has doubled."
+          },
+          {
+            "type": "subtitle",
+            "text": "AI-Native Workflow"
+          },
+          {
+            "type": "text",
+            "text": "I use a wide range of Coding Agents deeply. I’ve built dozens of tools and plugins, as well as my own Coding Agent and this AI-native personal website."
+          },
+          {
+            "type": "image-carousel",
+            "aspectRatio": "16 / 9",
+            "images": [
+              { "src": "content_images/JesseAgent.png", "alt": "JesseAgent" },
+              { "src": "content_images/vibe_en_1.webp", "alt": "Storyteller project" },
+              { "src": "content_images/vibe_en_2.webp", "alt": "Storyteller multimedia generation" },
+              { "src": "content_images/vibe_en_3.webp", "alt": "Mini games platform" },
+              { "src": "content_images/vibe_en_4.webp", "alt": "Copilot Chatting games hub" },
+              { "src": "content_images/vibe_en_5.webp", "alt": "Insight finder" },
+              { "src": "content_images/vibe_en_6.webp", "alt": "GenUI Lab" },
+              { "src": "content_images/vibe_en_8.webp", "alt": "Vibe Coding project" }
+            ]
+          },
+          {
+            "type": "text",
+            "text": "I’ve also integrated AI deeply into my workflow. This has broken down traditional role boundaries; we describe the shift as taking one step forward and one step back:"
+          },
+          {
+            "type": "text",
+            "text": "1. One step forward: I use Agents to analyze databases and user feedback. Decisions that once depended heavily on reports from data analysts or user researchers can now combine their expertise with AI judgment, giving every design decision a stronger foundation and making iteration faster."
+          },
+          {
+            "type": "text",
+            "text": "2. One step back: after finishing the design, I build it directly in the codebase and submit a PR for engineering review. During validation, I edit code and debug alongside developers (thank you, engineering teammates!), giving me stronger control over the quality of the shipped experience."
+          },
+          {
+            "type": "text",
+            "text": "3. The design process itself has changed. I no longer rely on Figma alone to produce solutions. We also built a Baby Copilot that designers can use to create new features quickly. Some ideas—such as GenUI and interaction animation—are difficult to express in Figma, and this tool lets us deliver both design and code more effectively."
+          },
+          {
+            "type": "image",
+            "src": "content_images/hello-jesse/notion-05.png",
+            "alt": "Shipping design and code with Xcode and Android Studio",
             "caption": ""
           },
           {
             "type": "subtitle",
-            "text": "Work Experience"
+            "text": "Outside of Work"
           },
           {
             "type": "text",
-            "text": "Alibaba:"
-          },
-          {
-            "type": "text",
-            "text": "• Led generative AI product experience for merchant-side from 0 to 1 when LLMs first emerged in early 2023"
-          },
-          {
-            "type": "text",
-            "text": "• Mentored new team members"
-          },
-          {
-            "type": "text",
-            "text": "Microsoft:"
+            "text": "Outside of work, I love writing and share thoughts on product design through my <a href=\"https://mp.weixin.qq.com/s/hbqhQS9mMXhLmtFRbWKDEQ\">WeChat Blog</a>, <a href=\"https://medium.com/@laijianxun123\">Medium</a>, and X."
           },
           {
             "type": "image",
-            "src": "content_images/copilot.png",
+            "src": "content_images/hello-jesse/notion-06.png",
+            "alt": "Writing and design articles",
             "caption": ""
           },
           {
             "type": "text",
-            "text": "• Designing Copilot experiences for both C-end and B-end with global team, focusing on GenUI and Agent experiences"
-          },
-          {
-            "type": "text",
-            "text": "• Over the past few years of my career, I’ve been focused on the same thing: how to combine simple building blocks into diverse, complex systems"
-          },
-          {
-            "type": "text",
-            "text": "• Integrating Vibe Coding workflow into product development, delivering full-chain experiences from design to front-end code"
+            "text": "And if I’m not designing or vibe coding, I’m probably <a href=\"https://app.notion.com/p/146400ee0cf5808f87e8d536e92e21ee?pvs=25\">performing stand-up comedy</a> 🤣"
           },
           {
             "type": "image",
-            "src": "content_images/designtocode.png",
+            "src": "content_images/hello-jesse/notion-07.png",
+            "alt": "Stand-up comedy performances",
             "caption": ""
+          },
+          {
+            "type": "subtitle",
+            "text": "Overall"
           },
           {
             "type": "text",
-            "text": "• Completed 10+ Vibe Coding product plugins and prototypes in 2025"
+            "text": "I believe my experience and skills align closely with the DeepSeek Harness team’s goal of building open, reusable, and composable infrastructure and a developer ecosystem:"
           },
           {
-            "type": "image",
-            "src": "content_images/vibe_en_8.webp",
-            "caption": ""
+            "type": "text",
+            "text": "(1) Agent design: from early chatbots to Copilot and Coding Agents, my projects have spanned the full evolution of Agent products, giving me more experience and deeper insight into designing them."
+          },
+          {
+            "type": "text",
+            "text": "(2) Systems thinking: Microsoft’s GenUI and Copilot design-system work taught me how to break complex systems into foundational atoms and build product-design infrastructure."
+          },
+          {
+            "type": "text",
+            "text": "(3) AI Native: designing and building dozens of AI products—and working in an AI-native workflow for years—has made this way of working second nature and helps me collaborate effectively across functions."
+          },
+          {
+            "type": "text",
+            "text": "(4) Global reach: my Copilot experience has taught me how to design quality products for hundreds of millions of users, adapt them for global markets, and communicate with users around the world."
+          },
+          {
+            "type": "text",
+            "text": "(5) Product-design taste: I bring together interaction design, visual creativity, prototyping, and user research, with a drive to turn frontier technology into friendly, usable experiences."
+          },
+          {
+            "type": "text",
+            "text": "(6) Curiosity: beyond exploring the frontier of product design, my love of writing and stand-up comedy keeps me interesting—and curious—in the AI era."
           },
           {
             "type": "subtitle",
@@ -1922,10 +2080,14 @@
         "author": "赖健勋 Jesse",
         "notion_zh": [
           [
+            "subtitle",
+            "从 Agent 产品形态到 DeepSeek Harness"
+          ],
+          [
             "text",
-            "DeepSeek Harness 发布以后，基于 “Everything is a plugin” 的理念，我在想如果我是它的产品设计师，会如何设计？我的设计认为设计策略是：把界面拆解成基础原子，一切复杂界面都由基础原子组成，通过定义原子间的组合规则，实现灵活而多变的系统。",
+            "DeepSeek Harness 发布以后，基于 “Everything is a plugin” 的理念，我在想如果我是它的产品设计师，会如何设计？我的设计策略是：把界面拆解成基础原子，一切复杂界面都由基础原子组成；通过定义原子的行为和组合规则，实现灵活而多变的系统。",
             {
-              "highlight_text": "把界面拆解成基础原子，一切复杂界面都由基础原子组成，通过定义原子间的组合规则，实现灵活而多变的系统。"
+              "highlight_text": "把界面拆解成基础原子，一切复杂界面都由基础原子组成；通过定义原子的行为和组合规则，实现灵活而多变的系统。"
             }
           ],
           [
@@ -1935,22 +2097,63 @@
               "highlight_text": "利用简单的基本元素，创造多变的复杂系统。"
             }
           ],
-          6,
           [
-            "text",
-            "这会让产品设计的重心，从设计一个 Agent，变成设计一个可复用、可组合的创造系统。",
+            "image",
+            "",
             {
-              "highlight_text": "设计一个可复用、可组合的创造系统。"
+              "src": "content_images/deepseek-harness-01-hands.webp?v=notion-20260906",
+              "caption": "复杂的乐高玩具，都由基础模块组成",
+              "alt": "由基础模块组成的乐高手部视觉"
             }
           ],
           [
             "text",
-            "我通过对主流 Agent 产品趋势分析，结合 DeepSeek Harness “Everything is a plugin” 的理念，梳理了下一个阶段 Agent 产品体验上的挑战和解法。当前 Agent 在产品体验上的主要挑战有：越灵活复杂度越高、意图漂移和上下文分散",
+            "这会让产品设计的重心，从设计一个 Agent，变成设计一个可复用、可组合的创造系统，在更多场景下更深入地帮助到更多的用户。",
             {
-              "highlight_text": "越灵活复杂度越高、意图漂移和上下文分散"
+              "highlight_text": "可复用、可组合的创造系统，在更多场景下更深入地帮助到更多的用户。"
             }
           ],
-          10,
+          [
+            "subheading",
+            "先回顾 Agent 产品的发展阶段"
+          ],
+          [
+            "text",
+            "我幸运的参与了过去几年，处于不同阶段的 Agent 产品设计，总结了每个阶段 Agent 的特点。"
+          ],
+          [
+            "image",
+            "",
+            {
+              "src": "content_images/deepseek-harness-agent-stages.webp?v=notion-20260906",
+              "caption": "",
+              "alt": "Agent 产品形态发展阶段"
+            }
+          ],
+          [
+            "text",
+            "结合 DeepSeek Harness “Everything is a plugin” 的理念，我认为下个阶段 Agent 产品会：越来越灵活（Custom Agent）、任务越来越长、上下文/记忆越来越分散、多 Agent 协作越来越普遍、更深入的嵌入组织、更主动。",
+            {
+              "highlight_text": "越来越灵活（Custom Agent）、任务越来越长、上下文/记忆越来越分散、多 Agent 协作越来越普遍、更深入的嵌入组织、更主动。"
+            }
+          ],
+          [
+            "subheading",
+            "趋势、挑战和设计策略"
+          ],
+          [
+            "text",
+            "针对 Agent 越来越灵活（custom Agent）、任务越来越长、上下文越来越分散 这几个趋势，我提出了一些设计策略和初步方案。"
+          ],
+          [
+            "image",
+            "",
+            {
+              "src": "content_images/deepseek-harness-agent-trends.webp?v=notion-20260906",
+              "caption": "",
+              "alt": "Agent 发展趋势、产品体验挑战与产品设计策略"
+            }
+          ],
           [
             "subtitle",
             "趋势1：Agent 越来越灵活 - Everything is a plugin"
@@ -1958,6 +2161,15 @@
           [
             "text",
             "越来越多的个人/企业开始搭建自己的Agent，每个人的 Agent 和工作流都不一样。这会带来的结果是，在未来每个人的 Agent 长得都不一样，我们不能再设计一套固定的产品扔给用户。而应该设计一套灵活的框架，让用户能轻松的组装成自己想要的样子。"
+          ],
+          [
+            "image",
+            "",
+            {
+              "src": "content_images/deepseek-harness-custom-agents.webp?v=notion-20260907",
+              "caption": "每个人/组织都有自己的 Agent",
+              "alt": "不同个人与组织拥有不同形态的 Agent"
+            }
           ],
           [
             "subheading",
@@ -1981,6 +2193,7 @@
               "highlight_text": "实现产品体验与 Harness 的持续共同进化"
             }
           ],
+          14,
           [
             "subheading",
             "Notion —— Everything is a “Block”"
@@ -1989,30 +2202,67 @@
             "text",
             "为了方便理解，我先分析一个产品。Notion 的基础原子是“Block”。不论多复杂的 Notion 页面，都是由最基础的 Block 组成，也有点像 Web 开发的“盒模型”。正是 Notion 在早期定义清楚了原子结构 Block 的行为和边界，系统的复杂度就变得可以被管理。"
           ],
-          14,
+          [
+            "image",
+            "",
+            {
+              "src": "content_images/deepseek-harness-02-notion-blocks.webp?v=notion-20260907",
+              "caption": "最基础的 Block 元素，就可以组成所有复杂的 Notion 页面",
+              "alt": "Notion 页面由基础 Block 元素组成"
+            }
+          ],
           [
             "subheading",
             "Agent —— Everything is a “?”"
           ],
           [
             "text",
-            "那么 Agent 产品有哪些基础元素呢？我的答案是 “Session”。",
+            "那么 Agent 产品有哪些元素呢？随便列举就会发现有很多元素👇，要给这些元素每个单独设计UI和交互，随着插件体系扩展，产品一定会越来越臃肿。"
+          ],
+          [
+            "image",
+            "",
             {
-              "highlight_text": "“Session”"
+              "src": "content_images/deepseek-harness-agent-concepts.webp?v=notion-20260907",
+              "caption": "Agent 由太多概念组成",
+              "alt": "Agent 产品中的多种界面和功能概念"
             }
           ],
           [
             "text",
-            "回想一下主流 Coding Agent 的一切。每一个 Query、每个任务、每个项目，都是由多个 Sessions 组成的。还能再拆分吗？Session 还能被拆分为 Query 和 Response，但它们两个单拿出来不足以组成完整体验。"
-          ],
-          17,
-          [
-            "text",
-            "不论多复杂的 Agent 界面，都可以由可复用、可组合的原子单位 Session 组成，实现自由的组合布局，就像插件一样。原子种类是有限的，而组合出的界面是无限的。"
+            "对于 Agent 来说，什么元素是基础原子？",
+            {
+              "highlight_text": "什么元素是基础原子？"
+            }
           ],
           [
             "text",
-            "我用这个设计理念改造了 DeepSeek Harness。"
+            "在 Coding 场景里：用户通常是围绕一个大项目、一个连续多步骤任务来工作，用户行为是找任务。所以产品更适合以 Task / Session 为原子（如 CodeX）。"
+          ],
+          [
+            "text",
+            "在通用 Agent 场景里：用户面对的往往是很多独立、较小、但相同类型的任务，用户行为是找人。所以产品更适合以 Agent / Bot 为原子（如 Grok Bot）。"
+          ],
+          [
+            "text",
+            "回想一下主流 Coding Agent 的一切。每一个 Query、每个任务、每个项目，都是由多个 Task / Session 组成的。还能再拆分吗？Session 还能被拆分为 Query 和 Response，但它们两个单拿出来不足以组成完整体验。"
+          ],
+          [
+            "image",
+            "",
+            {
+              "src": "content_images/deepseek-harness-03-session.webp?v=notion-20260907",
+              "caption": "Task / Session 是 Agent 的最小单位",
+              "alt": "Task 和 Session 作为 Agent 的基础原子"
+            }
+          ],
+          [
+            "text",
+            "不论多复杂的 Agent 界面，都可以由可复用、可组合的原子 Session 组成，实现自由的组合布局，就像插件一样。原子种类是有限的，而组合出的界面是无限的。"
+          ],
+          [
+            "text",
+            "我基于这个理念重新设计了 DeepSeek Harness 产品框架。"
           ],
           [
             "text",
@@ -2031,7 +2281,7 @@
           24,
           [
             "subtitle",
-            "趋势2：上下文越来越多"
+            "趋势2：上下文越来越分散"
           ],
           72,
           [
@@ -2092,7 +2342,7 @@
           ],
           [
             "text",
-            "针对这个问题，我的设计让用户在任务执行中和完成后，可以从思维链的任意节点开始“重新推理”。“重新推理”会保留该节点之前的推理过程和产出，放弃该节点之后的所有内容，并基于用户的补充信息重新推理，提升任务完成效率，减少 Token 浪费。",
+            "针对这个问题，我的设计让用户在任务执行中&完成后，可以从思维链的任意节点开始“重新推理”。“重新推理”会保留该节点之前的推理过程和产出，放弃该节点之后的所有内容，并基于用户的补充信息重新推理，提升任务完成效率，减少 Token 浪费。",
             {
               "highlight_text": "从思维链的任意节点开始“重新推理”"
             }
@@ -2100,11 +2350,11 @@
           45,
           [
             "subtitle",
-            "DeepSeek Harness 的不同阶段"
+            "在 DeepSeek Harness 设计师能做什么"
           ],
           [
             "text",
-            "如果说 DeepSeek Harness 的产品设计重心是打造一个可复用、可组合的基础设施，那么产品设计师需要深度参与这个系统的 3 个阶段，最终让不同阶段的用户都容易理解、易于创造、乐于开源："
+            "如果说 DeepSeek Harness 的产品设计重心是打造一个可复用，可组合的基础设施。 那么产品设计师需要深度参与这个系统的3个阶段，最终让不同阶段的用户都容易理解、易于创造、乐于开源。"
           ],
           [
             "text",
@@ -2115,7 +2365,7 @@
           ],
           [
             "text",
-            "如果说打造“原子化设计系统”是第 1 个阶段，通过有良好体验的基础产品降低普通用户使用门槛，让用户长期留在 DeepSeek Harness 生态内，那么我们还需要“激发创造活力”和“维护社区生态”。"
+            "如果说前面的产品设计方案是说的第1个阶段，通过有良好体验的基础产品，降低普通用户使用门槛，让用户长期留在 DeepSeek Harness 生态内。那么我们还需要“激发创造活力”和“维护社区生态”。"
           ],
           [
             "subtitle",
@@ -2177,21 +2427,29 @@
             "• 参与构建一个完善而繁荣的社区生态，建设插件市场和插件筛选机制。\n• 从社区创新中发现优化官方产品的思路。"
           ],
           [
-            "subtitle",
-            "最后，我还能做什么"
-          ],
-          [
             "text",
             "更好的用户体验能帮助 DeepSeek Harness 获得更多基础用户，这些基础用户可以逐渐转化成生态内的创作者；最终繁荣生态中的许多好想法，又可以反哺基础用户体验的提升。"
           ],
-          68,
           [
-            "text",
-            "综上，我觉得 DeepSeek Harness 团队需要的不只是懂某一领域、拥有单一经验的设计专家，而是在产品发展的各个阶段，对不同领域都有了解、强调系统性思维的通才。我觉得我的过往经历和技能，与 DeepSeek Harness 团队构建开放、可复用、可组合的基础设施和开发者生态的目标非常契合："
+            "image",
+            "",
+            {
+              "src": "content_images/deepseek-harness-08-flywheel.webp?v=notion-20260830",
+              "caption": "",
+              "alt": "DeepSeek Harness 生态飞轮"
+            }
+          ],
+          [
+            "subtitle",
+            "在 DeepSeek Harness 我能做什么"
           ],
           [
             "text",
-            "（1）Agent：Coding Agent 的设计和开发经历让我充分了解 Agent 产品设计。\n（2）系统思维：微软的 GenUI 及 Copilot 设计系统项目，让我理解复杂系统如何由简单原子组成。\n（3）AI Native：搭建数十个 AI 产品和工作流，让我对 AI Native 研发流程拥有足够经验和热情。\n（4）全球化：Copilot 产品设计经历，让我具备面向全球数亿用户打磨产品品质、帮助产品走向全球市场的经验。\n（5）能力综合：交互体验、视觉创意、原型开发、用户调研，甚至插画等综合能力。\n（6）好奇心驱动：生活中我对写作和喜剧的热情，以及 AI Native 的创作流程（构思—实践—评估），让我积累了 Agent 任务质量评估经验，也让我在 AI 时代依然保持好奇。",
+            "我觉得 DeepSeek Harness 团队需要的不只是懂某一领域、单一经验的设计师，而是在产品发展的各个阶段，熟悉不同设计领域、有系统性思维的通才。我觉得我的过往经历和技能点，与 DeepSeek Harness 团队非常契合："
+          ],
+          [
+            "text",
+            "（1）专注 Agent 设计：从早期的 Chat Bot，到 Copilot，再到 Coding Agent。我参与的项目经历了 Agent 发展的多个周期。让我对全链路参与定义 Agent 产品形态有更多经验，和更深入的想法。\n（2）系统思维：微软的 GenUI 及 Copilot 设计系统项目，让我理解如何拆解复杂系统为基本原子。\n（3）AI Native：设计数十个 AI 产品，和早已 AI Native 的工作流，让我对 AI Native 研发流程拥有足够经验和热情。既有在 Microsoft 的工作经验，又有在小团队 Research Lab 直接与Pm、开发和研究员协作的经历。\n（4）全球化：Copilot 产品设计经历，让我有为全球数亿用户设计的品质，以及适应全球化市场的设计经验，以及和全球用户沟通的能力。\n（5）产品设计品味：综合交互体验、视觉创意、原型开发、用户调研等能力。有将前沿的技术和产品转化为用户友好体验的追求。\n（6）好奇心：除了产品设计的前沿探索，生活中我对写作和喜剧的热爱，以及 AI Native 的创作流程（构思—实践—评估），让我在 AI 时代依然是一个有趣的人。",
             {
               "highlight_leading_labels": true
             }
@@ -2234,15 +2492,20 @@
           10,
           [
             "subtitle",
-            "Trend 1: Malleable Software"
+            "Trend 1: Agents Are Becoming More Flexible — Everything Is a Plugin"
           ],
           [
             "text",
-            "More individuals and companies are building their own Agents, and every Agent and workflow is different. In the future, everyone’s Agent will look different. We can no longer hand users one fixed product; we should design a flexible framework that people can easily assemble into the form they need."
+            "More individuals and organizations are building their own Agents, and each has a different Agent and workflow. The result is that everyone’s Agent will look different in the future. We can no longer give every user the same fixed product. Instead, we should design a flexible framework that users can easily assemble into the form they need."
           ],
           [
-            "text",
-            "Malleable software exists for this reason."
+            "image",
+            "",
+            {
+              "src": "content_images/deepseek-harness-custom-agents.webp?v=notion-20260907",
+              "caption": "Every person and organization has its own Agent",
+              "alt": "Different Agent interfaces for different people and organizations"
+            }
           ],
           [
             "subheading",
@@ -2266,6 +2529,7 @@
               "highlight_text": "the product experience and Harness can continue evolving together"
             }
           ],
+          14,
           [
             "subheading",
             "Notion — Everything Is a “Block”"
@@ -2274,30 +2538,67 @@
             "text",
             "To make this concrete, consider Notion. Its foundational atom is the Block. No matter how complex a Notion page becomes, it is assembled from basic Blocks, much like the box model on the web. By defining the behavior and boundaries of Blocks early, Notion made system complexity manageable."
           ],
-          14,
+          [
+            "image",
+            "",
+            {
+              "src": "content_images/deepseek-harness-02-notion-blocks.webp?v=notion-20260907",
+              "caption": "The most basic Block elements can compose every complex Notion page",
+              "alt": "A Notion page composed from foundational Block elements"
+            }
+          ],
           [
             "subheading",
             "Agent — Everything Is a “?”"
           ],
           [
             "text",
-            "What are the foundational elements of an Agent product? My answer is the Session.",
+            "What elements make up an Agent product? Even a quick list reveals a large number of them 👇. Designing separate UI and interactions for every element would inevitably make the product increasingly bloated as the plugin ecosystem expands."
+          ],
+          [
+            "image",
+            "",
             {
-              "highlight_text": "Session"
+              "src": "content_images/deepseek-harness-agent-concepts.webp?v=notion-20260907",
+              "caption": "An Agent is made up of too many concepts",
+              "alt": "The many interface and feature concepts in an Agent product"
             }
           ],
           [
             "text",
-            "Think about mainstream Coding Agents: every Query, task, and project consists of multiple Sessions. Can we break a Session down further? It can be split into a Query and a Response, but neither can form a complete experience on its own."
+            "For an Agent, which element should be the foundational atom?",
+            {
+              "highlight_text": "which element should be the foundational atom?"
+            }
           ],
-          17,
+          [
+            "text",
+            "In coding scenarios, people usually work around a large project or a continuous, multi-step task—their behavior is task-oriented. The product is therefore better organized around Task / Session atoms, as in Codex."
+          ],
+          [
+            "text",
+            "In general Agent scenarios, people often face many independent, smaller tasks of the same type—their behavior is agent-oriented. The product is therefore better organized around Agent / Bot atoms, as in Grok Bots."
+          ],
+          [
+            "text",
+            "Think about everything in a mainstream Coding Agent: every Query, task, and project consists of multiple Tasks / Sessions. Can we break a Session down further? It can be split into a Query and a Response, but neither can form a complete experience on its own."
+          ],
+          [
+            "image",
+            "",
+            {
+              "src": "content_images/deepseek-harness-03-session.webp?v=notion-20260907",
+              "caption": "Task / Session is the smallest unit of an Agent",
+              "alt": "Task and Session as the foundational unit of an Agent"
+            }
+          ],
           [
             "text",
             "Any Agent interface, no matter how complex, can be composed from reusable Session atoms and arranged freely, just like plugins. The types of atoms are finite, but the interfaces they can compose are infinite."
           ],
           [
             "text",
-            "I used this design principle to reimagine DeepSeek Harness."
+            "Based on this principle, I redesigned the DeepSeek Harness product framework."
           ],
           [
             "text",
@@ -2547,8 +2848,9 @@
           {
             "type": "image",
             "src": "content_images/deepseek-harness-02-notion-blocks.webp?v=notion-20260830",
-            "caption": "最基础的 Block 元素，就可以组成所有复杂的 Notion 页面",
-            "alt": "Notion Block 组合示意"
+            "caption": "有限的原子组件，可以组合出无限的应用场景",
+            "alt": "原子组件组合为多种应用场景的动态示意",
+            "interactive": "atomic-design"
           },
           {
             "type": "text",
@@ -2667,8 +2969,10 @@
             "text": "思维链对长程任务至关重要，用户会据此判断 Agent 的推理过程是否符合预期。它的一个挑战是：普通用户看不懂，而专业用户又觉得不够细。这两种情况都无法帮助各自用户做出有效判断。因此，一个能够根据不同用户层次变化的、灵活的思维链非常重要。"
           },
           {
-            "type": "video",
-            "src": "content_images/deepseek-cot-levels.mp4",
+            "type": "interactive",
+            "src": "demos/reasoning-detail-slider.html?v=1",
+            "title": "思维链可读：点击或拖动滑杆切换简洁、专业、深入三档",
+            "aspectRatio": "736 / 520",
             "caption": ""
           },
           {
@@ -2803,9 +3107,9 @@
           },
           {
             "type": "image",
-            "src": "content_images/deepseek-harness-context-sources.webp?v=notion-20260905",
+            "src": "content_images/deepseek-harness-context-strategy.png?v=20260907",
             "caption": "",
-            "alt": "多源上下文与 Agent 的关系"
+            "alt": "上下文越来越多、上下文分散与场景化 Agent 的设计策略"
           },
           {
             "type": "image",
@@ -2879,8 +3183,9 @@
           {
             "type": "image",
             "src": "content_images/deepseek-harness-02-notion-blocks.webp?v=notion-20260830",
-            "caption": "The most basic Block elements can compose every complex Notion page.",
-            "alt": "How Notion Blocks compose into pages"
+            "caption": "A finite set of atomic components can compose infinite application scenarios.",
+            "alt": "Animated atomic components composing multiple application scenarios",
+            "interactive": "atomic-design"
           },
           {
             "type": "text",
@@ -2999,8 +3304,10 @@
             "text": "Chains of thought are crucial in long-running tasks because users rely on them to judge whether the agent is reasoning as expected. One challenge is that the reasoning may be incomprehensible to general users yet insufficiently detailed for experts. Neither group can make an effective judgment. A flexible chain of thought that adapts to the user’s level is therefore essential."
           },
           {
-            "type": "video",
-            "src": "content_images/deepseek-cot-levels.mp4",
+            "type": "interactive",
+            "src": "demos/reasoning-detail-slider.html?v=1",
+            "title": "Reasoning readability: click or drag the slider to change detail level",
+            "aspectRatio": "736 / 520",
             "caption": ""
           },
           {
@@ -3135,9 +3442,9 @@
           },
           {
             "type": "image",
-            "src": "content_images/deepseek-harness-context-sources.webp?v=notion-20260905",
+            "src": "content_images/deepseek-harness-context-strategy.png?v=20260907",
             "caption": "",
-            "alt": "The relationship between multiple context sources and the agent"
+            "alt": "Growing context, fragmented context, and context-aware agents as a design strategy"
           },
           {
             "type": "image",

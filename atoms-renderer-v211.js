@@ -1,7 +1,9 @@
 // atoms-renderer.js — Shared atom rendering module
-console.log('[atoms-renderer] v=217 loaded');
+console.log('[atoms-renderer] v=223 loaded');
 // All atom types are rendered from here. Both atoms.html and wall.js import this.
 import { streamChat, chatSync, buildSystemPrompt } from './ai-client.js?v=166';
+import './lib/embla-carousel.umd.js?v=860';
+import './atomic-design-diagram.js?v=14';
 
 const _SEND_SVG = '<svg width="14" height="14" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4.284 10.296A1 1 0 0 0 5.709 11.7L11 6.33V20a1 1 0 1 0 2 0V6.336l5.285 5.364a1 1 0 0 0 1.425-1.404l-6.823-6.924a1.25 1.25 0 0 0-1.78 0l-6.823 6.924Z" fill="currentColor"/></svg>';
 const _STOP_SVG = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>';
@@ -2429,8 +2431,19 @@ export class FocusOverlay {
 
   _renderArticleSubheading(section, previousSection) {
     const previousType = String(previousSection?.type || '');
-    const marginTop = ['subtitle', 'image', 'video'].includes(previousType) ? '0' : '32px';
-    return `<h3 style="font-family:var(--body-font, -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif);font-size:18px;color:var(--text-primary, #1a1a1a);font-weight:700;line-height:1.5;margin:${marginTop} 0 16px;">${section.text}</h3>`;
+    const marginTop = ['subtitle', 'image', 'video', 'interactive'].includes(previousType) ? '0' : '32px';
+    const fontSize = this.activeItem?.focusData?.title === 'DeepSeek Harness' ? '16px' : '18px';
+    return `<h3 style="font-family:var(--body-font, -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif);font-size:${fontSize};color:var(--text-primary, #1a1a1a);font-weight:700;line-height:1.5;margin:${marginTop} 0 16px;">${section.text}</h3>`;
+  }
+
+  _isDeepSeekTOCHeadingText(rawText) {
+    return /^(?:从 Agent 产品形态到 DeepSeek Harness$|趋势\s*[123]\s*[:：]|DeepSeek Harness 的不同阶段$|在 DeepSeek Harness 设计师能做什么$|最后[，,]?\s*我还?能做什么$|在 DeepSeek Harness 我能做什么$|Trend\s*[123]\s*[:：]|The Different Stages of DeepSeek Harness$|Finally,?\s*What Else Can I Contribute\??$)/i.test(String(rawText || '').trim());
+  }
+
+  _renderArticleSubtitle(section) {
+    const isDeepSeek = this.activeItem?.focusData?.title === 'DeepSeek Harness';
+    const fontSize = isDeepSeek && !this._isDeepSeekTOCHeadingText(section.text) ? '16px' : '20px';
+    return `<h2 style="font-family:var(--title-font, Special Elite);font-size:${fontSize};color:var(--text-primary, #1a1a1a);margin:48px 0 16px;line-height:1.4;">${section.text}</h2>`;
   }
 
   _renderArticleSignature(section) {
@@ -2450,7 +2463,117 @@ export class FocusOverlay {
     const caption = section.caption
       ? `<p style="font-family:Red Hat Mono,monospace;font-size:11px;color:var(--text-caption, #555);text-align:center;margin:8px 0 40px;">${section.caption}</p>`
       : '';
+    if (section.interactive === 'atomic-design') {
+      return `<atomic-design-diagram lang="${this._lang}" reference="content_images/deepseek-atomic-design-static.png"></atomic-design-diagram>${caption}`;
+    }
     return `<img src="${section.src}" alt="${section.alt || ''}" style="display:block;width:100%;border-radius:6px;margin:32px 0 ${bottomMargin};">${caption}`;
+  }
+
+  _renderImageCarousel(section) {
+    const images = Array.isArray(section.images) ? section.images.filter(image => image?.src) : [];
+    if (!images.length) return '';
+    const aspectRatio = section.aspectRatio || '16 / 9';
+    const [ratioWidth, ratioHeight] = String(aspectRatio).split('/').map(value => Number(value.trim()));
+    const fallbackRatio = ratioWidth > 0 && ratioHeight > 0 ? ratioWidth / ratioHeight : 16 / 9;
+    const viewportRatio = fallbackRatio / 0.82;
+    const glassLayers = '<span class="glass-effect"></span><span class="glass-tint"></span><span class="glass-shine"></span>';
+    const buttonStyle = 'width:27px;height:27px;min-width:27px;padding:0;';
+    const previousIcon = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m14.5 18-6-6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    const nextIcon = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m9.5 6 6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    const slides = images.map((image, index) => `<div data-carousel-slide role="group" aria-roledescription="slide" aria-label="${index + 1} / ${images.length}" style="flex:0 0 calc(82% + 12px);height:100%;min-width:0;padding-left:12px;box-sizing:border-box;"><div data-carousel-frame style="width:100%;height:100%;overflow:hidden;border:1px solid var(--border-divider,rgba(0,0,0,.08));border-radius:8px;background:var(--overlay-bg,#fffdfa);"><img src="${image.src}" alt="${image.alt || ''}" loading="${index === 0 ? 'eager' : 'lazy'}" draggable="false" style="display:block;width:100%;height:100%;object-fit:contain;margin:0;border-radius:0;user-select:none;"></div></div>`).join('');
+    const dots = images.map((_, index) => `<button type="button" data-carousel-dot="${index}" aria-label="${this._lang === 'en' ? `Go to image ${index + 1}` : `跳转到第 ${index + 1} 张图片`}" style="display:block;width:7px;height:7px;padding:0;border-radius:999px;border:${index === 0 ? '1.5px solid var(--text-primary,#1a1a1a)' : '1px solid color-mix(in srgb,var(--text-primary,#1a1a1a) 18%,transparent)'};background:transparent;cursor:pointer;transition:border-color .2s ease,transform .2s ease;"></button>`).join('');
+    return `<div data-image-carousel tabindex="0" role="region" aria-roledescription="carousel" aria-label="${this._lang === 'en' ? 'Project image carousel' : '项目图片轮播'}" style="position:relative;margin:32px 0 42px;outline:none;">
+      <div data-carousel-viewport data-carousel-fallback-ratio="${fallbackRatio}" style="width:100%;aspect-ratio:${viewportRatio};overflow:hidden;-webkit-mask-image:linear-gradient(to right,transparent 0%,#000 5%,#000 95%,transparent 100%);mask-image:linear-gradient(to right,transparent 0%,#000 5%,#000 95%,transparent 100%);">
+        <div data-carousel-track style="display:flex;height:100%;margin-left:-12px;touch-action:pan-y pinch-zoom;backface-visibility:hidden;">${slides}</div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding:0 2px;">
+        <div style="display:flex;gap:6px;">
+          <button type="button" class="glass-dismiss" data-carousel-prev aria-label="${this._lang === 'en' ? 'Previous image' : '上一张图片'}" style="${buttonStyle}">${glassLayers}${previousIcon}</button>
+          <button type="button" class="glass-dismiss" data-carousel-next aria-label="${this._lang === 'en' ? 'Next image' : '下一张图片'}" style="${buttonStyle}">${glassLayers}${nextIcon}</button>
+        </div>
+        <div data-carousel-dots style="display:flex;gap:6px;align-items:center;">${dots}</div>
+      </div>
+      <span data-carousel-status aria-live="polite" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">1 / ${images.length}</span>
+    </div>`;
+  }
+
+  _bindImageCarousels(root = this._articleWrap) {
+    if (!root) return;
+    root.querySelectorAll('[data-image-carousel]:not([data-carousel-bound])').forEach(carousel => {
+      const viewport = carousel.querySelector('[data-carousel-viewport]');
+      const slides = Array.from(carousel.querySelectorAll('[data-carousel-slide]'));
+      const dots = Array.from(carousel.querySelectorAll('[data-carousel-dot]'));
+      const status = carousel.querySelector('[data-carousel-status]');
+      const Embla = window.EmblaCarousel;
+      if (!viewport || dots.length < 2 || typeof Embla !== 'function') return;
+      const sizeSlides = () => {
+        const height = viewport.clientHeight;
+        const fallbackRatio = Number(viewport.dataset.carouselFallbackRatio) || 16 / 9;
+        if (!height) return;
+        slides.forEach(slide => {
+          const image = slide.querySelector('img');
+          const imageRatio = image?.naturalWidth && image?.naturalHeight ? image.naturalWidth / image.naturalHeight : fallbackRatio;
+          const width = Math.round(height * imageRatio + 12);
+          slide.style.flexBasis = `${width}px`;
+          slide.style.width = `${width}px`;
+        });
+      };
+      sizeSlides();
+      const emblaApi = Embla(viewport, { loop: true, align: 'center' });
+      carousel._emblaApi = emblaApi;
+      carousel.setAttribute('data-carousel-bound', 'true');
+      const update = () => {
+        const index = emblaApi.selectedScrollSnap();
+        dots.forEach((dot, dotIndex) => {
+          const active = dotIndex === index;
+          dot.style.border = active ? '1.5px solid var(--text-primary,#1a1a1a)' : '1px solid color-mix(in srgb,var(--text-primary,#1a1a1a) 18%,transparent)';
+          dot.style.transform = active ? 'scale(1)' : 'scale(.86)';
+          dot.setAttribute('aria-current', active ? 'true' : 'false');
+        });
+        if (status) status.textContent = `${index + 1} / ${dots.length}`;
+      };
+      const refreshSlideSizes = () => {
+        const index = emblaApi.selectedScrollSnap();
+        sizeSlides();
+        emblaApi.reInit();
+        emblaApi.scrollTo(index, true);
+      };
+      slides.forEach(slide => {
+        const image = slide.querySelector('img');
+        if (image && !image.complete) image.addEventListener('load', refreshSlideSizes, { once: true });
+      });
+      const resizeObserver = new ResizeObserver(refreshSlideSizes);
+      resizeObserver.observe(viewport);
+      carousel._carouselResizeObserver = resizeObserver;
+      let autoplayTimer = 0;
+      const stopAutoplay = () => { if (autoplayTimer) window.clearInterval(autoplayTimer); autoplayTimer = 0; };
+      const startAutoplay = () => {
+        stopAutoplay();
+        autoplayTimer = window.setInterval(() => {
+          if (!carousel.isConnected) { resizeObserver.disconnect(); emblaApi.destroy(); return; }
+          emblaApi.scrollNext();
+        }, 2000);
+      };
+      const navigate = callback => { stopAutoplay(); callback(); startAutoplay(); };
+      carousel.querySelector('[data-carousel-prev]')?.addEventListener('click', event => { event.stopPropagation(); navigate(() => emblaApi.scrollPrev()); });
+      carousel.querySelector('[data-carousel-next]')?.addEventListener('click', event => { event.stopPropagation(); navigate(() => emblaApi.scrollNext()); });
+      dots.forEach((dot, dotIndex) => dot.addEventListener('click', event => { event.stopPropagation(); navigate(() => emblaApi.scrollTo(dotIndex)); }));
+      carousel.addEventListener('keydown', event => {
+        if (event.key === 'ArrowLeft') { event.preventDefault(); navigate(() => emblaApi.scrollPrev()); }
+        if (event.key === 'ArrowRight') { event.preventDefault(); navigate(() => emblaApi.scrollNext()); }
+      });
+      emblaApi.on('select', update).on('reInit', update).on('pointerDown', stopAutoplay).on('pointerUp', startAutoplay);
+      update();
+      startAutoplay();
+    });
+  }
+
+  _renderArticleInteractive(section) {
+    const caption = section.caption
+      ? `<p style="font-family:Red Hat Mono,monospace;font-size:11px;color:var(--text-caption, #555);text-align:center;margin:8px 0 40px;">${section.caption}</p>`
+      : '';
+    const bottomMargin = section.caption ? '0' : '40px';
+    return `<iframe src="${section.src}" title="${section.title || 'Interactive article demo'}" loading="lazy" sandbox="allow-scripts" style="display:block;width:100%;aspect-ratio:${section.aspectRatio || '736 / 520'};border:0;border-radius:6px;margin:32px 0 ${bottomMargin};background:#7e805e;"></iframe>${caption}`;
   }
 
   _renderArticleVideo(section) {
@@ -2520,7 +2643,7 @@ export class FocusOverlay {
       for (let i = 0; i < _sections.length; i++) {
         const section = _sections[i];
         if (section.type === 'subtitle') {
-          html += `<h2 style="font-family:var(--title-font, Special Elite);font-size:20px;color:var(--text-primary, #1a1a1a);margin:48px 0 16px;line-height:1.4;">${section.text}</h2>`;
+          html += this._renderArticleSubtitle(section);
         } else if (section.type === 'subheading') {
           html += this._renderArticleSubheading(section, _sections[i - 1]);
         } else if (section.type === 'signature') {
@@ -2529,6 +2652,10 @@ export class FocusOverlay {
           html += this._renderArticleText(section, undefined, _sections[i - 1]);
         } else if (section.type === 'image') {
           html += this._renderArticleImage(section);
+        } else if (section.type === 'image-carousel') {
+          html += this._renderImageCarousel(section);
+        } else if (section.type === 'interactive') {
+          html += this._renderArticleInteractive(section);
         } else if (section.type === 'video') {
           html += this._renderArticleVideo(section);
         }
@@ -2542,6 +2669,7 @@ export class FocusOverlay {
     this._articleWrap.querySelectorAll('a').forEach(a => { a.setAttribute('target', '_blank'); a.style.color = 'inherit'; a.style.textDecoration = 'underline'; a.style.textUnderlineOffset = '3px'; a.style.textDecorationThickness = '1px'; });
     this._articleWrap.style.paddingBottom = '160px';
     this._bindWeChatArticleVideos(this._articleWrap);
+    this._bindImageCarousels();
     this._bindImageLightbox();
 
     // 重建 chat 容器
@@ -3022,7 +3150,7 @@ export class FocusOverlay {
         for (let i = 0; i < _secs.length; i++) {
           const section = _secs[i];
           if (section.type === 'subtitle') {
-            html += `<h2 style="font-family:var(--title-font, Special Elite);font-size:20px;color:var(--text-primary, #1a1a1a);margin:48px 0 16px;line-height:1.4;">${section.text}</h2>`;
+            html += this._renderArticleSubtitle(section);
           } else if (section.type === 'subheading') {
             html += this._renderArticleSubheading(section, _secs[i - 1]);
           } else if (section.type === 'signature') {
@@ -3031,6 +3159,10 @@ export class FocusOverlay {
             html += this._renderArticleText(section, undefined, _secs[i - 1]);
           } else if (section.type === 'image') {
             html += this._renderArticleImage(section);
+          } else if (section.type === 'image-carousel') {
+            html += this._renderImageCarousel(section);
+          } else if (section.type === 'interactive') {
+            html += this._renderArticleInteractive(section);
           } else if (section.type === 'video') {
             html += this._renderArticleVideo(section);
           }
@@ -3087,6 +3219,7 @@ export class FocusOverlay {
           const headings = Array.from(h2s).map(el => ({ text: el.textContent, el }));
           this._buildTOC(headings);
         }
+        this._bindImageCarousels();
         this._bindImageLightbox();
       }, 550);
     }, 400);
@@ -3754,12 +3887,14 @@ export class FocusOverlay {
         if (_secs3) {
           for (let i = 0; i < _secs3.length; i++) {
             const s = _secs3[i];
-            if (s.type === 'subtitle') html += `<h2 style="font-family:var(--title-font, Special Elite);font-size:20px;color:var(--text-primary, #1a1a1a);margin:48px 0 16px;line-height:1.4;">${s.text}</h2>`;
+            if (s.type === 'subtitle') html += this._renderArticleSubtitle(s);
             else if (s.type === 'subheading') html += this._renderArticleSubheading(s, _secs3[i - 1]);
             else if (s.type === 'signature') html += this._renderArticleSignature(s);
             else if (s.type === 'text') html += this._renderArticleText(s, '24px', _secs3[i - 1]);
             else if (s.type === 'image') {
               html += this._renderArticleImage(s);
+            } else if (s.type === 'image-carousel') {
+              html += this._renderImageCarousel(s);
             } else if (s.type === 'video') html += this._renderArticleVideo(s);
           }
         }
@@ -3776,6 +3911,7 @@ export class FocusOverlay {
         nestedOverlay.addEventListener('scroll', onScroll);
         this._nestedState.onScroll = onScroll;
         this._nestedState.articleWrap = articleWrap;
+        this._bindImageCarousels(articleWrap);
 
         requestAnimationFrame(() => requestAnimationFrame(() => {
           articleWrap.style.opacity = '1';
@@ -4044,14 +4180,16 @@ export class FocusOverlay {
     this._destroyTOC();
     if (this.activeItem?.focusData?.title === 'DeepSeek Harness') {
       headings = headings
-        .filter(({ text }) => /^(?:趋势\s*[123]\s*[:：]|DeepSeek Harness 的不同阶段$|最后[，,]?\s*我还?能做什么$|Trend\s*[123]\s*[:：]|The Different Stages of DeepSeek Harness$|Finally,?\s*What Else Can I Contribute\??$)/i.test(text.trim()))
+        .filter(({ text }) => this._isDeepSeekTOCHeadingText(text))
         .map(heading => ({
           ...heading,
           tocText: /^趋势\s*1\s*[:：]/i.test(heading.text.trim())
             ? '趋势1：Agent 越来越灵活'
-            : /^最后[，,]?\s*我还?能做什么$/i.test(heading.text.trim())
+            : /^(?:最后[，,]?\s*我还?能做什么|在 DeepSeek Harness 我能做什么)$/i.test(heading.text.trim())
               ? '最后，我能做什么'
-              : heading.text
+              : /^在 DeepSeek Harness 设计师能做什么$/i.test(heading.text.trim())
+                ? 'DeepSeek Harness 的不同阶段'
+                : heading.text
         }));
     }
     if (!headings.length) return;
