@@ -4243,8 +4243,8 @@ export class FocusOverlay {
 
   _updateTOCPosition() {
     if (!this._tocEl || !this._tocHeadings?.length) return;
-    const firstP = this._articleWrap?.querySelector('p');
-    const alignEl = firstP || this._tocHeadings[0].el;
+    const title = this._articleWrap?.querySelector('h1');
+    const alignEl = title || this._tocHeadings[0].el;
     const rect = alignEl.getBoundingClientRect();
     const top = Math.max(80, rect.top);
     this._tocEl.style.top = top + 'px';
