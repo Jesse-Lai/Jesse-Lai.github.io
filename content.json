@@ -169,7 +169,7 @@
           },
           {
             "type": "text",
-            "text": "DeepSeek harness 发布以后，我也马上做了很多尝试，写下了我的 DeepSeek Harness 的产品设计思考。"
+            "text": "我也基于开源 Agent 框架做了很多新的尝试，写下了我的 Agent 产品设计思考。"
           },
           {
             "type": "atom",
@@ -209,7 +209,7 @@
           },
           {
             "type": "text",
-            "text": "我觉得我的过往经历和技能，与 DeepSeek Harness 团队构建开放、可复用、可组合的基础设施和开发者生态的目标非常契合："
+            "text": "我觉得我的过往经历和热情所在，让我适合在一个 AI Native 的团队构建下一代面向全球用户的 Agent："
           },
           {
             "type": "text",
@@ -431,7 +431,7 @@
           },
           {
             "type": "text",
-            "text": "As soon as DeepSeek Harness was released, I started experimenting with it and wrote down my thoughts on its product design."
+            "text": "I also explored new ideas using open-source agent frameworks and wrote down my thoughts on agent product design."
           },
           {
             "type": "atom",
@@ -471,7 +471,7 @@
           },
           {
             "type": "text",
-            "text": "I believe my experience and skills align closely with the DeepSeek Harness team’s goal of building open, reusable, and composable infrastructure and a developer ecosystem:"
+            "text": "I believe my experience and passions make me well suited to building the next generation of agents for users around the world as part of an AI-native team:"
           },
           {
             "type": "text",
@@ -2211,8 +2211,8 @@
       "link": "#",
       "linkText": "Read more",
       "article": {
-        "title": "DeepSeek Harness 的产品设计思考",
-        "title_en": "Product Design Thoughts on DeepSeek Harness",
+        "title": "Agent Harness 的产品设计思考",
+        "title_en": "Product Design Thoughts on Agent Harness",
         "author": "赖健勋 Jesse",
         "notion_zh": [
           [
@@ -2221,7 +2221,7 @@
           ],
           [
             "text",
-            "DeepSeek Harness 发布以后，基于 “Everything is a plugin” 的理念，我在想如果我是它的产品设计师，会如何设计？我的设计策略是：把界面拆解成基础原子，一切复杂界面都由基础原子组成；通过定义原子的行为和组合规则，实现灵活而多变的系统。",
+            "DeepSeek Harness 发布以后，基于 “Everything is a plugin” 的理念，我在产品设计上做了很多想法和尝试。我的设计策略是：把界面拆解成基础原子，一切复杂界面都由基础原子组成；通过定义原子的行为和组合规则，实现灵活而多变的系统。",
             {
               "highlight_text": "把界面拆解成基础原子，一切复杂界面都由基础原子组成；通过定义原子的行为和组合规则，实现灵活而多变的系统。"
             }
@@ -2433,7 +2433,7 @@
             "subtitle",
             "趋势2：上下文越来越分散"
           ],
-          72,
+          69,
           [
             "text",
             "主流 Coding Agent 最大的体验问题之一，是使用场景和 Context 分散。一个典型场景是：用户在使用自己的办公软件或浏览器时，把这些 App 中的 Context 多次来回复制粘贴到 Coding Agent；Coding Agent 处理完以后，再把结果复制回 App 中。导致用户效率降低，注意力分散。"
@@ -2472,7 +2472,7 @@
             "text",
             "随着 Agent 执行的任务时间越来越长，过程中的小错误和意图偏差会越滚越大，且失败的成本也越大。因此，任务执行中用户的掌控感变得越来越重要，我把 Agent 思维链推理过程分为“可读”和“可控”两部分："
           ],
-          73,
+          70,
           [
             "subheading",
             "1）思维链可读"
@@ -2500,11 +2500,11 @@
           45,
           [
             "subtitle",
-            "在 DeepSeek Harness 设计师能做什么"
+            "产品生态的不同阶段"
           ],
           [
             "text",
-            "如果说 DeepSeek Harness 的产品设计重心是打造一个可复用，可组合的基础设施。 那么产品设计师需要深度参与这个系统的3个阶段，最终让不同阶段的用户都容易理解、易于创造、乐于开源。"
+            "如果说 DeepSeek Harness 的产品设计重心是打造一个可复用，可组合的基础设施。 那么这个基础设施的发展可能会有3个阶段，每个阶段都需要好的体验。最终让不同阶段的用户都容易理解、易于创造、乐于开源。"
           ],
           [
             "text",
@@ -2590,27 +2590,12 @@
               "width": 1536,
               "height": 1024
             }
-          ],
-          [
-            "subtitle",
-            "在 DeepSeek Harness 我能做什么"
-          ],
-          [
-            "text",
-            "我觉得 DeepSeek Harness 团队需要的不只是懂某一领域、单一经验的设计师，而是在产品发展的各个阶段，熟悉不同设计领域、有系统性思维的通才。我觉得我的过往经历和技能点，与 DeepSeek Harness 团队非常契合："
-          ],
-          [
-            "text",
-            "（1）专注 Agent 设计：从早期的 Chat Bot，到 Copilot，再到 Coding Agent。我参与的项目经历了 Agent 发展的多个周期。让我对全链路参与定义 Agent 产品形态有更多经验，和更深入的想法。\n（2）系统思维：微软的 GenUI 及 Copilot 设计系统项目，让我理解如何拆解复杂系统为基本原子。\n（3）AI Native：设计/开发的数十个AI工具和早已 AI Native 的工作流，让我对 AI Native 工作方式很熟悉。以及，既有在 Microsoft 的工作经验，又有在小团队 AI Lab 合作经历，能让我好的与团队协作。\n（4）全球化：Copilot 产品设计经历，让我有为全球数亿用户设计的品质，以及适应全球化市场的设计经验，以及和全球用户沟通的能力。\n（5）产品设计品味：综合交互体验、视觉创意、原型开发、用户调研等能力。有将前沿的技术和产品转化为用户友好体验的追求。\n（6）好奇心：除了产品设计的前沿探索，生活中我对写作和喜剧的热爱，以及 AI Native 的创作流程（构思—实践—评估），让我在 AI 时代依然是一个有趣的人。",
-            {
-              "highlight_leading_labels": true
-            }
           ]
         ],
         "notion_en": [
           [
             "text",
-            "After DeepSeek Harness launched, the idea that “Everything is a plugin” made me ask: if I were its product designer, how would I design it? My design strategy would be to decompose the interface into foundational atoms, build every complex interface from those atoms, and define composition rules between them to create a flexible, evolving system.",
+            "After DeepSeek Harness launched, I explored and experimented with many product design ideas based on the “Everything is a plugin” philosophy. My design strategy is to decompose the interface into foundational atoms, build every complex interface from those atoms, and define composition rules between them to create a flexible, evolving system.",
             {
               "highlight_text": "decompose the interface into foundational atoms, build every complex interface from those atoms, and define composition rules between them to create a flexible, evolving system."
             }
@@ -2779,7 +2764,7 @@
             "subtitle",
             "Trend 2: Context from Multiple Sources"
           ],
-          72,
+          69,
           [
             "text",
             "One of the biggest experience problems in mainstream Coding Agents is the separation between the work surface and its Context. Users work in office apps or browsers, repeatedly copy Context into a Coding Agent, and then copy the result back into the original app, fragmenting their attention."
@@ -2818,7 +2803,7 @@
             "text",
             "As Agent tasks run longer, small errors and intent drift compound over time, while the cost of failure keeps growing. User control during execution therefore becomes increasingly important. I divide the Agent’s reasoning process into two qualities: readable and controllable."
           ],
-          73,
+          70,
           [
             "subheading",
             "1) Readable Reasoning"
@@ -2846,11 +2831,11 @@
           45,
           [
             "subtitle",
-            "The Different Stages of DeepSeek Harness"
+            "Stages of the Product Ecosystem"
           ],
           [
             "text",
-            "If the product-design focus of DeepSeek Harness is to create reusable, composable infrastructure, product designers need to participate deeply in three stages of the system so users at every stage can understand it, create with it, and contribute openly:"
+            "If the product-design focus of DeepSeek Harness is to create reusable, composable infrastructure, then this infrastructure may develop through three stages, each requiring a good user experience. The goal is to help users at every stage understand it, create with it, and contribute openly:"
           ],
           [
             "text",
@@ -2923,30 +2908,15 @@
             "• Help build a complete, thriving ecosystem with a plugin marketplace and curation mechanisms.\n• Discover ideas from community innovation that improve the official product."
           ],
           [
-            "subtitle",
-            "Finally, What Else Can I Contribute?"
-          ],
-          [
             "text",
             "A better user experience brings more people into DeepSeek Harness; some gradually become ecosystem creators; and the best ideas from a thriving ecosystem flow back into the foundational experience."
           ],
-          68,
-          [
-            "text",
-            "In short, DeepSeek Harness needs more than a specialist in one design domain. It needs a systems-minded generalist who understands different disciplines across every stage of product development. My background aligns closely with the team’s goal of building open, reusable, composable infrastructure and a developer ecosystem:"
-          ],
-          [
-            "text",
-            "(1) Agent: designing and building Coding Agents gives me a strong understanding of Agent product design.\n(2) Systems thinking: Microsoft GenUI and Copilot design-system work taught me how complex systems emerge from simple atoms.\n(3) AI Native: building dozens of AI products and workflows gave me deep experience and enthusiasm for AI-native development.\n(4) Global scale: designing Copilot for hundreds of millions of users taught me how to refine quality for a worldwide market.\n(5) Breadth: interaction design, visual creativity, prototyping, user research, and even illustration.\n(6) Curiosity: my passion for writing and comedy, together with the AI-native cycle of ideation, execution, and evaluation, has given me experience evaluating Agent-task quality—and keeps me curious in the AI era.",
-            {
-              "highlight_leading_labels": true
-            }
-          ]
+          67
         ],
         "sections_latest": [
           {
             "type": "text",
-            "text": "DeepSeek Harness 发布以后，基于 “Everything is a plugin” 的理念，我在想：如果我是它的产品设计师，会如何设计？我认为设计策略是：把界面拆解成基础原子，一切复杂界面都由基础原子组成，通过定义原子的组合规则，实现灵活而多变的系统。",
+            "text": "DeepSeek Harness 发布以后，基于 “Everything is a plugin” 的理念，我在产品设计上做了很多想法和尝试。我认为设计策略是：把界面拆解成基础原子，一切复杂界面都由基础原子组成，通过定义原子的组合规则，实现灵活而多变的系统。",
             "highlight_text": "把界面拆解成基础原子，一切复杂界面都由基础原子组成，通过定义原子的组合规则，实现灵活而多变的系统。"
           },
           {
@@ -3279,10 +3249,6 @@
             "text": "• 参与构建一个完善而繁荣的社区生态，建设插件市场和插件筛选机制。\n• 从社区创新中发现优化官方产品的思路。"
           },
           {
-            "type": "subtitle",
-            "text": "最后，我还能做什么"
-          },
-          {
             "type": "text",
             "text": "健康的生态是：更好的用户体验能帮助产品获得更多基础用户，这些用户可以逐渐转化成生态内的创作者；繁荣生态中的许多好想法，又会反哺基础用户体验的提升。"
           },
@@ -3293,15 +3259,6 @@
             "alt": "DeepSeek Harness 生态飞轮",
             "width": 1536,
             "height": 1024
-          },
-          {
-            "type": "text",
-            "text": "综上，我认为 DeepSeek Harness 团队需要的不只是懂某一领域、拥有单一经验的设计专家，而是在产品发展的各个阶段，对不同领域都有了解、强调系统性思维的通才。我的过往经历和技能，与团队构建开放、可复用、可组合的基础设施和开发者生态的目标非常契合："
-          },
-          {
-            "type": "text",
-            "highlight_leading_labels": true,
-            "text": "（1）Agent：Coding Agent 的设计和开发经历让我充分了解 Agent 产品设计。\n（2）系统思维：微软的 GenUI 及 Copilot 设计系统项目，让我理解复杂系统如何由简单原子组成。\n（3）AI Native：搭建数十个 AI 产品和工作流，让我对 AI Native 研发流程拥有足够经验和热情。\n（4）全球化：Copilot 产品设计经历，让我具备面向全球数亿用户打磨产品品质、帮助产品走向全球市场的经验。\n（5）能力综合：交互体验、视觉创意、原型开发、用户调研，甚至插画等综合能力。\n（6）好奇心驱动：我对写作和喜剧的热情，以及 AI Native 的创作流程（构思—实践—评估），让我积累了 Agent 任务质量评估经验，也让我在 AI 时代依然保持好奇。"
           },
           {
             "type": "signature",
@@ -3327,7 +3284,7 @@
         "sections_en_latest": [
           {
             "type": "text",
-            "text": "After DeepSeek Harness launched, the idea that “Everything is a plugin” made me ask: if I were its product designer, how would I design it? My strategy would be to decompose the interface into foundational atoms, build every complex interface from those atoms, and define composition rules that create a flexible, evolving system.",
+            "text": "After DeepSeek Harness launched, I explored and experimented with many product design ideas based on the “Everything is a plugin” philosophy. My strategy is to decompose the interface into foundational atoms, build every complex interface from those atoms, and define composition rules that create a flexible, evolving system.",
             "highlight_text": "decompose the interface into foundational atoms, build every complex interface from those atoms, and define composition rules that create a flexible, evolving system."
           },
           {
@@ -3660,10 +3617,6 @@
             "text": "• Help build a complete, thriving ecosystem with a plugin marketplace and curation mechanisms.\n• Discover ideas from community innovation that improve the official product."
           },
           {
-            "type": "subtitle",
-            "text": "Finally, What Else Can I Contribute?"
-          },
-          {
             "type": "text",
             "text": "A healthy ecosystem works like this: a better user experience brings more people into the product; some gradually become ecosystem creators; and the best ideas from a thriving ecosystem flow back into the foundational experience."
           },
@@ -3674,15 +3627,6 @@
             "alt": "DeepSeek Harness ecosystem flywheel",
             "width": 1536,
             "height": 1024
-          },
-          {
-            "type": "text",
-            "text": "In short, DeepSeek Harness needs more than a specialist in one design domain. It needs a systems-minded generalist who understands different disciplines across every stage of product development. My background aligns closely with the goal of building open, reusable, composable infrastructure and a developer ecosystem:"
-          },
-          {
-            "type": "text",
-            "highlight_leading_labels": true,
-            "text": "(1) Agent design: designing and building coding agents gives me a strong understanding of agent product design.\n(2) Managing complexity: Microsoft GenUI and Copilot design-system work taught me how complex systems emerge from simple atoms.\n(3) AI Native: building dozens of AI products and workflows gave me deep experience and enthusiasm for AI-native development.\n(4) Global scale: designing Copilot for hundreds of millions of users taught me how to refine quality for a worldwide market.\n(5) Breadth: interaction design, visual creativity, prototyping, user research, and even illustration.\n(6) Curiosity: my passion for writing and comedy, together with the AI-native cycle of ideation, execution, and evaluation, has given me experience evaluating agent-task quality—and keeps me curious in the AI era."
           },
           {
             "type": "signature",
@@ -3827,16 +3771,8 @@
             "text": "这个阶段的设计工作，是参与构建繁荣且可持续的社区生态，包括插件市场、发现机制、质量筛选与体验评估框架。评估可以关注：是否容易理解、是否符合平台心智、是否清楚暴露权限与风险、是否破坏任务流、能否与其他插件共存，以及是否具备合理的 fallback、empty state 和 error state。"
           },
           {
-            "type": "subtitle",
-            "text": "我还能做什么"
-          },
-          {
             "type": "text",
             "text": "更好的基础体验会带来更多用户，其中一部分会成长为生态创作者；繁荣生态中的优秀想法，又会反哺基础体验。这形成了“留在生态—制作插件—深入创作—提升体验”的飞轮。"
-          },
-          {
-            "type": "text",
-            "text": "我与这个目标的契合点包括：Coding Agent 的设计与开发经历；微软多个 GenUI 项目与 Copilot 设计系统经验；数十个 Vibe Coding 产品和 AI 工作流实践；以及写作与喜剧带来的创作、实践和评估能力。"
           }
         ],
         "sections_en": [
@@ -3961,16 +3897,8 @@
             "text": "Design work at this stage means building a healthy plugin marketplace, discovery and curation mechanisms, and an experience-quality framework. That framework can ask whether a plugin is understandable, fits the platform's mental model, exposes permissions and risks, protects task flow, coexists with other plugins, and provides sensible fallback, empty, and error states."
           },
           {
-            "type": "subtitle",
-            "text": "What I Can Contribute"
-          },
-          {
             "type": "text",
             "text": "A better core experience brings in more users; some become ecosystem creators; the best ideas from that ecosystem then improve the core experience. This creates a flywheel from adoption, to plugin creation, to deeper invention, and back to a better product."
-          },
-          {
-            "type": "text",
-            "text": "My fit with this goal comes from designing and building coding agents; working across GenUI projects and the Copilot design system at Microsoft; creating dozens of vibe-coded products and AI workflows; and practicing the cycle of creation, performance, and evaluation through writing and comedy."
           }
         ]
       }

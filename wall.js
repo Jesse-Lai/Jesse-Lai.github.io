@@ -1,5 +1,5 @@
 // wall.js — Main view, uses atoms-renderer.js
-import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, renderTearoffCard, makeDraggable, FocusOverlay, getOrCreateVideo, loadAllVideosSequentially, animateTo, fadeIn } from "./atoms-renderer-v211.js?v=250";
+import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, renderTearoffCard, makeDraggable, FocusOverlay, getOrCreateVideo, loadAllVideosSequentially, animateTo, fadeIn } from "./atoms-renderer-v211.js?v=251";
 import { WallArticle } from "./wall-article.js?v=152";
 
 (async () => {
@@ -161,8 +161,8 @@ import { WallArticle } from "./wall-article.js?v=152";
       en: { title: 'My AI Design Principles', body: 'My AI product design principles, and how this website will evolve with model iterations.' }
     },
     'DeepSeek Harness': {
-      zh: { title: 'DeepSeek Harness', body: '设计一套可复用、可组合的创造系统。' },
-      en: { title: 'DeepSeek Harness', body: 'From designing one agent to designing a reusable, composable creation system.' }
+      zh: { title: 'Agent Harness', body: '设计一套可复用、可组合的创造系统。' },
+      en: { title: 'Agent Harness', body: 'From designing one agent to designing a reusable, composable creation system.' }
     },
     'Born Builder': {
       zh: { title: '天生创造者', body: '这个项目提醒我——我是一个创造者。无论是否在AI时代，让东西活起来都让我兴奋！' },

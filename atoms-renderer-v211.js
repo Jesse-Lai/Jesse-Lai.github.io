@@ -2433,16 +2433,16 @@ export class FocusOverlay {
   _renderArticleSubheading(section, previousSection) {
     const previousType = String(previousSection?.type || '');
     const marginTop = ['subtitle', 'image', 'video', 'interactive'].includes(previousType) ? '0' : '32px';
-    const fontSize = this.activeItem?.focusData?.title === 'DeepSeek Harness' ? '16px' : '18px';
+    const fontSize = ['DeepSeek Harness', 'Agent Harness'].includes(this.activeItem?.focusData?.title) ? '16px' : '18px';
     return `<h3 style="font-family:var(--body-font, -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif);font-size:${fontSize};color:var(--text-primary, #1a1a1a);font-weight:700;line-height:1.5;margin:${marginTop} 0 16px;">${section.text}</h3>`;
   }
 
   _isDeepSeekTOCHeadingText(rawText) {
-    return /^(?:从 Agent 产品形态到 DeepSeek Harness$|趋势\s*[123]\s*[:：]|DeepSeek Harness 的不同阶段$|在 DeepSeek Harness 设计师能做什么$|最后[，,]?\s*我还?能做什么$|在 DeepSeek Harness 我能做什么$|Trend\s*[123]\s*[:：]|The Different Stages of DeepSeek Harness$|Finally,?\s*What Else Can I Contribute\??$)/i.test(String(rawText || '').trim());
+    return /^(?:从 Agent 产品形态到 DeepSeek Harness$|趋势\s*[123]\s*[:：]|产品生态的不同阶段$|DeepSeek Harness 的不同阶段$|在 DeepSeek Harness 设计师能做什么$|最后[，,]?\s*我还?能做什么$|在 DeepSeek Harness 我能做什么$|Trend\s*[123]\s*[:：]|Stages of the Product Ecosystem$|The Different Stages of DeepSeek Harness$|Finally,?\s*What Else Can I Contribute\??$)/i.test(String(rawText || '').trim());
   }
 
   _renderArticleSubtitle(section) {
-    const isDeepSeek = this.activeItem?.focusData?.title === 'DeepSeek Harness';
+    const isDeepSeek = ['DeepSeek Harness', 'Agent Harness'].includes(this.activeItem?.focusData?.title);
     const fontSize = isDeepSeek && !this._isDeepSeekTOCHeadingText(section.text) ? '16px' : '20px';
     return `<h2 style="font-family:var(--title-font, Special Elite);font-size:${fontSize};color:var(--text-primary, #1a1a1a);margin:48px 0 16px;line-height:1.4;">${section.text}</h2>`;
   }
@@ -4250,7 +4250,7 @@ export class FocusOverlay {
 
   _buildTOC(headings) {
     this._destroyTOC();
-    if (this.activeItem?.focusData?.title === 'DeepSeek Harness') {
+    if (['DeepSeek Harness', 'Agent Harness'].includes(this.activeItem?.focusData?.title)) {
       headings = headings
         .filter(({ text }) => this._isDeepSeekTOCHeadingText(text))
         .map(heading => ({
@@ -4260,7 +4260,7 @@ export class FocusOverlay {
             : /^(?:最后[，,]?\s*我还?能做什么|在 DeepSeek Harness 我能做什么)$/i.test(heading.text.trim())
               ? '最后，我能做什么'
               : /^在 DeepSeek Harness 设计师能做什么$/i.test(heading.text.trim())
-                ? 'DeepSeek Harness 的不同阶段'
+                ? '产品生态的不同阶段'
                 : heading.text
         }));
     }
