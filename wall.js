@@ -466,9 +466,8 @@ import { WallArticle } from "./wall-article.js?v=152";
     if (r.focusableItem) renderedItems.push({ wallItem: r.wallItem, focusableItem: r.focusableItem });
   }
 
-  // Rotate the three existing visual slots after masonry has laid out the
-  // wall, so each atom lands at the exact position shown in the previous
-  // layout: DeepSeek → GenUI → AI Principles → DeepSeek.
+  // Arrange the featured atoms after masonry: GenUI keeps its original slot,
+  // Harness occupies AI Principles' slot, and AI Principles occupies Harness' slot.
   const renderedItemKey = item => item.wallItem._origTitle || item.wallItem.caption || item.wallItem.title;
   const findRenderedItem = title => rendered.find(item => renderedItemKey(item) === title);
   const genuiRendered = findRenderedItem('GenUI 设计指南');
@@ -485,8 +484,8 @@ import { WallArticle } from "./wall-article.js?v=152";
       item.group.y += slotBounds.y - itemBounds.y;
     };
 
-    moveToSlot(deepSeekRendered, genuiBounds);
-    moveToSlot(genuiRendered, aiPrinciplesBounds);
+    moveToSlot(deepSeekRendered, aiPrinciplesBounds);
+    moveToSlot(genuiRendered, genuiBounds);
     moveToSlot(aiPrinciplesRendered, deepSeekBounds);
   }
 
