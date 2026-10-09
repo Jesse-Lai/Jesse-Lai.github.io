@@ -75,7 +75,7 @@ html { scroll-padding-top: 32px; }
   position: absolute;
   z-index: 1;
   top: 54%;
-  right: calc(var(--photo-width) * -.055);
+  right: calc(var(--photo-width) * -.32);
   width: calc(var(--photo-width) * .57);
   transform: rotate(7deg);
   filter: drop-shadow(1.5px 2px 0 #00000026);
@@ -149,7 +149,7 @@ html { scroll-padding-top: 32px; }
   .hero-shutters i:nth-child(n+14) { display: none; }
 }
 @media (max-width: 560px) {
-  .portrait-stamp { right: 0; }
+  .portrait-note { --photo-width: clamp(160px, 50vw, 248px); }
 }
 @media (prefers-reduced-motion: reduce) {
   .portrait-note { transition: none; }
