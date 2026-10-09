@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Language Bubble：从查词工具到场景学习 Agent。产品思维、交互原型与界面设计。">
+  <title>Agent revamp</title>
+  <link rel="icon" type="image/svg+xml" href="assets/bubble.svg">
+  <link rel="preload" href="assets/InterVariable.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/Manrope-wght.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="stylesheet" href="typography.css">
+  <link rel="stylesheet" href="style.css?v=naive-type">
+  <link rel="stylesheet" href="hero-personal.css">
+  <link rel="stylesheet" href="hero-wallpaper.css?v=all-screenshots">
+  <link rel="stylesheet" href="brainstorm.css">
+  <link rel="stylesheet" href="case-study.css?v=notion-20261010">
+  <script src="case-study.js" defer></script>
+  <script src="hero-personal.js" defer></script>
+  <script src="hero-wallpaper.js?v=all-screenshots" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳至内容</a>
+  <main id="main">
+    <section class="hero container" aria-label="Jesse Lai · Language Bubble">
+      <div class="hero-intro">
+        <div class="portrait-space">
+          <button class="portrait-note" type="button" aria-label="Jesse Lai 的照片便利贴" aria-describedby="portrait-help">
+            <span class="portrait-image">
+              <img src="assets/jesse-portrait.webp" width="2560" height="2560" alt="Jesse 的手绘头像，头顶一只小猫" draggable="false" fetchpriority="high">
+              <video muted playsinline preload="auto" aria-hidden="true" disablepictureinpicture><source src="assets/jesse-portrait.mp4" type="video/mp4"></video>
+            </span>
+            <span class="portrait-caption">Hello I’m Jesse Lai</span>
+            <span class="portrait-stamp"><img src="assets/meshy-stamp.svg" width="640" height="368" alt="Meshy 邮票" draggable="false"></span>
+          </button>
+          <span class="visually-hidden" id="portrait-help">拖动照片可移动位置，悬停或点击可播放动画。键盘方向键移动，Escape 复位。</span>
+        </div>
+        <div class="hero-daylight" aria-hidden="true">
+          <div class="hero-sunbeam"></div>
+          <div class="hero-sunlight"><div class="hero-light-perspective">
+            <div class="hero-leaves"></div>
+            <div class="hero-blinds">
+              <div class="hero-shutters"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              <div class="hero-window-bars"><i></i><i></i></div>
+            </div>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="hero-stage wallpaper wallpaper-stage">
+        <div class="desktop-window" aria-label="Language Bubble 查词与场景记录界面示意">
+          <div class="window-bar"><span class="window-dots" aria-hidden="true"><i></i><i></i><i></i></span><span>Language Bubble</span><span class="quiet">界面示意</span></div>
+          <div class="workspace">
+            <aside class="workspace-sidebar">
+              <div class="sidebar-title">我的语言空间 <span>⌘ K</span></div>
+              <div class="sidebar-item selected"><span>▤</span> 记录 <small>03</small></div>
+              <div class="sidebar-item"><span>◉</span> 学习</div>
+              <div class="sidebar-item"><span>▦</span> 进度</div>
+              <div class="sidebar-label">最近遇见</div>
+              <div class="word-item current"><strong>serendipity</strong><small>阅读 · 刚刚</small></div>
+              <div class="word-item"><strong>resilient</strong><small>工作 · 今天</small></div>
+              <div class="word-item"><strong>make sense</strong><small>文章 · 昨天</small></div>
+              <div class="sidebar-bottom"><span class="avatar">L</span><span>Learning, in context.</span></div>
+            </aside>
+            <div class="word-detail">
+              <div class="word-toolbar"><span>记录 / 单词</span><span>↗ &nbsp; ☆</span></div>
+              <div class="word-body"><span class="tiny-label">A WORD YOU CAME ACROSS</span><h2>serendipity<span class="sound-mark" aria-hidden="true">◖))</span></h2><p class="phonetic">/ˌserənˈdɪpəti/ &nbsp; noun</p><p class="meaning">不期而遇的美好；意外发现的幸运</p>
+                <div class="context-card"><span class="tiny-label">回到遇见它的地方</span><p>“Some of the best discoveries<br>begin with <mark>serendipity</mark>.”</p><span class="context-source">阅读中的一句话 · 示例语料</span></div>
+                <div class="detail-bottom"><span class="status-dot"></span> 原句与语境，一起留下。</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="floating-card"><div class="floating-heading"><span class="agent-symbol">✳</span> 从遇见，到记住 <span>↗</span></div><p>用你查过的词，读一篇新的文章。</p><div class="mini-words"><span>serendipity</span><span>resilient</span><span>make sense</span></div><a href="#interaction">准备我的学习材料 <span>→</span></a></div>
+      </div>
+      <div class="hero-caption"><span>Language Bubble · macOS + iOS 原生项目</span><span>Translation → Context → Learning</span></div>
+    </section>
+
+    <div class="container chapter-index" aria-label="答卷目录">
+      <a href="#thinking"><span class="chapter-number">01</span><span>产品思维</span><span>↗</span></a>
+      <a href="#interaction"><span class="chapter-number">02</span><span>交互设计 + Vibe Coding</span><span>↗</span></a>
+      <a href="#design"><span class="chapter-number">03</span><span>UI 能力</span><span>↗</span></a>
+    </div>
+
+<section class="container section case-study" id="thinking" aria-labelledby="thinking-title">
+
+<div class="section-heading"><h2 id="thinking-title">1. 产品思维</h2></div>
+
+      <figure class="learner-brainstorm" aria-labelledby="brainstorm-title">
+        <figcaption><h3 id="brainstorm-title">语言学习，卡在哪里？</h3><span>头脑风暴 · 待验证</span></figcaption>
+        <div class="brainstorm-map">
+          <div class="brainstorm-rings" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <div class="brainstorm-person"><span class="learner-emoji" role="img" aria-label="正在学习的年轻人">🧑🏻‍💻</span><span>语言学习者</span></div>
+          <ul class="brainstorm-notes" aria-label="语言学习者可能面临的困难">
+            <li class="pain-memory">单词背了又忘</li>
+            <li class="pain-material">找不到感兴趣、<br>难度又合适的材料</li>
+            <li class="pain-reading">每天读很多，<br>真正留下的很少</li>
+            <li class="pain-effort">筛选、整理材料<br>太花时间</li>
+            <li class="pain-time">学习时间零碎，<br>总被打断</li>
+            <li class="pain-review">收藏一堆资料，<br>却没再打开</li>
+            <li class="pain-use">看得懂，<br>开口却用不出来</li>
+            <li class="pain-progress">看不到进步，很难坚持</li>
+          </ul>
+        </div>
+      </figure>
+
+<article class="case-answer">
+
+<div class="case-copy">
+<p data-source-id="notion-line-9">补充背景调研，关键问题、设计策略</p>
+</div>
+
+</article>
+
+<div class="case-topic">
+
+<h3>1. 为什么值得 Agent 化</h3>
+
+<article class="case-answer">
+
+<h4>谁是最值得优先服务的用户？</h4>
+
+<div class="case-copy">
+<p data-source-id="notion-line-19">最优先服务的是已有一定语言基础、且日常会持续接触目标语言的人，比如和外籍同事协作的人、需要读文献的学生、以及会主动看原生内容的学习者。因为他们每天都在查词和记词，这个需求高频、真实、持续。</p>
+<ul>
+<li data-source-id="notion-line-21">已有一定语言基础的人</li>
+<li data-source-id="notion-line-22">日常会持续接触目标语言语料的人</li>
+<li data-source-id="notion-line-23">典型用户：外企协作者、需要读文献的学生、会主动看原生内容的学习者</li>
+<li data-source-id="notion-line-24">原因：他们每天都在查词和记词，需求高频、真实、持续</li>
+</ul>
+</div>
+
+</article>
+
+<article class="case-answer">
+
+<h4>哪个具体场景最有价值？</h4>
+
+<div class="case-copy">
+<ol>
+<li data-source-id="notion-line-31">查单词：最高频、最明确、传统词典形态长期没变</li>
+<li data-source-id="notion-line-32">记单词：核心痛点是记忆和真实使用场景分离，容易机械背词</li>
+</ol>
+<ul>
+<li data-source-id="notion-line-33">优先级上先做查单词，因为它是最自然的入口，可顺势衔接理解、记忆和复习</li>
+</ul>
+<p data-source-id="notion-line-35">和几个语言学习者进行讨论和头脑风暴（参与者为学英语的中国人，和学中文的韩国人）</p>
+</div>
+<figure class="case-image" data-source-id="notion-line-37"><a href="assets/notion/agent-revamp-01.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-01.png" width="2716" height="900" alt="和几个语言学习者进行讨论和头脑风暴（参与者为学英语的中国人，和学中文的韩国人）" loading="lazy" decoding="async"></a></figure>
+
+</article>
+
+<article class="case-answer">
+
+<h4>Agent 版本相比现有产品，能解决什么新的问题？</h4>
+
+<div class="case-copy">
+<p data-source-id="notion-line-45">相比传统词典或背词产品，Agent 版不只是“查完给解释”，而是能自动记录、组织用户在真实生活中遇到的语料和场景，把一次查词变成后续可复用的学习材料。另一方面，它不再要求用户单独进入“学语言”模式，而是帮助用户在自己感兴趣的内容和爱好里直接使用语言，把语言当工具，在使用中完成学习。</p>
+<ul>
+<li data-source-id="notion-line-47">自动记录和组织用户在真实生活中遇到的语料与场景</li>
+<li data-source-id="notion-line-48">把一次查词延展成后续可复用的学习材料</li>
+<li data-source-id="notion-line-49">不再要求用户单独进入“学语言”模式，而是在感兴趣的内容里直接使用语言</li>
+</ul>
+</div>
+<figure class="case-image" data-source-id="notion-line-51"><a href="assets/notion/agent-revamp-02.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-02.png" width="2048" height="1156" alt="自动记录和组织用户在真实生活中遇到的语料与场景" loading="lazy" decoding="async"></a></figure>
+
+</article>
+
+<article class="case-answer">
+
+<h4>你会主动放弃哪些用户或场景？为什么？</h4>
+
+<div class="case-copy">
+<p data-source-id="notion-line-59">我会主动放弃想要“一次覆盖所有英语学习场景”的做法，优先只解决真实、高频、最痛的核心需求：记录语料，以及围绕语料去学习自己感兴趣的内容。早期不会优先做零基础启蒙、应试备考、系统语法课、儿童学习等场景，因为这些场景目标更标准化，产品形态也更成熟，不是这个 Agent 产品最有差异化的切入口。</p>
+<ul>
+<li data-source-id="notion-line-61">不追求一开始覆盖所有英语学习场景</li>
+<li data-source-id="notion-line-62">优先只做最痛的核心需求：记录语料、围绕语料学习兴趣内容</li>
+<li data-source-id="notion-line-63">早期主动放弃：零基础启蒙、应试备考、系统语法课、儿童学习</li>
+<li data-source-id="notion-line-64">原因：这些场景更标准化，也不是这个 Agent 产品最有差异化的切入口</li>
+</ul>
+</div>
+
+</article>
+
+<article class="case-answer">
+
+<h4>不要只是给现有产品加一个聊天框。请说明 Agent 化后，产品体验发生了什么根本变化。</h4>
+
+<div class="case-copy">
+<p data-source-id="notion-line-71">Agent 化后的根本变化有两点：第一，它会自动记录用户遇到单词和语料的真实场景，让回顾和记忆不再脱离使用语境；第二，它会利用生成能力，把这些词延展成文章、播客、互动游戏等内容，让用户不是为了学语言而学语言，而是在自己感兴趣的内容里使用语言、完成学习。</p>
+<ul>
+<li data-source-id="notion-line-73">自动记录单词和语料出现的真实场景，让记忆不再脱离语境</li>
+<li data-source-id="notion-line-74">用生成能力把词延展成文章、播客、互动游戏等内容</li>
+<li data-source-id="notion-line-75">目标从“学语言本身”转成“在感兴趣的内容里使用语言”</li>
+</ul>
+</div>
+
+</article>
+
+</div>
+
+<div class="case-topic">
+
+<h3>2. 能力边界与自主度</h3>
+
+<article class="case-answer">
+
+<div class="case-copy">
+<p data-source-id="notion-line-89">Agent 应该做的，是围绕两个核心目标展开：一是帮助用户把单词和真实使用场景关联起来，二是基于这些语料和用户兴趣生成学习内容，让用户在感兴趣的内容里使用语言。它不应该脱离用户记录过的场景和兴趣去天马行空地产生不相关内容，也不应该为了“看起来聪明”输出专业性不足、幻觉很多的学习材料。</p>
+<ul>
+<li data-source-id="notion-line-91">应该做：围绕真实语料场景和用户兴趣生成学习内容</li>
+<li data-source-id="notion-line-92">不应该做：脱离场景乱生成，或输出专业度不足、幻觉很多的内容</li>
+<li data-source-id="notion-line-93">直接执行：低风险、低成本、符合用户当前学习目标的操作</li>
+<li data-source-id="notion-line-94">先询问用户：会影响信任、带来明显成本或可能中途失败的操作</li>
+<li data-source-id="notion-line-95">例子：高 token 消耗的生成任务，应先提醒用户缩小范围、调整形式或补充 token</li>
+</ul>
+</div>
+
+</article>
+
+</div>
+
+<div class="case-topic">
+
+<h3>3. 最难的产品问题</h3>
+
+<article class="case-answer">
+
+<div class="case-copy">
+<p data-source-id="notion-line-104">1.查单词；2.记单词；3.学习效率 </p>
+<ol>
+<li data-source-id="notion-line-106">如何在 macOS 和不同应用之间低打扰地收集用户遇到的语料。用户的学习场景很碎，可能发生在浏览器、PDF、聊天或其他应用里；如果每次都要求手动添加，体验会很重，但如果过度主动采集，又容易打扰用户或破坏信任。</li>
+<li data-source-id="notion-line-107">如何让 Agent 产出的学习内容真的让用户愿意学。生成内容本身不难，难的是让内容既和用户语料、兴趣有关，又足够有吸引力，能让用户持续阅读、收听或互动。这本质上同时是教育设计和游戏化设计的问题。</li>
+</ol>
+</div>
+
+</article>
+
+<article class="case-answer">
+
+<div class="case-copy">
+<p data-source-id="notion-line-114">解决方向（先做第一个问题）：</p>
+<ul>
+<li data-source-id="notion-line-116">利用 macOS Accessibility 能力读取当前前台应用信息。</li>
+<li data-source-id="notion-line-117">当用户滑词或取词时，自动触发查词、翻译，并截取单词附近的屏幕内容。</li>
+<li data-source-id="notion-line-118">把“单词 + 语料 + 场景截图”一起记录下来，减少用户手动添加负担。</li>
+<li data-source-id="notion-line-119">后续再把这些记录加工成学习资料，形成从查词到记忆再到复用的闭环。</li>
+</ul>
+</div>
+
+</article>
+
+</div>
+
+</section>
+
+<section class="container section case-study" id="interaction" aria-labelledby="interaction-title">
+
+<div class="section-heading"><h2 id="interaction-title">2. 交互设计 + Vibe Coding</h2></div>
+
+<article class="case-answer">
+
+<h3 class="case-inline-heading" data-source-id="notion-line-141">策略1: Agent 与 Context 深度结合</h3>
+<div class="case-copy">
+<p data-source-id="notion-line-145">展示如何收集语料</p>
+</div>
+<h3 class="case-inline-heading" data-source-id="notion-line-149">策略2: 用语言，学爱好</h3>
+<h4 class="case-inline-heading" data-source-id="notion-line-151">计划与进度：</h4>
+<div class="case-copy">
+<p data-source-id="notion-line-153">拆解任务和当前进度：引导用户结构化输入</p>
+</div>
+<figure class="case-image wallpaper wallpaper-stage" data-source-id="notion-line-157"><a href="assets/notion/agent-revamp-03.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-03.png" width="2092" height="1350" alt="拆解任务和当前进度：引导用户结构化输入" loading="lazy" decoding="async"></a></figure>
+<div class="case-copy">
+<p data-source-id="notion-line-161">渐进式生成降低焦虑：</p>
+<p data-source-id="notion-line-163">先展示大纲，再展示文字，再生图片，最后生成可交互artifact（一边继续思考，一边开始回答。）</p>
+</div>
+<h4 class="case-inline-heading" data-source-id="notion-line-169">中途干预：</h4>
+<div class="case-copy">
+<p data-source-id="notion-line-171">steer、暂停生成（参考codex）</p>
+</div>
+<h4 class="case-inline-heading" data-source-id="notion-line-177">结果不符合预期：</h4>
+<div class="case-copy">
+<p data-source-id="notion-line-179">节省token：思维链重新推理</p>
+</div>
+<h4 class="case-inline-heading" data-source-id="notion-line-185">失败：</h4>
+<div class="case-copy">
+<p data-source-id="notion-line-187">失败时-没有token了：</p>
+<p data-source-id="notion-line-193">失败时-网络：</p>
+</div>
+<h4 class="case-inline-heading" data-source-id="notion-line-195">完成：</h4>
+<div class="case-copy">
+<p data-source-id="notion-line-197">完成时：展示互动题目</p>
+<h4 class="case-inline-heading" data-source-id="notion-line-205">真实 / Mock：</h4>
+<ul>
+<li data-source-id="notion-line-207">真实：右侧对话内容；单词列表中的单词（由 Agent 实际收集）。</li>
+<li data-source-id="notion-line-208">Mock：文章生成结果；学习页面中的拼贴画。</li>
+<li data-source-id="notion-line-209">原因：文章生成要和教育策略、单词与场景结合方式一起调；拼贴画要处理截图并做视觉编排，短时间内更适合先用理想化结果展示。</li>
+</ul>
+<h4 class="case-inline-heading" data-source-id="notion-line-211">如果有更多时间：</h4>
+<ul>
+<li data-source-id="notion-line-213">把文章生成从概念展示做成更稳定的教育内容生成链路。</li>
+<li data-source-id="notion-line-214">把学习页拼贴画做成真实可运行的生成或规则化排版能力。</li>
+</ul>
+<h4 class="case-inline-heading" data-source-id="notion-line-216">使用的 AI 工具：</h4>
+<ul>
+<li data-source-id="notion-line-218">主要使用 Codex 作为 AI 开发工具，用来辅助实现和迭代这个交互原型。</li>
+<li data-source-id="notion-line-219">Codex：用于前期头脑风暴、快速原型搭建，以及后续把设计实现成可运行原型。</li>
+<li data-source-id="notion-line-220">Figma：用于进入视觉设计精细化阶段后，完成高保真原型和细节设计。</li>
+<li data-source-id="notion-line-221">整体 workflow：先用 Codex 快速探索和搭原型，再用 Figma 打磨视觉与细节，最后再交回 Codex 实现。</li>
+<li data-source-id="notion-line-222">继续优化截图场景进入产品后的视觉呈现，不只是放一张图，而是把以文字为主的截图做成更有设计感的学习卡片或拼贴版式。</li>
+<li data-source-id="notion-line-223">参考报纸拼贴等视觉形式，让语料场景既可读又更美观。</li>
+<li data-source-id="notion-line-224">重点打磨学习内容生成，这是项目里最难的一部分：需要结合教育学、游戏化设计和用户测试，验证 AI 生成的文章、播客和互动游戏是否真的让用户愿意用、并且能帮助学习。</li>
+</ul>
+</div>
+
+</article>
+
+<article class="case-answer">
+
+<div class="case-copy">
+<p data-source-id="notion-line-242">artifact时效性</p>
+<p data-source-id="notion-line-243">agent主动性</p>
+<p data-source-id="notion-line-244">学习内容/游戏化：让用户更乐于学习</p>
+<p data-source-id="notion-line-245">截图和拼贴画算法</p>
+</div>
+
+</article>
+
+</section>
+
+<section class="container section case-study" id="design" aria-labelledby="design-title">
+
+<div class="section-heading"><h2 id="design-title">3. UI 能力</h2></div>
+
+<div class="case-topic">
+
+<h3>2. Design System 思路</h3>
+
+<article class="case-answer">
+
+<figure class="case-image" data-source-id="notion-line-294"><a href="assets/notion/agent-revamp-04.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-04.png" width="1500" height="828" alt="可视化：单词可以组成无数种 artifact" loading="lazy" decoding="async"></a></figure>
+<figure class="case-image" data-source-id="notion-line-296"><a href="assets/notion/agent-revamp-05.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-05.png" width="2048" height="1156" alt="Word 会在不同界面里复用，比如查词页、单词本、文章内容里。" loading="lazy" decoding="async"></a></figure>
+<figure class="case-image" data-source-id="notion-line-298"><a href="assets/notion/agent-revamp-06.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-06.png" width="2048" height="1156" alt="核心元素 1：Word。每个单词都是一个基础对象，包含释义、解释和 context / 场景。" loading="lazy" decoding="async"></a></figure>
+<div class="case-copy">
+<p data-source-id="notion-line-300">可视化：单词可以组成无数种 artifact</p>
+<ul>
+<li data-source-id="notion-line-302">核心元素 1：Word。每个单词都是一个基础对象，包含释义、解释和 context / 场景。</li>
+<li data-source-id="notion-line-303">Word 会在不同界面里复用，比如查词页、单词本、文章内容里。</li>
+<li data-source-id="notion-line-304">核心元素 2：Artifact（学习产物）。它可以是文章、播客、互动游戏等，由单词和语料进一步生成。</li>
+<li data-source-id="notion-line-305">学习页面更像一个“书桌”，由不同 Artifact 组成；新的、旧的内容都可以被摆放和再次拿起使用。</li>
+</ul>
+</div>
+
+</article>
+
+<article class="case-answer">
+
+<figure class="case-image wallpaper wallpaper-stage" data-source-id="notion-line-312"><a href="assets/notion/agent-revamp-07.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-07.png" width="1728" height="1117" alt="MacBook Pro 16_ - 18.png" loading="lazy" decoding="async"></a></figure>
+<figure class="case-image wallpaper wallpaper-stage" data-source-id="notion-line-314"><a href="assets/notion/agent-revamp-08.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-08.png" width="1728" height="1117" alt="MacBook Pro 16_ - 20.png" loading="lazy" decoding="async"></a></figure>
+<figure class="case-image wallpaper wallpaper-stage" data-source-id="notion-line-316"><a href="assets/notion/agent-revamp-09.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-09.png" width="1728" height="1117" alt="MacBook Pro 16_ - 21.png" loading="lazy" decoding="async"></a></figure>
+<figure class="case-image" data-source-id="notion-line-318"><a href="assets/notion/agent-revamp-10.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-10.png" width="980" height="532" alt="image.png" loading="lazy" decoding="async"></a></figure>
+<figure class="case-image" data-source-id="notion-line-320"><a href="assets/notion/agent-revamp-11.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-11.png" width="802" height="280" alt="image.png" loading="lazy" decoding="async"></a></figure>
+
+</article>
+
+</div>
+
+</section>
+  </main>
+
+  <footer><div class="container footer-top"><a class="brand" href="#">Language Bubble</a><div><a href="#thinking">产品思维</a><a href="#interaction">交互原型</a><a href="#design">UI 设计</a></div><a href="https://o9ixctz0o7.feishu.cn/docx/DTr9dad5Ao5S9wxbLkGcWhQ5nhb?302from=wiki" target="_blank" rel="noreferrer">查看原题 ↗</a></div><div class="container footer-bottom"><span>2026 · Agent revamp</span><span>视觉与壁纸：<a href="https://cursor.com/" target="_blank" rel="noreferrer">Cursor ↗</a> · 字体：<a href="https://naive.ai/en/" target="_blank" rel="noreferrer">Naive AI ↗</a></span><button id="theme-toggle" type="button" aria-label="切换为深色主题">◐ <span>浅色</span></button></div></footer>
+</body>
+</html>

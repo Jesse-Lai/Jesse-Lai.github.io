@@ -1,0 +1,37 @@
+/* Reveal a full-width background without resizing the interface above it. */
+.wallpaper-stage.wallpaper.is-expanding {
+  background: none;
+  border-radius: 0;
+  overflow: visible;
+}
+.wallpaper-stage.is-expanding::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: var(--wallpaper-width);
+  transform: translateX(-50%);
+  background: #c9c5b6 url('assets/cursor-landscape.jpg') center / cover;
+  clip-path: inset(0 var(--wallpaper-inset) round calc(var(--radius) * var(--wallpaper-roundness)));
+}
+[data-theme=dark] .wallpaper-stage.is-expanding::before {
+  background-blend-mode: multiply;
+  background-color: #aaa79b;
+}
+
+/* Product screenshots share the hero wallpaper, with a fixed foreground frame. */
+.case-image.wallpaper-stage {
+  position: relative;
+  isolation: isolate;
+  padding: clamp(24px, 5vw, 72px);
+}
+.case-image.wallpaper-stage > a {
+  border-radius: 9px;
+  box-shadow: 0 10px 48px #25251b26;
+}
+@media (max-width: 560px) {
+  .case-image.wallpaper-stage { padding: 20px 14px; }
+  .case-image.wallpaper-stage > a { border-radius: 5px; }
+}

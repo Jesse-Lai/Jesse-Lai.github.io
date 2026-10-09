@@ -1,0 +1,38 @@
+/* The Notion content uses the site's existing type, colors, and spacing. */
+.case-study .section-heading h2 { font-size: 15px; color: var(--muted); }
+.case-topic { margin-top: 56px; }
+.case-topic > h3 { font-size: 28px; line-height: 1.45; letter-spacing: -.6px; margin-bottom: 28px; }
+.case-answer { padding: 32px; background: var(--card); border-radius: var(--radius); margin: 16px 0; }
+.case-answer > h4 { font-size: 21px; line-height: 1.6; margin-bottom: 24px; max-width: 880px; }
+.case-copy { max-width: 880px; }
+.case-copy p, .case-copy li { font-size: 16px; line-height: 1.9; white-space: pre-line; overflow-wrap: anywhere; }
+.case-copy p + p { margin-top: 16px; }
+.case-copy ul, .case-copy ol { padding-left: 22px; margin: 20px 0 0; }
+.case-copy li + li { margin-top: 8px; }
+.case-copy ul + p, .case-copy ol + p { margin-top: 24px; }
+.case-copy strong { font-weight: 400; }
+.case-answer > h3.case-inline-heading { font-size: 27px; line-height: 1.5; margin: 40px 0 20px; }
+.case-answer > h3.case-inline-heading:first-child { margin-top: 0; }
+.case-answer > h4.case-inline-heading, .case-copy > h4.case-inline-heading { font-size: 19px; margin: 32px 0 16px; }
+.case-image { margin: 28px 0 0; }
+.case-image a { display: block; border-radius: var(--radius); overflow: hidden; cursor: zoom-in; }
+.case-image a:hover { opacity: 1; }
+.case-image img { display: block; width: 100%; height: auto; }
+.case-image + .case-copy { margin-top: 28px; }
+.case-study .learner-brainstorm { margin-top: 36px; }
+.case-study:last-of-type { padding-bottom: 100px; }
+@media (max-width: 800px) {
+  .case-answer { padding: 24px; }
+  .case-topic { margin-top: 40px; }
+  .case-topic > h3 { font-size: 25px; }
+  .case-answer > h4 { font-size: 19px; }
+  .case-answer > h3.case-inline-heading { font-size: 24px; }
+  .case-copy p, .case-copy li { font-size: 15px; }
+}
+@media (max-width: 560px) {
+  .case-answer { padding: 20px 18px; margin: 12px 0; }
+  .case-topic > h3 { font-size: 23px; margin-bottom: 20px; }
+  .case-copy p, .case-copy li { font-size: 14px; line-height: 1.85; }
+  .case-image { margin-top: 22px; }
+  .case-study:last-of-type { padding-bottom: 64px; }
+}

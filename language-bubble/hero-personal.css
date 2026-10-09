@@ -1,0 +1,157 @@
+/* Photo geometry and light layers adapted from creative-coding/the-wall. */
+@font-face {
+  font-family: Schoolbell;
+  src: url('assets/Schoolbell-Regular.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+html { scroll-padding-top: 32px; }
+.hero { padding-top: 0; }
+.hero-intro {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  min-height: 560px;
+  padding: 80px 0;
+}
+.hero-stage { margin-top: 14px; }
+.portrait-space {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  min-height: 400px;
+}
+.portrait-note {
+  --note-x: 0px;
+  --note-y: 0px;
+  --note-scale: 1;
+  --photo-width: 288px;
+  position: relative;
+  display: block;
+  width: calc(var(--photo-width) * 1.12);
+  padding: calc(var(--photo-width) * .06);
+  padding-bottom: calc(var(--photo-width) * .18);
+  border: 0;
+  border-radius: 3px;
+  background: #fff;
+  color: #b45c00;
+  box-shadow: 3px 3px 0 #0000001f;
+  text-align: left;
+  transform: translate(var(--note-x), var(--note-y)) rotate(-2.5deg) scale(var(--note-scale));
+  transition: transform .22s ease, box-shadow .22s ease;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+.portrait-note:hover { filter: none; }
+.portrait-note:focus-visible { --note-scale: 1.05; }
+@media (hover: hover) { .portrait-note:hover { --note-scale: 1.05; } }
+.portrait-note.is-dragging {
+  --note-scale: 1.05;
+  cursor: grabbing;
+  transition: box-shadow .22s ease;
+  box-shadow: 5px 7px 0 #00000015, 0 16px 28px #26251e14;
+}
+.portrait-image { position: relative; display: block; aspect-ratio: 1; overflow: hidden; }
+.portrait-image img, .portrait-image video { display: block; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+.portrait-image video { position: absolute; inset: 0; opacity: 0; }
+.portrait-note.is-playing video { opacity: 1; }
+.portrait-caption {
+  position: absolute;
+  left: calc(var(--photo-width) * .13);
+  bottom: calc(var(--photo-width) * .11);
+  font: 400 calc(var(--photo-width) * .10)/1.3 Schoolbell, cursive;
+  white-space: nowrap;
+  transform: rotate(1deg);
+}
+.portrait-stamp {
+  position: absolute;
+  z-index: 1;
+  top: 54%;
+  right: calc(var(--photo-width) * -.055);
+  width: calc(var(--photo-width) * .57);
+  transform: rotate(7deg);
+  filter: drop-shadow(1.5px 2px 0 #00000026);
+  pointer-events: none;
+}
+.portrait-stamp img { display: block; width: 100%; height: auto; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* Keep the original perspective, shutters, and leaf movement scoped to the intro. */
+.hero-daylight {
+  pointer-events: none;
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  bottom: -20px;
+  left: calc(50% - 50vw);
+  width: 100vw;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(#000 80%, transparent);
+  mask-image: linear-gradient(#000 80%, transparent);
+}
+.hero-sunbeam { position: absolute; inset: 0; background: radial-gradient(ellipse at 0% 0%, #ffffff59 0%, #ffffff00 50%); }
+.hero-sunlight { position: absolute; inset: 0; transform: scaleX(-1); }
+.hero-light-perspective {
+  --shutter-gap: 42px;
+  --shutter-height: 28px;
+  position: absolute;
+  top: -240px;
+  left: 0;
+  width: 85%;
+  height: 1000px;
+  opacity: .12;
+  transform-origin: top right;
+  transform: matrix3d(.75,-.0625,0,.0008, 0,1,0,0, 0,0,1,0, 0,0,0,1);
+  -webkit-mask-image: linear-gradient(to right, #000 40%, transparent 100%);
+  mask-image: linear-gradient(to right, #000 40%, transparent 100%);
+  filter: blur(3px);
+}
+.hero-leaves {
+  position: absolute;
+  top: 50%;
+  right: -160px;
+  margin-top: -375px;
+  width: 864px;
+  height: 749px;
+  background: url('assets/leaves.png') center/cover no-repeat;
+  transform-origin: center;
+  animation: hero-billow 4.5s ease-in-out infinite;
+}
+.hero-blinds { position: relative; width: 100%; }
+.hero-shutters { display: flex; flex-direction: column; align-items: end; gap: var(--shutter-gap); }
+.hero-shutters i { width: 100%; height: var(--shutter-height); background: #1a1917; }
+.hero-window-bars { position: absolute; inset: 0; display: flex; justify-content: space-around; }
+.hero-window-bars i { width: 5px; height: 100%; background: #1a1917; }
+.hero-intro.is-resting .hero-leaves { animation-play-state: paused; }
+[data-theme=dark] .hero-sunbeam { opacity: .1; }
+[data-theme=dark] .hero-daylight { opacity: .7; }
+@keyframes hero-billow {
+  0%, 100% { transform: perspective(400px) rotateX(0deg) rotateY(0deg) scale(1) translateX(0); }
+  25% { transform: perspective(400px) rotateX(2deg) rotateY(4deg) scale(1.04) translateX(12px); }
+  50% { transform: perspective(400px) rotateX(-6deg) rotateY(2deg) scale(.96) translateX(20px); }
+  75% { transform: perspective(400px) rotateX(1deg) rotateY(5deg) scale(1.06) translateX(8px); }
+}
+@media (max-width: 760px) {
+  .hero-intro { min-height: 470px; padding: 60px 0; }
+  .portrait-space { min-height: 350px; }
+  .portrait-note { --photo-width: 248px; }
+  .hero-stage { margin-top: 20px; }
+  .hero-light-perspective { top: -160px; width: 120%; height: 1100px; }
+  .hero-leaves { width: 576px; height: 504px; right: 0; margin-top: -252px; }
+  .hero-shutters i:nth-child(n+14) { display: none; }
+}
+@media (max-width: 560px) {
+  .portrait-stamp { right: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .portrait-note { transition: none; }
+  .hero-leaves { animation: none; }
+}
