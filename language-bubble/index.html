@@ -77,8 +77,8 @@
 
     <div class="container chapter-index" aria-label="答卷目录">
       <a href="#thinking"><span class="chapter-number">01</span><span>背景</span><span>↗</span></a>
-      <a href="#interaction"><span class="chapter-number">02</span><span>设计方案 - 交互设计 + Demo</span><span>↗</span></a>
-      <a href="#design"><span class="chapter-number">03</span><span>UI 能力</span><span>↗</span></a>
+      <a href="#interaction"><span class="chapter-number">02</span><span>设计方案（交互设计 Demo）</span><span>↗</span></a>
+      <a href="#design"><span class="chapter-number">03</span><span>完整流程和 UI 演示</span><span>↗</span></a>
     </div>
 
 <section class="container section case-study" id="thinking" aria-labelledby="thinking-title"><div class="section-heading"><h2 id="thinking-title" data-source-id="notion-3f4400ee-0cf5-805c-9e66-c371c74ffdf4">背景</h2></div>
@@ -110,7 +110,7 @@
 <div class="case-copy">
 <p data-source-id="notion-3f4400ee-0cf5-8048-be7e-eb2de8f1a4ab">根据大家的反馈，我总结了一些高频痛点。</p>
 </div>
-<figure class="learner-brainstorm" aria-labelledby="brainstorm-title">
+<figure data-source-id="notion-3f4400ee-0cf5-80d9-bf69-c5c6e820b25c" class="learner-brainstorm" aria-labelledby="brainstorm-title">
         <figcaption><h3 id="brainstorm-title">语言学习，卡在哪里？</h3><span>头脑风暴 · 待验证</span></figcaption>
         <div class="brainstorm-map">
           <div class="brainstorm-rings" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
@@ -202,90 +202,101 @@
 </div>
 </article>
 </section>
-<section class="container section case-study" id="interaction" aria-labelledby="interaction-title"><div class="section-heading"><h2 id="interaction-title" data-source-id="notion-3f4400ee-0cf5-80e6-abe5-e59081d072e4">2. 设计方案 - 交互设计 + Demo</h2></div>
+<section class="container section case-study" id="interaction" aria-labelledby="interaction-title"><div class="section-heading"><h2 id="interaction-title" data-source-id="notion-3f4400ee-0cf5-80e6-abe5-e59081d072e4">2. 设计方案（交互设计 Demo）</h2></div>
 <article class="case-answer">
 <h3 class="case-inline-heading" data-source-id="notion-3f4400ee-0cf5-80ee-a03a-c996970d3433">策略1: Agent 与 Context 深度结合</h3>
 <div class="case-copy">
-<p data-source-id="notion-3f4400ee-0cf5-80fc-89c7-f132b6c46f16">展示如何收集语料</p>
+<p data-source-id="notion-3f5400ee-0cf5-808b-ab4f-eb7e82fbb4a6">我给 Agent 设计了一个更长的“手”——一个随时可以在使用场景中唤起的手。利用我们定义好的基础元素，随时唤起独立窗口，帮用户不用离开 Context 就能使用 Agent 能力。</p>
+<p data-source-id="notion-3f4400ee-0cf5-80fc-89c7-f132b6c46f16">展示收集语料</p>
+<p data-source-id="notion-3f5400ee-0cf5-8024-b948-d980e4eeaff7">展示记单词时会看到单词的 context 拼贴画</p>
 </div>
 </article>
 <article class="case-answer">
-<h3 class="case-inline-heading" data-source-id="notion-3f4400ee-0cf5-8011-9a06-c994d125a3cb">策略2: 用语言，学爱好</h3>
+<h3 class="case-inline-heading" data-source-id="notion-3f5400ee-0cf5-8093-a020-c009c0630f9a">策略2: 用语言，学爱好</h3>
 <div class="case-copy">
-<h4 class="case-inline-heading" data-source-id="notion-3f4400ee-0cf5-80e9-b3e0-d29cdfc737ed">计划与进度：</h4>
-<p data-source-id="notion-3f4400ee-0cf5-80eb-a0c0-de1308d54584">拆解任务和当前进度：引导用户结构化输入</p>
+<p data-source-id="notion-3f5400ee-0cf5-8028-a47a-f9fd309b7fbc">AI可以基于用户见过的、被收集的、正在学习的这些语料，生成用户喜爱的内容，用这些语料来学习爱好，在过程中语言水平自然逐渐提升。</p>
+<p data-source-id="notion-3f5400ee-0cf5-80ee-830d-d06f213317b2">在用户输入第一个指令创建内容时，引导用户结构化输入帮助用户缩小意图表达偏差</p>
 </div>
 <figure class="case-image wallpaper wallpaper-stage" data-source-id="notion-3f4400ee-0cf5-8073-8f95-fba3d66913e5"><a href="assets/notion/agent-revamp-03.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-03.png" width="2092" height="1350" alt="拆解任务和当前进度：引导用户结构化输入" loading="lazy" decoding="async"></a></figure>
 <div class="case-copy">
-<p data-source-id="notion-3f4400ee-0cf5-80e8-8441-df47ace855b4">渐进式生成降低焦虑：</p>
-<p data-source-id="notion-3f4400ee-0cf5-8069-a14b-c029be887565">先展示大纲，再展示文字，再生图片，最后生成可交互artifact（一边继续思考，一边开始回答。）</p>
-<h4 class="case-inline-heading" data-source-id="notion-3f4400ee-0cf5-801f-a459-c8ce93055b03">中途干预：</h4>
-<p data-source-id="notion-3f4400ee-0cf5-80b3-8c19-f74c47f6517e">steer、暂停生成（参考codex）</p>
-<h4 class="case-inline-heading" data-source-id="notion-3f4400ee-0cf5-803c-b38c-f81df6aa1865">结果不符合预期：</h4>
-<p data-source-id="notion-3f4400ee-0cf5-80fc-a253-cd57d8da40de">节省token：思维链重新推理</p>
-<h4 class="case-inline-heading" data-source-id="notion-3f4400ee-0cf5-80c5-816c-f423b4cf0b2b">失败：</h4>
-<p data-source-id="notion-3f4400ee-0cf5-800d-b464-efa3114e9265">失败时-没有token了：</p>
-<h4 class="case-inline-heading" data-source-id="notion-3f4400ee-0cf5-80ac-8910-e55871e7b7c4">失败：不满意结果</h4>
+<p data-source-id="notion-3f5400ee-0cf5-809c-8721-c501e5c7cbcf">生成内容时，渐进式生成降低用户等待焦虑：</p>
+<p data-source-id="notion-3f5400ee-0cf5-80ca-b0d1-edca1ab46212">将交付的内容分类：先展示内容大纲，再生成文字，再生图片，最后生成可交互artifact。把生成速度更快，更全局的信息优先展示，让用户可以尽早判断规划是否符合预期。</p>
+<p data-source-id="notion-3f4400ee-0cf5-801f-a459-c8ce93055b03">用户判断不符合预期，也可以随时暂停或者输入新的prompt，steer 当前的任务。</p>
+<p data-source-id="notion-3f5400ee-0cf5-801a-b761-c311fe001288">生成结束后，一个常见场景是：一个失败的任务，回顾思维链时，发现是最后几步推理错误导致，但却要重新执行整个任务，大量时间和 Token 都被浪费了。</p>
+<p data-source-id="notion-3f5400ee-0cf5-8028-a6db-cadd9a743f1e">针对这个问题，我的设计让用户在任务执行中&amp;完成后，可以从思维链的任意节点开始“重新推理”。“重新推理”会保留该节点之前的推理过程和产出，放弃该节点之后的所有内容，并基于用户的补充信息重新推理，提升任务完成效率，减少 Token 浪费。</p>
+<p data-source-id="notion-3f5400ee-0cf5-805d-87b1-d50673aebe31">生成出错/失败的场景，比如过程中 token 用完了（常见于首次生成）</p>
+<p data-source-id="notion-3f5400ee-0cf5-808d-9308-f4b5019937c4">或者是不满意生成的结果，可以让用户基于指定生成的部分内容重新优化，不需要重做整个任务。</p>
 <p data-source-id="notion-3f4400ee-0cf5-8020-a07e-d7b3815edaab">选择block单独修改</p>
-<p data-source-id="notion-3f4400ee-0cf5-8068-a56e-c6313a5dfbd4">失败时-网络：</p>
-<h4 class="case-inline-heading" data-source-id="notion-3f4400ee-0cf5-802b-8b97-db2df158fe35">完成：</h4>
-<p data-source-id="notion-3f4400ee-0cf5-800f-b686-f04060ea652e">完成时：展示互动题目</p>
-<h4 class="case-inline-heading" data-source-id="notion-3f4400ee-0cf5-8047-9597-f5cdd4e3fcca">真实 / Mock：</h4>
+<p data-source-id="notion-3f5400ee-0cf5-8065-a94d-efe445b091e3">任务完成后，还可以引导用户在阅读后进行互动学习</p>
+<p data-source-id="notion-3f4400ee-0cf5-8047-9597-f5cdd4e3fcca">产品 Demo 中的真实生成和 Mock 数据：</p>
 <ul>
 <li data-source-id="notion-3f4400ee-0cf5-802e-add0-c100b211b5a3">真实：右侧对话内容；单词列表中的单词（由 Agent 实际收集）。</li>
 <li data-source-id="notion-3f4400ee-0cf5-8050-a80c-c80853f5d4b2">Mock：文章生成结果；学习页面中的拼贴画。</li>
-<li data-source-id="notion-3f4400ee-0cf5-8086-b1b5-d845a8d6c187">原因：文章生成要和教育策略、单词与场景结合方式一起调；拼贴画要处理截图并做视觉编排，短时间内更适合先用理想化结果展示。</li>
 </ul>
 <h4 class="case-inline-heading" data-source-id="notion-3f4400ee-0cf5-808f-92f8-cc6ca5c534d2">如果有更多时间：</h4>
 <ul>
 <li data-source-id="notion-3f4400ee-0cf5-8059-867a-e35df7893b3f">把文章生成从概念展示做成更稳定的教育内容生成链路。</li>
 <li data-source-id="notion-3f4400ee-0cf5-8064-a827-c79dacec91ea">把学习页拼贴画做成真实可运行的生成或规则化排版能力。</li>
+<li data-source-id="notion-3f4400ee-0cf5-8041-b95d-eafbde4e1a58">重点打磨学习内容生成，这是项目里最难的一部分：需要结合教育学、游戏化设计和用户测试，验证 AI 生成的文章、播客和互动游戏是否真的让用户愿意用、并且能帮助学习。</li>
+<li data-source-id="notion-3f5400ee-0cf5-8003-ae67-fa37b6c57729">artifact时效性
+agent主动性
+学习内容/游戏化：让用户更乐于学习
+截图和拼贴画算法
+没有单词时的冷启动</li>
 </ul>
 <h4 class="case-inline-heading" data-source-id="notion-3f4400ee-0cf5-8031-8b2b-cdbe9e577142">使用的 AI 工具：</h4>
 <ul>
-<li data-source-id="notion-3f4400ee-0cf5-80d4-abff-d93687ff8141">主要使用 Codex 作为 AI 开发工具，用来辅助实现和迭代这个交互原型。</li>
+<li data-source-id="notion-3f4400ee-0cf5-80d4-abff-d93687ff8141">主要使用 Codex 和 Figma 作为 AI 开发工具，用来 build 交互原型和打磨视觉设计。</li>
 <li data-source-id="notion-3f4400ee-0cf5-8091-8b1f-fe1306429879">Codex：用于前期头脑风暴、快速原型搭建，以及后续把设计实现成可运行原型。</li>
 <li data-source-id="notion-3f4400ee-0cf5-80f2-b19a-d02d79959309">Figma：用于进入视觉设计精细化阶段后，完成高保真原型和细节设计。</li>
-<li data-source-id="notion-3f4400ee-0cf5-80d2-a7eb-e926b5890d30">整体 workflow：先用 Codex 快速探索和搭原型，再用 Figma 打磨视觉与细节，最后再交回 Codex 实现。</li>
-<li data-source-id="notion-3f4400ee-0cf5-8068-948c-df5b654d9b98">继续优化截图场景进入产品后的视觉呈现，不只是放一张图，而是把以文字为主的截图做成更有设计感的学习卡片或拼贴版式。</li>
-<li data-source-id="notion-3f4400ee-0cf5-801e-a1cc-cefe81033e19">参考报纸拼贴等视觉形式，让语料场景既可读又更美观。</li>
-<li data-source-id="notion-3f4400ee-0cf5-8041-b95d-eafbde4e1a58">重点打磨学习内容生成，这是项目里最难的一部分：需要结合教育学、游戏化设计和用户测试，验证 AI 生成的文章、播客和互动游戏是否真的让用户愿意用、并且能帮助学习。</li>
 </ul>
-<p data-source-id="notion-3f4400ee-0cf5-80c5-8c76-c1513637bf62">Agent 应该做的，是围绕两个核心目标展开：一是帮助用户把单词和真实使用场景关联起来，二是基于这些语料和用户兴趣生成学习内容，让用户在感兴趣的内容里使用语言。它不应该脱离用户记录过的场景和兴趣去天马行空地产生不相关内容，也不应该为了“看起来聪明”输出专业性不足、幻觉很多的学习材料。</p>
+<p data-source-id="notion-3f4400ee-0cf5-8050-b82e-f47e137d658b">提交时请说明：</p>
 <ul>
-<li data-source-id="notion-3f4400ee-0cf5-80c2-9fb2-e2cacb558a10">应该做：围绕真实语料场景和用户兴趣生成学习内容</li>
-<li data-source-id="notion-3f4400ee-0cf5-80c6-a505-d8c44d8add34">不应该做：脱离场景乱生成，或输出专业度不足、幻觉很多的内容</li>
-<li data-source-id="notion-3f4400ee-0cf5-80f9-8b9e-f2efe8d31679">直接执行：低风险、低成本、符合用户当前学习目标的操作</li>
-<li data-source-id="notion-3f4400ee-0cf5-80b9-8a4b-ef02b698ad77">先询问用户：会影响信任、带来明显成本或可能中途失败的操作</li>
-<li data-source-id="notion-3f4400ee-0cf5-8029-ae77-fed3f46d5a8e">例子：高 token 消耗的生成任务，应先提醒用户缩小范围、调整形式或补充 token</li>
+<li data-source-id="notion-3f4400ee-0cf5-801c-aa58-cedf20924e1e">哪些是真实交互，哪些是 Mock；</li>
+<li data-source-id="notion-3f4400ee-0cf5-80d2-aec2-c7c7a5c14e93">使用了哪些 AI 工具，以及如何使用；</li>
+<li data-source-id="notion-3f4400ee-0cf5-8003-8a74-c32f0d354f12">如果有更多时间，你会继续完善什么。</li>
 </ul>
-<p data-source-id="notion-3f4400ee-0cf5-80a7-ba72-c19457fa3057">artifact时效性
-agent主动性
-学习内容/游戏化：让用户更乐于学习
-截图和拼贴画算法</p>
 </div>
 </article>
 </section>
-<section class="container section case-study" id="design" aria-labelledby="design-title"><div class="section-heading"><h2 id="design-title" data-source-id="notion-3f4400ee-0cf5-80d4-ab10-c35826de0913">3. UI 能力</h2></div>
+<section class="container section case-study" id="design" aria-labelledby="design-title"><div class="section-heading"><h2 id="design-title" data-source-id="notion-3f4400ee-0cf5-80d4-ab10-c35826de0913">完整流程和 UI 演示</h2></div>
 <article class="case-answer">
-<h3 class="case-inline-heading" data-source-id="notion-3f4400ee-0cf5-8000-8cb0-c6562f279609">2. Design System 思路</h3>
-<figure class="case-image" data-source-id="notion-3f4400ee-0cf5-80ad-ba34-ea79d5d98436"><a href="assets/notion/agent-revamp-04.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-04.png" width="1500" height="828" alt="可视化：单词可以组成无数种 artifact" loading="lazy" decoding="async"></a></figure>
-<figure class="case-image" data-source-id="notion-3f4400ee-0cf5-80da-ad9e-dfaf38ee3562"><a href="assets/notion/agent-revamp-05.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-05.png" width="2048" height="1156" alt="Word 会在不同界面里复用，比如查词页、单词本、文章内容里。" loading="lazy" decoding="async"></a></figure>
-<figure class="case-image" data-source-id="notion-3f4400ee-0cf5-80ee-8ad0-d8a439670a25"><a href="assets/notion/agent-revamp-06.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-06.png" width="2048" height="1156" alt="核心元素 1：Word。每个单词都是一个基础对象，包含释义、解释和 context / 场景。" loading="lazy" decoding="async"></a></figure>
 <div class="case-copy">
-<p data-source-id="notion-3f4400ee-0cf5-80b7-8a04-e53b46b3482f">可视化：单词可以组成无数种 artifact</p>
-<ul>
-<li data-source-id="notion-3f4400ee-0cf5-801b-aa6f-d8a20166d44d">核心元素 1：Word。每个单词都是一个基础对象，包含释义、解释和 context / 场景。</li>
-<li data-source-id="notion-3f4400ee-0cf5-80a8-b5b7-ebe94905a6b2">Word 会在不同界面里复用，比如查词页、单词本、文章内容里。</li>
-<li data-source-id="notion-3f4400ee-0cf5-8061-899e-db4d996d72d3">核心元素 2：Artifact（学习产物）。它可以是文章、播客、互动游戏等，由单词和语料进一步生成。</li>
-<li data-source-id="notion-3f4400ee-0cf5-8070-b3d0-d23d1451e4dd">学习页面更像一个“书桌”，由不同 Artifact 组成；新的、旧的内容都可以被摆放和再次拿起使用。</li>
-</ul>
+<p data-source-id="notion-3f5400ee-0cf5-80b4-8ea9-f0b904cadba9">视觉设计理念：有人文温度的 AI 产品</p>
+<p data-source-id="notion-3f5400ee-0cf5-801e-a0c5-ef7c027d6c30">用户收集 Context 的过程，有点像小时候剪贴报纸做拼贴画，把好看的图案和句子收集起来贴在笔记本上，也有点像现在流行的手帐。</p>
+</div>
+<figure class="case-image" data-source-id="notion-3f4400ee-0cf5-8065-bb34-cb062e47fa29"><a href="assets/notion/agent-revamp-11.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-11.png" width="802" height="280" alt="image.png" loading="lazy" decoding="async"></a></figure>
+<div class="case-copy">
+<p data-source-id="notion-3f5400ee-0cf5-80e8-b994-e6005cfba683">我的产品从这些真实的、有温度的生活场景获得灵感，Agent 会帮用户将每一次查找场景都记录下来，复制文案、截图场景、裁剪拼贴，最终可以变成好看的拼贴画。</p>
+<p data-source-id="notion-3f4400ee-0cf5-806d-9a1c-fed834e50cb3">以下是整体的产品演示：</p>
 </div>
 <figure class="case-image wallpaper wallpaper-stage" data-source-id="notion-3f4400ee-0cf5-8017-b7ef-d45c90261d30"><a href="assets/notion/agent-revamp-07.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-07.png" width="1728" height="1117" alt="MacBook Pro 16_ - 18.png" loading="lazy" decoding="async"></a></figure>
 <figure class="case-image wallpaper wallpaper-stage" data-source-id="notion-3f4400ee-0cf5-809e-ac2e-e93c44760559"><a href="assets/notion/agent-revamp-08.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-08.png" width="1728" height="1117" alt="MacBook Pro 16_ - 20.png" loading="lazy" decoding="async"></a></figure>
 <figure class="case-image wallpaper wallpaper-stage" data-source-id="notion-3f4400ee-0cf5-8087-97b0-f39cace64809"><a href="assets/notion/agent-revamp-09.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-09.png" width="1728" height="1117" alt="MacBook Pro 16_ - 21.png" loading="lazy" decoding="async"></a></figure>
-<figure class="case-image" data-source-id="notion-3f4400ee-0cf5-8074-a28a-ed3301389b56"><a href="assets/notion/agent-revamp-10.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-10.png" width="980" height="532" alt="image.png" loading="lazy" decoding="async"></a></figure>
-<figure class="case-image" data-source-id="notion-3f4400ee-0cf5-8065-bb34-cb062e47fa29"><a href="assets/notion/agent-revamp-11.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-11.png" width="802" height="280" alt="image.png" loading="lazy" decoding="async"></a></figure>
+<div class="case-copy">
+<p data-source-id="notion-3f5400ee-0cf5-8091-86f2-ea838e724eee">hover 单词展示拼贴画</p>
+</div>
+</article>
+<article class="case-answer">
+<h3 class="case-inline-heading" data-source-id="notion-3f5400ee-0cf5-8090-8217-d2470a2ea9cd">Design System 思路：把复杂界面分解为原子结构</h3>
+<div class="case-copy">
+<p data-source-id="notion-3f5400ee-0cf5-80d6-a27f-c1f4920e9a75">随着用户收集的单词和生成的artifact越来越多，产品可能会变得更臃肿。“原子化设计” 是在系统层进行简化和抽象，提炼出系统中能做几乎所有事的、最基础的元素，定义这个元素的行为和元素间的互动机制。</p>
+</div>
+<figure class="case-image" data-source-id="notion-3f4400ee-0cf5-80ad-ba34-ea79d5d98436"><a href="assets/notion/agent-revamp-04.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-04.png" width="1500" height="828" alt="可视化：单词可以组成无数种 artifact" loading="lazy" decoding="async"></a></figure>
+<div class="case-copy">
+<ul>
+<li data-source-id="notion-3f5400ee-0cf5-8005-a998-dd7c3f2a2c54">在“记录”页面，单词/语料就是原子。只要克制的、不引入新的概念，那么不论用户收集多少语料，整个列表和详情都会很好管理</li>
+<li data-source-id="notion-3f5400ee-0cf5-8063-9bf5-c40e4b00bdf0">“学习”页面，像一个“书桌”，上面摆着 Agent 生成的不同 Artifact，在这里 Artifact 就是原子。</li>
+<li data-source-id="notion-3f5400ee-0cf5-80e6-903a-e6dd66992159">Artifact 详情页，可以借鉴 Notion 的思路。Notion 的基础原子是“Block”。不论多复杂的 Notion 页面，都是由最基础的 Block 组成，也有点像 Web 开发的“盒模型”。正是 Notion 在早期定义清楚了原子结构 Block 的行为和边界，系统的复杂度就变得可以被管理。</li>
+</ul>
+</div>
+<figure class="case-image" data-source-id="notion-3f5400ee-0cf5-8034-ab24-cbef9f25a570"><a href="assets/notion/agent-revamp-blocks.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-blocks.png" width="2048" height="2175" alt="Notion 界面分解为 Block 原子结构" loading="lazy" decoding="async"></a></figure>
+</article>
+<article class="case-answer">
+<h3 class="case-inline-heading" data-source-id="notion-3f5400ee-0cf5-8049-ad34-e96cd7f4b08f">最后</h3>
+<div class="case-copy">
+<p data-source-id="notion-3f5400ee-0cf5-80dd-baf3-e69ab7c3e48b">感谢 Meshy 提供的这个测试，让我有机会为自己思考和设计一个每天都会使用的产品。这个产品还会继续打磨和开发，后续会发布到 App store 面向更广泛的用户。</p>
+</div>
 </article>
 </section>
   </main>
