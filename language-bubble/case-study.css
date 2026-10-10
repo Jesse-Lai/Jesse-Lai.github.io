@@ -1,5 +1,6 @@
 /* The Notion content uses the site's existing type, colors, and spacing. */
-.case-study .section-heading h2 { font-size: 15px; color: var(--muted); }
+/* Match the source Notion H1 (30px) and H3 (20px) hierarchy. */
+.case-study .section-heading h2 { font-size: 30px; line-height: 1.3; font-weight: 600; color: var(--fg); }
 .case-topic { margin-top: 56px; }
 .case-topic > h3 { font-size: 28px; line-height: 1.45; letter-spacing: -.6px; margin-bottom: 28px; }
 .case-answer { padding: 32px 0; background: transparent; margin: 16px 0; }
@@ -11,7 +12,7 @@
 .case-copy li + li { margin-top: 8px; }
 .case-copy ul + p, .case-copy ol + p { margin-top: 24px; }
 .case-copy strong { font-weight: 400; }
-.case-answer > h3.case-inline-heading { font-size: 27px; line-height: 1.5; margin: 40px 0 20px; }
+.case-answer > h3.case-inline-heading { font-size: 20px; line-height: 1.3; font-weight: 600; margin: 40px 0 20px; }
 .case-answer > h3.case-inline-heading:first-child { margin-top: 0; }
 .case-answer > h4.case-inline-heading, .case-copy > h4.case-inline-heading { font-size: 19px; margin: 32px 0 16px; }
 .case-image { margin: 28px 0 0; }
@@ -26,7 +27,6 @@
   .case-topic { margin-top: 40px; }
   .case-topic > h3 { font-size: 25px; }
   .case-answer > h4 { font-size: 19px; }
-  .case-answer > h3.case-inline-heading { font-size: 24px; }
   .case-copy p, .case-copy li { font-size: 15px; }
 }
 @media (max-width: 560px) {
