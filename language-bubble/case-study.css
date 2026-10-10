@@ -2,7 +2,7 @@
 .case-study .section-heading h2 { font-size: 15px; color: var(--muted); }
 .case-topic { margin-top: 56px; }
 .case-topic > h3 { font-size: 28px; line-height: 1.45; letter-spacing: -.6px; margin-bottom: 28px; }
-.case-answer { padding: 32px; background: var(--card); border-radius: var(--radius); margin: 16px 0; }
+.case-answer { padding: 32px; background: transparent; margin: 16px 0; }
 .case-answer > h4 { font-size: 21px; line-height: 1.6; margin-bottom: 24px; max-width: 880px; }
 .case-copy { max-width: 880px; }
 .case-copy p, .case-copy li { font-size: 16px; line-height: 1.9; white-space: pre-line; overflow-wrap: anywhere; }
