@@ -76,16 +76,41 @@
     </section>
 
     <div class="container chapter-index" aria-label="答卷目录">
-      <a href="#thinking"><span class="chapter-number">01</span><span>产品思维</span><span>↗</span></a>
-      <a href="#interaction"><span class="chapter-number">02</span><span>交互设计 + Vibe Coding</span><span>↗</span></a>
+      <a href="#thinking"><span class="chapter-number">01</span><span>背景</span><span>↗</span></a>
+      <a href="#interaction"><span class="chapter-number">02</span><span>设计方案 - 交互设计 + Demo</span><span>↗</span></a>
       <a href="#design"><span class="chapter-number">03</span><span>UI 能力</span><span>↗</span></a>
     </div>
 
-<section class="container section case-study" id="thinking" aria-labelledby="thinking-title">
-
-<div class="section-heading"><h2 id="thinking-title">1. 产品思维</h2></div>
-
-      <figure class="learner-brainstorm" aria-labelledby="brainstorm-title">
+<section class="container section case-study" id="thinking" aria-labelledby="thinking-title"><div class="section-heading"><h2 id="thinking-title" data-source-id="notion-3f4400ee-0cf5-805c-9e66-c371c74ffdf4">背景</h2></div>
+<article class="case-answer">
+<div class="case-copy">
+<p data-source-id="notion-3f4400ee-0cf5-80a0-8aa8-cc90975f2247">中国约有超过4亿人正在学习外语，但目前主流的语言学习的工具和方法还是前AI时代的。用字典查词、单词表记单词、读枯燥的阅读理解和听力，语言学习仍然是一个头疼的过程。</p>
+</div>
+</article>
+<article class="case-answer">
+<h3 class="case-inline-heading" data-source-id="notion-3f4400ee-0cf5-8078-9bd6-c74c258a14e0">核心用户群</h3>
+<div class="case-copy">
+<p data-source-id="notion-3f4400ee-0cf5-801c-8c6d-c0ef4627760d">AI+教育的话题很大，我想从一个自己每天亲身经历的痛点开始入手。最优先服务的是已有一定语言基础、且日常会持续接触目标语言的用户，比如：</p>
+<ul>
+<li data-source-id="notion-3f4400ee-0cf5-803d-a5f6-c3724146af3a">在外企工作</li>
+<li data-source-id="notion-3f4400ee-0cf5-8071-b775-f404ed97255a">需要读国外文献的学生</li>
+<li data-source-id="notion-3f4400ee-0cf5-800d-9817-fe897c17f04e">广大留学生群体</li>
+<li data-source-id="notion-3f4400ee-0cf5-806c-b056-d0118b47dcc4">喜欢某个国外文化</li>
+<li data-source-id="notion-3f4400ee-0cf5-804d-b0ef-ce4ec5b722cb">使用 Mac OS 系统</li>
+</ul>
+<p data-source-id="notion-3f4400ee-0cf5-80ec-9711-ed98826429b2">这些用户每天都在查词和记词，接触语言环境。这个需求高频、真实、持续。</p>
+</div>
+</article>
+<article class="case-answer">
+<h3 class="case-inline-heading" data-source-id="notion-3f4400ee-0cf5-8031-80e3-e04eb699d614">有价值的场景</h3>
+<div class="case-copy">
+<p data-source-id="notion-3f4400ee-0cf5-80b2-8865-dddcd84014ae">除了自己的亲身经历，我对身边学习不同外语的用户们进行了调研（参与者为学英语的中国人，和学中文的韩国人）</p>
+</div>
+<figure class="case-image" data-source-id="notion-3f4400ee-0cf5-80e4-86e2-e891d26036a2"><a href="assets/notion/agent-revamp-01.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-01.png" width="2716" height="900" alt="和几个语言学习者进行讨论和头脑风暴（参与者为学英语的中国人，和学中文的韩国人）" loading="lazy" decoding="async"></a></figure>
+<div class="case-copy">
+<p data-source-id="notion-3f4400ee-0cf5-8048-be7e-eb2de8f1a4ab">根据大家的反馈，我总结了一些高频痛点。</p>
+</div>
+<figure class="learner-brainstorm" aria-labelledby="brainstorm-title">
         <figcaption><h3 id="brainstorm-title">语言学习，卡在哪里？</h3><span>头脑风暴 · 待验证</span></figcaption>
         <div class="brainstorm-map">
           <div class="brainstorm-rings" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
@@ -102,268 +127,166 @@
           </ul>
         </div>
       </figure>
-
-<article class="case-answer">
-
 <div class="case-copy">
-<p data-source-id="notion-line-9">补充背景调研，关键问题、设计策略</p>
-</div>
-
-</article>
-
-<div class="case-topic">
-
-<h3>1. 为什么值得 Agent 化</h3>
-
-<article class="case-answer">
-
-<h4>谁是最值得优先服务的用户？</h4>
-
-<div class="case-copy">
-<p data-source-id="notion-line-19">最优先服务的是已有一定语言基础、且日常会持续接触目标语言的人，比如和外籍同事协作的人、需要读文献的学生、以及会主动看原生内容的学习者。因为他们每天都在查词和记词，这个需求高频、真实、持续。</p>
+<p data-source-id="notion-3f4400ee-0cf5-80bc-a8e9-fb3b2760d985">我发现了2个高频痛点还未被解决：</p>
 <ul>
-<li data-source-id="notion-line-21">已有一定语言基础的人</li>
-<li data-source-id="notion-line-22">日常会持续接触目标语言语料的人</li>
-<li data-source-id="notion-line-23">典型用户：外企协作者、需要读文献的学生、会主动看原生内容的学习者</li>
-<li data-source-id="notion-line-24">原因：他们每天都在查词和记词，需求高频、真实、持续</li>
+<li data-source-id="notion-3f4400ee-0cf5-80e6-ab66-f6f2349876d6">拿着单词书背单词太痛苦，脱离了场景</li>
+<li data-source-id="notion-3f4400ee-0cf5-8056-bf14-f2cc9524149b">学习的资料和生活中看到的语料完全不同</li>
 </ul>
 </div>
-
 </article>
-
 <article class="case-answer">
-
-<h4>哪个具体场景最有价值？</h4>
-
+<h3 class="case-inline-heading" data-source-id="notion-3f4400ee-0cf5-80ef-ac2e-f927772e06e8">Agent 有机会解决这两个痛点</h3>
 <div class="case-copy">
+<p data-source-id="notion-3f4400ee-0cf5-8027-9221-f0ff51aba3f9">我们先回忆一下一个经典的学习流程：</p>
 <ol>
-<li data-source-id="notion-line-31">查单词：最高频、最明确、传统词典形态长期没变</li>
-<li data-source-id="notion-line-32">记单词：核心痛点是记忆和真实使用场景分离，容易机械背词</li>
-</ol>
-<ul>
-<li data-source-id="notion-line-33">优先级上先做查单词，因为它是最自然的入口，可顺势衔接理解、记忆和复习</li>
-</ul>
-<p data-source-id="notion-line-35">和几个语言学习者进行讨论和头脑风暴（参与者为学英语的中国人，和学中文的韩国人）</p>
-</div>
-<figure class="case-image" data-source-id="notion-line-37"><a href="assets/notion/agent-revamp-01.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-01.png" width="2716" height="900" alt="和几个语言学习者进行讨论和头脑风暴（参与者为学英语的中国人，和学中文的韩国人）" loading="lazy" decoding="async"></a></figure>
-
-</article>
-
-<article class="case-answer">
-
-<h4>Agent 版本相比现有产品，能解决什么新的问题？</h4>
-
-<div class="case-copy">
-<p data-source-id="notion-line-45">相比传统词典或背词产品，Agent 版不只是“查完给解释”，而是能自动记录、组织用户在真实生活中遇到的语料和场景，把一次查词变成后续可复用的学习材料。另一方面，它不再要求用户单独进入“学语言”模式，而是帮助用户在自己感兴趣的内容和爱好里直接使用语言，把语言当工具，在使用中完成学习。</p>
-<ul>
-<li data-source-id="notion-line-47">自动记录和组织用户在真实生活中遇到的语料与场景</li>
-<li data-source-id="notion-line-48">把一次查词延展成后续可复用的学习材料</li>
-<li data-source-id="notion-line-49">不再要求用户单独进入“学语言”模式，而是在感兴趣的内容里直接使用语言</li>
-</ul>
-</div>
-<figure class="case-image" data-source-id="notion-line-51"><a href="assets/notion/agent-revamp-02.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-02.png" width="2048" height="1156" alt="自动记录和组织用户在真实生活中遇到的语料与场景" loading="lazy" decoding="async"></a></figure>
-
-</article>
-
-<article class="case-answer">
-
-<h4>你会主动放弃哪些用户或场景？为什么？</h4>
-
-<div class="case-copy">
-<p data-source-id="notion-line-59">我会主动放弃想要“一次覆盖所有英语学习场景”的做法，优先只解决真实、高频、最痛的核心需求：记录语料，以及围绕语料去学习自己感兴趣的内容。早期不会优先做零基础启蒙、应试备考、系统语法课、儿童学习等场景，因为这些场景目标更标准化，产品形态也更成熟，不是这个 Agent 产品最有差异化的切入口。</p>
-<ul>
-<li data-source-id="notion-line-61">不追求一开始覆盖所有英语学习场景</li>
-<li data-source-id="notion-line-62">优先只做最痛的核心需求：记录语料、围绕语料学习兴趣内容</li>
-<li data-source-id="notion-line-63">早期主动放弃：零基础启蒙、应试备考、系统语法课、儿童学习</li>
-<li data-source-id="notion-line-64">原因：这些场景更标准化，也不是这个 Agent 产品最有差异化的切入口</li>
-</ul>
-</div>
-
-</article>
-
-<article class="case-answer">
-
-<h4>不要只是给现有产品加一个聊天框。请说明 Agent 化后，产品体验发生了什么根本变化。</h4>
-
-<div class="case-copy">
-<p data-source-id="notion-line-71">Agent 化后的根本变化有两点：第一，它会自动记录用户遇到单词和语料的真实场景，让回顾和记忆不再脱离使用语境；第二，它会利用生成能力，把这些词延展成文章、播客、互动游戏等内容，让用户不是为了学语言而学语言，而是在自己感兴趣的内容里使用语言、完成学习。</p>
-<ul>
-<li data-source-id="notion-line-73">自动记录单词和语料出现的真实场景，让记忆不再脱离语境</li>
-<li data-source-id="notion-line-74">用生成能力把词延展成文章、播客、互动游戏等内容</li>
-<li data-source-id="notion-line-75">目标从“学语言本身”转成“在感兴趣的内容里使用语言”</li>
-</ul>
-</div>
-
-</article>
-
-</div>
-
-<div class="case-topic">
-
-<h3>2. 能力边界与自主度</h3>
-
-<article class="case-answer">
-
-<div class="case-copy">
-<p data-source-id="notion-line-89">Agent 应该做的，是围绕两个核心目标展开：一是帮助用户把单词和真实使用场景关联起来，二是基于这些语料和用户兴趣生成学习内容，让用户在感兴趣的内容里使用语言。它不应该脱离用户记录过的场景和兴趣去天马行空地产生不相关内容，也不应该为了“看起来聪明”输出专业性不足、幻觉很多的学习材料。</p>
-<ul>
-<li data-source-id="notion-line-91">应该做：围绕真实语料场景和用户兴趣生成学习内容</li>
-<li data-source-id="notion-line-92">不应该做：脱离场景乱生成，或输出专业度不足、幻觉很多的内容</li>
-<li data-source-id="notion-line-93">直接执行：低风险、低成本、符合用户当前学习目标的操作</li>
-<li data-source-id="notion-line-94">先询问用户：会影响信任、带来明显成本或可能中途失败的操作</li>
-<li data-source-id="notion-line-95">例子：高 token 消耗的生成任务，应先提醒用户缩小范围、调整形式或补充 token</li>
-</ul>
-</div>
-
-</article>
-
-</div>
-
-<div class="case-topic">
-
-<h3>3. 最难的产品问题</h3>
-
-<article class="case-answer">
-
-<div class="case-copy">
-<p data-source-id="notion-line-104">1.查单词；2.记单词；3.学习效率 </p>
-<ol>
-<li data-source-id="notion-line-106">如何在 macOS 和不同应用之间低打扰地收集用户遇到的语料。用户的学习场景很碎，可能发生在浏览器、PDF、聊天或其他应用里；如果每次都要求手动添加，体验会很重，但如果过度主动采集，又容易打扰用户或破坏信任。</li>
-<li data-source-id="notion-line-107">如何让 Agent 产出的学习内容真的让用户愿意学。生成内容本身不难，难的是让内容既和用户语料、兴趣有关，又足够有吸引力，能让用户持续阅读、收听或互动。这本质上同时是教育设计和游戏化设计的问题。</li>
+<li data-source-id="notion-3f4400ee-0cf5-8047-8ae9-f2fcdb8da138" value="1">遇到一个不会的单词</li>
+<li data-source-id="notion-3f4400ee-0cf5-8088-a8c4-da39610d0586" value="2">复制它</li>
+<li data-source-id="notion-3f4400ee-0cf5-80a2-90d7-cc76f537f1e2" value="3">打开有道词典</li>
+<li data-source-id="notion-3f4400ee-0cf5-80a5-8871-d0b13fc7ecf6" value="4">粘贴到搜索框</li>
+<li data-source-id="notion-3f4400ee-0cf5-8059-a491-e7cbf1bd71f8" value="5">点击搜索</li>
+<li data-source-id="notion-3f4400ee-0cf5-80d8-beaf-d3b4656a2b42" value="6">查看释义</li>
+<li data-source-id="notion-3f4400ee-0cf5-808d-8427-c217e73d63ee" value="7">点击收藏单词本</li>
+<li data-source-id="notion-3f4400ee-0cf5-80ce-bd5c-d449242a61d1" value="8">一周后背单词，但完全想不起来在哪见过它们</li>
 </ol>
 </div>
-
-</article>
-
-<article class="case-answer">
-
+<figure class="case-image" data-source-id="notion-3f4400ee-0cf5-8069-9f2e-f9c71b5c7b21"><a href="assets/notion/agent-revamp-flow.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-flow.png" width="512" height="289" alt="Office、Browser 和 PDF 中的语料进入 Dictionary" loading="lazy" decoding="async"></a></figure>
 <div class="case-copy">
-<p data-source-id="notion-line-114">解决方向（先做第一个问题）：</p>
+<p data-source-id="notion-3f4400ee-0cf5-8006-a641-e50da94309a9">这个学习流程里，可以拆解出 2 个本质需求：</p>
 <ul>
-<li data-source-id="notion-line-116">利用 macOS Accessibility 能力读取当前前台应用信息。</li>
-<li data-source-id="notion-line-117">当用户滑词或取词时，自动触发查词、翻译，并截取单词附近的屏幕内容。</li>
-<li data-source-id="notion-line-118">把“单词 + 语料 + 场景截图”一起记录下来，减少用户手动添加负担。</li>
-<li data-source-id="notion-line-119">后续再把这些记录加工成学习资料，形成从查词到记忆再到复用的闭环。</li>
+<li data-source-id="notion-3f4400ee-0cf5-801c-95e5-ed57fff5e9d7">Context 收集（记录见过的语料）</li>
+<li data-source-id="notion-3f4400ee-0cf5-809e-a24a-ebd196e0362d">结合 context 的个性化学习（高效有趣的学习这些语料）</li>
 </ul>
 </div>
-
 </article>
-
+<article class="case-answer">
+<h3 class="case-inline-heading" data-source-id="notion-3f4400ee-0cf5-80db-b82e-e1e993fc8bae">设计原则</h3>
+<div class="case-copy">
+<p data-source-id="notion-3f4400ee-0cf5-808a-b273-ed463e3b4ca9">因此我提出两个设计原则，这也是 Agent 化以后，产品体验会发生的根本变化：</p>
+<ol>
+<li data-source-id="notion-3f4400ee-0cf5-806d-9339-c24e5ab6e196" value="1">Context based Agent</li>
+</ol>
+<p data-source-id="notion-3f4400ee-0cf5-80a1-a6ee-feee0d710bbd">意味着 Agent 不能只是传统的App形式，等待用户去投喂 Context, 必须在用户身边，无感的帮用户记录这些 Context</p>
+<ol>
+<li data-source-id="notion-3f4400ee-0cf5-8065-b72c-f6b28d59f5b0" value="2">不学习语言，而是用语言去学爱好</li>
+</ol>
+<p data-source-id="notion-3f4400ee-0cf5-80ef-a4b6-caf5b02560bc">利用 AI 生成能力和收集到的用户 Context，Agent 可以帮用户创作出用户喜欢的学习素材</p>
 </div>
-
+</article>
+<article class="case-answer">
+<h3 class="case-inline-heading" data-source-id="notion-3f4400ee-0cf5-8030-b8b6-c5e8e3fc2ec0">会放弃的场景</h3>
+<div class="case-copy">
+<p data-source-id="notion-3f4400ee-0cf5-8039-b036-e714c121e54d">我不会想 “一次覆盖所有语言学习场景”，MVP 版本优先只解决真实、高频、最痛的核心用户需求：</p>
+<ul>
+<li data-source-id="notion-3f4400ee-0cf5-802c-8d83-ecebfce08a4d">记录 Context </li>
+<li data-source-id="notion-3f4400ee-0cf5-80ac-aa19-c2cda8f5019e">围绕这些 Context 去学习用户感兴趣的内容</li>
+</ul>
+</div>
+</article>
+<article class="case-answer">
+<h3 class="case-inline-heading" data-source-id="notion-3f4400ee-0cf5-80b4-a1fc-eec1c6558b91">最难的产品问题</h3>
+<div class="case-copy">
+<p data-source-id="notion-3f4400ee-0cf5-8018-9721-cf72f398e187">结合之前的痛点场景，我觉得有几个难解决的问题：</p>
+<ol>
+<li data-source-id="notion-3f4400ee-0cf5-80f8-a51c-fe569b03407b" value="1">如何在 macOS 和不同应用之间低打扰地收集用户遇到的语料。用户的学习场景很碎，可能发生在浏览器、PDF、聊天或其他应用里；如果每次都要求手动添加，体验会很重，但如果过度主动采集，又容易打扰用户或破坏信任。</li>
+<li data-source-id="notion-3f4400ee-0cf5-8089-a771-cd5eff6831b6" value="2">如何让用户背单词的效率提升？</li>
+<li data-source-id="notion-3f4400ee-0cf5-8096-a49d-d79ebf5beb4d" value="3">如何让 Agent 产出的学习内容真的让用户愿意学。生成内容本身不难，难的是让内容既和用户语料、兴趣有关，又足够有吸引力，能让用户持续阅读、收听或互动。这本质上同时是教育设计和游戏化设计的问题。</li>
+</ol>
+<p data-source-id="notion-3f4400ee-0cf5-8056-badb-cc79def269e1">其中一个问题，我的解决方向是：</p>
+<ul>
+<li data-source-id="notion-3f4400ee-0cf5-80b6-a8a6-fc98a1088bee">利用 macOS Accessibility 能力读取当前前台应用信息。</li>
+<li data-source-id="notion-3f4400ee-0cf5-80e3-a734-c4b625f8d941">当用户择某段文字时，自动触发查词、翻译，并截取单词附近的屏幕内容 Context。</li>
+<li data-source-id="notion-3f4400ee-0cf5-800d-8c5c-e64bab71e31c">Agent 会把“单词 + 语料 + 场景截图”一起记录下来，减少用户手动添加负担。</li>
+<li data-source-id="notion-3f4400ee-0cf5-806d-a25f-e9a497ea6933">后续再把这些记录加工成学习资料，形成从查词到记忆再到复用的闭环。</li>
+</ul>
+</div>
+</article>
 </section>
-
-<section class="container section case-study" id="interaction" aria-labelledby="interaction-title">
-
-<div class="section-heading"><h2 id="interaction-title">2. 交互设计 + Vibe Coding</h2></div>
-
+<section class="container section case-study" id="interaction" aria-labelledby="interaction-title"><div class="section-heading"><h2 id="interaction-title" data-source-id="notion-3f4400ee-0cf5-80e6-abe5-e59081d072e4">2. 设计方案 - 交互设计 + Demo</h2></div>
 <article class="case-answer">
-
-<h3 class="case-inline-heading" data-source-id="notion-line-141">策略1: Agent 与 Context 深度结合</h3>
+<h3 class="case-inline-heading" data-source-id="notion-3f4400ee-0cf5-80ee-a03a-c996970d3433">策略1: Agent 与 Context 深度结合</h3>
 <div class="case-copy">
-<p data-source-id="notion-line-145">展示如何收集语料</p>
+<p data-source-id="notion-3f4400ee-0cf5-80fc-89c7-f132b6c46f16">展示如何收集语料</p>
 </div>
-<h3 class="case-inline-heading" data-source-id="notion-line-149">策略2: 用语言，学爱好</h3>
-<h4 class="case-inline-heading" data-source-id="notion-line-151">计划与进度：</h4>
-<div class="case-copy">
-<p data-source-id="notion-line-153">拆解任务和当前进度：引导用户结构化输入</p>
-</div>
-<figure class="case-image wallpaper wallpaper-stage" data-source-id="notion-line-157"><a href="assets/notion/agent-revamp-03.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-03.png" width="2092" height="1350" alt="拆解任务和当前进度：引导用户结构化输入" loading="lazy" decoding="async"></a></figure>
-<div class="case-copy">
-<p data-source-id="notion-line-161">渐进式生成降低焦虑：</p>
-<p data-source-id="notion-line-163">先展示大纲，再展示文字，再生图片，最后生成可交互artifact（一边继续思考，一边开始回答。）</p>
-</div>
-<h4 class="case-inline-heading" data-source-id="notion-line-169">中途干预：</h4>
-<div class="case-copy">
-<p data-source-id="notion-line-171">steer、暂停生成（参考codex）</p>
-</div>
-<h4 class="case-inline-heading" data-source-id="notion-line-177">结果不符合预期：</h4>
-<div class="case-copy">
-<p data-source-id="notion-line-179">节省token：思维链重新推理</p>
-</div>
-<h4 class="case-inline-heading" data-source-id="notion-line-185">失败：</h4>
-<div class="case-copy">
-<p data-source-id="notion-line-187">失败时-没有token了：</p>
-<p data-source-id="notion-line-193">失败时-网络：</p>
-</div>
-<h4 class="case-inline-heading" data-source-id="notion-line-195">完成：</h4>
-<div class="case-copy">
-<p data-source-id="notion-line-197">完成时：展示互动题目</p>
-<h4 class="case-inline-heading" data-source-id="notion-line-205">真实 / Mock：</h4>
-<ul>
-<li data-source-id="notion-line-207">真实：右侧对话内容；单词列表中的单词（由 Agent 实际收集）。</li>
-<li data-source-id="notion-line-208">Mock：文章生成结果；学习页面中的拼贴画。</li>
-<li data-source-id="notion-line-209">原因：文章生成要和教育策略、单词与场景结合方式一起调；拼贴画要处理截图并做视觉编排，短时间内更适合先用理想化结果展示。</li>
-</ul>
-<h4 class="case-inline-heading" data-source-id="notion-line-211">如果有更多时间：</h4>
-<ul>
-<li data-source-id="notion-line-213">把文章生成从概念展示做成更稳定的教育内容生成链路。</li>
-<li data-source-id="notion-line-214">把学习页拼贴画做成真实可运行的生成或规则化排版能力。</li>
-</ul>
-<h4 class="case-inline-heading" data-source-id="notion-line-216">使用的 AI 工具：</h4>
-<ul>
-<li data-source-id="notion-line-218">主要使用 Codex 作为 AI 开发工具，用来辅助实现和迭代这个交互原型。</li>
-<li data-source-id="notion-line-219">Codex：用于前期头脑风暴、快速原型搭建，以及后续把设计实现成可运行原型。</li>
-<li data-source-id="notion-line-220">Figma：用于进入视觉设计精细化阶段后，完成高保真原型和细节设计。</li>
-<li data-source-id="notion-line-221">整体 workflow：先用 Codex 快速探索和搭原型，再用 Figma 打磨视觉与细节，最后再交回 Codex 实现。</li>
-<li data-source-id="notion-line-222">继续优化截图场景进入产品后的视觉呈现，不只是放一张图，而是把以文字为主的截图做成更有设计感的学习卡片或拼贴版式。</li>
-<li data-source-id="notion-line-223">参考报纸拼贴等视觉形式，让语料场景既可读又更美观。</li>
-<li data-source-id="notion-line-224">重点打磨学习内容生成，这是项目里最难的一部分：需要结合教育学、游戏化设计和用户测试，验证 AI 生成的文章、播客和互动游戏是否真的让用户愿意用、并且能帮助学习。</li>
-</ul>
-</div>
-
 </article>
-
 <article class="case-answer">
-
+<h3 class="case-inline-heading" data-source-id="notion-3f4400ee-0cf5-8011-9a06-c994d125a3cb">策略2: 用语言，学爱好</h3>
 <div class="case-copy">
-<p data-source-id="notion-line-242">artifact时效性</p>
-<p data-source-id="notion-line-243">agent主动性</p>
-<p data-source-id="notion-line-244">学习内容/游戏化：让用户更乐于学习</p>
-<p data-source-id="notion-line-245">截图和拼贴画算法</p>
+<h4 class="case-inline-heading" data-source-id="notion-3f4400ee-0cf5-80e9-b3e0-d29cdfc737ed">计划与进度：</h4>
+<p data-source-id="notion-3f4400ee-0cf5-80eb-a0c0-de1308d54584">拆解任务和当前进度：引导用户结构化输入</p>
 </div>
-
+<figure class="case-image wallpaper wallpaper-stage" data-source-id="notion-3f4400ee-0cf5-8073-8f95-fba3d66913e5"><a href="assets/notion/agent-revamp-03.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-03.png" width="2092" height="1350" alt="拆解任务和当前进度：引导用户结构化输入" loading="lazy" decoding="async"></a></figure>
+<div class="case-copy">
+<p data-source-id="notion-3f4400ee-0cf5-80e8-8441-df47ace855b4">渐进式生成降低焦虑：</p>
+<p data-source-id="notion-3f4400ee-0cf5-8069-a14b-c029be887565">先展示大纲，再展示文字，再生图片，最后生成可交互artifact（一边继续思考，一边开始回答。）</p>
+<h4 class="case-inline-heading" data-source-id="notion-3f4400ee-0cf5-801f-a459-c8ce93055b03">中途干预：</h4>
+<p data-source-id="notion-3f4400ee-0cf5-80b3-8c19-f74c47f6517e">steer、暂停生成（参考codex）</p>
+<h4 class="case-inline-heading" data-source-id="notion-3f4400ee-0cf5-803c-b38c-f81df6aa1865">结果不符合预期：</h4>
+<p data-source-id="notion-3f4400ee-0cf5-80fc-a253-cd57d8da40de">节省token：思维链重新推理</p>
+<h4 class="case-inline-heading" data-source-id="notion-3f4400ee-0cf5-80c5-816c-f423b4cf0b2b">失败：</h4>
+<p data-source-id="notion-3f4400ee-0cf5-800d-b464-efa3114e9265">失败时-没有token了：</p>
+<h4 class="case-inline-heading" data-source-id="notion-3f4400ee-0cf5-80ac-8910-e55871e7b7c4">失败：不满意结果</h4>
+<p data-source-id="notion-3f4400ee-0cf5-8020-a07e-d7b3815edaab">选择block单独修改</p>
+<p data-source-id="notion-3f4400ee-0cf5-8068-a56e-c6313a5dfbd4">失败时-网络：</p>
+<h4 class="case-inline-heading" data-source-id="notion-3f4400ee-0cf5-802b-8b97-db2df158fe35">完成：</h4>
+<p data-source-id="notion-3f4400ee-0cf5-800f-b686-f04060ea652e">完成时：展示互动题目</p>
+<h4 class="case-inline-heading" data-source-id="notion-3f4400ee-0cf5-8047-9597-f5cdd4e3fcca">真实 / Mock：</h4>
+<ul>
+<li data-source-id="notion-3f4400ee-0cf5-802e-add0-c100b211b5a3">真实：右侧对话内容；单词列表中的单词（由 Agent 实际收集）。</li>
+<li data-source-id="notion-3f4400ee-0cf5-8050-a80c-c80853f5d4b2">Mock：文章生成结果；学习页面中的拼贴画。</li>
+<li data-source-id="notion-3f4400ee-0cf5-8086-b1b5-d845a8d6c187">原因：文章生成要和教育策略、单词与场景结合方式一起调；拼贴画要处理截图并做视觉编排，短时间内更适合先用理想化结果展示。</li>
+</ul>
+<h4 class="case-inline-heading" data-source-id="notion-3f4400ee-0cf5-808f-92f8-cc6ca5c534d2">如果有更多时间：</h4>
+<ul>
+<li data-source-id="notion-3f4400ee-0cf5-8059-867a-e35df7893b3f">把文章生成从概念展示做成更稳定的教育内容生成链路。</li>
+<li data-source-id="notion-3f4400ee-0cf5-8064-a827-c79dacec91ea">把学习页拼贴画做成真实可运行的生成或规则化排版能力。</li>
+</ul>
+<h4 class="case-inline-heading" data-source-id="notion-3f4400ee-0cf5-8031-8b2b-cdbe9e577142">使用的 AI 工具：</h4>
+<ul>
+<li data-source-id="notion-3f4400ee-0cf5-80d4-abff-d93687ff8141">主要使用 Codex 作为 AI 开发工具，用来辅助实现和迭代这个交互原型。</li>
+<li data-source-id="notion-3f4400ee-0cf5-8091-8b1f-fe1306429879">Codex：用于前期头脑风暴、快速原型搭建，以及后续把设计实现成可运行原型。</li>
+<li data-source-id="notion-3f4400ee-0cf5-80f2-b19a-d02d79959309">Figma：用于进入视觉设计精细化阶段后，完成高保真原型和细节设计。</li>
+<li data-source-id="notion-3f4400ee-0cf5-80d2-a7eb-e926b5890d30">整体 workflow：先用 Codex 快速探索和搭原型，再用 Figma 打磨视觉与细节，最后再交回 Codex 实现。</li>
+<li data-source-id="notion-3f4400ee-0cf5-8068-948c-df5b654d9b98">继续优化截图场景进入产品后的视觉呈现，不只是放一张图，而是把以文字为主的截图做成更有设计感的学习卡片或拼贴版式。</li>
+<li data-source-id="notion-3f4400ee-0cf5-801e-a1cc-cefe81033e19">参考报纸拼贴等视觉形式，让语料场景既可读又更美观。</li>
+<li data-source-id="notion-3f4400ee-0cf5-8041-b95d-eafbde4e1a58">重点打磨学习内容生成，这是项目里最难的一部分：需要结合教育学、游戏化设计和用户测试，验证 AI 生成的文章、播客和互动游戏是否真的让用户愿意用、并且能帮助学习。</li>
+</ul>
+<p data-source-id="notion-3f4400ee-0cf5-80c5-8c76-c1513637bf62">Agent 应该做的，是围绕两个核心目标展开：一是帮助用户把单词和真实使用场景关联起来，二是基于这些语料和用户兴趣生成学习内容，让用户在感兴趣的内容里使用语言。它不应该脱离用户记录过的场景和兴趣去天马行空地产生不相关内容，也不应该为了“看起来聪明”输出专业性不足、幻觉很多的学习材料。</p>
+<ul>
+<li data-source-id="notion-3f4400ee-0cf5-80c2-9fb2-e2cacb558a10">应该做：围绕真实语料场景和用户兴趣生成学习内容</li>
+<li data-source-id="notion-3f4400ee-0cf5-80c6-a505-d8c44d8add34">不应该做：脱离场景乱生成，或输出专业度不足、幻觉很多的内容</li>
+<li data-source-id="notion-3f4400ee-0cf5-80f9-8b9e-f2efe8d31679">直接执行：低风险、低成本、符合用户当前学习目标的操作</li>
+<li data-source-id="notion-3f4400ee-0cf5-80b9-8a4b-ef02b698ad77">先询问用户：会影响信任、带来明显成本或可能中途失败的操作</li>
+<li data-source-id="notion-3f4400ee-0cf5-8029-ae77-fed3f46d5a8e">例子：高 token 消耗的生成任务，应先提醒用户缩小范围、调整形式或补充 token</li>
+</ul>
+<p data-source-id="notion-3f4400ee-0cf5-80a7-ba72-c19457fa3057">artifact时效性
+agent主动性
+学习内容/游戏化：让用户更乐于学习
+截图和拼贴画算法</p>
+</div>
 </article>
-
 </section>
-
-<section class="container section case-study" id="design" aria-labelledby="design-title">
-
-<div class="section-heading"><h2 id="design-title">3. UI 能力</h2></div>
-
-<div class="case-topic">
-
-<h3>2. Design System 思路</h3>
-
+<section class="container section case-study" id="design" aria-labelledby="design-title"><div class="section-heading"><h2 id="design-title" data-source-id="notion-3f4400ee-0cf5-80d4-ab10-c35826de0913">3. UI 能力</h2></div>
 <article class="case-answer">
-
-<figure class="case-image" data-source-id="notion-line-294"><a href="assets/notion/agent-revamp-04.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-04.png" width="1500" height="828" alt="可视化：单词可以组成无数种 artifact" loading="lazy" decoding="async"></a></figure>
-<figure class="case-image" data-source-id="notion-line-296"><a href="assets/notion/agent-revamp-05.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-05.png" width="2048" height="1156" alt="Word 会在不同界面里复用，比如查词页、单词本、文章内容里。" loading="lazy" decoding="async"></a></figure>
-<figure class="case-image" data-source-id="notion-line-298"><a href="assets/notion/agent-revamp-06.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-06.png" width="2048" height="1156" alt="核心元素 1：Word。每个单词都是一个基础对象，包含释义、解释和 context / 场景。" loading="lazy" decoding="async"></a></figure>
+<h3 class="case-inline-heading" data-source-id="notion-3f4400ee-0cf5-8000-8cb0-c6562f279609">2. Design System 思路</h3>
+<figure class="case-image" data-source-id="notion-3f4400ee-0cf5-80ad-ba34-ea79d5d98436"><a href="assets/notion/agent-revamp-04.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-04.png" width="1500" height="828" alt="可视化：单词可以组成无数种 artifact" loading="lazy" decoding="async"></a></figure>
+<figure class="case-image" data-source-id="notion-3f4400ee-0cf5-80da-ad9e-dfaf38ee3562"><a href="assets/notion/agent-revamp-05.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-05.png" width="2048" height="1156" alt="Word 会在不同界面里复用，比如查词页、单词本、文章内容里。" loading="lazy" decoding="async"></a></figure>
+<figure class="case-image" data-source-id="notion-3f4400ee-0cf5-80ee-8ad0-d8a439670a25"><a href="assets/notion/agent-revamp-06.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-06.png" width="2048" height="1156" alt="核心元素 1：Word。每个单词都是一个基础对象，包含释义、解释和 context / 场景。" loading="lazy" decoding="async"></a></figure>
 <div class="case-copy">
-<p data-source-id="notion-line-300">可视化：单词可以组成无数种 artifact</p>
+<p data-source-id="notion-3f4400ee-0cf5-80b7-8a04-e53b46b3482f">可视化：单词可以组成无数种 artifact</p>
 <ul>
-<li data-source-id="notion-line-302">核心元素 1：Word。每个单词都是一个基础对象，包含释义、解释和 context / 场景。</li>
-<li data-source-id="notion-line-303">Word 会在不同界面里复用，比如查词页、单词本、文章内容里。</li>
-<li data-source-id="notion-line-304">核心元素 2：Artifact（学习产物）。它可以是文章、播客、互动游戏等，由单词和语料进一步生成。</li>
-<li data-source-id="notion-line-305">学习页面更像一个“书桌”，由不同 Artifact 组成；新的、旧的内容都可以被摆放和再次拿起使用。</li>
+<li data-source-id="notion-3f4400ee-0cf5-801b-aa6f-d8a20166d44d">核心元素 1：Word。每个单词都是一个基础对象，包含释义、解释和 context / 场景。</li>
+<li data-source-id="notion-3f4400ee-0cf5-80a8-b5b7-ebe94905a6b2">Word 会在不同界面里复用，比如查词页、单词本、文章内容里。</li>
+<li data-source-id="notion-3f4400ee-0cf5-8061-899e-db4d996d72d3">核心元素 2：Artifact（学习产物）。它可以是文章、播客、互动游戏等，由单词和语料进一步生成。</li>
+<li data-source-id="notion-3f4400ee-0cf5-8070-b3d0-d23d1451e4dd">学习页面更像一个“书桌”，由不同 Artifact 组成；新的、旧的内容都可以被摆放和再次拿起使用。</li>
 </ul>
 </div>
-
+<figure class="case-image wallpaper wallpaper-stage" data-source-id="notion-3f4400ee-0cf5-8017-b7ef-d45c90261d30"><a href="assets/notion/agent-revamp-07.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-07.png" width="1728" height="1117" alt="MacBook Pro 16_ - 18.png" loading="lazy" decoding="async"></a></figure>
+<figure class="case-image wallpaper wallpaper-stage" data-source-id="notion-3f4400ee-0cf5-809e-ac2e-e93c44760559"><a href="assets/notion/agent-revamp-08.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-08.png" width="1728" height="1117" alt="MacBook Pro 16_ - 20.png" loading="lazy" decoding="async"></a></figure>
+<figure class="case-image wallpaper wallpaper-stage" data-source-id="notion-3f4400ee-0cf5-8087-97b0-f39cace64809"><a href="assets/notion/agent-revamp-09.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-09.png" width="1728" height="1117" alt="MacBook Pro 16_ - 21.png" loading="lazy" decoding="async"></a></figure>
+<figure class="case-image" data-source-id="notion-3f4400ee-0cf5-8074-a28a-ed3301389b56"><a href="assets/notion/agent-revamp-10.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-10.png" width="980" height="532" alt="image.png" loading="lazy" decoding="async"></a></figure>
+<figure class="case-image" data-source-id="notion-3f4400ee-0cf5-8065-bb34-cb062e47fa29"><a href="assets/notion/agent-revamp-11.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-11.png" width="802" height="280" alt="image.png" loading="lazy" decoding="async"></a></figure>
 </article>
-
-<article class="case-answer">
-
-<figure class="case-image wallpaper wallpaper-stage" data-source-id="notion-line-312"><a href="assets/notion/agent-revamp-07.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-07.png" width="1728" height="1117" alt="MacBook Pro 16_ - 18.png" loading="lazy" decoding="async"></a></figure>
-<figure class="case-image wallpaper wallpaper-stage" data-source-id="notion-line-314"><a href="assets/notion/agent-revamp-08.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-08.png" width="1728" height="1117" alt="MacBook Pro 16_ - 20.png" loading="lazy" decoding="async"></a></figure>
-<figure class="case-image wallpaper wallpaper-stage" data-source-id="notion-line-316"><a href="assets/notion/agent-revamp-09.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-09.png" width="1728" height="1117" alt="MacBook Pro 16_ - 21.png" loading="lazy" decoding="async"></a></figure>
-<figure class="case-image" data-source-id="notion-line-318"><a href="assets/notion/agent-revamp-10.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-10.png" width="980" height="532" alt="image.png" loading="lazy" decoding="async"></a></figure>
-<figure class="case-image" data-source-id="notion-line-320"><a href="assets/notion/agent-revamp-11.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-11.png" width="802" height="280" alt="image.png" loading="lazy" decoding="async"></a></figure>
-
-</article>
-
-</div>
-
 </section>
   </main>
 
