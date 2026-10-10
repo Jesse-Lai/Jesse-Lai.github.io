@@ -3,6 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>document.documentElement.classList.add('is-loading');</script>
+  <style>html.is-loading main{visibility:hidden}html.is-loading{overflow:hidden}html:not(.is-loading) #loading-screen:not(.hidden){display:none}[hidden]{display:none!important}</style>
+  <link rel="stylesheet" href="site-loader.css">
+  <script src="site-loader.js" defer onerror="document.getElementById('loading-error').hidden=false"></script>
   <meta name="description" content="Language Bubble：从查词工具到场景学习 Agent。产品思维、交互原型与界面设计。">
   <title>Agent revamp</title>
   <link rel="icon" type="image/svg+xml" href="assets/bubble.svg">
@@ -15,10 +19,16 @@
   <link rel="stylesheet" href="brainstorm.css">
   <link rel="stylesheet" href="case-study.css?v=notion-20261010">
   <script src="case-study.js" defer></script>
-  <script src="hero-personal.js" defer></script>
+  <script src="hero-personal.js?v=loader-ready" defer></script>
   <script src="hero-wallpaper.js?v=all-screenshots" defer></script>
 </head>
 <body>
+  <div id="loading-screen" role="status" aria-label="正在加载网页">
+    <div id="loading-text">JESSE OS</div>
+    <div id="loading-bar-bg" role="progressbar" aria-label="加载进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="loading-bar"></div></div>
+    <div id="loading-percent" aria-hidden="true">0%</div>
+    <div id="loading-error" hidden>部分内容加载失败，请重试。<button type="button" onclick="location.reload()">重新加载</button></div>
+  </div>
   <a class="skip-link" href="#main">跳至内容</a>
   <main id="main">
     <section class="hero container" aria-label="Jesse Lai · Language Bubble">
@@ -27,7 +37,7 @@
           <button class="portrait-note" type="button" aria-label="Jesse Lai 的照片便利贴" aria-describedby="portrait-help">
             <span class="portrait-image">
               <img src="assets/jesse-portrait.webp" width="2560" height="2560" alt="Jesse 的手绘头像，头顶一只小猫" draggable="false" fetchpriority="high">
-              <video muted playsinline preload="auto" aria-hidden="true" disablepictureinpicture><source src="assets/jesse-portrait.mp4" type="video/mp4"></video>
+              <video muted playsinline preload="none" aria-hidden="true" disablepictureinpicture><source src="assets/jesse-portrait.mp4" type="video/mp4"></video>
             </span>
             <span class="portrait-caption">Hello I’m Jesse Lai</span>
             <span class="portrait-stamp"><img src="assets/meshy-stamp.svg" width="640" height="368" alt="Meshy 邮票" draggable="false"></span>

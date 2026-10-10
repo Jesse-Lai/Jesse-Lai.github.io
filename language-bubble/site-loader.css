@@ -1,0 +1,38 @@
+/* Loading screen reused from Jesse OS, including its type and timings. */
+@font-face {
+  font-family: 'Red Hat Mono';
+  src: url('assets/RedHatMono-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+html.is-loading { overflow: hidden; }
+html.is-loading main { visibility: hidden; }
+html.is-loading main *, html.is-loading main *::before,
+html.is-loading main *::after { animation-play-state: paused !important; }
+#loading-screen {
+  position: fixed; inset: 0; z-index: 99999; background: #FFFDFA;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  transition: opacity .6s ease;
+}
+#loading-screen.hidden { opacity: 0; pointer-events: none; }
+#loading-text {
+  font-family: 'Red Hat Mono', 'Courier New', monospace;
+  color: #666; font-size: 13px; letter-spacing: 2px; margin-bottom: 20px;
+}
+#loading-bar-bg {
+  width: 200px; height: 2px; background: rgba(0,0,0,.06);
+  border-radius: 1px; overflow: hidden;
+}
+#loading-bar {
+  height: 100%; width: 0%; border-radius: 1px;
+  background: rgba(0,0,0,.2); transition: width .3s ease;
+}
+#loading-percent {
+  font-family: 'Red Hat Mono', 'Courier New', monospace;
+  color: #444; font-size: 11px; margin-top: 10px;
+}
+#loading-error { margin-top: 20px; text-align: center; color: #666; font-size: 13px; }
+#loading-error button { display: block; margin: 12px auto 0; padding: 7px 16px; border: 1px solid #ccc; border-radius: 4px; background: transparent; color: #444; cursor: pointer; }
+@media (prefers-reduced-motion: reduce) {
+  #loading-screen, #loading-bar { transition: none; }
+}

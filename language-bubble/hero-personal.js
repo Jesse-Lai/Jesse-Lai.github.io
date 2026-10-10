@@ -7,7 +7,7 @@
   const video = note.querySelector('video');
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   let inView = false;
-  let pageLoaded = document.readyState === 'complete';
+  let pageLoaded = document.documentElement.dataset.pageReady === 'true';
   let introPlayback = !reducedMotion.matches;
   let hovering = false;
   let playingByClick = false;
@@ -37,7 +37,7 @@
   }
 
   function updateMotion() {
-    const resting = !inView || document.hidden;
+    const resting = !pageLoaded || !inView || document.hidden;
     intro.classList.toggle('is-resting', resting);
     if (pageLoaded && !resting && !reducedMotion.matches && (introPlayback || hovering || playingByClick)) {
       // The initial playback is a single pass, even if the pointer is over it.
@@ -56,7 +56,7 @@
     }
   }
   video.addEventListener('playing', () => {
-    if (inView && !document.hidden && !reducedMotion.matches && (introPlayback || hovering || playingByClick)) {
+    if (pageLoaded && inView && !document.hidden && !reducedMotion.matches && (introPlayback || hovering || playingByClick)) {
       note.classList.add('is-playing');
     } else { updateMotion(); }
   });
@@ -143,7 +143,7 @@
     if (reducedMotion.matches) introPlayback = false;
     updateMotion(); requestLightUpdate();
   });
-  window.addEventListener('load', () => { pageLoaded = true; updateMotion(); }, { once: true });
+  window.addEventListener('site:ready', () => { pageLoaded = true; updateMotion(); }, { once: true });
   window.addEventListener('scroll', requestLightUpdate, { passive: true });
   window.addEventListener('resize', () => { move(x, y); requestLightUpdate(); }, { passive: true });
   requestLightUpdate();
