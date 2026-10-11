@@ -376,9 +376,9 @@ window.articleTranslations = {
     "en": "The learning page is filled with the warmth of 8 a.m. sunlight, gentle rather than glaring.",
     "ko": "학습 페이지는 아침 8시의 햇살처럼 따뜻하면서도 눈부시지 않은 빛으로 채워집니다."
   },
-  "以下是整体的关键页面UI：": {
-    "en": "Here are the key screens:",
-    "ko": "주요 화면은 다음과 같습니다."
+  "下面是一些小彩蛋": {
+    "en": "Here are a few little Easter eggs",
+    "ko": "작은 이스터에그 몇 가지를 소개합니다"
   },
   "收集的语料": {
     "en": "Collected language materials",
