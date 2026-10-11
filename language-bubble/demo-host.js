@@ -22,7 +22,7 @@
  function fit(slot){if(slot.frame)slot.frame.style.transform=`scale(${slot.shell.clientWidth/slot.width})`;}
  function mount(slot){if(slot.frame||slot.failed||document.hidden||slots.filter(s=>s.frame).length>=(mobile.matches?1:2))return;
   const frame=document.createElement('iframe');frame.title=`Language Bubble · ${slot.scene} · 可交互演示`;frame.width=String(slot.width);frame.height=String(slot.height);frame.style.width=`${slot.width}px`;frame.style.height=`${slot.height}px`;frame.className='demo-frame';frame.setAttribute('allow','fullscreen');frame.setAttribute('sandbox','allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox');
-  frame.src=`demo/index.html?scene=${encodeURIComponent(slot.scene)}&instance=${slot.id}`;slot.frame=frame;slot.retiring=false;slot.request=++serial;slot.ready=false;slot.shell.append(frame);fit(slot);
+  frame.src=`demo/index.html?scene=${encodeURIComponent(slot.scene)}&instance=${slot.id}&v=loop-v2`;slot.frame=frame;slot.retiring=false;slot.request=++serial;slot.ready=false;slot.shell.append(frame);fit(slot);
   slot.deadline=setTimeout(()=>fail(slot),12000);
  }
  function remove(slot){clearTimeout(slot.deadline);clearTimeout(slot.timer);slot.frame?.remove();slot.frame=null;slot.ready=false;slot.retiring=false;slot.shell.classList.remove('demo-ready');slot.fallback.inert=false;slot.fallback.removeAttribute('aria-hidden');}
