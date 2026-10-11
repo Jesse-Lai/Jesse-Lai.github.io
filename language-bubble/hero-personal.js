@@ -9,6 +9,7 @@
   let inView = false;
   let pageLoaded = document.documentElement.dataset.pageReady === 'true';
   let introPlayback = !reducedMotion.matches;
+  let autoplayBlocked = false;
   let hovering = false;
   let playingByClick = false;
   let x = 0;
@@ -43,8 +44,10 @@
       // The initial playback is a single pass, even if the pointer is over it.
       video.loop = !introPlayback;
       video.muted = true;
-      video.play().catch(error => {
+      const playback = video.play();
+      playback?.catch(error => {
         if (error.name === 'AbortError') return;
+        autoplayBlocked = error.name === 'NotAllowedError';
         introPlayback = false;
         note.classList.remove('is-playing');
       });
@@ -56,6 +59,7 @@
     }
   }
   video.addEventListener('playing', () => {
+    autoplayBlocked = false;
     if (pageLoaded && inView && !document.hidden && !reducedMotion.matches && (introPlayback || hovering || playingByClick)) {
       note.classList.add('is-playing');
     } else { updateMotion(); }
@@ -76,7 +80,8 @@
     if (introPlayback) {
       introPlayback = false;
       hovering = false;
-      playingByClick = false;
+      // A WebView may still be waiting for a gesture. Treat the first tap as play.
+      playingByClick = video.paused;
     } else {
       playingByClick = !playingByClick;
     }
@@ -144,6 +149,13 @@
     updateMotion(); requestLightUpdate();
   });
   window.addEventListener('site:ready', () => { pageLoaded = true; updateMotion(); }, { once: true });
+  document.addEventListener('WeixinJSBridgeReady', () => {
+    if (autoplayBlocked && !reducedMotion.matches) {
+      autoplayBlocked = false;
+      introPlayback = true;
+      updateMotion();
+    }
+  }, { once: true });
   window.addEventListener('scroll', requestLightUpdate, { passive: true });
   window.addEventListener('resize', () => { move(x, y); requestLightUpdate(); }, { passive: true });
   requestLightUpdate();

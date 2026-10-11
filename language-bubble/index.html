@@ -3,10 +3,31 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script>document.documentElement.classList.add('is-loading');</script>
+  <script>
+    // Independent fail-open guard: slow/blocked scripts or media cannot trap readers.
+    (function () {
+      var root = document.documentElement;
+      root.classList.add('is-loading');
+      window.finishSiteLoading = function () {
+        if (root.dataset.pageReady === 'true') return;
+        clearTimeout(window.siteLoadingDeadline);
+        root.classList.remove('is-loading');
+        root.dataset.pageReady = 'true';
+        var main = document.querySelector('main');
+        if (main) { main.inert = false; main.removeAttribute('aria-busy'); }
+        var screen = document.getElementById('loading-screen');
+        if (screen) {
+          screen.classList.add('hidden');
+          setTimeout(function () { screen.remove(); }, 600);
+        }
+        window.dispatchEvent(new Event('site:ready'));
+      };
+      window.siteLoadingDeadline = setTimeout(window.finishSiteLoading, 6000);
+    })();
+  </script>
   <style>html.is-loading main{visibility:hidden}html.is-loading{overflow:hidden}html:not(.is-loading) #loading-screen:not(.hidden){display:none}[hidden]{display:none!important}</style>
   <link rel="stylesheet" href="site-loader.css">
-  <script src="site-loader.js?v=atomic-ready" defer onerror="document.getElementById('loading-error').hidden=false"></script>
+  <script src="site-loader.js?v=mobile-fail-open" defer onerror="window.finishSiteLoading()"></script>
   <meta name="description" content="Language Bubble：从查词工具到场景学习 Agent。产品思维、交互原型与界面设计。">
   <title>Agent revamp</title>
   <link rel="icon" type="image/svg+xml" href="assets/bubble.svg">
@@ -19,10 +40,10 @@
   <link rel="stylesheet" href="brainstorm.css?v=consistent-heading">
   <link rel="stylesheet" href="case-study.css?v=smooth-corners">
   <script src="case-study.js" defer></script>
-  <script type="module" src="atomic-design-diagram.js?v=languages-v1"></script>
+  <script type="module" src="atomic-design-diagram.js?v=lazy-init"></script>
   <link rel="stylesheet" href="learning-flow.css?v=solution-cards">
   <script src="learning-flow.js?v=solution-handdrawn" defer></script>
-  <script src="hero-personal.js?v=daylight-restored" defer></script>
+  <script src="hero-personal.js?v=wechat-streaming" defer></script>
   <script src="hero-wallpaper.js?v=rounded-card-limit" defer></script>
   <link rel="stylesheet" href="language-switcher.css?v=page-top-glass">
   <script src="translations.js?v=3" defer></script>
@@ -49,7 +70,7 @@
           <button class="portrait-note" type="button" aria-label="Jesse Lai 的照片便利贴" aria-describedby="portrait-help">
             <span class="portrait-image">
               <img src="assets/jesse-portrait.webp" width="2560" height="2560" alt="Jesse 的手绘头像，头顶一只小猫" draggable="false" fetchpriority="high">
-              <video muted playsinline preload="none" aria-hidden="true" disablepictureinpicture><source src="assets/jesse-portrait.mp4" type="video/mp4"></video>
+              <video muted playsinline webkit-playsinline x5-playsinline preload="none" aria-hidden="true" disablepictureinpicture><source src="assets/jesse-portrait.mp4" type="video/mp4"></video>
             </span>
             <span class="portrait-caption">Hello I’m Jesse Lai</span>
             <span class="portrait-stamp"><img src="assets/meshy-stamp.svg" width="640" height="368" alt="Meshy 邮票" draggable="false"></span>
@@ -81,7 +102,7 @@
 <p data-source-id="notion-3f4400ee-0cf5-80a0-8aa8-cc90975f2247">中国约有超过4亿人正在学习外语，但目前主流的语言学习的工具和方法还是前AI时代的。用字典查词、单词表记单词、读枯燥的阅读理解和听力，语言学习仍然是一个头疼的过程。</p>
 </div>
 <figure class="learning-photograph" data-source-id="notion-3f5400ee-0cf5-80d9-b96c-e56d03e1cec4">
-  <img src="assets/photos/university-tesol-classroom.jpg" width="1170" height="420" alt="西交利物浦大学课堂全景：老师、学生与英文课件同框" decoding="async">
+  <img loading="lazy" src="assets/photos/university-tesol-classroom.jpg" width="1170" height="420" alt="西交利物浦大学课堂全景：老师、学生与英文课件同框" decoding="async">
 </figure>
 </article>
 <article class="case-answer">
@@ -98,10 +119,10 @@
 <p data-source-id="notion-3f4400ee-0cf5-80ec-9711-ed98826429b2">这些用户每天都在查词和记词，接触语言环境。这个需求高频、真实、持续。</p>
 </div>
 <div data-source-id="notion-3f5400ee-0cf5-806a-bab7-d7be710585a8" class="audience-photos" aria-label="不同语言学习用户的场景">
-  <figure><img src="assets/photos/work.jpg" width="800" height="600" alt="团队围坐在电脑前讨论和协作" decoding="async"><figcaption>在外企工作</figcaption></figure>
-  <figure><img src="assets/photos/research.jpg" width="800" height="532" alt="阅读书籍并整理笔记的真实场景" decoding="async"><figcaption>需要读国外文献的学生</figcaption></figure>
-  <figure><img src="assets/photos/campus.jpg" width="800" height="533" alt="课堂里的学生与课本" decoding="async"><figcaption>广大留学生群体</figcaption></figure>
-  <figure><img src="assets/photos/culture.jpg" width="800" height="600" alt="读者在书架旁阅读书籍" decoding="async"><figcaption>喜欢某个国外文化</figcaption></figure>
+  <figure><img loading="lazy" src="assets/photos/work.jpg" width="800" height="600" alt="团队围坐在电脑前讨论和协作" decoding="async"><figcaption>在外企工作</figcaption></figure>
+  <figure><img loading="lazy" src="assets/photos/research.jpg" width="800" height="532" alt="阅读书籍并整理笔记的真实场景" decoding="async"><figcaption>需要读国外文献的学生</figcaption></figure>
+  <figure><img loading="lazy" src="assets/photos/campus.jpg" width="800" height="533" alt="课堂里的学生与课本" decoding="async"><figcaption>广大留学生群体</figcaption></figure>
+  <figure><img loading="lazy" src="assets/photos/culture.jpg" width="800" height="600" alt="读者在书架旁阅读书籍" decoding="async"><figcaption>喜欢某个国外文化</figcaption></figure>
 </div>
 </article>
 <article class="case-answer">

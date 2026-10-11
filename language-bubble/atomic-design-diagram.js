@@ -431,20 +431,25 @@ class AtomicDesignDiagram extends HTMLElement {
   }
 
   connectedCallback() {
-    const scene = this.shadowRoot.querySelector('.scene');
-    const background = this.shadowRoot.querySelector('.background-reference');
-    background.src = BACKGROUND_SRC;
     this._updateLanguage();
-    this._setupInteractions();
-    if (!this._started) {
+    const start = () => {
+      if (this._started) return;
       this._started = true;
-      // Let the host loading screen wait for shadow-DOM media and the morph.
-      this.ready = Promise.all([
-        this._startAnimation(),
-        ...Array.from(this.shadowRoot.querySelectorAll('img'), image => image.decode()),
-        document.fonts.load('16px MFBoHeHaiYanNoncommercial'),
-      ]);
-    }
+      this.shadowRoot.querySelector('.background-reference').src = BACKGROUND_SRC;
+      this._setupInteractions();
+      // This deep-article demo is optional and never gates the page or its fonts.
+      this.ready = this._startAnimation().catch(() => {
+        this.shadowRoot.querySelector('.scene').style.display = 'none';
+        if (!this.shadowRoot.querySelector('slot')) this.shadowRoot.appendChild(document.createElement('slot'));
+      });
+    };
+    if ('IntersectionObserver' in window) {
+      this._visibilityObserver = new IntersectionObserver(([entry]) => {
+        this._visible = entry.isIntersecting;
+        if (this._visible) start();
+      }, { rootMargin: '400px' });
+      this._visibilityObserver.observe(this);
+    } else { this._visible = true; start(); }
   }
 
   disconnectedCallback() {
@@ -452,6 +457,7 @@ class AtomicDesignDiagram extends HTMLElement {
     this._frame = 0;
     this._started = false;
     this._interactionAbort?.abort();
+    this._visibilityObserver?.disconnect();
   }
 
   _setupInteractions() {
@@ -802,6 +808,10 @@ class AtomicDesignDiagram extends HTMLElement {
       this._animationStart = performance.now();
       const draw = now => {
         if (!this.isConnected) return;
+        if (!this._visible || document.hidden) {
+          this._frame = requestAnimationFrame(draw);
+          return;
+        }
         const elapsed = (now - this._animationStart) % (segmentDuration * interpolators.length);
         // The first rAF timestamp can precede performance.now() by a fraction.
         // Clamp both ends so every frame uses a real interpolator.
