@@ -69,7 +69,10 @@
       image.src = url;
       images.push(imageReady(image));
     }
-    const jobs = [videoReady(), ...images,
+    const interactiveDiagrams = [...document.querySelectorAll('atomic-design-diagram')].map(diagram =>
+      bounded(customElements.whenDefined('atomic-design-diagram').then(() => diagram.ready), 'Interactive diagram loading timed out')
+    );
+    const jobs = [videoReady(), ...images, ...interactiveDiagrams,
       bounded(Promise.all([
         document.fonts.load('16px Inter'), document.fonts.load('24px Manrope'),
         document.fonts.load('24px Schoolbell'), document.fonts.load('13px "Red Hat Mono"')

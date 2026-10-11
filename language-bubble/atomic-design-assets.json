@@ -1,0 +1,12 @@
+{
+  "source": "Jesse OS / deepseek-harness / atomic-design-diagram.js",
+  "assets": [
+    "content_images/deepseek-atomic-bg.webp",
+    "content_images/deepseek-atomic-card.svg",
+    "content_images/deepseek-atomic-circle.svg",
+    "content_images/deepseek-atomic-triangle.svg",
+    "content_images/deepseek-atomic-star.svg",
+    "lib/flubber.min.js",
+    "lib/flubber.LICENSE.txt"
+  ]
+}

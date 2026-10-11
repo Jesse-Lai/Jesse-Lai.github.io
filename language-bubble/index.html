@@ -6,7 +6,7 @@
   <script>document.documentElement.classList.add('is-loading');</script>
   <style>html.is-loading main{visibility:hidden}html.is-loading{overflow:hidden}html:not(.is-loading) #loading-screen:not(.hidden){display:none}[hidden]{display:none!important}</style>
   <link rel="stylesheet" href="site-loader.css">
-  <script src="site-loader.js" defer onerror="document.getElementById('loading-error').hidden=false"></script>
+  <script src="site-loader.js?v=atomic-ready" defer onerror="document.getElementById('loading-error').hidden=false"></script>
   <meta name="description" content="Language Bubble：从查词工具到场景学习 Agent。产品思维、交互原型与界面设计。">
   <title>Agent revamp</title>
   <link rel="icon" type="image/svg+xml" href="assets/bubble.svg">
@@ -14,13 +14,16 @@
   <link rel="preload" href="assets/Manrope-wght.ttf" as="font" type="font/ttf" crossorigin>
   <link rel="stylesheet" href="typography.css">
   <link rel="stylesheet" href="style.css?v=naive-type">
-  <link rel="stylesheet" href="hero-personal.css?v=stamp-right-20261010">
-  <link rel="stylesheet" href="hero-wallpaper.css?v=all-screenshots">
-  <link rel="stylesheet" href="brainstorm.css">
-  <link rel="stylesheet" href="case-study.css?v=learning-illustrations">
+  <link rel="stylesheet" href="hero-personal.css?v=daylight-restored">
+  <link rel="stylesheet" href="hero-wallpaper.css?v=original-wallpapers">
+  <link rel="stylesheet" href="brainstorm.css?v=consistent-heading">
+  <link rel="stylesheet" href="case-study.css?v=smooth-corners">
   <script src="case-study.js" defer></script>
-  <script src="hero-personal.js?v=loader-ready" defer></script>
-  <script src="hero-wallpaper.js?v=all-screenshots" defer></script>
+  <script type="module" src="atomic-design-diagram.js?v=smooth-corners"></script>
+  <link rel="stylesheet" href="learning-flow.css?v=solution-cards">
+  <script src="learning-flow.js?v=solution-handdrawn" defer></script>
+  <script src="hero-personal.js?v=daylight-restored" defer></script>
+  <script src="hero-wallpaper.js?v=rounded-card-limit" defer></script>
 </head>
 <body>
   <div id="loading-screen" role="status" aria-label="正在加载网页">
@@ -54,50 +57,22 @@
             </div>
           </div></div>
         </div>
+
       </div>
 
-      <div class="hero-stage wallpaper wallpaper-stage">
-        <div class="desktop-window" aria-label="Language Bubble 查词与场景记录界面示意">
-          <div class="window-bar"><span class="window-dots" aria-hidden="true"><i></i><i></i><i></i></span><span>Language Bubble</span><span class="quiet">界面示意</span></div>
-          <div class="workspace">
-            <aside class="workspace-sidebar">
-              <div class="sidebar-title">我的语言空间 <span>⌘ K</span></div>
-              <div class="sidebar-item selected"><span>▤</span> 记录 <small>03</small></div>
-              <div class="sidebar-item"><span>◉</span> 学习</div>
-              <div class="sidebar-item"><span>▦</span> 进度</div>
-              <div class="sidebar-label">最近遇见</div>
-              <div class="word-item current"><strong>serendipity</strong><small>阅读 · 刚刚</small></div>
-              <div class="word-item"><strong>resilient</strong><small>工作 · 今天</small></div>
-              <div class="word-item"><strong>make sense</strong><small>文章 · 昨天</small></div>
-              <div class="sidebar-bottom"><span class="avatar">L</span><span>Learning, in context.</span></div>
-            </aside>
-            <div class="word-detail">
-              <div class="word-toolbar"><span>记录 / 单词</span><span>↗ &nbsp; ☆</span></div>
-              <div class="word-body"><span class="tiny-label">A WORD YOU CAME ACROSS</span><h2>serendipity<span class="sound-mark" aria-hidden="true">◖))</span></h2><p class="phonetic">/ˌserənˈdɪpəti/ &nbsp; noun</p><p class="meaning">不期而遇的美好；意外发现的幸运</p>
-                <div class="context-card"><span class="tiny-label">回到遇见它的地方</span><p>“Some of the best discoveries<br>begin with <mark>serendipity</mark>.”</p><span class="context-source">阅读中的一句话 · 示例语料</span></div>
-                <div class="detail-bottom"><span class="status-dot"></span> 原句与语境，一起留下。</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="floating-card"><div class="floating-heading"><span class="agent-symbol">✳</span> 从遇见，到记住 <span>↗</span></div><p>用你查过的词，读一篇新的文章。</p><div class="mini-words"><span>serendipity</span><span>resilient</span><span>make sense</span></div><a href="#interaction">准备我的学习材料 <span>→</span></a></div>
+      <div class="hero-stage hero-product-image wallpaper wallpaper-stage" data-wallpaper="alpine-lake">
+        <img src="assets/hero-records-original.png" width="1728" height="1117" alt="Language Bubble 记录界面：单词列表与 Journey 的 Context 拼贴画" decoding="async" fetchpriority="high">
       </div>
-      <div class="hero-caption"><span>Language Bubble · macOS + iOS 原生项目</span><span>Translation → Context → Learning</span></div>
     </section>
 
-    <div class="container chapter-index" aria-label="答卷目录">
-      <a href="#thinking"><span class="chapter-number">01</span><span>背景</span><span>↗</span></a>
-      <a href="#interaction"><span class="chapter-number">02</span><span>设计方案（交互设计 Demo）</span><span>↗</span></a>
-      <a href="#design"><span class="chapter-number">03</span><span>完整流程和 UI 演示</span><span>↗</span></a>
-    </div>
 
-<section class="container section case-study" id="thinking" aria-labelledby="thinking-title"><div class="section-heading"><h2 id="thinking-title" data-source-id="notion-3f4400ee-0cf5-805c-9e66-c371c74ffdf4">背景</h2></div>
+<section class="container section case-study" id="thinking" aria-labelledby="thinking-title"><div class="section-heading"><h2 id="thinking-title" data-source-id="notion-3f4400ee-0cf5-805c-9e66-c371c74ffdf4">1. 背景</h2></div>
 <article class="case-answer">
 <div class="case-copy">
 <p data-source-id="notion-3f4400ee-0cf5-80a0-8aa8-cc90975f2247">中国约有超过4亿人正在学习外语，但目前主流的语言学习的工具和方法还是前AI时代的。用字典查词、单词表记单词、读枯燥的阅读理解和听力，语言学习仍然是一个头疼的过程。</p>
 </div>
-<figure class="learning-illustration">
-  <img src="assets/illustrations/language-learning.svg" width="800" height="434" alt="学习者思考词句，完成语言填空练习" decoding="async">
+<figure class="learning-photograph" data-source-id="notion-3f5400ee-0cf5-80d9-b96c-e56d03e1cec4">
+  <img src="assets/photos/university-tesol-classroom.jpg" width="1170" height="420" alt="西交利物浦大学课堂全景：老师、学生与英文课件同框" decoding="async">
 </figure>
 </article>
 <article class="case-answer">
@@ -113,24 +88,24 @@
 </ul>
 <p data-source-id="notion-3f4400ee-0cf5-80ec-9711-ed98826429b2">这些用户每天都在查词和记词，接触语言环境。这个需求高频、真实、持续。</p>
 </div>
-<div class="audience-illustrations" aria-label="不同语言学习用户的场景">
-  <figure><img src="assets/illustrations/working-together.svg" width="1159" height="591" alt="同事围桌交流与协作" decoding="async"><figcaption>在外企工作</figcaption></figure>
-  <figure><img src="assets/illustrations/researching.svg" width="800" height="521" alt="学生阅读资料、进行研究" decoding="async"><figcaption>需要读国外文献的学生</figcaption></figure>
-  <figure><img src="assets/illustrations/around-the-world.svg" width="960" height="825" alt="学习者探索世界、接触海外环境" decoding="async"><figcaption>广大留学生群体</figcaption></figure>
-  <figure><img src="assets/illustrations/reading.svg" width="844" height="800" alt="在阅读中探索不同文化" decoding="async"><figcaption>喜欢某个国外文化</figcaption></figure>
+<div data-source-id="notion-3f5400ee-0cf5-806a-bab7-d7be710585a8" class="audience-photos" aria-label="不同语言学习用户的场景">
+  <figure><img src="assets/photos/work.jpg" width="800" height="600" alt="团队围坐在电脑前讨论和协作" decoding="async"><figcaption>在外企工作</figcaption></figure>
+  <figure><img src="assets/photos/research.jpg" width="800" height="532" alt="阅读书籍并整理笔记的真实场景" decoding="async"><figcaption>需要读国外文献的学生</figcaption></figure>
+  <figure><img src="assets/photos/campus.jpg" width="800" height="533" alt="课堂里的学生与课本" decoding="async"><figcaption>广大留学生群体</figcaption></figure>
+  <figure><img src="assets/photos/culture.jpg" width="800" height="600" alt="读者在书架旁阅读书籍" decoding="async"><figcaption>喜欢某个国外文化</figcaption></figure>
 </div>
 </article>
 <article class="case-answer">
 <h3 class="case-inline-heading" data-source-id="notion-3f4400ee-0cf5-8031-80e3-e04eb699d614">有价值的场景</h3>
 <div class="case-copy">
-<p data-source-id="notion-3f4400ee-0cf5-80b2-8865-dddcd84014ae">除了自己的亲身经历，我对身边学习不同外语的用户们进行了调研（参与者为学英语的中国人，和学中文的韩国人）</p>
+<p data-source-id="notion-3f4400ee-0cf5-80b2-8865-dddcd84014ae">除了自己的亲身经历，我对身边学习不同外语的用户们进行了调研（学英语的中国人，和学中文的韩国人）</p>
 </div>
-<figure class="case-image" data-source-id="notion-3f4400ee-0cf5-80e4-86e2-e891d26036a2"><a href="assets/notion/agent-revamp-01.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-01.png" width="2716" height="900" alt="和几个语言学习者进行讨论和头脑风暴（参与者为学英语的中国人，和学中文的韩国人）" loading="lazy" decoding="async"></a></figure>
+<figure class="case-image" id="notion-image-learner-research" data-source-id="notion-3f6400ee-0cf5-80ab-8a51-d8b04962c15c"><a href="assets/notion/learner-research-collage-20261011.webp" target="_blank" rel="noopener"><img src="assets/notion/learner-research-collage-20261011.webp" width="2048" height="2288" alt="学习英语和中文的用户调研：使用场景、手写笔记与词典" loading="lazy" decoding="async"></a></figure>
 <div class="case-copy">
 <p data-source-id="notion-3f4400ee-0cf5-8048-be7e-eb2de8f1a4ab">根据大家的反馈，我总结了一些高频痛点。</p>
 </div>
 <figure data-source-id="notion-3f4400ee-0cf5-80d9-bf69-c5c6e820b25c" class="learner-brainstorm" aria-labelledby="brainstorm-title">
-        <figcaption><h3 id="brainstorm-title">语言学习，卡在哪里？</h3><span>头脑风暴 · 待验证</span></figcaption>
+        <figcaption><h3 id="brainstorm-title">学习语言的难点</h3></figcaption>
         <div class="brainstorm-map">
           <div class="brainstorm-rings" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
           <div class="brainstorm-person"><span class="learner-emoji" role="img" aria-label="正在学习的年轻人">🧑🏻‍💻</span><span>语言学习者</span></div>
@@ -146,50 +121,48 @@
           </ul>
         </div>
       </figure>
-<div class="case-copy">
+<div class="case-copy case-points" id="pain-points">
 <p data-source-id="notion-3f4400ee-0cf5-80bc-a8e9-fb3b2760d985">我发现了2个高频痛点还未被解决：</p>
-<ul>
-<li data-source-id="notion-3f4400ee-0cf5-80e6-ab66-f6f2349876d6">拿着单词书背单词太痛苦，脱离了场景</li>
-<li data-source-id="notion-3f4400ee-0cf5-8056-bf14-f2cc9524149b">学习的资料和生活中看到的语料完全不同</li>
+<ul class="point-grid">
+<li class="point-item"><svg class="point-icon" data-icon="book" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11C15 7 9 7 4 9v23c6-2 11-1 16 3 5-4 10-5 16-3V9c-5-2-11-2-16 2v24"/><path d="M9 15c2-.4 4 0 6 1M9 21c2-.4 4 0 6 1M25 16c2-1 4-1.4 6-1M25 22c2-1 4-1.4 6-1"/></svg><p class="point-title" data-source-id="notion-3f4400ee-0cf5-80e6-ab66-f6f2349876d6">拿着单词书背单词太痛苦，脱离了场景</p></li>
+<li class="point-item"><svg class="point-icon" data-icon="different-materials" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="13" height="19" rx="2"/><rect x="23" y="16" width="13" height="19" rx="2"/><path d="M8 11h5M8 16h3M27 22h5M27 27h3M23 7h10l-3-3M33 7l-3 3M17 33H7l3-3M7 33l3 3"/></svg><p class="point-title" data-source-id="notion-3f4400ee-0cf5-8056-bf14-f2cc9524149b">学习的资料和生活中看到的语料完全不同</p></li>
 </ul>
 </div>
 </article>
 <article class="case-answer">
 <h3 class="case-inline-heading" data-source-id="notion-3f4400ee-0cf5-80ef-ac2e-f927772e06e8">Agent 有机会解决这两个痛点</h3>
-<div class="case-copy">
-<p data-source-id="notion-3f4400ee-0cf5-8027-9221-f0ff51aba3f9">我们先回忆一下一个经典的学习流程：</p>
-<ol>
-<li data-source-id="notion-3f4400ee-0cf5-8047-8ae9-f2fcdb8da138" value="1">遇到一个不会的单词</li>
-<li data-source-id="notion-3f4400ee-0cf5-8088-a8c4-da39610d0586" value="2">复制它</li>
-<li data-source-id="notion-3f4400ee-0cf5-80a2-90d7-cc76f537f1e2" value="3">打开有道词典</li>
-<li data-source-id="notion-3f4400ee-0cf5-80a5-8871-d0b13fc7ecf6" value="4">粘贴到搜索框</li>
-<li data-source-id="notion-3f4400ee-0cf5-8059-a491-e7cbf1bd71f8" value="5">点击搜索</li>
-<li data-source-id="notion-3f4400ee-0cf5-80d8-beaf-d3b4656a2b42" value="6">查看释义</li>
-<li data-source-id="notion-3f4400ee-0cf5-808d-8427-c217e73d63ee" value="7">点击收藏单词本</li>
-<li data-source-id="notion-3f4400ee-0cf5-80ce-bd5c-d449242a61d1" value="8">一周后背单词，但完全想不起来在哪见过它们</li>
+<div class="case-copy sketch-intro" id="classic-learning-flow">
+<p data-source-id="notion-3f4400ee-0cf5-8027-9221-f0ff51aba3f9">我们先回忆一下一个经典（而痛苦）的学习流程：</p>
+</div>
+<div class="learning-flow" aria-label="经典语言学习流程">
+<svg class="flow-arrows" aria-hidden="true"></svg>
+<ol class="flow-steps">
+<li class="flow-step flow-step-1" value="1"><svg class="flow-frame" viewBox="0 0 240 190" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M158 14 C201 17 233 48 229 96 C224 150 179 174 116 179 C58 182 13 151 10 103 C5 60 35 23 84 15 C100 12 112 12 125 14"/></svg><span class="flow-number" aria-hidden="true">01</span><span class="flow-label" data-source-id="notion-3f4400ee-0cf5-8047-8ae9-f2fcdb8da138">遇到一个<br>不会的单词</span></li>
+<li class="flow-step flow-step-2" value="2"><svg class="flow-frame" viewBox="0 0 240 190" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M202 43 C221 61 232 101 215 136 C194 173 140 179 92 169 C40 160 10 129 16 85 C21 43 66 15 121 18 C157 19 182 25 202 43"/></svg><span class="flow-number" aria-hidden="true">02</span><span class="flow-label" data-source-id="notion-3f4400ee-0cf5-8088-a8c4-da39610d0586">复制它</span></li>
+<li class="flow-step flow-step-3" value="3"><svg class="flow-frame" viewBox="0 0 240 190" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M105 15 C156 5 210 24 225 69 C244 119 208 164 148 175 C91 188 38 166 17 133 C-1 99 13 60 45 38 C57 30 67 27 79 24"/></svg><span class="flow-number" aria-hidden="true">03</span><span class="flow-label" data-source-id="notion-3f4400ee-0cf5-80a2-90d7-cc76f537f1e2">打开有道词典</span></li>
+<li class="flow-step flow-step-4" value="4"><svg class="flow-frame" viewBox="0 0 240 190" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M215 71 C225 116 205 163 155 174 C105 187 45 172 22 138 C-1 104 15 53 59 28 C109 0 169 15 194 34"/></svg><span class="flow-number" aria-hidden="true">04</span><span class="flow-label" data-source-id="notion-3f4400ee-0cf5-80a5-8871-d0b13fc7ecf6">粘贴到搜索框</span></li>
+<li class="flow-step flow-step-5" value="5"><svg class="flow-frame" viewBox="0 0 240 190" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M168 20 C209 36 236 80 222 123 C208 164 156 183 103 173 C48 166 13 139 14 94 C15 47 65 15 116 18 C137 17 152 19 168 20"/></svg><span class="flow-number" aria-hidden="true">05</span><span class="flow-label" data-source-id="notion-3f4400ee-0cf5-8059-a491-e7cbf1bd71f8">点击搜索</span></li>
+<li class="flow-step flow-step-6" value="6"><svg class="flow-frame" viewBox="0 0 240 190" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M63 30 C96 9 155 9 194 32 C230 55 236 102 215 137 C190 177 139 179 89 173 C44 166 12 139 13 104 C13 77 21 62 35 48"/></svg><span class="flow-number" aria-hidden="true">06</span><span class="flow-label" data-source-id="notion-3f4400ee-0cf5-80d8-beaf-d3b4656a2b42">查看释义</span></li>
+<li class="flow-step flow-step-7" value="7"><svg class="flow-frame" viewBox="0 0 240 190" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M133 16 C183 8 221 41 225 82 C235 128 194 163 144 174 C86 189 36 163 19 133 C-1 98 17 55 49 34 C64 24 81 20 96 21"/></svg><span class="flow-number" aria-hidden="true">07</span><span class="flow-label" data-source-id="notion-3f4400ee-0cf5-808d-8427-c217e73d63ee">点击收藏单词本</span></li>
+<li class="flow-step flow-step-8" value="8"><svg class="flow-frame" viewBox="0 0 240 190" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M198 39 C223 62 235 104 213 140 C188 177 131 178 86 165 C39 154 9 124 17 84 C25 46 66 16 115 19 C142 16 163 23 176 27"/></svg><span class="flow-number" aria-hidden="true">08</span><span class="flow-label" data-source-id="notion-3f4400ee-0cf5-80ce-bd5c-d449242a61d1">一周后背单词，但完全想不起来在哪见过它们</span></li>
 </ol>
 </div>
-<figure class="case-image" data-source-id="notion-3f4400ee-0cf5-8069-9f2e-f9c71b5c7b21"><a href="assets/notion/agent-revamp-flow.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-flow.png" width="512" height="289" alt="Office、Browser 和 PDF 中的语料进入 Dictionary" loading="lazy" decoding="async"></a></figure>
-<div class="case-copy">
-<p data-source-id="notion-3f4400ee-0cf5-8006-a641-e50da94309a9">这个学习流程里，可以拆解出 2 个本质需求：</p>
-<ul>
-<li data-source-id="notion-3f4400ee-0cf5-801c-95e5-ed57fff5e9d7">Context 收集（记录见过的语料）</li>
-<li data-source-id="notion-3f4400ee-0cf5-809e-a24a-ebd196e0362d">结合 context 的个性化学习（高效有趣的学习这些语料）</li>
+<div class="case-copy case-points" id="learning-needs">
+<p data-source-id="notion-3f4400ee-0cf5-8006-a641-e50da94309a9">这个学习流程里，可以拆解出 2 个用户的本质需求：</p>
+<ul class="point-grid point-grid-principles">
+<li class="point-item"><svg class="point-icon" data-icon="collect-context" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 4v19m-6-6 6 6 6-6M9 14H6L3 27v8h34v-8l-3-13h-3M3 27h10l3 4h8l3-4h10"/></svg><p class="point-title" data-source-id="notion-3f4400ee-0cf5-801c-95e5-ed57fff5e9d7">Context 收集</p><p class="point-description">记录见过的语料</p></li>
+<li class="point-item"><svg class="point-icon" data-icon="personalized-learning" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c-5-4-10-4-15-2v22c5-2 10-2 15 2 5-4 10-4 15-2V21M19 14v22M9 19h5M9 25h5"/><path d="m29 3 2.5 7.5L39 13l-7.5 2.5L29 23l-2.5-7.5L19 13l7.5-2.5Z"/></svg><p class="point-title" data-source-id="notion-3f4400ee-0cf5-809e-a24a-ebd196e0362d">结合 Context 的个性化学习</p><p class="point-description">高效有趣的学习这些语料</p></li>
 </ul>
 </div>
 </article>
 <article class="case-answer">
 <h3 class="case-inline-heading" data-source-id="notion-3f4400ee-0cf5-80db-b82e-e1e993fc8bae">设计原则</h3>
-<div class="case-copy">
+<div class="case-copy case-points" id="design-principles">
 <p data-source-id="notion-3f4400ee-0cf5-808a-b273-ed463e3b4ca9">因此我提出两个设计原则，这也是 Agent 化以后，产品体验会发生的根本变化：</p>
-<ol>
-<li data-source-id="notion-3f4400ee-0cf5-806d-9339-c24e5ab6e196" value="1">Context based Agent</li>
+<ol class="point-grid point-grid-principles">
+<li class="point-item"><svg class="point-icon" data-icon="context-agent" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="10" y="13" width="20" height="17" rx="5"/><path d="M20 8v5M16 25h8M4 15v-5a5 5 0 0 1 5-5M31 5a5 5 0 0 1 5 5v5M36 29v2a5 5 0 0 1-5 5M9 36a5 5 0 0 1-5-5v-2"/><circle cx="16" cy="20" r="1"/><circle cx="24" cy="20" r="1"/></svg><p class="point-title" data-source-id="notion-3f4400ee-0cf5-806d-9339-c24e5ab6e196">Context based Agent</p><p class="point-description" data-source-id="notion-3f4400ee-0cf5-80a1-a6ee-feee0d710bbd">意味着 Agent 不能只是传统的App形式，等待用户去投喂 Context, 必须在用户身边，无感的帮用户记录这些 Context</p></li>
+<li class="point-item"><svg class="point-icon" data-icon="learn-interests" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M34 25a7 7 0 0 1-7 7H15l-8 5v-8a7 7 0 0 1-4-6V12a7 7 0 0 1 7-7h17a7 7 0 0 1 7 7Z"/><path d="M19 25s-9-5.5-9-10a4.5 4.5 0 0 1 9-1 4.5 4.5 0 0 1 9 1c0 4.5-9 10-9 10Z"/></svg><p class="point-title" data-source-id="notion-3f4400ee-0cf5-8065-b72c-f6b28d59f5b0">不学习语言，<br>用语言去学爱好</p><p class="point-description" data-source-id="notion-3f4400ee-0cf5-80ef-a4b6-caf5b02560bc">利用 AI 生成能力和收集到的用户 Context，Agent 可以帮用户创作出用户喜欢的学习素材</p></li>
 </ol>
-<p data-source-id="notion-3f4400ee-0cf5-80a1-a6ee-feee0d710bbd">意味着 Agent 不能只是传统的App形式，等待用户去投喂 Context, 必须在用户身边，无感的帮用户记录这些 Context</p>
-<ol>
-<li data-source-id="notion-3f4400ee-0cf5-8065-b72c-f6b28d59f5b0" value="2">不学习语言，而是用语言去学爱好</li>
-</ol>
-<p data-source-id="notion-3f4400ee-0cf5-80ef-a4b6-caf5b02560bc">利用 AI 生成能力和收集到的用户 Context，Agent 可以帮用户创作出用户喜欢的学习素材</p>
 </div>
 </article>
 <article class="case-answer">
@@ -206,18 +179,21 @@
 <h3 class="case-inline-heading" data-source-id="notion-3f4400ee-0cf5-80b4-a1fc-eec1c6558b91">最难的产品问题</h3>
 <div class="case-copy">
 <p data-source-id="notion-3f4400ee-0cf5-8018-9721-cf72f398e187">结合之前的痛点场景，我觉得有几个难解决的问题：</p>
-<ol>
-<li data-source-id="notion-3f4400ee-0cf5-80f8-a51c-fe569b03407b" value="1">如何在 macOS 和不同应用之间低打扰地收集用户遇到的语料。用户的学习场景很碎，可能发生在浏览器、PDF、聊天或其他应用里；如果每次都要求手动添加，体验会很重，但如果过度主动采集，又容易打扰用户或破坏信任。</li>
-<li data-source-id="notion-3f4400ee-0cf5-8089-a771-cd5eff6831b6" value="2">如何让用户背单词的效率提升？</li>
-<li data-source-id="notion-3f4400ee-0cf5-8096-a49d-d79ebf5beb4d" value="3">如何让 Agent 产出的学习内容真的让用户愿意学。生成内容本身不难，难的是让内容既和用户语料、兴趣有关，又足够有吸引力，能让用户持续阅读、收听或互动。这本质上同时是教育设计和游戏化设计的问题。</li>
+<ol class="challenge-grid" id="product-challenges">
+<li data-source-id="notion-3f4400ee-0cf5-80f8-a51c-fe569b03407b" value="1"><h4 class="challenge-title">如何在 macOS 里不同应用之间低打扰地收集用户遇到的语料。</h4></li>
+<li data-source-id="notion-3f4400ee-0cf5-8089-a771-cd5eff6831b6" value="2"><h4 class="challenge-title">如何让用户结合使用场景背单词</h4></li>
+<li data-source-id="notion-3f4400ee-0cf5-8096-a49d-d79ebf5beb4d" value="3"><h4 class="challenge-title">如何让 Agent 产出的学习内容真的让用户愿意学。</h4></li>
 </ol>
 <p data-source-id="notion-3f4400ee-0cf5-8056-badb-cc79def269e1">其中一个问题，我的解决方向是：</p>
-<ul>
-<li data-source-id="notion-3f4400ee-0cf5-80b6-a8a6-fc98a1088bee">利用 macOS Accessibility 能力读取当前前台应用信息。</li>
-<li data-source-id="notion-3f4400ee-0cf5-80e3-a734-c4b625f8d941">当用户择某段文字时，自动触发查词、翻译，并截取单词附近的屏幕内容 Context。</li>
-<li data-source-id="notion-3f4400ee-0cf5-800d-8c5c-e64bab71e31c">Agent 会把“单词 + 语料 + 场景截图”一起记录下来，减少用户手动添加负担。</li>
-<li data-source-id="notion-3f4400ee-0cf5-806d-a25f-e9a497ea6933">后续再把这些记录加工成学习资料，形成从查词到记忆再到复用的闭环。</li>
-</ul>
+</div>
+<div class="learning-flow solution-flow" id="solution-learning-flow" aria-label="收集语料到学习复用的解决流程">
+<svg class="flow-arrows" aria-hidden="true"></svg>
+<ol class="flow-steps">
+<li class="flow-step flow-step-1" value="1"><svg class="flow-frame" viewBox="0 0 240 190" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M158 14 C201 17 233 48 229 96 C224 150 179 174 116 179 C58 182 13 151 10 103 C5 60 35 23 84 15 C100 12 112 12 125 14"/></svg><span class="flow-number" aria-hidden="true">01</span><span class="flow-label" data-source-id="notion-3f4400ee-0cf5-80b6-a8a6-fc98a1088bee">利用 macOS Accessibility 能力读取当前前台应用信息。</span></li>
+<li class="flow-step flow-step-2" value="2"><svg class="flow-frame" viewBox="0 0 240 190" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M202 43 C221 61 232 101 215 136 C194 173 140 179 92 169 C40 160 10 129 16 85 C21 43 66 15 121 18 C157 19 182 25 202 43"/></svg><span class="flow-number" aria-hidden="true">02</span><span class="flow-label" data-source-id="notion-3f4400ee-0cf5-80e3-a734-c4b625f8d941">当用户择某段文字时，自动触发查词、翻译，并截取单词附近的屏幕内容 Context。</span></li>
+<li class="flow-step flow-step-3" value="3"><svg class="flow-frame" viewBox="0 0 240 190" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M105 15 C156 5 210 24 225 69 C244 119 208 164 148 175 C91 188 38 166 17 133 C-1 99 13 60 45 38 C57 30 67 27 79 24"/></svg><span class="flow-number" aria-hidden="true">03</span><span class="flow-label" data-source-id="notion-3f4400ee-0cf5-800d-8c5c-e64bab71e31c">Agent 会把“单词 + 语料 + 场景截图”一起记录下来，减少用户手动添加负担。</span></li>
+<li class="flow-step flow-step-4" value="4"><svg class="flow-frame" viewBox="0 0 240 190" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M215 71 C225 116 205 163 155 174 C105 187 45 172 22 138 C-1 104 15 53 59 28 C109 0 169 15 194 34"/></svg><span class="flow-number" aria-hidden="true">04</span><span class="flow-label" data-source-id="notion-3f4400ee-0cf5-806d-a25f-e9a497ea6933">后续再把这些记录加工成学习资料，形成从查词到记忆再到复用的闭环。</span></li>
+</ol>
 </div>
 </article>
 </section>
@@ -225,75 +201,85 @@
 <article class="case-answer">
 <h3 class="case-inline-heading" data-source-id="notion-3f4400ee-0cf5-80ee-a03a-c996970d3433">策略1: Agent 与 Context 深度结合</h3>
 <div class="case-copy">
-<p data-source-id="notion-3f5400ee-0cf5-808b-ab4f-eb7e82fbb4a6">我给 Agent 设计了一个更长的“手”——一个随时可以在使用场景中唤起的手。利用我们定义好的基础元素，随时唤起独立窗口，帮用户不用离开 Context 就能使用 Agent 能力。</p>
-<p data-source-id="notion-3f4400ee-0cf5-80fc-89c7-f132b6c46f16">展示收集语料</p>
-<p data-source-id="notion-3f5400ee-0cf5-8024-b948-d980e4eeaff7">展示记单词时会看到单词的 context 拼贴画</p>
+<p data-source-id="notion-3f5400ee-0cf5-808b-ab4f-eb7e82fbb4a6">我给 Agent 设计了一个更长的“手”——一个随时可以在使用场景中唤起的手，帮用户不用离开 Context 就能使用 AI 能力，Agent 则会记录下每一个用户唤起场景的 Context。</p>
+<figure class="case-image wallpaper wallpaper-stage" id="notion-image-collect-context-browser" data-source-id="notion-3f6400ee-0cf5-80dc-844c-d9b246bbf253" data-wallpaper="quiet-coast"><a href="assets/notion/agent-revamp-collect-context-browser.webp" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-collect-context-browser.webp" width="2048" height="1127" alt="在浏览器中唤起 Agent 收集语料" loading="lazy" decoding="async"></a></figure>
+<figure class="case-image wallpaper wallpaper-stage" id="notion-image-collect-context-reading" data-source-id="notion-3f6400ee-0cf5-806b-ab79-c881f2f0489f" data-wallpaper="sunset-valley"><a href="assets/notion/agent-revamp-collect-context-reading.webp" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-collect-context-reading.webp" width="2048" height="1125" alt="在阅读场景中唤起 Agent 收集 Context" loading="lazy" decoding="async"></a></figure>
+<p data-source-id="notion-3f5400ee-0cf5-806a-bc55-d2285d74567a">展示记单词时，不再死记硬背，而是会看到收集这个单词时记录的 context 拼贴画</p>
+<figure class="case-image wallpaper wallpaper-stage" id="notion-image-context-collage" data-source-id="notion-3f5400ee-0cf5-804e-84c4-fb4834ab68b1" data-wallpaper="alpine-lake"><a href="assets/notion/agent-revamp-context-collage.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-context-collage.png" width="1728" height="1117" alt="单词记录与收集语料的 Context 拼贴画" loading="lazy" decoding="async"></a></figure>
+<p data-source-id="notion-3f6400ee-0cf5-800b-aadc-e9e8bb772f1f">这只手还可以随时帮我修改语言错误，并记录用户在使用语言过程中积累的这些问题，后续更有针对性的提供教学。</p>
+<figure class="case-image wallpaper wallpaper-stage" id="notion-image-correct-language" data-source-id="notion-3f6400ee-0cf5-802a-9172-cda5a02618f5" data-wallpaper="quiet-coast"><a href="assets/notion/agent-revamp-correct-language.webp" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-correct-language.webp" width="1970" height="1446" alt="使用 Agent 修改语言错误并记录问题" loading="lazy" decoding="async"></a></figure>
 </div>
 </article>
 <article class="case-answer">
 <h3 class="case-inline-heading" data-source-id="notion-3f5400ee-0cf5-8093-a020-c009c0630f9a">策略2: 用语言，学爱好</h3>
 <div class="case-copy">
 <p data-source-id="notion-3f5400ee-0cf5-8028-a47a-f9fd309b7fbc">AI可以基于用户见过的、被收集的、正在学习的这些语料，生成用户喜爱的内容，用这些语料来学习爱好，在过程中语言水平自然逐渐提升。</p>
-<p data-source-id="notion-3f5400ee-0cf5-80ee-830d-d06f213317b2">在用户输入第一个指令创建内容时，引导用户结构化输入帮助用户缩小意图表达偏差</p>
+<figure class="case-image wallpaper wallpaper-stage" id="notion-image-learning-collection" data-source-id="notion-3f5400ee-0cf5-80a3-977b-cb95c433e391" data-wallpaper="sunset-valley"><a href="assets/notion/agent-revamp-learning-collection.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-learning-collection.png" width="2360" height="1560" alt="学习内容卡片：用语言学习爱好" loading="lazy" decoding="async"></a></figure>
+<p data-source-id="notion-3f5400ee-0cf5-80ee-830d-d06f213317b2">比如用户想用英语学习摄影：在用户输入指令创建内容时，先引导用户结构化输入指定，帮助缩小意图表达偏差</p>
 </div>
-<figure class="case-image wallpaper wallpaper-stage" data-source-id="notion-3f4400ee-0cf5-8073-8f95-fba3d66913e5"><a href="assets/notion/agent-revamp-03.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-03.png" width="2092" height="1350" alt="拆解任务和当前进度：引导用户结构化输入" loading="lazy" decoding="async"></a></figure>
+<figure class="case-image wallpaper wallpaper-stage" data-source-id="notion-3f4400ee-0cf5-8073-8f95-fba3d66913e5" data-wallpaper="alpine-lake"><a href="assets/notion/agent-revamp-03.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-03.png" width="2092" height="1350" alt="拆解任务和当前进度：引导用户结构化输入" loading="lazy" decoding="async"></a></figure>
 <div class="case-copy">
 <p data-source-id="notion-3f5400ee-0cf5-809c-8721-c501e5c7cbcf">生成内容时，渐进式生成降低用户等待焦虑：</p>
-<p data-source-id="notion-3f5400ee-0cf5-80ca-b0d1-edca1ab46212">将交付的内容分类：先展示内容大纲，再生成文字，再生图片，最后生成可交互artifact。把生成速度更快，更全局的信息优先展示，让用户可以尽早判断规划是否符合预期。</p>
-<p data-source-id="notion-3f4400ee-0cf5-801f-a459-c8ce93055b03">用户判断不符合预期，也可以随时暂停或者输入新的prompt，steer 当前的任务。</p>
+<p data-source-id="notion-3f5400ee-0cf5-80ca-b0d1-edca1ab46212">将交付的内容分类：先展示内容大纲，再生成文字，再生图片，最后生成可交互 Artifact。把生成速度更快，更全局的信息优先展示，让用户可以尽早判断规划是否符合预期。</p>
+<figure class="case-image wallpaper wallpaper-stage" id="notion-image-progressive-generation" data-source-id="notion-3f5400ee-0cf5-80b3-aecc-e0daa5914196" data-wallpaper="quiet-coast"><a href="assets/notion/agent-revamp-progressive-generation-v2.webp" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-progressive-generation-v2.webp" width="1728" height="1117" alt="渐进式生成文章大纲与学习内容" loading="lazy" decoding="async"></a></figure>
+<p data-source-id="notion-3f4400ee-0cf5-801f-a459-c8ce93055b03">用户判断不符合预期，也可以随时暂停或者输入新的 prompt，steer 当前的任务。</p>
+<figure class="case-image wallpaper wallpaper-stage" id="notion-image-steer-task" data-source-id="notion-3f5400ee-0cf5-801c-961d-c62a4b61a6f8" data-wallpaper="sunset-valley"><a href="assets/notion/agent-revamp-steer-task-v2.webp" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-steer-task-v2.webp" width="1728" height="1117" alt="输入新的指令调整正在执行的任务" loading="lazy" decoding="async"></a></figure>
 <p data-source-id="notion-3f5400ee-0cf5-801a-b761-c311fe001288">生成结束后，一个常见场景是：一个失败的任务，回顾思维链时，发现是最后几步推理错误导致，但却要重新执行整个任务，大量时间和 Token 都被浪费了。</p>
 <p data-source-id="notion-3f5400ee-0cf5-8028-a6db-cadd9a743f1e">针对这个问题，我的设计让用户在任务执行中&amp;完成后，可以从思维链的任意节点开始“重新推理”。“重新推理”会保留该节点之前的推理过程和产出，放弃该节点之后的所有内容，并基于用户的补充信息重新推理，提升任务完成效率，减少 Token 浪费。</p>
+<figure class="case-image wallpaper wallpaper-stage" id="notion-image-retry-from-step" data-source-id="notion-3f5400ee-0cf5-803a-9ca3-de05fd739f9e" data-wallpaper="alpine-lake"><a href="assets/notion/agent-revamp-retry-from-step.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-retry-from-step.png" width="1476" height="936" alt="从思维链节点重新推理" loading="lazy" decoding="async"></a></figure>
 <p data-source-id="notion-3f5400ee-0cf5-805d-87b1-d50673aebe31">生成出错/失败的场景，比如过程中 token 用完了（常见于首次生成）</p>
+<figure class="case-image-placeholder" id="image-placeholder-generation-error" data-placeholder-for="notion-3f5400ee-0cf5-805d-87b1-d50673aebe31" aria-labelledby="image-placeholder-generation-error-label">
+  <svg class="image-placeholder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m3 17 5-5 4 4 4-6 5 7"/></svg>
+  <figcaption id="image-placeholder-generation-error-label"><span class="image-placeholder-status">待补图片</span><p>生成失败 / Token 用尽提示</p></figcaption>
+</figure>
 <p data-source-id="notion-3f5400ee-0cf5-808d-9308-f4b5019937c4">或者是不满意生成的结果，可以让用户基于指定生成的部分内容重新优化，不需要重做整个任务。</p>
-<p data-source-id="notion-3f4400ee-0cf5-8020-a07e-d7b3815edaab">选择block单独修改</p>
+<figure class="case-image wallpaper wallpaper-stage" id="notion-image-edit-block" data-source-id="notion-3f5400ee-0cf5-8023-b443-dc03e7c82cc5" data-wallpaper="quiet-coast"><a href="assets/notion/agent-revamp-edit-block-v2.webp" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-edit-block-v2.webp" width="1728" height="1117" alt="选择生成内容进行局部优化" loading="lazy" decoding="async"></a></figure>
 <p data-source-id="notion-3f5400ee-0cf5-8065-a94d-efe445b091e3">任务完成后，还可以引导用户在阅读后进行互动学习</p>
-<p data-source-id="notion-3f4400ee-0cf5-8047-9597-f5cdd4e3fcca">产品 Demo 中的真实生成和 Mock 数据：</p>
-<ul>
-<li data-source-id="notion-3f4400ee-0cf5-802e-add0-c100b211b5a3">真实：右侧对话内容；单词列表中的单词（由 Agent 实际收集）。</li>
-<li data-source-id="notion-3f4400ee-0cf5-8050-a80c-c80853f5d4b2">Mock：文章生成结果；学习页面中的拼贴画。</li>
-</ul>
-<p data-source-id="notion-3f4400ee-0cf5-808f-92f8-cc6ca5c534d2">如果有更多时间：</p>
-<ul>
-<li data-source-id="notion-3f4400ee-0cf5-8059-867a-e35df7893b3f">把文章生成从概念展示做成更稳定的教育内容生成链路。</li>
-<li data-source-id="notion-3f4400ee-0cf5-8064-a827-c79dacec91ea">把学习页拼贴画做成真实可运行的生成或规则化排版能力。</li>
-<li data-source-id="notion-3f4400ee-0cf5-8041-b95d-eafbde4e1a58">重点打磨学习内容生成，这是项目里最难的一部分：需要结合教育学、游戏化设计和用户测试，验证 AI 生成的文章、播客和互动游戏是否真的让用户愿意用、并且能帮助学习。</li>
-<li data-source-id="notion-3f5400ee-0cf5-8003-ae67-fa37b6c57729">artifact时效性
-agent主动性
-学习内容/游戏化：让用户更乐于学习
-截图和拼贴画算法
-没有单词时的冷启动</li>
-</ul>
-<p data-source-id="notion-3f4400ee-0cf5-8031-8b2b-cdbe9e577142">使用的 AI 工具：</p>
-<ul>
-<li data-source-id="notion-3f4400ee-0cf5-80d4-abff-d93687ff8141">主要使用 Codex 和 Figma 作为 AI 开发工具，用来 build 交互原型和打磨视觉设计。</li>
-<li data-source-id="notion-3f4400ee-0cf5-8091-8b1f-fe1306429879">Codex：用于前期头脑风暴、快速原型搭建，以及后续把设计实现成可运行原型。</li>
-<li data-source-id="notion-3f4400ee-0cf5-80f2-b19a-d02d79959309">Figma：用于进入视觉设计精细化阶段后，完成高保真原型和细节设计。</li>
-</ul>
-<p data-source-id="notion-3f4400ee-0cf5-8050-b82e-f47e137d658b">提交时请说明：</p>
-<ul>
-<li data-source-id="notion-3f4400ee-0cf5-801c-aa58-cedf20924e1e">哪些是真实交互，哪些是 Mock；</li>
-<li data-source-id="notion-3f4400ee-0cf5-80d2-aec2-c7c7a5c14e93">使用了哪些 AI 工具，以及如何使用；</li>
-<li data-source-id="notion-3f4400ee-0cf5-8003-8a74-c32f0d354f12">如果有更多时间，你会继续完善什么。</li>
-</ul>
+<figure class="case-image wallpaper wallpaper-stage" id="notion-image-interactive-learning" data-source-id="notion-3f5400ee-0cf5-8063-bfee-cebaec0977ca" data-wallpaper="sunset-valley"><a href="assets/notion/agent-revamp-interactive-learning.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-interactive-learning.png" width="2388" height="1536" alt="阅读文章后的互动词汇测验" loading="lazy" decoding="async"></a></figure>
+<aside class="supplement-card" id="supplement-notes" data-source-id="notion-3f5400ee-0cf5-8060-bf33-e8918885df21" aria-labelledby="supplement-title">
+  <h3 id="supplement-title" data-source-id="notion-3f5400ee-0cf5-807f-97ef-e2be1518168c">补充说明：</h3>
+  <div class="supplement-group">
+    <p data-source-id="notion-3f4400ee-0cf5-8047-9597-f5cdd4e3fcca">产品 Demo 中的真实生成和 Mock 数据：</p>
+    <ul>
+      <li data-source-id="notion-3f4400ee-0cf5-802e-add0-c100b211b5a3">真实：右侧对话内容；单词列表中的单词（由 Agent 实际收集）。</li>
+      <li data-source-id="notion-3f4400ee-0cf5-8050-a80c-c80853f5d4b2">Mock：文章生成结果；学习页面中的拼贴画。</li>
+    </ul>
+  </div>
+  <div class="supplement-group">
+    <p data-source-id="notion-3f4400ee-0cf5-808f-92f8-cc6ca5c534d2">如果有更多时间：</p>
+    <ol>
+      <li data-source-id="notion-3f4400ee-0cf5-8041-b95d-eafbde4e1a58">重点打磨学习内容生成，这是项目里最难的一部分：需要结合教育学、游戏化设计和用户测试，验证 AI 生成的文章、播客和互动游戏是否真的让用户愿意用、并且能帮助学习。</li>
+      <li data-source-id="notion-3f5400ee-0cf5-807f-962c-dfbd798b29b0">把截图的处理和拼贴画设计，做成真实可运行的skill，支持更多变的场景。</li>
+      <li data-source-id="notion-3f5400ee-0cf5-80c0-a854-da94a22a3eda">没有收集单词时的产品冷启动</li>
+    </ol>
+  </div>
+  <div class="supplement-group">
+    <p data-source-id="notion-3f4400ee-0cf5-8031-8b2b-cdbe9e577142">使用的 AI 工具：<br>主要使用 Codex 和 Figma 作为 AI 开发工具，用来 build 交互原型和打磨视觉设计。</p>
+  </div>
+</aside>
 </div>
 </article>
 </section>
-<section class="container section case-study" id="design" aria-labelledby="design-title"><div class="section-heading"><h2 id="design-title" data-source-id="notion-3f4400ee-0cf5-80d4-ab10-c35826de0913">完整流程和 UI 演示</h2></div>
+<section class="container section case-study" id="design" aria-labelledby="design-title"><div class="section-heading"><h2 id="design-title" data-source-id="notion-3f4400ee-0cf5-80d4-ab10-c35826de0913">3. 完整流程和 UI 演示</h2></div>
 <article class="case-answer">
 <div class="case-copy">
 <p data-source-id="notion-3f5400ee-0cf5-80b4-8ea9-f0b904cadba9">视觉设计理念：有人文温度的 AI 产品</p>
-<p data-source-id="notion-3f5400ee-0cf5-801e-a0c5-ef7c027d6c30">用户收集 Context 的过程，有点像小时候剪贴报纸做拼贴画，把好看的图案和句子收集起来贴在笔记本上，也有点像现在流行的手帐。</p>
+<p data-source-id="notion-3f5400ee-0cf5-801e-a0c5-ef7c027d6c30">用户收集 Context 的过程，有点像小时候剪贴报纸做拼贴画，把好看的图案和句子收集起来贴在笔记本上，也有点像现在流行的手帐。Agent 会帮用户将每一次查找场景都记录下来，复制文案、截图场景、裁剪拼贴，最终可以变成好看的拼贴画。</p>
 </div>
-<figure class="case-image" data-source-id="notion-3f4400ee-0cf5-8065-bb34-cb062e47fa29"><a href="assets/notion/agent-revamp-11.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-11.png" width="802" height="280" alt="image.png" loading="lazy" decoding="async"></a></figure>
+<figure class="case-image" data-source-id="notion-3f5400ee-0cf5-801c-985f-d6de565332f3"><a href="assets/notion/agent-revamp-collage-reference.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-collage-reference.png" width="1749" height="869" alt="报纸剪贴、复古文字与艺术拼贴参考图" loading="lazy" decoding="async"></a></figure>
 <div class="case-copy">
-<p data-source-id="notion-3f5400ee-0cf5-80e8-b994-e6005cfba683">我的产品从这些真实的、有温度的生活场景获得灵感，Agent 会帮用户将每一次查找场景都记录下来，复制文案、截图场景、裁剪拼贴，最终可以变成好看的拼贴画。</p>
-<p data-source-id="notion-3f4400ee-0cf5-806d-9a1c-fed834e50cb3">以下是整体的产品演示：</p>
-</div>
-<figure class="case-image wallpaper wallpaper-stage" data-source-id="notion-3f4400ee-0cf5-8017-b7ef-d45c90261d30"><a href="assets/notion/agent-revamp-07.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-07.png" width="1728" height="1117" alt="MacBook Pro 16_ - 18.png" loading="lazy" decoding="async"></a></figure>
-<figure class="case-image wallpaper wallpaper-stage" data-source-id="notion-3f4400ee-0cf5-809e-ac2e-e93c44760559"><a href="assets/notion/agent-revamp-08.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-08.png" width="1728" height="1117" alt="MacBook Pro 16_ - 20.png" loading="lazy" decoding="async"></a></figure>
-<figure class="case-image wallpaper wallpaper-stage" data-source-id="notion-3f4400ee-0cf5-8087-97b0-f39cace64809"><a href="assets/notion/agent-revamp-09.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-09.png" width="1728" height="1117" alt="MacBook Pro 16_ - 21.png" loading="lazy" decoding="async"></a></figure>
-<div class="case-copy">
-<p data-source-id="notion-3f5400ee-0cf5-8091-86f2-ea838e724eee">hover 单词展示拼贴画</p>
+<p data-source-id="notion-3f5400ee-0cf5-80e8-b994-e6005cfba683">学习页面则充满早上8点钟的阳光，温暖但不刺眼。</p>
+<figure class="case-image wallpaper wallpaper-stage" id="notion-image-learning-morning-light" data-source-id="notion-3f5400ee-0cf5-803f-8819-cabc0649ebed" data-wallpaper="alpine-lake"><a href="assets/notion/agent-revamp-learning-morning-light.webp" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-learning-morning-light.webp" width="2048" height="1354" alt="学习页面的清晨阳光与学习内容卡片" loading="lazy" decoding="async"></a></figure>
+<p data-source-id="notion-3f4400ee-0cf5-806d-9a1c-fed834e50cb3">以下是整体的关键页面UI：</p>
+<p data-source-id="notion-3f6400ee-0cf5-807c-9a8c-cc4fec391d20">收集的语料</p>
+<figure class="case-image wallpaper wallpaper-stage" data-source-id="notion-3f4400ee-0cf5-8017-b7ef-d45c90261d30" data-wallpaper="quiet-coast"><a href="assets/notion/agent-revamp-07.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-07.png" width="1728" height="1117" alt="MacBook Pro 16_ - 18.png" loading="lazy" decoding="async"></a></figure>
+<p data-source-id="notion-3f6400ee-0cf5-8086-ad2c-e8f9485e7a93">学习页面，有用户自己创造的学习内容 Artifact</p>
+<figure class="case-image wallpaper wallpaper-stage" data-source-id="notion-3f4400ee-0cf5-809e-ac2e-e93c44760559" data-wallpaper="sunset-valley"><a href="assets/notion/agent-revamp-08.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-08.png" width="1728" height="1117" alt="MacBook Pro 16_ - 20.png" loading="lazy" decoding="async"></a></figure>
+<p data-source-id="notion-3f6400ee-0cf5-8023-84e4-c20ab1a45fc7">可互动的学习内容</p>
+<figure class="case-image wallpaper wallpaper-stage" id="notion-image-camera-study" data-source-id="notion-3f5400ee-0cf5-805b-bf20-cf2f3e42344f" data-wallpaper="alpine-lake"><a href="assets/notion/agent-revamp-camera-study.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-camera-study.png" width="2096" height="1480" alt="学习文章中的相机互动演示" loading="lazy" decoding="async"></a></figure>
+<p data-source-id="notion-3f6400ee-0cf5-8056-8736-d3fdecf185c5">重新生成消失动效</p>
+<p data-source-id="notion-3f6400ee-0cf5-8005-881b-e1d8a9d00b5d">遇到收集过的词，hover 时会展示收集到的 Context</p>
+<figure class="case-image wallpaper wallpaper-stage" id="notion-image-word-hover" data-source-id="notion-3f5400ee-0cf5-808a-957c-de5ebf9e1e0f" data-wallpaper="quiet-coast"><a href="assets/notion/agent-revamp-word-hover.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-word-hover.png" width="2276" height="1462" alt="悬停单词展示 Context 拼贴画" loading="lazy" decoding="async"></a></figure>
 </div>
 </article>
 <article class="case-answer">
@@ -301,7 +287,9 @@ agent主动性
 <div class="case-copy">
 <p data-source-id="notion-3f5400ee-0cf5-80d6-a27f-c1f4920e9a75">随着用户收集的单词和生成的artifact越来越多，产品可能会变得更臃肿。“原子化设计” 是在系统层进行简化和抽象，提炼出系统中能做几乎所有事的、最基础的元素，定义这个元素的行为和元素间的互动机制。</p>
 </div>
-<figure class="case-image" data-source-id="notion-3f4400ee-0cf5-80ad-ba34-ea79d5d98436"><a href="assets/notion/agent-revamp-04.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-04.png" width="1500" height="828" alt="可视化：单词可以组成无数种 artifact" loading="lazy" decoding="async"></a></figure>
+<figure class="case-image atomic-design-interactive" id="atomic-design-demo" data-source-id="notion-3f4400ee-0cf5-80ad-ba34-ea79d5d98436">
+  <atomic-design-diagram lang="zh-CN"><img src="assets/notion/agent-revamp-04.png" width="1500" height="828" alt="原子组件可以组合为不同应用场景" loading="lazy" decoding="async"></atomic-design-diagram>
+</figure>
 <div class="case-copy">
 <ul>
 <li data-source-id="notion-3f5400ee-0cf5-8005-a998-dd7c3f2a2c54">在“记录”页面，单词/语料就是原子。只要克制的、不引入新的概念，那么不论用户收集多少语料，整个列表和详情都会很好管理</li>
@@ -309,7 +297,7 @@ agent主动性
 <li data-source-id="notion-3f5400ee-0cf5-80e6-903a-e6dd66992159">Artifact 详情页，可以借鉴 Notion 的思路。Notion 的基础原子是“Block”。不论多复杂的 Notion 页面，都是由最基础的 Block 组成，也有点像 Web 开发的“盒模型”。正是 Notion 在早期定义清楚了原子结构 Block 的行为和边界，系统的复杂度就变得可以被管理。</li>
 </ul>
 </div>
-<figure class="case-image" data-source-id="notion-3f5400ee-0cf5-8034-ab24-cbef9f25a570"><a href="assets/notion/agent-revamp-blocks.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-blocks.png" width="2048" height="2175" alt="Notion 界面分解为 Block 原子结构" loading="lazy" decoding="async"></a></figure>
+<figure class="case-image" data-source-id="notion-3f5400ee-0cf5-8034-ab24-cbef9f25a570"><a href="assets/notion/agent-revamp-blocks-updated.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-blocks-updated.png" width="2165" height="2300" alt="Notion 界面分解为 Block 原子结构" loading="lazy" decoding="async"></a></figure>
 </article>
 <article class="case-answer">
 <h3 class="case-inline-heading" data-source-id="notion-3f5400ee-0cf5-8049-ad34-e96cd7f4b08f">最后</h3>

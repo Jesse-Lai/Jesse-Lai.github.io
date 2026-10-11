@@ -1,4 +1,5 @@
-/* Reveal a full-width background without resizing the interface above it. */
+/* Expand the background into a centered rounded card while keeping the interface fixed. */
+.wallpaper-stage.wallpaper { --wallpaper-image: url('assets/wallpapers/cursor-alpine-lake.webp'); background-image: var(--wallpaper-image); --wallpaper-radius: clamp(12px, 1.5vw, 24px); border-radius: var(--wallpaper-radius); }
 .wallpaper-stage.wallpaper.is-expanding {
   background: none;
   border-radius: 0;
@@ -11,10 +12,12 @@
   top: 0;
   bottom: 0;
   left: 50%;
-  width: var(--wallpaper-width);
+  width: calc(var(--wallpaper-width) - 2 * var(--wallpaper-inset));
   transform: translateX(-50%);
-  background: #c9c5b6 url('assets/cursor-landscape.jpg') center / cover;
-  clip-path: inset(0 var(--wallpaper-inset) round calc(var(--radius) * var(--wallpaper-roundness)));
+  background: #c9c5b6 var(--wallpaper-image) center / cover;
+  border-radius: var(--wallpaper-radius);
+  corner-shape: squircle;
+  overflow: hidden;
 }
 [data-theme=dark] .wallpaper-stage.is-expanding::before {
   background-blend-mode: multiply;
@@ -22,16 +25,35 @@
 }
 
 /* Product screenshots share the hero wallpaper, with a fixed foreground frame. */
+.hero-stage.hero-product-image { height: auto; }
+.hero-product-image > img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 9px;
+  box-shadow: 0 10px 48px #25251b26;
+}
 .case-image.wallpaper-stage {
   position: relative;
   isolation: isolate;
-  padding: clamp(24px, 5vw, 72px);
+  --screenshot-gutter: clamp(14px, 5vw, 72px);
+  width: calc(100% + 2 * var(--screenshot-gutter));
+  margin-inline: calc(-1 * var(--screenshot-gutter));
+  padding: clamp(48px, 5vw, 88px) var(--screenshot-gutter);
 }
 .case-image.wallpaper-stage > a {
   border-radius: 9px;
   box-shadow: 0 10px 48px #25251b26;
 }
 @media (max-width: 560px) {
-  .case-image.wallpaper-stage { padding: 20px 14px; }
+  .case-image.wallpaper-stage { --screenshot-gutter: 14px; padding-block: 40px; }
   .case-image.wallpaper-stage > a { border-radius: 5px; }
 }
+
+.wallpaper-stage.wallpaper[data-wallpaper="quiet-coast"] { --wallpaper-image: url('assets/wallpapers/cursor-quiet-coast.webp'); }
+.wallpaper-stage.wallpaper[data-wallpaper="sunset-valley"] { --wallpaper-image: url('assets/wallpapers/cursor-sunset-valley.webp'); }
+
+/* Share continuous corners across wallpaper and foreground cards. */
+.wallpaper-stage.wallpaper,
+.hero-product-image > img,
+.case-image.wallpaper-stage > a { corner-shape: squircle; }

@@ -1,0 +1,49 @@
+@font-face {
+  font-family: MFBoHeHaiYanNoncommercial;
+  src: url('assets/MFBoHeHaiYanNoncommercial.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+.learning-flow { position: relative; width: 100%; margin: 32px auto 40px; padding: 20px 6px; }
+.flow-steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 52px 28px; margin: 0; padding: 0; list-style: none; }
+.flow-step { position: relative; display: flex; align-items: center; justify-content: center; min-width: 0; min-height: 142px; padding: 20px 10px; color: var(--fg); }
+.flow-step-1 { grid-area: 1 / 1; transform: rotate(-2deg); }
+.flow-step-2 { grid-area: 1 / 2; transform: rotate(1.5deg); }
+.flow-step-3 { grid-area: 1 / 3; transform: rotate(-1deg); }
+.flow-step-4 { grid-area: 1 / 4; transform: rotate(2deg); }
+.flow-step-5 { grid-area: 2 / 4; transform: rotate(-1deg); }
+.flow-step-6 { grid-area: 2 / 3; transform: rotate(1.5deg); }
+.flow-step-7 { grid-area: 2 / 2; transform: rotate(-2deg); }
+.flow-step-8 { grid-area: 2 / 1; transform: rotate(1deg); }
+.flow-label { position: relative; font: 400 22px/1.4 MFBoHeHaiYanNoncommercial, 'PingFang SC', cursive; text-align: center; text-wrap: balance; }
+.flow-step-8 .flow-label { font-size: 17px; line-height: 1.45; }
+.flow-number { position: absolute; left: 10px; top: -14px; font: 400 21px/1 MFBoHeHaiYanNoncommercial, cursive; color: #718779; }
+.flow-frame { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; fill: none; stroke: #718779; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.flow-frame path { vector-effect: non-scaling-stroke; }
+.flow-step-8 .flow-frame { stroke: #a36e53; }
+.flow-arrows { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; fill: none; stroke: #718779; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.flow-arrows .flow-return { opacity: .55; }
+.solution-flow .flow-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 54px 46px; }
+.solution-flow .flow-step { display: flex; flex-direction: column; align-items: stretch; justify-content: flex-start; min-height: 0; padding: 24px 18px; background: var(--card); border-radius: 22px; corner-shape: squircle; transform: none; }
+.solution-flow .flow-number { position: static; margin-bottom: 20px; font: 500 20px/1.2 var(--font-heading); }
+.solution-flow .flow-frame { display: none; }
+.solution-flow .flow-label { font: 500 18px/1.6 var(--font-body); text-align: left; text-wrap: wrap; overflow-wrap: anywhere; }
+.solution-flow .flow-step-3 { grid-area: 2 / 2; }
+.solution-flow .flow-step-4 { grid-area: 2 / 1; }
+.solution-flow .flow-step-4 .flow-frame { stroke: #a36e53; }
+@container article (max-width: 460px) {
+  .learning-flow { padding: 20px 8px; margin-top: 28px; }
+  .flow-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px 36px; }
+  .flow-step { min-height: 128px; }
+  .flow-step-1 { grid-area: 1 / 1; }
+  .flow-step-2 { grid-area: 1 / 2; }
+  .flow-step-3 { grid-area: 2 / 2; }
+  .flow-step-4 { grid-area: 2 / 1; }
+  .flow-step-5 { grid-area: 3 / 1; }
+  .flow-step-6 { grid-area: 3 / 2; }
+  .flow-step-7 { grid-area: 4 / 2; }
+  .flow-step-8 { grid-area: 4 / 1; }
+  .solution-flow .flow-steps { grid-template-columns: 1fr; gap: 48px; }
+  .solution-flow .flow-step { grid-area: auto; min-height: 0; padding: 24px; }
+}

@@ -16,19 +16,19 @@
     for (const { stage, bounds } of measurements) {
       stage.classList.toggle('is-expanding', !reducedMotion.matches);
       if (reducedMotion.matches) continue;
-      const gutter = Math.max(0, (width - bounds.width) / 2);
+      // End at a roomy centered card; never expand to the viewport edges.
+      const cardWidth = Math.max(bounds.width, Math.min(width - 32, width * .75));
+      const gutter = Math.max(0, (cardWidth - bounds.width) / 2);
       const start = Math.min(bounds.top + window.scrollY, window.innerHeight * .85);
       const end = Math.min(window.innerHeight * .12, start - 1);
       const progress = Math.max(0, Math.min(1, (start - bounds.top) / (start - end)));
       const eased = progress * progress * (3 - 2 * progress);
       const inset = (gutter * (1 - eased)).toFixed(3);
-      const roundness = (1 - eased).toFixed(4);
-      const style = `${width}:${inset}:${roundness}`;
+      const style = `${cardWidth}:${inset}`;
       if (style === previousStyles.get(stage)) continue;
       previousStyles.set(stage, style);
-      stage.style.setProperty('--wallpaper-width', `${width}px`);
+      stage.style.setProperty('--wallpaper-width', `${cardWidth}px`);
       stage.style.setProperty('--wallpaper-inset', `${inset}px`);
-      stage.style.setProperty('--wallpaper-roundness', roundness);
     }
   }
 
