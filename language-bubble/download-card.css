@@ -1,0 +1,30 @@
+.download-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 24px;
+  border-radius: 18px;
+  background: #e4f2ff;
+  color: #30302e;
+  text-align: left;
+  text-decoration: none;
+  transition: background-color 160ms ease;
+}
+.download-card:hover { background: #d7ebfd; opacity: 1; }
+.download-card:focus-visible { outline: 2px solid #3984b8; outline-offset: 4px; }
+.download-card-emoji { flex: none; font-size: 28px; line-height: 1; margin-right: 2px; }
+.download-card-file { flex: none; }
+.download-card-details { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; min-width: 0; }
+.download-card-name { font-size: 18px; line-height: 1.5; overflow-wrap: anywhere; }
+.download-card-size { color: #7a7a76; font-size: 14px; line-height: 1.5; white-space: nowrap; }
+@media (max-width: 560px) {
+  .download-card { gap: 10px; padding: 20px 16px; border-radius: 16px; }
+  .download-card-emoji { font-size: 25px; margin-right: 0; }
+  .download-card-file { width: 19px; height: 23px; }
+  .download-card-name { font-size: 16px; }
+  .download-card-size { font-size: 13px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .download-card { transition: none; }
+}

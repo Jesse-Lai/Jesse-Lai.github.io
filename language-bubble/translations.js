@@ -1,9 +1,9 @@
 // Article translations. Chinese source text stays in index.html.
 window.articleTranslations = {
-  "AI 帮用户翻译和查找语料时，会同时截图记录这个场景 (Context)": {"en": "When AI helps users translate and look up language material, it also takes a screenshot to capture the situation (Context).", "ko": "AI가 사용자의 번역과 언어 자료 검색을 도울 때, 해당 상황 (Context)도 스크린샷으로 함께 기록합니다."},
-  "比如在Teams里面回复国外同事的消息，我可以唤起 Agent 帮我优化表达": {
-    "en": "For example, when replying to an overseas colleague in Teams, I can call up Agent to help improve my wording.",
-    "ko": "예를 들어 Teams에서 해외 동료의 메시지에 답장할 때 Agent를 불러 표현을 다듬을 수 있습니다."
+  "AI 帮用户翻译和查找语料时，会同时截图记录这个场景 (Context)，和单词一起记录。": {"en": "When AI helps users translate and look up language material, it also takes a screenshot to capture the situation (Context) and saves it together with the word.", "ko": "AI가 사용자의 번역과 언어 자료 검색을 도울 때, 해당 상황 (Context)을 스크린샷으로 캡처해 단어와 함께 기록합니다."},
+  "比如在 Teams 里面回复国外同事的消息，我可以唤起 Agent 帮我优化英文表达。": {
+    "en": "For example, when replying to an overseas colleague in Teams, I can call up Agent to help improve my English wording.",
+    "ko": "예를 들어 Teams에서 해외 동료의 메시지에 답장할 때 Agent를 불러 영어 표현을 다듬을 수 있습니다."
   },
   "重新加载": {
     "en": "Reload",
@@ -48,10 +48,6 @@ window.articleTranslations = {
   "喜欢某个国外文化": {
     "en": "Exploring another culture",
     "ko": "다른 나라의 문화에 관심 있는 사람"
-  },
-  "使用 Mac OS 系统": {
-    "en": "Using macOS",
-    "ko": "macOS 사용자"
   },
   "这些用户每天都在查词和记词，接触语言环境。这个需求高频、真实、持续。": {
     "en": "These users look up and learn words every day while immersed in the language. The need is frequent, real, and ongoing.",
@@ -269,21 +265,25 @@ window.articleTranslations = {
     "en": "I gave the agent a longer “hand”—one users can summon wherever they are working. It brings AI capabilities into the current context, while the agent records the context of every invocation.",
     "ko": "Agent에게 더 긴 ‘손’을 설계했습니다. 사용 중인 상황에서 언제든 부를 수 있는 손입니다. 사용자는 Context를 벗어나지 않고 AI 기능을 쓰고, Agent는 호출될 때마다 그 상황의 Context를 기록합니다."
   },
-  "展示记单词时，不再死记硬背，而是会看到收集这个单词时记录的 context 拼贴画": {
-    "en": "When reviewing vocabulary, users see a collage of the context captured when they saved each word, instead of relying on rote memorization.",
-    "ko": "단어를 복습할 때 무작정 외우는 대신, 그 단어를 수집할 당시 기록한 Context 콜라주를 볼 수 있습니다."
+  "这样回顾收集的单词时，不再死记硬背，而是会再次看到收集这个单词时的 context 拼贴截图，唤起用户的记忆，更容易记住单词。": {
+    "en": "When reviewing saved words this way, users see the context screenshot collage from when they collected each word again, instead of relying on rote memorization. This brings back their memories and makes the words easier to remember.",
+    "ko": "이렇게 수집한 단어를 복습하면 무작정 외우는 대신, 그 단어를 수집할 당시의 context 스크린샷 콜라주를 다시 보게 됩니다. 당시의 기억을 떠올려 단어를 더 쉽게 기억할 수 있습니다."
   },
-  "这只手还可以随时帮我修改语言错误，并记录用户在使用语言过程中积累的这些问题，后续更有针对性的提供教学。": {
-    "en": "This hand can also correct language mistakes at any time and record the issues users encounter, enabling more targeted teaching later.",
-    "ko": "이 손은 언제든 언어 오류를 고쳐 주고 사용 중 쌓이는 문제를 기록해, 이후 더 맞춤화된 학습을 제공할 수도 있습니다."
+  "这只 Agent 的 “手” 还可以随时帮我修改语言错误，或者润色文案，并记录用户在使用语言过程中积累的这些问题，后续更有针对性的提供教学。": {
+    "en": "This Agent’s “hand” can also help me correct language mistakes or polish my writing at any time, while recording the issues users encounter as they use the language, enabling more targeted teaching later.",
+    "ko": "이 Agent의 ‘손’은 언제든 언어 오류를 고치거나 문장을 다듬어 주고, 사용자가 언어를 사용하면서 겪는 문제를 기록해 이후 더 맞춤화된 학습을 제공할 수도 있습니다."
   },
   "策略2: 用语言，学爱好": {
     "en": "Strategy 2: Use a language to explore your interests",
     "ko": "전략 2: 언어로 관심사 배우기"
   },
-  "这个部分是 Agent 发挥的重点。Agent 可以基于用户见过的、被收集的这些语料，结合用户的爱好来学习，语言水平在自然提升。比如在学习页面，用户可以生成（Agent 也可以主动生成）和爱好相关的学习内容（可以包含文章、播客、游戏等，本次demo只做了文章作为概念展示）。": {
-    "en": "This is where Agent plays its most important role. Using language materials users have encountered and collected, Agent can help them learn through their interests, naturally improving their language skills. For example, on the learning page, users can generate learning content related to their interests (Agent can also generate it proactively). This could include articles, podcasts, games, and more; this demo uses articles only to illustrate the concept.",
-    "ko": "이 부분이 Agent의 역할이 가장 중요한 지점입니다. Agent는 사용자가 접하고 수집한 언어 자료를 바탕으로 관심사와 연결된 학습을 도와 언어 실력이 자연스럽게 향상되도록 합니다. 예를 들어 학습 페이지에서 사용자는 관심사와 관련된 학습 콘텐츠를 생성할 수 있습니다(Agent가 먼저 생성할 수도 있습니다). 콘텐츠에는 글, 팟캐스트, 게임 등이 포함될 수 있으며, 이번 데모에서는 개념을 보여주기 위해 글만 구현했습니다."
+  "这个部分是 Agent 发挥的重点。Agent 可以基于用户见过的、被收集的这些语料，结合用户的爱好来生成学习内容，让用户的语言水平在 Have fun 中自然提升。": {
+    "en": "This is where Agent plays its most important role. Based on language materials users have encountered and collected, Agent can generate learning content around their interests, helping their language skills improve naturally while they have fun.",
+    "ko": "이 부분이 Agent의 역할이 가장 중요한 지점입니다. Agent는 사용자가 접하고 수집한 언어 자료를 바탕으로 관심사에 맞는 학습 콘텐츠를 생성해, 즐기는 동안 언어 실력이 자연스럽게 향상되도록 합니다."
+  },
+  "比如在学习页面，用户可以生成（Agent 也可以主动生成）和爱好相关的学习内容（可以包含文章、播客、游戏等，本次demo只做了文章作为概念展示）。": {
+    "en": "For example, on the learning page, users can generate learning content related to their interests (Agent can also generate it proactively). This could include articles, podcasts, games, and more; this demo uses articles only to illustrate the concept.",
+    "ko": "예를 들어 학습 페이지에서 사용자는 관심사와 관련된 학습 콘텐츠를 생성할 수 있습니다(Agent가 먼저 생성할 수도 있습니다). 콘텐츠에는 글, 팟캐스트, 게임 등이 포함될 수 있으며, 이번 데모에서는 개념을 보여주기 위해 글만 구현했습니다."
   },
   "Agent 一开始不了解用户的喜好（长期可以根据用户收集的 context 进行分析），需要引导用户提供更多context来确保生成质量。比如用户想用英语学习摄影：在用户输入指令创建内容时，先引导用户结构化输入喜欢的爱好、文章长度、要复习的单词范围等，帮助": {
     "en": "Agent does not initially know the user's preferences (over time, it can infer them from the context the user collects), so it needs to guide users to provide more context to ensure the quality of generated content. For example, if someone wants to learn photography in English, guide them to specify their interests, article length, the range of vocabulary to review, and other details in a structured format when requesting content, to help ",
@@ -344,7 +344,7 @@ window.articleTranslations = {
     "en": "Generation failed / Out of tokens",
     "ko": "생성 실패 / 토큰 소진 안내"
   },
-  "任务完成后，还可以引导用户在阅读后进行互动学习。（这里肯定还可以开发更多更好玩的互动方式，时间所限仅用答题展示互动概念）": {
+  "任务完成后，还可以引导用户在阅读后进行互动学习。（这里肯定还可以开发更多更好玩的互动方式，时间有限仅用答题展示互动概念）": {
     "en": "After the task is complete, guide users into interactive learning once they finish reading. (There is certainly room to develop more engaging ways to interact. Given the time constraints, this demo uses only quiz questions to illustrate the concept.)",
     "ko": "작업이 완료되면 읽기를 마친 사용자를 인터랙티브 학습으로 안내할 수 있습니다. (더 다양하고 재미있는 상호작용 방식을 개발할 여지가 충분하지만, 시간 제약으로 이번에는 퀴즈만으로 상호작용의 개념을 보여 주었습니다.)"
   },
@@ -460,9 +460,9 @@ window.articleTranslations = {
     "en": "Thank you to Meshy for this design test, which gave me the chance to think through and design a product I would use every day. I will continue refining and developing it, with plans to release it on the App Store for a wider audience.",
     "ko": "매일 사용할 제품을 직접 고민하고 설계할 기회를 준 Meshy의 이번 과제에 감사드립니다. 앞으로도 제품을 계속 다듬고 개발해, App Store를 통해 더 많은 사용자에게 선보일 예정입니다."
   },
-  "这个项目是用 SwiftUI 开发的 MacOS 应用，以上网页的界面展示是我让 Agent 逆向生成的版本，细节难免缺失，MacOS 版我也打个包放在这里（也还是 Mock 数据版）": {
-    "en": "This project is a macOS app built with SwiftUI. The interface demos on this webpage are a version I asked an Agent to reverse-engineer, so some details are inevitably missing. I'll also package the macOS version and put it here (it still uses mock data).",
-    "ko": "이 프로젝트는 SwiftUI로 개발한 macOS 앱입니다. 위 웹페이지의 UI 데모는 Agent에게 역으로 구현하도록 요청한 버전이라 일부 세부 사항이 빠져 있습니다. macOS 버전도 패키징해서 여기에 올려두겠습니다. (이 버전도 아직 Mock 데이터를 사용합니다.)"
+  "这个项目是用 SwiftUI 开发的 MacOS 应用，以上网页的界面展示是我让 Agent 逆向生成的版本，细节难免缺失，MacOS 版我也打个包放在这里（也还是 Mock 数据版，有很多不足，仅表达产品创意）": {
+    "en": "This project is a macOS app built with SwiftUI. The interface demos on this webpage are a version I asked an Agent to reverse-engineer, so some details are inevitably missing. I'll also package the macOS version and put it here (it still uses mock data and has many shortcomings; it is only intended to convey the product concept).",
+    "ko": "이 프로젝트는 SwiftUI로 개발한 macOS 앱입니다. 위 웹페이지의 UI 데모는 Agent에게 역으로 구현하도록 요청한 버전이라 일부 세부 사항이 빠져 있습니다. macOS 버전도 패키징해서 여기에 올려두겠습니다. (이 버전도 아직 Mock 데이터를 사용하며 부족한 점이 많고, 제품 아이디어를 전달하기 위한 것입니다.)"
   },
   "Jesse Lai 的照片便利贴": {
     "en": "Jesse Lai's photo sticky note",
