@@ -1,0 +1,15 @@
+.bubble-demo-shell{width:100%;position:relative;overflow:hidden;border-radius:9px;corner-shape:squircle;box-shadow:0 10px 48px #25251b26;background:#fbfbfb;isolation:isolate}
+.bubble-demo-shell>.demo-fallback{position:absolute;inset:0;display:block;width:100%;height:100%;margin:0;box-shadow:none;border:0}
+.bubble-demo-shell>img.demo-fallback,.demo-fallback>img{width:100%;height:100%;object-fit:contain;display:block;background:#fbfbfb}
+.bubble-demo-shell.demo-ready>.demo-fallback{visibility:hidden;pointer-events:none}
+.demo-frame{display:block;position:absolute;inset:0;border:0;max-width:none!important;max-height:none!important;transform-origin:top left;opacity:0;pointer-events:none;background:transparent}
+.demo-ready>.demo-frame{opacity:1;pointer-events:auto}
+.demo-controls{position:absolute;bottom:12px;right:18px;display:flex;align-items:center;gap:12px;font:11px/1.4 Inter,'PingFang SC',sans-serif;color:#fff;z-index:2;text-shadow:0 1px 3px #0007}
+.demo-controls button{font:inherit;cursor:pointer;padding:5px 9px;border:1px solid #ffffff40;border-radius:999px;background:#ffffffd9;color:#444;backdrop-filter:blur(12px);text-shadow:none}
+.demo-controls button:hover{background:#fff}.demo-controls button:focus-visible{outline:2px solid #657caa;outline-offset:3px}
+.hero-stage:has(.bubble-demo-shell){height:auto}
+@media(max-width:560px){.bubble-demo-shell{border-radius:5px}.demo-controls{bottom:8px;right:12px;font-size:10px}.demo-controls>span{display:none}}
+
+/* Reset the legacy hero mock-window rules on the iframe wrapper. */
+.hero-stage>.bubble-demo-shell{min-height:0;height:auto;border:0;padding:0;display:block}
+.hero-stage>.demo-controls{min-height:0;height:auto;border:0;box-shadow:none;background:none}

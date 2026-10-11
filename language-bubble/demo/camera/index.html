@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en" class="embedded">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Canon AT-1 Camera · Interactive Study</title>
+<link rel="stylesheet" href="explorer.css?v=9-dot-loading">
+</head>
+<body>
+<main>
+<section aria-label="Interactive camera anatomy">
+<div id="stage" class="stage" data-ready="false" aria-busy="true">
+<iframe id="viewer" title="Interactive 3D Canon AT-1 camera" allow="autoplay; fullscreen; xr-spatial-tracking" allowfullscreen></iframe>
+<div id="orbit" class="orbit" tabindex="0" role="application" aria-label="Drag to rotate. Scroll to read the article. Use arrow keys to rotate and plus or minus to zoom."></div>
+<svg id="leaders" aria-hidden="true"><path id="leader"/><circle id="anchor" r="2.5"/></svg>
+<div id="part-label" class="part-label" hidden><span id="label-en"></span></div>
+<div id="loading" class="loading" lang="zh-CN"><canvas id="loading-dots" aria-hidden="true"></canvas><span id="loading-text" role="status">正在加载模型</span><button id="retry" hidden>重新加载</button></div>
+</div>
+<div class="slider-block">
+<label class="sr-only" for="explosion">Camera expansion</label>
+<input id="explosion" type="range" min="0" max="100" step="1" value="0" disabled aria-label="Camera expansion" aria-valuetext="0% expanded">
+<output id="amount" for="explosion" class="sr-only">0%</output>
+</div>
+<div id="parts" class="parts" role="group" aria-label="Camera parts">
+<button data-part="all" aria-pressed="true" disabled>All</button>
+<button data-part="body" aria-pressed="false" disabled>Body</button>
+<button data-part="shutter" aria-pressed="false" disabled>Shutter</button>
+<button data-part="speed" aria-pressed="false" disabled>Speed dial</button>
+<button data-part="advance" aria-pressed="false" disabled>Advance</button>
+<button data-part="rewind" aria-pressed="false" disabled>Rewind</button>
+<button data-part="battery" aria-pressed="false" disabled>Battery</button>
+</div>
+<div class="explanation" aria-live="polite">
+<h2 id="part-title">Explore a camera, part by part</h2>
+<p id="part-description">Slide to expand the five controls around the camera body. Select a part to learn its name and what it does.</p>
+<p class="example" id="part-example" hidden></p>
+</div>
+</section>
+<details id="qa" hidden><summary>Scene verification</summary><button id="audit">Read part positions</button><pre id="audit-output"></pre></details>
+</main>
+<script src="sketchfab-viewer-1.12.1.js"></script>
+<script src="explorer.js?v=8-dot-loading"></script>
+<script src="smooth-corners.js"></script>
+<script src="embed.js"></script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+{
+  "AccountAvatar": {
+    "source": "Resources/Assets.xcassets/AccountAvatar.imageset/avatar@1x.png",
+    "width": 32,
+    "height": 32,
+    "bytes": 1084
+  },
+  "RecordFavorite": {
+    "source": "Resources/Assets.xcassets/RecordFavorite.imageset/favorite.svg",
+    "bytes": 653
+  },
+  "RecordSpeaker": {
+    "source": "Resources/Assets.xcassets/RecordSpeaker.imageset/speaker.svg",
+    "bytes": 1660
+  },
+  "ArticleJourneyTravel": {
+    "source": "Resources/Assets.xcassets/ArticleJourneyTravel.imageset/cutout.png",
+    "width": 218,
+    "height": 147,
+    "bytes": 12724
+  },
+  "ArticleJourneyQuote": {
+    "source": "Resources/Assets.xcassets/ArticleJourneyQuote.imageset/cutout.png",
+    "width": 217,
+    "height": 56,
+    "bytes": 6084
+  },
+  "ArticleJourneyTicket": {
+    "source": "Resources/Assets.xcassets/ArticleJourneyTicket.imageset/cutout.png",
+    "width": 199,
+    "height": 125,
+    "bytes": 8634
+  },
+  "ArticleGeneratedBuilding": {
+    "source": "Resources/Assets.xcassets/ArticleGeneratedBuilding.imageset/building.png",
+    "width": 1500,
+    "height": 1500,
+    "bytes": 182020
+  },
+  "ArticleDreamyReference": {
+    "source": "Resources/Assets.xcassets/ArticleDreamyReference.imageset/reference.png",
+    "width": 1041,
+    "height": 1290,
+    "bytes": 517862
+  },
+  "ArticleLeadingLinesOaks": {
+    "source": "Resources/Assets.xcassets/ArticleLeadingLinesOaks.imageset/avenue-of-oaks.jpg",
+    "width": 600,
+    "height": 400,
+    "bytes": 97836
+  },
+  "ArticleLeadingLinesPortraitAway": {
+    "source": "Resources/Assets.xcassets/ArticleLeadingLinesPortraitAway.imageset/portrait-away-from-wall.jpg",
+    "width": 1200,
+    "height": 1800,
+    "bytes": 213806
+  },
+  "ArticleSpaceExploration": {
+    "source": "Resources/Assets.xcassets/ArticleSpaceExploration.imageset/space-exploration.png",
+    "width": 736,
+    "height": 414,
+    "bytes": 92946
+  },
+  "ArticleSpaceHistory": {
+    "source": "Resources/Assets.xcassets/ArticleSpaceHistory.imageset/space-history.png",
+    "width": 1800,
+    "height": 982,
+    "bytes": 77060
+  },
+  "ArticleProgressDone": {
+    "source": "Resources/Assets.xcassets/ArticleProgressDone.imageset/done-icon.svg",
+    "bytes": 1149
+  },
+  "ArticleProgressNumberBorder": {
+    "source": "Resources/Assets.xcassets/ArticleProgressNumberBorder.imageset/number-border.svg",
+    "bytes": 548
+  },
+  "ArticleRethinkChat": {
+    "source": "Resources/Assets.xcassets/ArticleRethinkChat.imageset/chat.svg",
+    "bytes": 1136
+  },
+  "ArticleSendArrow": {
+    "source": "Resources/Assets.xcassets/ArticleSendArrow.imageset/arrow-up.svg",
+    "bytes": 783
+  },
+  "ArticleQuizGlow": {
+    "source": "Resources/Assets.xcassets/ArticleQuizGlow.imageset/glow.png",
+    "width": 1180,
+    "height": 786,
+    "bytes": 105376
+  },
+  "LearningSpaceTravel": {
+    "source": "Resources/Assets.xcassets/LearningSpaceTravel.imageset/cutout.png",
+    "width": 297,
+    "height": 226,
+    "bytes": 34804
+  },
+  "LearningSpaceQuote": {
+    "source": "Resources/Assets.xcassets/LearningSpaceQuote.imageset/cutout.png",
+    "width": 296,
+    "height": 134,
+    "bytes": 23548
+  },
+  "LearningSpaceTicket": {
+    "source": "Resources/Assets.xcassets/LearningSpaceTicket.imageset/cutout.png",
+    "width": 262,
+    "height": 188,
+    "bytes": 24916
+  },
+  "LearningSpaceBubbles": {
+    "source": "Resources/Assets.xcassets/LearningSpaceBubbles.imageset/cutout.png",
+    "width": 274,
+    "height": 260,
+    "bytes": 42232
+  },
+  "LearningSpacePost": {
+    "source": "Resources/Assets.xcassets/LearningSpacePost.imageset/cutout.png",
+    "width": 326,
+    "height": 185,
+    "bytes": 29850
+  },
+  "LearningPhotographyBath": {
+    "source": "Resources/Assets.xcassets/LearningPhotographyBath.imageset/cutout.png",
+    "width": 220,
+    "height": 122,
+    "bytes": 5954
+  },
+  "LearningPhotographyYellowPost": {
+    "source": "Resources/Assets.xcassets/LearningPhotographyYellowPost.imageset/cutout.png",
+    "width": 354,
+    "height": 176,
+    "bytes": 30480
+  },
+  "LearningPhotographyFeedback": {
+    "source": "Resources/Assets.xcassets/LearningPhotographyFeedback.imageset/cutout.png",
+    "width": 218,
+    "height": 78,
+    "bytes": 6200
+  },
+  "LearningPhotographyTravel": {
+    "source": "Resources/Assets.xcassets/LearningPhotographyTravel.imageset/cutout.png",
+    "width": 205,
+    "height": 132,
+    "bytes": 7830
+  },
+  "LearningPhotographyGreenPost": {
+    "source": "Resources/Assets.xcassets/LearningPhotographyGreenPost.imageset/cutout.png",
+    "width": 316,
+    "height": 156,
+    "bytes": 28174
+  }
+}
