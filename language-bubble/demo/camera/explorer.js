@@ -74,6 +74,7 @@
   let api, ready=false, generation=0, selected='all', amount=0, targetAmount=0;
   let spinning=!reduced, spinDelay=0, angle=-.52, elevation=.25, distance=.33, target=[0,-.024,.048];
   let desiredView=null, partsState={};
+  let lastStateReport=0;
   let lastTick=0,lastProjection=0, projectionBusy=false, gestures=new Map(), gestureStart=null;
   let tween=null, errorCount=0;
   const matrix=v=>Array.from({length:16},(_,i)=>v[i]);
@@ -84,25 +85,31 @@
   function worldPoint(m,p){return [0,1,2].map(i=>m[i]*p[0]+m[4+i]*p[1]+m[8+i]*p[2]+m[12+i])}
   function actualPartAmount(id){return selected==='all'||selected==='body'||selected===id?amount:0}
   function reportState(){
-    parent.postMessage({channel:'bubble-camera',type:'state',value:{part:selected,expansion:Math.round(targetAmount*100),angle,elevation,distance}},location.origin);
+    parent.postMessage({channel:'bubble-camera',type:'state',value:{part:selected,expansion:Math.round(targetAmount*100),angle,elevation,distance,autoRotate:spinning}},location.origin);
   }
   function restore(value){
     if(!value||!parts[value.part])return;
     pendingRestore=value;
     if(!ready)return;
     const v=pendingRestore;pendingRestore=null;
-    selected=v.part;targetAmount=limit(Number(v.expansion)||0,0,100)/100;
-    amount=targetAmount;Object.values(partsState).forEach(s=>s.from=s.progress);
-    tween={start:performance.now(),from:amount,to:targetAmount,duration:reduced?0:700,selection:true};
-    if(Number.isFinite(v.angle))angle=v.angle;
+    const selectionChanged=selected!==v.part;
+    const expansion=limit(Number(v.expansion)||0,0,100)/100;
+    const amountChanged=targetAmount!==expansion;
+    selected=v.part;targetAmount=expansion;
+    if(selectionChanged||amountChanged){
+      Object.values(partsState).forEach(s=>s.from=s.progress);
+      tween={start:performance.now(),from:amount,to:targetAmount,duration:reduced?0:750,selection:true};
+      updateText();syncControls();fitView();spinDelay=performance.now()+2500;
+    }
+    if(Number.isFinite(v.angle)){angle=v.angle;desiredView=null;}
     if(Number.isFinite(v.elevation))elevation=limit(v.elevation,-.6,1.25);
     if(Number.isFinite(v.distance))distance=limit(v.distance,.11,1.3);
-    spinning=false;updateText();syncControls();fitView();
-    if(Number.isFinite(v.angle)&&Number.isFinite(v.distance)){desiredView=null;angle=v.angle;}
+    spinning=!reduced&&v.autoRotate!==false;
     updateCamera();
   }
-  window.addEventListener('message',e=>{if(e.origin!==location.origin||e.source!==parent||e.data?.channel!=='bubble-camera-host')return;if(e.data.type==='restore')restore(e.data.value);});
-  ['pointerdown','keydown','wheel','touchstart'].forEach(name=>window.addEventListener(name,e=>{if(e.isTrusted)parent.postMessage({channel:'bubble-camera',type:'takeover'},location.origin);},{capture:true,passive:true}));
+  window.addEventListener('message',e=>{if(e.origin!==location.origin||e.source!==parent||e.data?.channel!=='bubble-camera-host')return;if(e.data.type==='restore')restore(e.data.value);if(e.data.type==='motion')spinning=!reduced&&!!e.data.enabled;});
+  // A completed click/tap takes over; scrolling or touching to scroll must not stop the tour.
+  window.addEventListener('click',e=>{if(e.isTrusted){spinning=false;parent.postMessage({channel:'bubble-camera',type:'takeover'},location.origin);}},{capture:true,passive:true});
   function syncControls(){
     $('amount').value=Math.round(targetAmount*100)+'%';
     $('explosion').value=String(Math.round(targetAmount*100));
@@ -130,7 +137,7 @@
     }else{
       const point=partPoint(selected,targetAmount);
       desiredView={target:[point[0]*.32,point[1]*.3-.014,point[2]*.45+.026],distance:.43*aspectScale,elevation:.38};
-      angle=-.48;
+
     }
   }
   function partPoint(id,progress=actualPartAmount(id)){
@@ -220,6 +227,8 @@
     }
     if(spinning&&!gestures.size&&time>spinDelay){angle+=dt*.10;changed=true}
     if(changed)updateCamera();
+    if(spinning&&time-lastStateReport>300){lastStateReport=time;reportState();}
+    $('stage').dataset.angle=angle.toFixed(4);
     if(time-lastProjection>70){lastProjection=time;projectLabel()}
   }
   async function init(){

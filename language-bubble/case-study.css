@@ -13,7 +13,7 @@
 .case-copy ul, .case-copy ol { padding-left: 22px; margin: 20px 0 0; }
 .case-copy li + li { margin-top: 8px; }
 .case-copy ul + p, .case-copy ol + p { margin-top: 24px; }
-.case-copy strong { font-weight: 400; }
+.case-copy strong { font-weight: 700; }
 .case-answer > h3.case-inline-heading, .case-study .learner-brainstorm h3 { font-family: var(--font-heading); font-size: 20px; line-height: 1.3; font-weight: 600; letter-spacing: normal; }
 .case-answer > h3.case-inline-heading { margin: 40px 0 20px; }
 .case-answer > h3.case-inline-heading:first-child { margin-top: 0; }
@@ -124,7 +124,7 @@
 .case-study .case-copy > :is(.point-grid, .challenge-grid, .case-image, .case-image-placeholder) + * { margin-top: var(--block-gap); }
 .case-study :is(.case-answer, .case-copy) > :first-child { margin-top: 0; }
 .case-study :is(.case-answer, .case-copy) > :last-child { margin-bottom: 0; }
-.case-study:last-of-type { padding-bottom: var(--chapter-gap); }
+.case-study:last-of-type { padding-bottom: clamp(128px, 16vw, 240px); }
 .case-study .case-copy > .supplement-card {
   margin-top: var(--block-gap);
   padding: 28px;
@@ -155,4 +155,15 @@
     .portrait-note, .context-card, .floating-card, .desktop-window,
     .reading-window, .demo-shell, .demo-result, .demo-settings, .request-bubble) {
   corner-shape: squircle;
+}
+
+/* Make the generation order readable without adding another card. */
+.progressive-delivery { margin-top: 16px; }
+.case-copy .generation-sequence { display: flex; align-items: center; gap: 0; list-style: none; padding: 0; margin: 20px 0; }
+.case-copy .generation-sequence li { display: flex; align-items: center; margin: 0; font-weight: 500; white-space: normal; overflow-wrap: normal; }
+.case-copy .generation-sequence li + li::before { content: "→"; flex: none; margin-inline: clamp(10px, 1.3vw, 22px); color: var(--muted); font-size: 23px; font-weight: 400; }
+@container article (max-width: 560px) {
+  .case-copy .generation-sequence { flex-direction: column; align-items: flex-start; gap: 0; }
+  .case-copy .generation-sequence li { flex-direction: column; align-items: flex-start; }
+  .case-copy .generation-sequence li + li::before { content: "↓"; margin: 4px 0; line-height: 1.2; }
 }

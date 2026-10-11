@@ -1,4 +1,4 @@
-.bubble-demo-shell{width:100%;position:relative;overflow:hidden;border-radius:9px;corner-shape:squircle;box-shadow:0 10px 48px #25251b26;background:#fbfbfb;isolation:isolate}
+.bubble-demo-shell{width:100%;position:relative;overflow:hidden;border-radius:var(--demo-window-radius,32px);corner-shape:squircle;box-shadow:0 10px 48px #25251b26;background:#fbfbfb;isolation:isolate}
 .bubble-demo-shell>.demo-fallback{position:absolute;inset:0;display:block;width:100%;height:100%;margin:0;box-shadow:none;border:0}
 .bubble-demo-shell>img.demo-fallback,.demo-fallback>img{width:100%;height:100%;object-fit:contain;display:block;background:#fbfbfb}
 .bubble-demo-shell.demo-ready>.demo-fallback{visibility:hidden;pointer-events:none}
@@ -8,4 +8,3 @@
 
 /* Reset the legacy hero mock-window rules on the iframe wrapper. */
 .hero-stage>.bubble-demo-shell{min-height:0;height:auto;border:0;padding:0;display:block}
-@media(max-width:560px){.bubble-demo-shell{border-radius:5px}}

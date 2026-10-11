@@ -2,12 +2,12 @@
 (() => {
  'use strict';
  if(new URLSearchParams(location.search).get('demos')==='off')return;
- const order=['records','browser','reading','collage','correction','library','create','generation','steer','rewind','edit','quiz','sunlight','collect','learning','camera','word'];
+ const order=['browser','reading','collage','correction','library','create','generation','steer','rewind','quiz','sunlight','learning','camera','word'];
  const original=Array.from(document.querySelectorAll('.wallpaper-stage'));
- if(original.length!==17){console.warn('Demo slots changed; keeping static images.');return;}
+ if(original.length!==order.length){console.warn('Demo slots changed; keeping static images.');return;}
  // Insert before the following paragraph so the existing article copy remains untouched.
- const caption=Array.from(document.querySelectorAll('p')).find(p=>p.textContent.trim()==='重新生成消失动效');
- if(caption){const figure=document.createElement('figure');figure.className='case-image wallpaper wallpaper-stage';figure.id='interactive-dissolve';figure.dataset.wallpaper='alpine-lake';const source=document.getElementById('notion-image-retry-from-step')?.querySelector('a');if(source){figure.append(source.cloneNode(true));caption.after(figure);original.splice(16,0,figure);order.splice(16,0,'dissolve');}}
+ const caption=document.getElementById('dissolve-caption');
+ if(caption){const figure=document.createElement('figure');figure.className='case-image wallpaper wallpaper-stage';figure.id='interactive-dissolve';figure.dataset.wallpaper='alpine-lake';const source=document.getElementById('notion-image-retry-from-step')?.querySelector('a');if(source){figure.append(source.cloneNode(true));caption.after(figure);const index=order.indexOf('word');original.splice(index,0,figure);order.splice(index,0,'dissolve');}}
  const mobile=matchMedia('(max-width: 700px)'),motion=matchMedia('(prefers-reduced-motion: reduce)');
  let serial=0,scheduled=false;
  const slots=original.map((stage,i)=>{
@@ -19,10 +19,11 @@
   return slot;
  }).filter(Boolean);
  function send(slot,type,extra={}){slot.frame?.contentWindow?.postMessage({channel:'bubble-host',instance:slot.id,type,...extra},location.origin);}
- function fit(slot){if(slot.frame)slot.frame.style.transform=`scale(${slot.shell.clientWidth/slot.width})`;}
+ // Match the app's 32 px logical corner at every embed size, including fallbacks.
+ function fit(slot){const scale=slot.shell.clientWidth/slot.width;slot.shell.style.setProperty('--demo-window-radius',`${32*scale}px`);if(slot.frame)slot.frame.style.transform=`scale(${scale})`;}
  function mount(slot){if(slot.frame||slot.failed||document.hidden||slots.filter(s=>s.frame).length>=(mobile.matches?1:2))return;
   const frame=document.createElement('iframe');frame.title=`Language Bubble · ${slot.scene} · 可交互演示`;frame.width=String(slot.width);frame.height=String(slot.height);frame.style.width=`${slot.width}px`;frame.style.height=`${slot.height}px`;frame.className='demo-frame';frame.setAttribute('allow','fullscreen');frame.setAttribute('sandbox','allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox');
-  frame.src=`demo/index.html?scene=${encodeURIComponent(slot.scene)}&instance=${slot.id}&v=loop-v2`;slot.frame=frame;slot.retiring=false;slot.request=++serial;slot.ready=false;slot.shell.append(frame);fit(slot);
+  frame.src=`demo/index.html?scene=${encodeURIComponent(slot.scene)}&instance=${slot.id}&v=scroll-edges-v1`;slot.frame=frame;slot.retiring=false;slot.request=++serial;slot.ready=false;slot.shell.append(frame);fit(slot);
   slot.deadline=setTimeout(()=>fail(slot),12000);
  }
  function remove(slot){clearTimeout(slot.deadline);clearTimeout(slot.timer);slot.frame?.remove();slot.frame=null;slot.ready=false;slot.retiring=false;slot.shell.classList.remove('demo-ready');slot.fallback.inert=false;slot.fallback.removeAttribute('aria-hidden');}

@@ -38,17 +38,17 @@
   <link rel="stylesheet" href="hero-personal.css?v=daylight-restored">
   <link rel="stylesheet" href="hero-wallpaper.css?v=original-wallpapers">
   <link rel="stylesheet" href="brainstorm.css?v=consistent-heading">
-  <link rel="stylesheet" href="case-study.css?v=smooth-corners">
+  <link rel="stylesheet" href="case-study.css?v=20261012">
   <script src="case-study.js" defer></script>
   <script type="module" src="atomic-design-diagram.js?v=lazy-init"></script>
   <link rel="stylesheet" href="learning-flow.css?v=solution-cards">
   <script src="learning-flow.js?v=solution-handdrawn" defer></script>
   <script src="hero-personal.js?v=wechat-streaming" defer></script>
-  <link rel="stylesheet" href="demo-host.css?v=loop-v2">
-  <script src="demo-host.js?v=loop-v3" defer></script>
+  <link rel="stylesheet" href="demo-host.css?v=20261012">
+  <script src="demo-host.js?v=20261012" defer></script>
   <script src="hero-wallpaper.js?v=rounded-card-limit" defer></script>
   <link rel="stylesheet" href="language-switcher.css?v=page-top-glass">
-  <script src="translations.js?v=3" defer></script>
+  <script src="translations.js?v=20261012" defer></script>
   <script src="language-switcher.js?v=1" defer></script>
 </head>
 <body>
@@ -92,16 +92,14 @@
 
       </div>
 
-      <div class="hero-stage hero-product-image wallpaper wallpaper-stage" data-wallpaper="alpine-lake">
-        <img src="assets/hero-records-original.png" width="1728" height="1117" alt="Language Bubble 记录界面：单词列表与 Journey 的 Context 拼贴画" decoding="async" fetchpriority="high">
-      </div>
+
     </section>
 
 
 <section class="container section case-study" id="thinking" aria-labelledby="thinking-title"><div class="section-heading"><h2 id="thinking-title" data-source-id="notion-3f4400ee-0cf5-805c-9e66-c371c74ffdf4">1. 背景</h2></div>
 <article class="case-answer">
 <div class="case-copy">
-<p data-source-id="notion-3f4400ee-0cf5-80a0-8aa8-cc90975f2247">中国约有超过4亿人正在学习外语，但目前主流的语言学习的工具和方法还是前AI时代的。用字典查词、单词表记单词、读枯燥的阅读理解和听力，语言学习仍然是一个头疼的过程。</p>
+<p data-source-id="notion-3f4400ee-0cf5-80a0-8aa8-cc90975f2247">中国约有超过4亿人正在学习外语，但目前主流的语言学习的工具和方法还是前AI时代的。用字典查词、单词表记单词、读枯燥的阅读理解和听力，语言学习仍然是一个头疼的过程。（我选择改造的产品是有道电子词典）</p>
 </div>
 <figure class="learning-photograph" data-source-id="notion-3f5400ee-0cf5-80d9-b96c-e56d03e1cec4">
   <img loading="lazy" src="assets/photos/university-tesol-classroom.jpg" width="1170" height="420" alt="西交利物浦大学课堂全景：老师、学生与英文课件同框" decoding="async">
@@ -110,7 +108,7 @@
 <article class="case-answer">
 <h3 class="case-inline-heading" data-source-id="notion-3f4400ee-0cf5-8078-9bd6-c74c258a14e0">核心用户群</h3>
 <div class="case-copy">
-<p data-source-id="notion-3f4400ee-0cf5-801c-8c6d-c0ef4627760d">AI+教育的话题很大，我想从一个自己每天亲身经历的痛点开始入手。最优先服务的是已有一定语言基础、且日常会持续接触目标语言的用户，比如：</p>
+<p data-source-id="notion-3f4400ee-0cf5-801c-8c6d-c0ef4627760d">AI+学习的话题很大，我想从一个自己每天亲身经历的痛点开始入手。最优先服务的是已有一定语言基础、且日常会持续接触目标语言的用户，比如：</p>
 <ul>
 <li data-source-id="notion-3f4400ee-0cf5-803d-a5f6-c3724146af3a">在外企工作</li>
 <li data-source-id="notion-3f4400ee-0cf5-8071-b775-f404ed97255a">需要读国外文献的学生</li>
@@ -239,50 +237,57 @@
 <p data-source-id="notion-3f5400ee-0cf5-806a-bc55-d2285d74567a">展示记单词时，不再死记硬背，而是会看到收集这个单词时记录的 context 拼贴画</p>
 <figure class="case-image wallpaper wallpaper-stage" id="notion-image-context-collage" data-source-id="notion-3f5400ee-0cf5-804e-84c4-fb4834ab68b1" data-wallpaper="alpine-lake"><a href="assets/notion/agent-revamp-context-collage.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-context-collage.png" width="1728" height="1117" alt="单词记录与收集语料的 Context 拼贴画" loading="lazy" decoding="async"></a></figure>
 <p data-source-id="notion-3f6400ee-0cf5-800b-aadc-e9e8bb772f1f">这只手还可以随时帮我修改语言错误，并记录用户在使用语言过程中积累的这些问题，后续更有针对性的提供教学。</p>
-<figure class="case-image wallpaper wallpaper-stage" id="notion-image-correct-language" data-source-id="notion-3f6400ee-0cf5-802a-9172-cda5a02618f5" data-wallpaper="quiet-coast"><a href="assets/notion/agent-revamp-correct-language.webp" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-correct-language.webp" width="1970" height="1446" alt="使用 Agent 修改语言错误并记录问题" loading="lazy" decoding="async"></a></figure>
+<p>比如在Teams里面回复国外同事的消息，我可以唤起 Agent 帮我优化表达</p>
+<figure class="case-image wallpaper wallpaper-stage" id="notion-image-correct-language" data-source-id="notion-3f6400ee-0cf5-802a-9172-cda5a02618f5" data-wallpaper="quiet-coast"><a href="assets/teams-correction-fallback.jpg" target="_blank" rel="noopener"><img src="assets/teams-correction-fallback.jpg" width="1970" height="1446" alt="在 Teams 输入回复，使用 Agent 润色并回填发送" loading="lazy" decoding="async"></a></figure>
 </div>
 </article>
 <article class="case-answer">
 <h3 class="case-inline-heading" data-source-id="notion-3f5400ee-0cf5-8093-a020-c009c0630f9a">策略2: 用语言，学爱好</h3>
 <div class="case-copy">
-<p data-source-id="notion-3f5400ee-0cf5-8028-a47a-f9fd309b7fbc">AI可以基于用户见过的、被收集的、正在学习的这些语料，生成用户喜爱的内容，用这些语料来学习爱好，在过程中语言水平自然逐渐提升。</p>
+<p data-source-id="notion-3f5400ee-0cf5-8028-a47a-f9fd309b7fbc">这个部分是 Agent 发挥的重点。Agent 可以基于用户见过的、被收集的这些语料，结合用户的爱好来学习，语言水平在自然提升。比如在学习页面，用户可以生成（Agent 也可以主动生成）和爱好相关的学习内容（可以包含文章、播客、游戏等，本次demo只做了文章作为概念展示）。</p>
 <figure class="case-image wallpaper wallpaper-stage" id="notion-image-learning-collection" data-source-id="notion-3f5400ee-0cf5-80a3-977b-cb95c433e391" data-wallpaper="sunset-valley"><a href="assets/notion/agent-revamp-learning-collection.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-learning-collection.png" width="2360" height="1560" alt="学习内容卡片：用语言学习爱好" loading="lazy" decoding="async"></a></figure>
-<p data-source-id="notion-3f5400ee-0cf5-80ee-830d-d06f213317b2">比如用户想用英语学习摄影：在用户输入指令创建内容时，先引导用户结构化输入指定，帮助缩小意图表达偏差</p>
+<p data-source-id="notion-3f5400ee-0cf5-80ee-830d-d06f213317b2"><span>Agent 一开始不了解用户的喜好（长期可以根据用户收集的 context 进行分析），需要引导用户提供更多context来确保生成质量。比如用户想用英语学习摄影：在用户输入指令创建内容时，先引导用户结构化输入喜欢的爱好、文章长度、要复习的单词范围等，帮助</span><strong>缩小意图表达偏差。</strong><span>（这个页面在选择器上有优化空间，如有更多时间值得优化，有限时间内没有选择打磨这个页面）</span></p>
 </div>
 <figure class="case-image wallpaper wallpaper-stage" data-source-id="notion-3f4400ee-0cf5-8073-8f95-fba3d66913e5" data-wallpaper="alpine-lake"><a href="assets/notion/agent-revamp-03.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-03.png" width="2092" height="1350" alt="拆解任务和当前进度：引导用户结构化输入" loading="lazy" decoding="async"></a></figure>
 <div class="case-copy">
-<p data-source-id="notion-3f5400ee-0cf5-809c-8721-c501e5c7cbcf">生成内容时，渐进式生成降低用户等待焦虑：</p>
-<p data-source-id="notion-3f5400ee-0cf5-80ca-b0d1-edca1ab46212">将交付的内容分类：先展示内容大纲，再生成文字，再生图片，最后生成可交互 Artifact。把生成速度更快，更全局的信息优先展示，让用户可以尽早判断规划是否符合预期。</p>
+<p data-source-id="notion-3f5400ee-0cf5-809c-8721-c501e5c7cbcf"><span>生成内容时，“</span><strong>渐进式”生成降低用户等待焦虑</strong><span>：</span></p>
+<div class="progressive-delivery" id="generation-sequence" data-source-id="notion-3f5400ee-0cf5-80ca-b0d1-edca1ab46212">
+<p>将生成的内容按生成速度分类：</p>
+<ol class="generation-sequence">
+<li><span>先展示简单的内容大纲</span></li>
+<li><span>再生成文字</span></li>
+<li><span>再生图片</span></li>
+<li><span>最后生成可交互 Artifact</span></li>
+</ol>
+<p>原则：把生成速度更快，更全局的信息优先展示，让用户可以尽早判断是否符合预期。从而确保靠后、token 消耗量大、耗时长的任务能被提前纠偏。</p>
+</div>
 <figure class="case-image wallpaper wallpaper-stage" id="notion-image-progressive-generation" data-source-id="notion-3f5400ee-0cf5-80b3-aecc-e0daa5914196" data-wallpaper="quiet-coast"><a href="assets/notion/agent-revamp-progressive-generation-v2.webp" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-progressive-generation-v2.webp" width="1728" height="1117" alt="渐进式生成文章大纲与学习内容" loading="lazy" decoding="async"></a></figure>
-<p data-source-id="notion-3f4400ee-0cf5-801f-a459-c8ce93055b03">用户判断不符合预期，也可以随时暂停或者输入新的 prompt，steer 当前的任务。</p>
+<p data-source-id="notion-3f4400ee-0cf5-801f-a459-c8ce93055b03">生成中，用户觉得不符合预期，可以随时点击暂停生成，或者直接输入新的 prompt 发送，Steer 当前的任务，Agent 会当前的 loop 中考虑新的用户消息，调整执行计划。</p>
+<p>在这个产品中学习内容（或者叫 Artifact）是用户关注的主角，长期也可以根据用户新收集的词汇更新，所以产品结构上，没有把和 Agent 对话作为主界面，确保同一个学习内容 （Artifact）可以通过对话持续更新，而不被频繁的被对话流带走。</p>
 <figure class="case-image wallpaper wallpaper-stage" id="notion-image-steer-task" data-source-id="notion-3f5400ee-0cf5-801c-961d-c62a4b61a6f8" data-wallpaper="sunset-valley"><a href="assets/notion/agent-revamp-steer-task-v2.webp" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-steer-task-v2.webp" width="1728" height="1117" alt="输入新的指令调整正在执行的任务" loading="lazy" decoding="async"></a></figure>
 <p data-source-id="notion-3f5400ee-0cf5-801a-b761-c311fe001288">生成结束后，一个常见场景是：一个失败的任务，回顾思维链时，发现是最后几步推理错误导致，但却要重新执行整个任务，大量时间和 Token 都被浪费了。</p>
 <p data-source-id="notion-3f5400ee-0cf5-8028-a6db-cadd9a743f1e">针对这个问题，我的设计让用户在任务执行中&amp;完成后，可以从思维链的任意节点开始“重新推理”。“重新推理”会保留该节点之前的推理过程和产出，放弃该节点之后的所有内容，并基于用户的补充信息重新推理，提升任务完成效率，减少 Token 浪费。</p>
 <figure class="case-image wallpaper wallpaper-stage" id="notion-image-retry-from-step" data-source-id="notion-3f5400ee-0cf5-803a-9ca3-de05fd739f9e" data-wallpaper="alpine-lake"><a href="assets/notion/agent-revamp-retry-from-step.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-retry-from-step.png" width="1476" height="936" alt="从思维链节点重新推理" loading="lazy" decoding="async"></a></figure>
-<p data-source-id="notion-3f5400ee-0cf5-805d-87b1-d50673aebe31">生成出错/失败的场景，比如过程中 token 用完了（常见于首次生成）</p>
+<p data-source-id="notion-3f5400ee-0cf5-805d-87b1-d50673aebe31">生成出错的场景：<br>比如过程中 token 用完了（常见于首次生成），可以在用户 Token 快用完时（可以由过往生成计算），提前告知用户，而不是等到生成一半用户才知道无法完成（剩余的 Token 也浪费了）</p>
 <figure class="case-image-placeholder" id="image-placeholder-generation-error" data-placeholder-for="notion-3f5400ee-0cf5-805d-87b1-d50673aebe31" aria-labelledby="image-placeholder-generation-error-label">
   <svg class="image-placeholder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m3 17 5-5 4 4 4-6 5 7"/></svg>
   <figcaption id="image-placeholder-generation-error-label"><span class="image-placeholder-status">待补图片</span><p>生成失败 / Token 用尽提示</p></figcaption>
 </figure>
-<p data-source-id="notion-3f5400ee-0cf5-808d-9308-f4b5019937c4">或者是不满意生成的结果，可以让用户基于指定生成的部分内容重新优化，不需要重做整个任务。</p>
-<figure class="case-image wallpaper wallpaper-stage" id="notion-image-edit-block" data-source-id="notion-3f5400ee-0cf5-8023-b443-dc03e7c82cc5" data-wallpaper="quiet-coast"><a href="assets/notion/agent-revamp-edit-block-v2.webp" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-edit-block-v2.webp" width="1728" height="1117" alt="选择生成内容进行局部优化" loading="lazy" decoding="async"></a></figure>
-<p data-source-id="notion-3f5400ee-0cf5-8065-a94d-efe445b091e3">任务完成后，还可以引导用户在阅读后进行互动学习</p>
+<p data-source-id="notion-3f5400ee-0cf5-8065-a94d-efe445b091e3">任务完成后，还可以引导用户在阅读后进行互动学习。（这里肯定还可以开发更多更好玩的互动方式，时间所限仅用答题展示互动概念）</p>
 <figure class="case-image wallpaper wallpaper-stage" id="notion-image-interactive-learning" data-source-id="notion-3f5400ee-0cf5-8063-bfee-cebaec0977ca" data-wallpaper="sunset-valley"><a href="assets/notion/agent-revamp-interactive-learning.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-interactive-learning.png" width="2388" height="1536" alt="阅读文章后的互动词汇测验" loading="lazy" decoding="async"></a></figure>
 <aside class="supplement-card" id="supplement-notes" data-source-id="notion-3f5400ee-0cf5-8060-bf33-e8918885df21" aria-labelledby="supplement-title">
   <h3 id="supplement-title" data-source-id="notion-3f5400ee-0cf5-807f-97ef-e2be1518168c">补充说明：</h3>
   <div class="supplement-group">
     <p data-source-id="notion-3f4400ee-0cf5-8047-9597-f5cdd4e3fcca">产品 Demo 中的真实生成和 Mock 数据：</p>
-    <ul>
-      <li data-source-id="notion-3f4400ee-0cf5-802e-add0-c100b211b5a3">真实：右侧对话内容；单词列表中的单词（由 Agent 实际收集）。</li>
-      <li data-source-id="notion-3f4400ee-0cf5-8050-a80c-c80853f5d4b2">Mock：文章生成结果；学习页面中的拼贴画。</li>
-    </ul>
+    <p data-source-id="notion-3f4400ee-0cf5-802e-add0-c100b211b5a3">单词列表中的单词和部分拼贴，在使用过程中 Agent 真实帮我收集</p>
+    <p data-source-id="notion-3f4400ee-0cf5-8050-a80c-c80853f5d4b2">文章生成结果、学习页面中的拼贴画、AI 对话是 Mock 数据</p>
   </div>
   <div class="supplement-group">
     <p data-source-id="notion-3f4400ee-0cf5-808f-92f8-cc6ca5c534d2">如果有更多时间：</p>
     <ol>
-      <li data-source-id="notion-3f4400ee-0cf5-8041-b95d-eafbde4e1a58">重点打磨学习内容生成，这是项目里最难的一部分：需要结合教育学、游戏化设计和用户测试，验证 AI 生成的文章、播客和互动游戏是否真的让用户愿意用、并且能帮助学习。</li>
-      <li data-source-id="notion-3f5400ee-0cf5-807f-962c-dfbd798b29b0">把截图的处理和拼贴画设计，做成真实可运行的skill，支持更多变的场景。</li>
-      <li data-source-id="notion-3f5400ee-0cf5-80c0-a854-da94a22a3eda">没有收集单词时的产品冷启动</li>
+      <li data-source-id="notion-3f4400ee-0cf5-8041-b95d-eafbde4e1a58">重点打磨学习内容 (Artifact)，这是产品里最难的一部分：需要结合教育学、游戏化设计和进行大量用户测试，验证 AI 生成的文章、播客和互动游戏是否真的让用户愿意用、并且能帮助学习。</li>
+      <li data-source-id="notion-3f5400ee-0cf5-807f-962c-dfbd798b29b0">把收集单词时的截图和拼贴画设计，做成 Skill 来支持更多变的场景。</li>
+      <li data-source-id="notion-3f5400ee-0cf5-80c0-a854-da94a22a3eda">思考没有收集单词时，产品怎么做冷启动</li>
     </ol>
   </div>
   <div class="supplement-group">
@@ -292,7 +297,7 @@
 </div>
 </article>
 </section>
-<section class="container section case-study" id="design" aria-labelledby="design-title"><div class="section-heading"><h2 id="design-title" data-source-id="notion-3f4400ee-0cf5-80d4-ab10-c35826de0913">3. 关键体验和视觉设计</h2></div>
+<section class="container section case-study" id="design" aria-labelledby="design-title"><div class="section-heading"><h2 id="design-title" data-source-id="notion-3f4400ee-0cf5-80d4-ab10-c35826de0913">3. 关键页面</h2></div>
 <article class="case-answer">
 <div class="case-copy">
 <p data-source-id="notion-3f5400ee-0cf5-80b4-8ea9-f0b904cadba9"><strong>视觉设计理念：有人文温度的 AI 产品</strong></p>
@@ -300,17 +305,18 @@
 </div>
 <figure class="case-image" data-source-id="notion-3f5400ee-0cf5-801c-985f-d6de565332f3"><a href="assets/notion/agent-revamp-collage-reference.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-collage-reference.png" width="1749" height="869" alt="报纸剪贴、复古文字与艺术拼贴参考图" loading="lazy" decoding="async"></a></figure>
 <div class="case-copy">
-<p data-source-id="notion-3f5400ee-0cf5-80e8-b994-e6005cfba683">学习页面则充满早上8点钟的阳光，温暖但不刺眼。</p>
+<p data-source-id="notion-3f5400ee-0cf5-80e8-b994-e6005cfba683">学习页面则充满早上8点钟的阳光，温暖但不刺眼，让用户感到元气满满的学习。</p>
+<p data-source-id="notion-3f4400ee-0cf5-806d-9a1c-fed834e50cb3">上面很多页面都有一些UI的体现，所以下面这部分我不会再重复放界面，而是放一些细节。</p>
+<p data-source-id="notion-3f6400ee-0cf5-807c-9a8c-cc4fec391d20">思考：工具类的产品，往往市面上都有不少同类竞品，所以除了基本的功能性、产品的差异化，一些细节里的彩蛋可以让用户有更多的 Wow moment，从而提升用户对产品的忠诚度。</p>
+<p>学习页面营造早上阳光洒在桌上的感觉，温暖但不刺眼。阳光会随着用户的鼠标位置而变化（可以鼠标 hover 试一试👇）</p>
 <figure class="case-image wallpaper wallpaper-stage" id="notion-image-learning-morning-light" data-source-id="notion-3f5400ee-0cf5-803f-8819-cabc0649ebed" data-wallpaper="alpine-lake"><a href="assets/notion/agent-revamp-learning-morning-light.webp" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-learning-morning-light.webp" width="2048" height="1354" alt="学习页面的清晨阳光与学习内容卡片" loading="lazy" decoding="async"></a></figure>
-<p data-source-id="notion-3f4400ee-0cf5-806d-9a1c-fed834e50cb3">下面是一些小彩蛋</p>
-<p data-source-id="notion-3f6400ee-0cf5-807c-9a8c-cc4fec391d20">收集的语料</p>
-<figure class="case-image wallpaper wallpaper-stage" data-source-id="notion-3f4400ee-0cf5-8017-b7ef-d45c90261d30" data-wallpaper="quiet-coast"><a href="assets/notion/agent-revamp-07.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-07.png" width="1728" height="1117" alt="MacBook Pro 16_ - 18.png" loading="lazy" decoding="async"></a></figure>
 <p data-source-id="notion-3f6400ee-0cf5-8086-ad2c-e8f9485e7a93">学习页面，有用户自己创造的学习内容 Artifact</p>
 <figure class="case-image wallpaper wallpaper-stage" data-source-id="notion-3f4400ee-0cf5-809e-ac2e-e93c44760559" data-wallpaper="sunset-valley"><a href="assets/notion/agent-revamp-08.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-08.png" width="1728" height="1117" alt="MacBook Pro 16_ - 20.png" loading="lazy" decoding="async"></a></figure>
-<p data-source-id="notion-3f6400ee-0cf5-8023-84e4-c20ab1a45fc7">可互动的学习内容</p>
-<figure class="case-image wallpaper wallpaper-stage" id="notion-image-camera-study" data-source-id="notion-3f5400ee-0cf5-805b-bf20-cf2f3e42344f" data-wallpaper="alpine-lake"><a href="assets/notion/agent-revamp-camera-study.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-camera-study.png" width="2096" height="1480" alt="学习文章中的相机互动演示" loading="lazy" decoding="async"></a></figure>
-<p data-source-id="notion-3f6400ee-0cf5-8056-8736-d3fdecf185c5">重新生成消失动效</p>
-<p data-source-id="notion-3f6400ee-0cf5-8005-881b-e1d8a9d00b5d">遇到收集过的词，hover 时会展示收集到的 Context</p>
+<p data-source-id="notion-3f6400ee-0cf5-8023-84e4-c20ab1a45fc7">学习内容 (Artifact) 里其实可以生成各种内容，比如游戏、播客、 可互动的学习内容（也许还可以接入 Meshy 的 Mora 生成无限游戏），总的来说，AI for fun… and learning!</p>
+<p>比如用英语学习摄影时，可以拆解一下相机的每个部位。用语言，学爱好！</p>
+<figure class="case-image wallpaper wallpaper-stage" id="notion-image-camera-study" data-source-id="notion-3f5400ee-0cf5-805b-bf20-cf2f3e42344f" data-wallpaper="alpine-lake"><a href="assets/camera-demo-fallback.jpg" target="_blank" rel="noopener"><img src="assets/camera-demo-fallback.jpg" width="1728" height="1117" alt="学习文章中的相机互动演示" loading="lazy" decoding="async"></a></figure>
+<p id="dissolve-caption" data-source-id="notion-3f6400ee-0cf5-8056-8736-d3fdecf185c5">用户选择某个思维链的步骤“重新生成”时，该节点下方受影响的生成物和内容都会消失。就像复仇者联盟中灭霸打的响指。</p>
+<p data-source-id="notion-3f6400ee-0cf5-8005-881b-e1d8a9d00b5d">在文章中遇到收集过的词，鼠标 hover 在上面，会展示用户遇到这个词的所有场景，基于 Context 加深记忆。</p>
 <figure class="case-image wallpaper wallpaper-stage" id="notion-image-word-hover" data-source-id="notion-3f5400ee-0cf5-808a-957c-de5ebf9e1e0f" data-wallpaper="quiet-coast"><a href="assets/notion/agent-revamp-word-hover.png" target="_blank" rel="noopener"><img src="assets/notion/agent-revamp-word-hover.png" width="2276" height="1462" alt="悬停单词展示 Context 拼贴画" loading="lazy" decoding="async"></a></figure>
 </div>
 </article>
@@ -335,6 +341,7 @@
 <h3 class="case-inline-heading" data-source-id="notion-3f5400ee-0cf5-8049-ad34-e96cd7f4b08f">最后</h3>
 <div class="case-copy">
 <p data-source-id="notion-3f5400ee-0cf5-80dd-baf3-e69ab7c3e48b">感谢 Meshy 提供的这个测试，让我有机会为自己思考和设计一个每天都会使用的产品。这个产品还会继续打磨和开发，后续会发布到 App store 面向更广泛的用户。</p>
+<p>这个项目是用 SwiftUI 开发的 MacOS 应用，以上网页的界面展示是我让 Agent 逆向生成的版本，细节难免缺失，MacOS 版我也打个包放在这里（也还是 Mock 数据版）</p>
 </div>
 </article>
 </section>

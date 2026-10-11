@@ -1,5 +1,9 @@
 // Article translations. Chinese source text stays in index.html.
 window.articleTranslations = {
+  "比如在Teams里面回复国外同事的消息，我可以唤起 Agent 帮我优化表达": {
+    "en": "For example, when replying to an overseas colleague in Teams, I can call up Agent to help improve my wording.",
+    "ko": "예를 들어 Teams에서 해외 동료의 메시지에 답장할 때 Agent를 불러 표현을 다듬을 수 있습니다."
+  },
   "重新加载": {
     "en": "Reload",
     "ko": "새로고침"
@@ -16,17 +20,17 @@ window.articleTranslations = {
     "en": "1. Background",
     "ko": "1. 배경"
   },
-  "中国约有超过4亿人正在学习外语，但目前主流的语言学习的工具和方法还是前AI时代的。用字典查词、单词表记单词、读枯燥的阅读理解和听力，语言学习仍然是一个头疼的过程。": {
-    "en": "Over 400 million people in China are learning a foreign language, yet today's mainstream tools and methods still belong to the pre-AI era. Looking words up in dictionaries, memorizing vocabulary lists, and working through dull reading and listening exercises—language learning remains a frustrating process.",
-    "ko": "중국에서는 4억 명이 넘는 사람들이 외국어를 배우고 있지만, 주류 학습 도구와 방식은 여전히 AI 이전 시대에 머물러 있습니다. 사전으로 단어를 찾고, 단어장을 외우고, 지루한 독해와 듣기 문제를 푸는 등 언어 학습은 여전히 골치 아픈 과정입니다."
+  "中国约有超过4亿人正在学习外语，但目前主流的语言学习的工具和方法还是前AI时代的。用字典查词、单词表记单词、读枯燥的阅读理解和听力，语言学习仍然是一个头疼的过程。（我选择改造的产品是有道电子词典）": {
+    "en": "Over 400 million people in China are learning a foreign language, yet today's mainstream tools and methods still belong to the pre-AI era. Looking words up in dictionaries, memorizing vocabulary lists, and working through dull reading and listening exercises—language learning remains a frustrating process. (The product I chose to redesign is the Youdao electronic dictionary.)",
+    "ko": "중국에서는 4억 명이 넘는 사람들이 외국어를 배우고 있지만, 주류 학습 도구와 방식은 여전히 AI 이전 시대에 머물러 있습니다. 사전으로 단어를 찾고, 단어장을 외우고, 지루한 독해와 듣기 문제를 푸는 등 언어 학습은 여전히 골치 아픈 과정입니다. (제가 새롭게 디자인하기로 선택한 제품은 Youdao 전자사전입니다.)"
   },
   "核心用户群": {
     "en": "Core users",
     "ko": "핵심 사용자"
   },
-  "AI+教育的话题很大，我想从一个自己每天亲身经历的痛点开始入手。最优先服务的是已有一定语言基础、且日常会持续接触目标语言的用户，比如：": {
-    "en": "AI and education is a vast topic. I wanted to start with a pain point I experience every day. My first priority is people who already have some foundation in a language and regularly encounter it in daily life, such as:",
-    "ko": "AI와 교육은 아주 넓은 주제입니다. 저는 매일 직접 겪는 불편함부터 해결하고 싶었습니다. 우선 대상으로 삼은 사용자는 어느 정도 언어 기초가 있고 일상에서 학습 언어를 지속적으로 접하는 사람들입니다. 예를 들면 다음과 같습니다."
+  "AI+学习的话题很大，我想从一个自己每天亲身经历的痛点开始入手。最优先服务的是已有一定语言基础、且日常会持续接触目标语言的用户，比如：": {
+    "en": "AI and learning is a vast topic. I wanted to start with a pain point I experience every day. My first priority is people who already have some foundation in a language and regularly encounter it in daily life, such as:",
+    "ko": "AI와 학습은 아주 넓은 주제입니다. 저는 매일 직접 겪는 불편함부터 해결하고 싶었습니다. 우선 대상으로 삼은 사용자는 어느 정도 언어 기초가 있고 일상에서 학습 언어를 지속적으로 접하는 사람들입니다. 예를 들면 다음과 같습니다."
   },
   "在外企工作": {
     "en": "Working at international companies",
@@ -276,25 +280,48 @@ window.articleTranslations = {
     "en": "Strategy 2: Use a language to explore your interests",
     "ko": "전략 2: 언어로 관심사 배우기"
   },
-  "AI可以基于用户见过的、被收集的、正在学习的这些语料，生成用户喜爱的内容，用这些语料来学习爱好，在过程中语言水平自然逐渐提升。": {
-    "en": "AI can generate content users love from the language they have encountered, collected, and are learning. They use these materials to explore their interests, improving their language skills naturally along the way.",
-    "ko": "AI는 사용자가 접하고 수집하며 배우는 언어 자료를 바탕으로 좋아할 만한 콘텐츠를 생성할 수 있습니다. 이 자료로 관심사를 배우다 보면 언어 실력도 자연스럽게 향상됩니다."
+  "这个部分是 Agent 发挥的重点。Agent 可以基于用户见过的、被收集的这些语料，结合用户的爱好来学习，语言水平在自然提升。比如在学习页面，用户可以生成（Agent 也可以主动生成）和爱好相关的学习内容（可以包含文章、播客、游戏等，本次demo只做了文章作为概念展示）。": {
+    "en": "This is where Agent plays its most important role. Using language materials users have encountered and collected, Agent can help them learn through their interests, naturally improving their language skills. For example, on the learning page, users can generate learning content related to their interests (Agent can also generate it proactively). This could include articles, podcasts, games, and more; this demo uses articles only to illustrate the concept.",
+    "ko": "이 부분이 Agent의 역할이 가장 중요한 지점입니다. Agent는 사용자가 접하고 수집한 언어 자료를 바탕으로 관심사와 연결된 학습을 도와 언어 실력이 자연스럽게 향상되도록 합니다. 예를 들어 학습 페이지에서 사용자는 관심사와 관련된 학습 콘텐츠를 생성할 수 있습니다(Agent가 먼저 생성할 수도 있습니다). 콘텐츠에는 글, 팟캐스트, 게임 등이 포함될 수 있으며, 이번 데모에서는 개념을 보여주기 위해 글만 구현했습니다."
   },
-  "比如用户想用英语学习摄影：在用户输入指令创建内容时，先引导用户结构化输入指定，帮助缩小意图表达偏差": {
-    "en": "For example, if someone wants to learn photography in English, guide them through a structured request when creating content to reduce gaps between their intent and what they express.",
-    "ko": "예를 들어 영어로 사진을 배우고 싶다면, 콘텐츠 생성 요청을 구조화해서 입력하도록 안내합니다. 실제 의도와 표현 사이의 차이를 줄이기 위해서입니다."
+  "Agent 一开始不了解用户的喜好（长期可以根据用户收集的 context 进行分析），需要引导用户提供更多context来确保生成质量。比如用户想用英语学习摄影：在用户输入指令创建内容时，先引导用户结构化输入喜欢的爱好、文章长度、要复习的单词范围等，帮助": {
+    "en": "Agent does not initially know the user's preferences (over time, it can infer them from the context the user collects), so it needs to guide users to provide more context to ensure the quality of generated content. For example, if someone wants to learn photography in English, guide them to specify their interests, article length, the range of vocabulary to review, and other details in a structured format when requesting content, to help ",
+    "ko": "Agent는 처음에는 사용자의 취향을 알지 못하므로(장기적으로는 사용자가 수집한 context를 바탕으로 분석할 수 있습니다), 생성 품질을 확보하기 위해 더 많은 context를 제공하도록 안내해야 합니다. 예를 들어 사용자가 영어로 사진을 배우고 싶다면, 콘텐츠 생성 요청 시 관심사, 글의 길이, 복습할 단어의 범위 등을 구조화해서 입력하도록 안내해 "
   },
-  "生成内容时，渐进式生成降低用户等待焦虑：": {
-    "en": "Progressive generation makes the wait less stressful:",
-    "ko": "점진적 생성으로 기다리는 동안의 불안감을 줄입니다."
+  "缩小意图表达偏差。": {
+    "en": "reduce the gap between intent and expression.",
+    "ko": "의도와 표현 사이의 차이를 줄입니다."
   },
+  "（这个页面在选择器上有优化空间，如有更多时间值得优化，有限时间内没有选择打磨这个页面）": {
+    "en": " (The selectors on this page have room for improvement and would be worth refining with more time. Given the time constraints, I chose not to polish this page.)",
+    "ko": " (이 페이지의 선택 컨트롤에는 개선할 여지가 있으며, 시간이 더 있다면 다듬을 가치가 있습니다. 제한된 시간 안에서는 이 페이지를 세밀하게 다듬는 데 우선순위를 두지 않았습니다.)"
+  },
+  "生成内容时，“": {
+    "en": "When generating content, “",
+    "ko": "콘텐츠 생성 시, ‘"
+  },
+  "渐进式”生成降低用户等待焦虑": {
+    "en": "progressive” generation reduces users’ anxiety while waiting",
+    "ko": "점진적’ 생성으로 기다리는 동안 사용자의 불안을 줄입니다"
+  },
+  "：": {"en": ":", "ko": ":"},
+  "将生成的内容按生成速度分类：": {"en": "Group the content by generation speed:", "ko": "생성 속도에 따라 콘텐츠를 분류합니다:"},
+  "先展示简单的内容大纲": {"en": "Show a simple outline first", "ko": "먼저 간단한 개요 표시"},
+  "再生成文字": {"en": "Then generate text", "ko": "이어서 텍스트 생성"},
+  "再生图片": {"en": "Then images", "ko": "이어서 이미지 생성"},
+  "最后生成可交互 Artifact": {"en": "Finally, interactive artifacts", "ko": "마지막으로 인터랙티브 Artifact 생성"},
+  "原则：把生成速度更快，更全局的信息优先展示，让用户可以尽早判断是否符合预期。从而确保靠后、token 消耗量大、耗时长的任务能被提前纠偏。": {"en": "Principle: Prioritize information that is faster to generate and offers a broader overview, so users can judge early whether it meets their expectations. This allows them to correct the direction before later tasks that consume more tokens and take longer begin.", "ko": "원칙: 더 빨리 생성할 수 있고 전체를 파악할 수 있는 정보를 먼저 보여 주어, 사용자가 기대에 부합하는지 일찍 판단하도록 합니다. 이를 통해 토큰 소모가 크고 시간이 오래 걸리는 후속 작업의 방향을 미리 바로잡을 수 있습니다."},
   "将交付的内容分类：先展示内容大纲，再生成文字，再生图片，最后生成可交互 Artifact。把生成速度更快，更全局的信息优先展示，让用户可以尽早判断规划是否符合预期。": {
     "en": "Generate deliverables in stages: show the outline first, then text, then images, and finally interactive artifacts. Prioritize information that is faster to generate and offers a broader overview, so users can judge early whether the plan matches their expectations.",
     "ko": "결과물을 단계별로 나눕니다. 먼저 개요를 보여 주고, 텍스트, 이미지, 마지막으로 인터랙티브 Artifact를 생성합니다. 더 빨리 만들 수 있고 전체를 파악할 수 있는 정보를 먼저 보여 주어, 사용자가 계획이 기대에 맞는지 일찍 판단하도록 합니다."
   },
-  "用户判断不符合预期，也可以随时暂停或者输入新的 prompt，steer 当前的任务。": {
-    "en": "If it doesn't meet their expectations, users can pause at any time or enter a new prompt to steer the current task.",
-    "ko": "기대와 다르다면 언제든 멈추거나 새로운 프롬프트를 입력해 진행 중인 작업의 방향을 바꿀 수 있습니다."
+  "生成中，用户觉得不符合预期，可以随时点击暂停生成，或者直接输入新的 prompt 发送，Steer 当前的任务，Agent 会当前的 loop 中考虑新的用户消息，调整执行计划。": {
+    "en": "During generation, if the result does not meet their expectations, users can click to pause at any time or simply send a new prompt to steer the current task. Agent takes the new user message into account within the current loop and adjusts its execution plan.",
+    "ko": "생성 도중 결과가 기대와 다르다고 느끼면 사용자는 언제든 클릭해 생성을 일시 정지하거나, 새로운 프롬프트를 바로 보내 현재 작업의 방향을 바꿀 수 있습니다. Agent는 현재 루프에서 새 사용자 메시지를 고려해 실행 계획을 조정합니다."
+  },
+  "在这个产品中学习内容（或者叫 Artifact）是用户关注的主角，长期也可以根据用户新收集的词汇更新，所以产品结构上，没有把和 Agent 对话作为主界面，确保同一个学习内容 （Artifact）可以通过对话持续更新，而不被频繁的被对话流带走。": {
+    "en": "In this product, the learning content (or Artifact) is the user's main focus and can be updated over time based on newly collected vocabulary. That is why the product does not make the conversation with Agent the main interface: the same learning content (Artifact) can be continuously updated through conversation without repeatedly being swept away by the chat stream.",
+    "ko": "이 제품에서 사용자가 주목하는 주인공은 학습 콘텐츠(Artifact)이며, 장기적으로는 새로 수집한 어휘에 맞춰 업데이트할 수도 있습니다. 그래서 제품 구조상 Agent와의 대화를 메인 화면으로 삼지 않았습니다. 같은 학습 콘텐츠(Artifact)가 대화 흐름에 자꾸 밀려나지 않고, 대화를 통해 지속적으로 업데이트될 수 있도록 했습니다."
   },
   "生成结束后，一个常见场景是：一个失败的任务，回顾思维链时，发现是最后几步推理错误导致，但却要重新执行整个任务，大量时间和 Token 都被浪费了。": {
     "en": "A common situation after generation: a task fails, and reviewing the reasoning chain reveals an error in the final few steps. Yet the entire task has to run again, wasting considerable time and tokens.",
@@ -304,9 +331,9 @@ window.articleTranslations = {
     "en": "My design lets users restart reasoning from any point in the chain, during or after a task. It preserves the reasoning and outputs before that point, discards everything after it, and reasons again using the user's additional input—improving efficiency and reducing token waste.",
     "ko": "이를 해결하기 위해 작업 도중이나 완료 후에도 추론 과정의 어느 지점에서든 ‘다시 추론’할 수 있도록 설계했습니다. 그 지점 이전의 추론과 결과는 유지하고 이후 내용은 버린 뒤, 사용자가 추가한 정보를 바탕으로 다시 추론합니다. 작업 효율을 높이고 토큰 낭비를 줄일 수 있습니다."
   },
-  "生成出错/失败的场景，比如过程中 token 用完了（常见于首次生成）": {
-    "en": "Generation errors or failures, such as running out of tokens midway (common on the first attempt)",
-    "ko": "생성 도중 토큰이 소진되는 등 오류나 실패가 발생하는 경우입니다. 특히 첫 생성에서 자주 일어납니다."
+  "生成出错的场景：\n比如过程中 token 用完了（常见于首次生成），可以在用户 Token 快用完时（可以由过往生成计算），提前告知用户，而不是等到生成一半用户才知道无法完成（剩余的 Token 也浪费了）": {
+    "en": "When generation goes wrong:\nFor example, tokens may run out during generation (common on the first attempt). When a user's tokens are running low, estimated from previous generations, notify them in advance rather than letting them discover halfway through that generation cannot be completed, wasting their remaining tokens in the process.",
+    "ko": "생성 중 오류가 발생하는 경우:\n예를 들어 생성 도중 토큰이 소진될 수 있습니다(첫 생성에서 흔히 발생합니다). 이전 생성 기록을 바탕으로 토큰이 곧 소진될 것으로 예상되면 사용자에게 미리 알려줄 수 있습니다. 생성이 절반쯤 진행된 뒤에야 완료할 수 없다는 사실을 알게 되어 남은 토큰까지 낭비하는 상황을 막기 위해서입니다."
   },
   "待补图片": {
     "en": "Image to be added",
@@ -316,13 +343,9 @@ window.articleTranslations = {
     "en": "Generation failed / Out of tokens",
     "ko": "생성 실패 / 토큰 소진 안내"
   },
-  "或者是不满意生成的结果，可以让用户基于指定生成的部分内容重新优化，不需要重做整个任务。": {
-    "en": "If users are unhappy with the result, they can refine a specific generated section without redoing the entire task.",
-    "ko": "결과가 마음에 들지 않으면 전체 작업을 다시 할 필요 없이, 생성된 내용 중 특정 부분만 골라 개선할 수 있습니다."
-  },
-  "任务完成后，还可以引导用户在阅读后进行互动学习": {
-    "en": "After the task is complete, guide users into interactive learning once they finish reading.",
-    "ko": "작업이 완료되면 읽기를 마친 사용자를 인터랙티브 학습으로 안내할 수 있습니다."
+  "任务完成后，还可以引导用户在阅读后进行互动学习。（这里肯定还可以开发更多更好玩的互动方式，时间所限仅用答题展示互动概念）": {
+    "en": "After the task is complete, guide users into interactive learning once they finish reading. (There is certainly room to develop more engaging ways to interact. Given the time constraints, this demo uses only quiz questions to illustrate the concept.)",
+    "ko": "작업이 완료되면 읽기를 마친 사용자를 인터랙티브 학습으로 안내할 수 있습니다. (더 다양하고 재미있는 상호작용 방식을 개발할 여지가 충분하지만, 시간 제약으로 이번에는 퀴즈만으로 상호작용의 개념을 보여 주었습니다.)"
   },
   "补充说明：": {
     "en": "Additional notes",
@@ -332,37 +355,37 @@ window.articleTranslations = {
     "en": "Real generation and mock data in the product demo:",
     "ko": "제품 데모의 실제 생성 결과와 목업 데이터:"
   },
-  "真实：右侧对话内容；单词列表中的单词（由 Agent 实际收集）。": {
-    "en": "Real: the conversation on the right and the words in the vocabulary list, actually collected by the agent.",
-    "ko": "실제: 오른쪽 대화 내용, 단어 목록의 단어들(Agent가 실제로 수집)."
+  "单词列表中的单词和部分拼贴，在使用过程中 Agent 真实帮我收集": {
+    "en": "The words in the vocabulary list and some of the collages were actually collected for me by Agent as I used the product.",
+    "ko": "단어 목록의 단어와 일부 콜라주는 제품을 사용하는 동안 Agent가 실제로 수집해 주었습니다."
   },
-  "Mock：文章生成结果；学习页面中的拼贴画。": {
-    "en": "Mock: generated articles and collages on the learning page.",
-    "ko": "목업: 생성된 글의 결과물, 학습 페이지의 콜라주."
+  "文章生成结果、学习页面中的拼贴画、AI 对话是 Mock 数据": {
+    "en": "The generated articles, collages on the learning page, and AI conversations are mock data.",
+    "ko": "생성된 글, 학습 페이지의 콜라주, AI 대화는 목업 데이터입니다."
   },
   "如果有更多时间：": {
     "en": "With more time:",
     "ko": "시간이 더 있다면:"
   },
-  "重点打磨学习内容生成，这是项目里最难的一部分：需要结合教育学、游戏化设计和用户测试，验证 AI 生成的文章、播客和互动游戏是否真的让用户愿意用、并且能帮助学习。": {
-    "en": "Focus on learning-content generation, the hardest part of this project. Combine pedagogy, gamification, and user testing to see whether AI-generated articles, podcasts, and interactive games are things people actually want to use—and whether they help them learn.",
-    "ko": "프로젝트에서 가장 어려운 학습 콘텐츠 생성에 집중하겠습니다. 교육학, 게임화 설계, 사용자 테스트를 결합해 AI가 만든 글, 팟캐스트, 인터랙티브 게임을 사용자가 정말 쓰고 싶어 하는지, 실제 학습에 도움이 되는지 검증하겠습니다."
+  "重点打磨学习内容 (Artifact)，这是产品里最难的一部分：需要结合教育学、游戏化设计和进行大量用户测试，验证 AI 生成的文章、播客和互动游戏是否真的让用户愿意用、并且能帮助学习。": {
+    "en": "Focus on refining the learning content (Artifact), the hardest part of the product. Combine pedagogy, gamification design, and extensive user testing to verify whether AI-generated articles, podcasts, and interactive games are things users want to use and whether they help them learn.",
+    "ko": "제품에서 가장 어려운 부분인 학습 콘텐츠(Artifact)를 다듬는 데 집중하겠습니다. 교육학, 게임화 설계, 광범위한 사용자 테스트를 결합해 AI가 생성한 글, 팟캐스트, 인터랙티브 게임을 사용자가 정말 쓰고 싶어 하는지, 실제 학습에 도움이 되는지 검증해야 합니다."
   },
-  "把截图的处理和拼贴画设计，做成真实可运行的skill，支持更多变的场景。": {
-    "en": "Turn screenshot processing and collage design into a working skill that supports a wider range of scenarios.",
-    "ko": "스크린샷 처리와 콜라주 디자인을 실제로 작동하는 skill로 만들어 더 다양한 상황을 지원하겠습니다."
+  "把收集单词时的截图和拼贴画设计，做成 Skill 来支持更多变的场景。": {
+    "en": "Turn screen capture and collage design during word collection into a Skill to support a wider variety of scenarios.",
+    "ko": "단어를 수집할 때의 화면 캡처와 콜라주 디자인을 Skill로 만들어 더 다양한 상황을 지원하겠습니다."
   },
-  "没有收集单词时的产品冷启动": {
-    "en": "Handle the cold-start experience before any words have been collected.",
-    "ko": "아직 단어를 수집하지 않은 사용자의 초기 경험을 설계하겠습니다."
+  "思考没有收集单词时，产品怎么做冷启动": {
+    "en": "Explore how the product can provide a useful starting experience before any words have been collected.",
+    "ko": "아직 단어를 수집하지 않은 상태에서 제품의 초기 경험을 어떻게 제공할지 고민하겠습니다."
   },
   "使用的 AI 工具：\n主要使用 Codex 和 Figma 作为 AI 开发工具，用来 build 交互原型和打磨视觉设计。": {
     "en": "AI tools used:\nPrimarily Codex and Figma, to build interactive prototypes and refine the visual design.",
     "ko": "사용한 AI 도구:\n주로 Codex와 Figma를 활용해 인터랙티브 프로토타입을 만들고 시각 디자인을 다듬었습니다."
   },
-  "3. 关键体验和视觉设计": {
-    "en": "3. Key experiences and visual design",
-    "ko": "3. 핵심 경험과 시각 디자인"
+  "3. 关键页面": {
+    "en": "3. Key screens",
+    "ko": "3. 주요 화면"
   },
   "视觉设计理念：有人文温度的 AI 产品": {
     "en": "Visual design: an AI product with human warmth",
@@ -372,33 +395,41 @@ window.articleTranslations = {
     "en": "Collecting context feels a little like making newspaper collages as a child: saving beautiful images and sentences in a notebook. It also resembles today's creative journaling. The agent records every lookup, copies text, captures the screen, and crops and arranges the pieces into a beautiful collage.",
     "ko": "Context를 수집하는 과정은 어릴 적 신문을 오려 콜라주를 만들던 경험과 닮았습니다. 예쁜 그림과 문장을 모아 공책에 붙이던 일, 요즘의 다이어리 꾸미기와도 비슷합니다. Agent는 단어를 찾을 때마다 상황을 기록하고, 텍스트를 복사하고 화면을 캡처해 오리고 배치하면서 멋진 콜라주로 만들어 줍니다."
   },
-  "学习页面则充满早上8点钟的阳光，温暖但不刺眼。": {
-    "en": "The learning page is filled with the warmth of 8 a.m. sunlight, gentle rather than glaring.",
-    "ko": "학습 페이지는 아침 8시의 햇살처럼 따뜻하면서도 눈부시지 않은 빛으로 채워집니다."
+  "学习页面则充满早上8点钟的阳光，温暖但不刺眼，让用户感到元气满满的学习。": {
+    "en": "The learning page is filled with 8 a.m. sunlight, warm and gentle on the eyes, helping users feel energized and ready to learn.",
+    "ko": "학습 페이지는 아침 8시의 햇살처럼 따뜻하면서도 눈부시지 않은 빛으로 채워져, 사용자가 활기차게 학습할 수 있도록 합니다."
   },
-  "下面是一些小彩蛋": {
-    "en": "Here are a few little Easter eggs",
-    "ko": "작은 이스터에그 몇 가지를 소개합니다"
+  "上面很多页面都有一些UI的体现，所以下面这部分我不会再重复放界面，而是放一些细节。": {
+    "en": "Many of the screens above already show the UI, so this section focuses on the details instead of repeating those screens.",
+    "ko": "위의 여러 화면에서 이미 UI를 보여 주었으므로, 아래에서는 화면을 반복해서 소개하기보다 세부 요소에 집중하려고 합니다."
   },
-  "收集的语料": {
-    "en": "Collected language materials",
-    "ko": "수집한 언어 자료"
+  "思考：工具类的产品，往往市面上都有不少同类竞品，所以除了基本的功能性、产品的差异化，一些细节里的彩蛋可以让用户有更多的 Wow moment，从而提升用户对产品的忠诚度。": {
+    "en": "A thought: utility products often face many similar competitors. Beyond core functionality and product differentiation, little Easter eggs in the details can give users more wow moments and strengthen their loyalty to the product.",
+    "ko": "생각: 도구형 제품은 시장에 비슷한 경쟁 제품이 많은 경우가 많습니다. 따라서 기본 기능과 제품의 차별화뿐 아니라, 세부 요소에 숨겨진 작은 이스터에그도 사용자에게 더 많은 감탄의 순간을 선사하고 제품에 대한 충성도를 높일 수 있습니다."
+  },
+  "学习页面营造早上阳光洒在桌上的感觉，温暖但不刺眼。阳光会随着用户的鼠标位置而变化（可以鼠标 hover 试一试👇）": {
+    "en": "The learning page evokes morning sunlight falling across a desk, warm and gentle on the eyes. The sunlight changes with the position of your mouse (try hovering below 👇).",
+    "ko": "학습 페이지는 아침 햇살이 책상 위로 비치는 듯한 느낌을 주며, 따뜻하지만 눈부시지 않습니다. 햇살은 마우스 위치에 따라 달라집니다(아래에 마우스를 올려 보세요 👇)."
   },
   "学习页面，有用户自己创造的学习内容 Artifact": {
     "en": "The learning page, with learning artifacts created by the user",
     "ko": "사용자가 직접 만든 학습 Artifact가 있는 학습 페이지"
   },
-  "可互动的学习内容": {
-    "en": "Interactive learning content",
-    "ko": "인터랙티브 학습 콘텐츠"
+  "学习内容 (Artifact) 里其实可以生成各种内容，比如游戏、播客、 可互动的学习内容（也许还可以接入 Meshy 的 Mora 生成无限游戏），总的来说，AI for fun… and learning!": {
+    "en": "Learning artifacts can actually contain all kinds of generated content, such as games, podcasts, and interactive learning experiences (perhaps even integrating Meshy's Mora to generate endless games). All in all, AI for fun… and learning!",
+    "ko": "학습 콘텐츠 (Artifact) 안에는 게임, 팟캐스트, 인터랙티브 학습 콘텐츠 등 다양한 콘텐츠를 생성할 수 있습니다. (어쩌면 Meshy의 Mora를 연동해 무한한 게임을 생성할 수도 있겠죠.) 한마디로, AI for fun… and learning!"
   },
-  "重新生成消失动效": {
-    "en": "Disappearing animation during regeneration",
-    "ko": "재생성 시 사라지는 애니메이션"
+  "比如用英语学习摄影时，可以拆解一下相机的每个部位。用语言，学爱好！": {
+    "en": "For example, when learning photography in English, you can take a camera apart to explore each component. Use language to learn what you love!",
+    "ko": "예를 들어 영어로 사진을 배울 때 카메라를 분해해 각 부분을 살펴볼 수 있습니다. 언어로 취미를 배워보세요!"
   },
-  "遇到收集过的词，hover 时会展示收集到的 Context": {
-    "en": "Hover over a previously saved word to see its collected context",
-    "ko": "수집했던 단어에 마우스를 올리면 저장된 Context가 표시됩니다"
+  "用户选择某个思维链的步骤“重新生成”时，该节点下方受影响的生成物和内容都会消失。就像复仇者联盟中灭霸打的响指。": {
+    "en": "When a user selects “Regenerate” for a step in the chain of thought, all affected artifacts and content below that node disappear. Just like Thanos snapping his fingers in Avengers.",
+    "ko": "사용자가 사고 과정의 특정 단계에서 ‘재생성’을 선택하면 해당 노드 아래에서 영향을 받는 생성물과 콘텐츠가 모두 사라집니다. 마치 어벤져스에서 타노스가 손가락을 튕기는 것처럼요."
+  },
+  "在文章中遇到收集过的词，鼠标 hover 在上面，会展示用户遇到这个词的所有场景，基于 Context 加深记忆。": {
+    "en": "When you encounter a previously saved word in an article, hover over it to see all the situations in which you have encountered that word, reinforcing your memory through Context.",
+    "ko": "글에서 이전에 수집한 단어를 만나면 마우스를 올려보세요. 사용자가 그 단어를 접했던 모든 상황이 표시되어 Context를 바탕으로 기억을 강화할 수 있습니다."
   },
   "Design System 思路：把复杂界面分解为原子结构": {
     "en": "Design system: break complex interfaces into atomic structures",
@@ -427,6 +458,10 @@ window.articleTranslations = {
   "感谢 Meshy 提供的这个测试，让我有机会为自己思考和设计一个每天都会使用的产品。这个产品还会继续打磨和开发，后续会发布到 App store 面向更广泛的用户。": {
     "en": "Thank you to Meshy for this design test, which gave me the chance to think through and design a product I would use every day. I will continue refining and developing it, with plans to release it on the App Store for a wider audience.",
     "ko": "매일 사용할 제품을 직접 고민하고 설계할 기회를 준 Meshy의 이번 과제에 감사드립니다. 앞으로도 제품을 계속 다듬고 개발해, App Store를 통해 더 많은 사용자에게 선보일 예정입니다."
+  },
+  "这个项目是用 SwiftUI 开发的 MacOS 应用，以上网页的界面展示是我让 Agent 逆向生成的版本，细节难免缺失，MacOS 版我也打个包放在这里（也还是 Mock 数据版）": {
+    "en": "This project is a macOS app built with SwiftUI. The interface demos on this webpage are a version I asked an Agent to reverse-engineer, so some details are inevitably missing. I'll also package the macOS version and put it here (it still uses mock data).",
+    "ko": "이 프로젝트는 SwiftUI로 개발한 macOS 앱입니다. 위 웹페이지의 UI 데모는 Agent에게 역으로 구현하도록 요청한 버전이라 일부 세부 사항이 빠져 있습니다. macOS 버전도 패키징해서 여기에 올려두겠습니다. (이 버전도 아직 Mock 데이터를 사용합니다.)"
   },
   "Jesse Lai 的照片便利贴": {
     "en": "Jesse Lai's photo sticky note",
