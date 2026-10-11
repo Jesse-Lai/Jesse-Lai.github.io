@@ -1,5 +1,6 @@
 // Article translations. Chinese source text stays in index.html.
 window.articleTranslations = {
+  "AI 帮用户翻译和查找语料时，会同时截图记录这个场景 (Context)": {"en": "When AI helps users translate and look up language material, it also takes a screenshot to capture the situation (Context).", "ko": "AI가 사용자의 번역과 언어 자료 검색을 도울 때, 해당 상황 (Context)도 스크린샷으로 함께 기록합니다."},
   "比如在Teams里面回复国外同事的消息，我可以唤起 Agent 帮我优化表达": {
     "en": "For example, when replying to an overseas colleague in Teams, I can call up Agent to help improve my wording.",
     "ko": "예를 들어 Teams에서 해외 동료의 메시지에 답장할 때 Agent를 불러 표현을 다듬을 수 있습니다."
