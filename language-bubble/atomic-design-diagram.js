@@ -188,6 +188,13 @@ TEMPLATE.innerHTML = `
       pointer-events: none;
     }
 
+    :host([lang="en"]) .cluster-label,
+    :host([lang="ko"]) .cluster-label {
+      font-family: var(--font-body, sans-serif);
+      font-size: max(9px, 1.5cqw);
+      letter-spacing: 0;
+    }
+
     .atom-label {
       left: 8.10546875%;
       top: 73.05%;
@@ -396,6 +403,24 @@ TEMPLATE.innerHTML = `
 `;
 
 class AtomicDesignDiagram extends HTMLElement {
+  static get observedAttributes() { return ['lang']; }
+
+  attributeChangedCallback() { this._updateLanguage(); }
+
+  _updateLanguage() {
+    const language = (this.getAttribute('lang') || document.documentElement.lang).split('-')[0];
+    const labels = {
+      zh: ['原子组件', '应用场景', '原子组件可拖入或拖出响应式应用场景，分隔线可调整各区域大小。', '调整第一列宽度', '调整第二列宽度', '调整第三列宽度', '调整上下区域高度', '拖出原子组件'],
+      en: ['Atomic components', 'Applications', 'Drag the atomic component into or out of the responsive application layout. Resize regions using the dividers.', 'Resize the first column', 'Resize the second column', 'Resize the third column', 'Resize the top and bottom regions', 'Drag the atomic component out'],
+      ko: ['원자 컴포넌트', '활용 사례', '원자 컴포넌트를 반응형 레이아웃 안팎으로 드래그할 수 있습니다. 구분선으로 영역 크기를 조절하세요.', '첫 번째 열 너비 조절', '두 번째 열 너비 조절', '세 번째 열 너비 조절', '위아래 영역 높이 조절', '원자 컴포넌트 밖으로 드래그'],
+    }[language] || ['原子组件', '应用场景', '原子组件可拖入或拖出响应式应用场景，分隔线可调整各区域大小。', '调整第一列宽度', '调整第二列宽度', '调整第三列宽度', '调整上下区域高度', '拖出原子组件'];
+    this.shadowRoot.querySelector('.atom-label').textContent = labels[0];
+    this.shadowRoot.querySelector('.application-label').textContent = labels[1];
+    this.shadowRoot.querySelector('.scene').setAttribute('aria-label', labels[2]);
+    this.shadowRoot.querySelectorAll('.splitter').forEach((splitter, index) => splitter.setAttribute('aria-label', labels[index + 3]));
+    this.shadowRoot.querySelector('.docked-atom')?.setAttribute('aria-label', labels[7]);
+  }
+
   constructor() {
     super();
     this.attachShadow({ mode: 'open' }).appendChild(TEMPLATE.content.cloneNode(true));
@@ -408,11 +433,8 @@ class AtomicDesignDiagram extends HTMLElement {
   connectedCallback() {
     const scene = this.shadowRoot.querySelector('.scene');
     const background = this.shadowRoot.querySelector('.background-reference');
-    const isEnglish = (this.getAttribute('lang') || document.documentElement.lang).toLowerCase().startsWith('en');
     background.src = BACKGROUND_SRC;
-    scene.setAttribute('aria-label', isEnglish
-      ? 'Drag the atomic component into or out of the responsive application layout.'
-      : '原子组件可拖入或拖出响应式应用场景，分隔线可调整各区域大小。');
+    this._updateLanguage();
     this._setupInteractions();
     if (!this._started) {
       this._started = true;
@@ -486,8 +508,8 @@ class AtomicDesignDiagram extends HTMLElement {
       const tile = document.createElement('div');
       tile.className = 'application-tile docked-atom';
       tile.dataset.dockedAtom = '';
-      tile.setAttribute('aria-label', '拖出原子组件');
       grid.insertBefore(tile, grid.querySelector('.splitter'));
+      this._updateLanguage();
       tile.appendChild(atomCard);
       atomGroup.classList.add('docked');
       grid.classList.add('has-docked-atom');

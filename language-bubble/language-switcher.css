@@ -1,0 +1,43 @@
+.language-switcher {
+  position: fixed;
+  top: max(20px, env(safe-area-inset-top));
+  right: max(24px, env(safe-area-inset-right));
+  z-index: 40;
+  display: flex;
+  gap: 2px;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  corner-shape: squircle;
+  background: var(--bg);
+  box-shadow: 0 3px 16px #26251e08;
+}
+.language-switcher button {
+  min-width: 44px;
+  min-height: 40px;
+  padding: 8px 10px;
+  border-radius: 11px;
+  corner-shape: squircle;
+  background: transparent;
+  color: var(--muted);
+  font: 500 13px/1.2 var(--font-body);
+  transition: background .15s, color .15s;
+}
+.language-switcher button[aria-pressed="true"] { background: var(--fg); color: var(--bg); }
+.language-switcher button:focus-visible { outline-offset: 2px; }
+html:lang(ko) {
+  --font-body: Inter, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
+  --font-heading: Manrope, Inter, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+html:not(:lang(zh)) .flow-label { font-family: var(--font-body); font-size: 18px; }
+html:not(:lang(zh)) .flow-step-8 .flow-label { font-size: 15px; }
+html:not(:lang(zh)) .point-title { overflow-wrap: break-word; text-wrap: balance; }
+html:not(:lang(zh)) .brainstorm-notes li { font-size: clamp(12px, 1.55cqi, 20px); line-height: 1.4; }
+@media (max-width: 600px) {
+  .language-switcher { top: max(12px, env(safe-area-inset-top)); right: max(12px, env(safe-area-inset-right)); }
+}
+@container article (max-width: 600px) {
+  html:not(:lang(zh)) .brainstorm-notes li { font-size: 12px; max-width: 43%; padding: 10px; }
+}

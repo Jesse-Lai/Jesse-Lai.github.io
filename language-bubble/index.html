@@ -19,20 +19,29 @@
   <link rel="stylesheet" href="brainstorm.css?v=consistent-heading">
   <link rel="stylesheet" href="case-study.css?v=smooth-corners">
   <script src="case-study.js" defer></script>
-  <script type="module" src="atomic-design-diagram.js?v=smooth-corners"></script>
+  <script type="module" src="atomic-design-diagram.js?v=languages-v1"></script>
   <link rel="stylesheet" href="learning-flow.css?v=solution-cards">
   <script src="learning-flow.js?v=solution-handdrawn" defer></script>
   <script src="hero-personal.js?v=daylight-restored" defer></script>
   <script src="hero-wallpaper.js?v=rounded-card-limit" defer></script>
+  <link rel="stylesheet" href="language-switcher.css?v=1">
+  <script src="translations.js?v=1" defer></script>
+  <script src="language-switcher.js?v=1" defer></script>
 </head>
 <body>
   <div id="loading-screen" role="status" aria-label="正在加载网页">
     <div id="loading-text">JESSE OS</div>
     <div id="loading-bar-bg" role="progressbar" aria-label="加载进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="loading-bar"></div></div>
     <div id="loading-percent" aria-hidden="true">0%</div>
-    <div id="loading-error" hidden>部分内容加载失败，请重试。<button type="button" onclick="location.reload()">重新加载</button></div>
+    <div id="loading-error" hidden><span>部分内容加载失败，请重试。</span><button type="button" onclick="location.reload()">重新加载</button></div>
   </div>
   <a class="skip-link" href="#main">跳至内容</a>
+  <nav class="language-switcher" aria-label="语言 / Language / 언어" hidden>
+    <button type="button" data-language="zh-CN" lang="zh-CN" aria-label="中文" aria-pressed="true">中</button>
+    <button type="button" data-language="en" lang="en" aria-label="English" aria-pressed="false">EN</button>
+    <button type="button" data-language="ko" lang="ko" aria-label="한국어" aria-pressed="false">한</button>
+  </nav>
+  <span class="visually-hidden" id="language-status" role="status" aria-live="polite"></span>
   <main id="main">
     <section class="hero container" aria-label="Jesse Lai · Language Bubble">
       <div class="hero-intro">
