@@ -360,9 +360,9 @@ window.articleTranslations = {
     "en": "AI tools used:\nPrimarily Codex and Figma, to build interactive prototypes and refine the visual design.",
     "ko": "사용한 AI 도구:\n주로 Codex와 Figma를 활용해 인터랙티브 프로토타입을 만들고 시각 디자인을 다듬었습니다."
   },
-  "3. 完整流程和 UI 演示": {
-    "en": "3. Complete flow and UI walkthrough",
-    "ko": "3. 전체 흐름과 UI 시연"
+  "3. 关键体验和视觉设计": {
+    "en": "3. Key experiences and visual design",
+    "ko": "3. 핵심 경험과 시각 디자인"
   },
   "视觉设计理念：有人文温度的 AI 产品": {
     "en": "Visual design: an AI product with human warmth",
