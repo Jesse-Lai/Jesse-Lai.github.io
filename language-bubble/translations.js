@@ -112,8 +112,8 @@ window.articleTranslations = {
     "en": "I found two recurring pain points that remain unresolved:",
     "ko": "아직 해결되지 않은 두 가지 주요 문제를 발견했습니다."
   },
-  "拿着单词书背单词太痛苦，脱离了场景": {
-    "en": "Memorizing vocabulary books is painful and disconnected from context",
+  "用生词本背单词太痛苦，脱离了场景": {
+    "en": "Memorizing words from a saved-word list is painful and disconnected from context",
     "ko": "맥락 없이 단어장만 외우는 건 너무 힘들다"
   },
   "学习的资料和生活中看到的语料完全不同": {
