@@ -1,5 +1,5 @@
 .language-switcher {
-  position: fixed;
+  position: absolute;
   top: max(20px, env(safe-area-inset-top));
   right: max(24px, env(safe-area-inset-right));
   z-index: 40;
