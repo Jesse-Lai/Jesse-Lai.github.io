@@ -1,0 +1,192 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>第 1 次正式确认</title><style>body{max-width:900px;margin:60px auto;padding:0 24px;background:#f7f7f4;color:#26251e;font:15px/1.9 system-ui;overflow-wrap:anywhere}a{color:#a84c3f}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit;background:#efeee9;padding:16px}h1{font-size:28px}h2{font-size:22px;margin-top:40px}nav{margin-bottom:30px}table{border-collapse:collapse;display:block;overflow:auto;font-size:13px}th,td{border-bottom:1px solid #d8d7d0;padding:10px;text-align:left}</style><nav><a href="../">← 返回实验网页</a> · <a href="../#materials">查看全部图片</a></nav><h1>第 1 次正式确认</h1>
+<p><strong>未通过正式确认，不能宣布升级成功。</strong></p>
+<p>两批新题使用同一个事先锁定的第 2 轮模型，合计 1600 张。两模型使用相同裁图、预处理、解码和评分；两批完成前未根据第一批结果调整候选。</p>
+<table>
+<thead>
+<tr>
+<th>批次</th>
+<th style="text-align:right">张数</th>
+<th style="text-align:right">底模归一化整段正确率</th>
+<th style="text-align:right">候选</th>
+<th style="text-align:right">差值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td style="text-align:right">800</td>
+<td style="text-align:right">56.75%</td>
+<td style="text-align:right">56.75%</td>
+<td style="text-align:right">+0.00 个百分点</td>
+</tr>
+<tr>
+<td>B</td>
+<td style="text-align:right">800</td>
+<td style="text-align:right">59.25%</td>
+<td style="text-align:right">59.13%</td>
+<td style="text-align:right">-0.12 个百分点</td>
+</tr>
+<tr>
+<td>合并</td>
+<td style="text-align:right">1600</td>
+<td style="text-align:right">58.00%</td>
+<td style="text-align:right">57.94%</td>
+<td style="text-align:right">-0.06 个百分点</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th style="text-align:right">底模</th>
+<th style="text-align:right">候选</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>严格整段正确率</td>
+<td style="text-align:right">56.69%</td>
+<td style="text-align:right">56.56%</td>
+</tr>
+<tr>
+<td>严格字符错误率 CER</td>
+<td style="text-align:right">21.30%</td>
+<td style="text-align:right">21.26%</td>
+</tr>
+<tr>
+<td>归一化整段正确率</td>
+<td style="text-align:right">58.00%</td>
+<td style="text-align:right">57.94%</td>
+</tr>
+<tr>
+<td>归一化字符错误率 CER</td>
+<td style="text-align:right">20.61%</td>
+<td style="text-align:right">20.59%</td>
+</tr>
+</tbody>
+</table>
+<p>改对 2 张，改错 3 张。
+配对单侧精确 McNemar p=0.8125；本次预留显著性水平 α=0.025。
+描述性的分层配对 bootstrap 95% 差值区间：正确率 [-0.31 个百分点, +0.19 个百分点]；CER [-0.13 个百分点, +0.10 个百分点]。该区间不是反复确认校正后的置信序列。</p>
+<table>
+<thead>
+<tr>
+<th>预先固定的条件</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>两批正确率均提高</td>
+<td>False</td>
+</tr>
+<tr>
+<td>合并正确率至少提高 2 个百分点</td>
+<td>False</td>
+</tr>
+<tr>
+<td>McNemar p ≤ 本次 α</td>
+<td>False</td>
+</tr>
+<tr>
+<td>归一化 CER 下降</td>
+<td>True</td>
+</tr>
+<tr>
+<td>严格 CER 不增加</td>
+<td>True</td>
+</tr>
+<tr>
+<td>语言和来源分组护栏通过</td>
+<td>True</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>分组</th>
+<th style="text-align:right">张数</th>
+<th>底模正确率 → 候选</th>
+<th>底模 CER → 候选</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>language/en</td>
+<td style="text-align:right">800</td>
+<td>48.38% → 48.38%</td>
+<td>29.34% → 29.24%</td>
+</tr>
+<tr>
+<td>language/mixed</td>
+<td style="text-align:right">320</td>
+<td>65.62% → 65.00%</td>
+<td>12.15% → 12.24%</td>
+</tr>
+<tr>
+<td>language/zh</td>
+<td style="text-align:right">480</td>
+<td>68.96% → 69.17%</td>
+<td>15.83% → 15.83%</td>
+</tr>
+<tr>
+<td>source/MTWI</td>
+<td style="text-align:right">400</td>
+<td>69.50% → 69.00%</td>
+<td>12.15% → 12.20%</td>
+</tr>
+<tr>
+<td>source/ReCTS</td>
+<td style="text-align:right">400</td>
+<td>65.75% → 66.00%</td>
+<td>16.77% → 16.84%</td>
+</tr>
+<tr>
+<td>source/TextOCR</td>
+<td style="text-align:right">800</td>
+<td>48.38% → 48.38%</td>
+<td>29.34% → 29.24%</td>
+</tr>
+</tbody>
+</table>
+<p>分组护栏是观察值限制，不能据此宣称已统计证明每个分组都改善。
+范围仅限本计划抽取的真实文字裁图：拉丁字母街景、中文招牌及中文/混合网页图片；不包含整图定位，也不是 Language Bubble 全部使用场景的验证。
+TextOCR/ReCTS 使用核对过的官方训练标注；MTWI 为固定版本镜像，官方划分归属未单独证实。公开数据是否进入过底模预训练未知；来源编码、标注与未检出的模板相似性仍可能影响结果。</p>
+<p>固定模型：<code>models/real_loop/round_02</code>；SHA256：<code>8e5d461a040bebd24563ecceca82d8bb1a826fe514a202cf88ae6965f559856a</code>。
+最后一次恢复运行用时 244.1 秒；独立完整模型复现 264 次。该时长不含此前被中断的运行、下载和逐图标注审查，不能视为整个实验总耗时。</p>
+<p>预注册锁定记录 · 逐图标签审查 · 完整结果 · 独立复核</p>
+<p><strong>标签审查和敏感性分析</strong></p>
+<p>逐图审查记录：<code>{&quot;consistent&quot;: 1061, &quot;corrected&quot;: 52, &quot;uncertain&quot;: 487}</code>。明确错标在预测前修订并保留原标注；看不清或无法确定的样本仍保留原标签。助手的目视检查不等于独立专家裁决，也不能保证所有标签正确。</p>
+<table>
+<thead>
+<tr>
+<th>辅助评分口径</th>
+<th style="text-align:right">张数</th>
+<th style="text-align:right">底模归一化正确率</th>
+<th style="text-align:right">候选</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>全部题使用原来源标签</td>
+<td style="text-align:right">1600</td>
+<td style="text-align:right">56.62%</td>
+<td style="text-align:right">56.62%</td>
+</tr>
+<tr>
+<td>预先标为可确认或已修订的子集</td>
+<td style="text-align:right">1113</td>
+<td style="text-align:right">71.34%</td>
+<td style="text-align:right">71.07%</td>
+</tr>
+</tbody>
+</table>
+<p>这些辅助口径用于展示标注不确定性的影响，不替代预注册的全体题主评分，不用于重新选择模型。</p>
+<p><strong>预测前的数据独立性补充检查</strong></p>
+<p>目视复查 8 组同文案候选后，3 张确认题因明确或高度疑似广告模板重复被排除：其中一张与训练图重叠、一张与阶段测试重叠、一张与确认 A 批内另一图重叠。未查看任何模型答案，按未使用备用题 ID 升序补齐同一来源/语言的 3 张题并重新核查标签。两批样本量、比例、模型和验收规则均未改变；保留原清单、原审核和完整修订记录。
+这是对初始题目锁定的显式修订；原先的像素、原图编号和联系方式模板查重未捕获所有缩放/背景变化。补充检查也不能证明再无其他模板重复。
+补充检查和替换记录。</p>
+<p>全部确认图片及逐题答案</p>
+</html>

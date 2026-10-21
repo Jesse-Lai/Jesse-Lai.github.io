@@ -1,0 +1,285 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>第一次 OCR 微调：结果与逐步教学</title><style>body{max-width:900px;margin:60px auto;padding:0 24px;background:#f7f7f4;color:#26251e;font:15px/1.9 system-ui;overflow-wrap:anywhere}a{color:#a84c3f}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit;background:#efeee9;padding:16px}h1{font-size:28px}h2{font-size:22px;margin-top:40px}nav{margin-bottom:30px}table{border-collapse:collapse;display:block;overflow:auto;font-size:13px}th,td{border-bottom:1px solid #d8d7d0;padding:10px;text-align:left}</style><nav><a href="../">← 返回实验网页</a> · <a href="../#materials">查看全部图片</a></nav><h1>第一次 OCR 微调：结果与逐步教学</h1>
+<p><strong>实验已完成。真实参数更新成立；独立测试集效果持平。</strong> 目标是学会完整流程，本次没有把分数未提升当作失败，也没有为了提高分数反复使用测试集调参。</p>
+<p>本次输入是<strong>裁好的单行文字图片</strong>，数据全部为合成图片。它验证了训练和测评流程，尚不能证明真实照片、完整截图或文字定位的效果。没有接入 Language Bubble。</p>
+<h2>先看结果</h2>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th style="text-align:right">底模</th>
+<th style="text-align:right">微调后</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>独立测试集：整行完全正确</td>
+<td style="text-align:right">93 / 100</td>
+<td style="text-align:right">93 / 100</td>
+</tr>
+<tr>
+<td>独立测试集：字符错误率 CER ↓</td>
+<td style="text-align:right">0.47%</td>
+<td style="text-align:right">0.47%</td>
+</tr>
+<tr>
+<td>独立测试集：字符编辑错误 / 标准字符数</td>
+<td style="text-align:right">8 / 1,698</td>
+<td style="text-align:right">8 / 1,698</td>
+</tr>
+<tr>
+<td>验证集：整行完全正确</td>
+<td style="text-align:right">46 / 50</td>
+<td style="text-align:right">47 / 50</td>
+</tr>
+<tr>
+<td>验证集：字符错误率 CER ↓</td>
+<td style="text-align:right">0.48%</td>
+<td style="text-align:right">0.36%</td>
+</tr>
+</tbody>
+</table>
+<p>100 条测试输出中有 <strong>0 条发生变化</strong>。没有改善案例或退步案例可展示；下面保留全部 7 个未解决的错例。验证集只少错一个字符，这种小样本变化不能用来宣称模型整体变强。</p>
+<h2>你实际训练了什么</h2>
+<p>底模是 <a href="https://huggingface.co/PaddlePaddle/PP-OCRv5_mobile_rec_safetensors/tree/485a9a9781535ad477de3b1eea5f96a2e7300d8d">PP-OCRv5 mobile 文字识别模型</a>。OCR 是“从图像读文字”的任务名称；这个底模是一套已经训练好的网络结构和权重。官方模型卡标注 Apache-2.0，支持中英文。</p>
+<p>本机加载后共有 7,682,365 个网络参数，微调最后线性分类层的 2,224,585 个参数。模型文件约 31 MB。文件里还含有归一化统计量等张量，因此官方文件中浮点元素总数与 <code>model.parameters()</code> 的参数统计略有区别。</p>
+<p>常见 OCR 流程为：<strong>整张图 → 检测文字框 → 裁成文字行 → 识别出字符串</strong>。本次从“文字行”开始。能读出字符串，不代表这个接口也能输出每个字在原图中的坐标；整张图片上的检测/定位是本次没有训练和测评的部分。有些一体模型会同时处理两者，但不是这次的架构和输出范围。</p>
+<h2>每一步：我做了什么，你要理解什么</h2>
+<table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>本次实际动作</th>
+<th>你需要掌握的概念</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. 定义任务与成功标准</td>
+<td>中英文文字行识别；完成可验证的训练闭环</td>
+<td>先明确输入、输出和“什么算对”；学习实验不要求一定涨分</td>
+</tr>
+<tr>
+<td>2. 选底模</td>
+<td>选择小型双语预训练识别器，固定版本与权重</td>
+<td>复用已有知识，节省从零学习文字的成本</td>
+</tr>
+<tr>
+<td>3. 配置环境和框架</td>
+<td>项目内 Python 虚拟环境，PyTorch + Transformers</td>
+<td>框架负责计算和模型加载；虚拟环境隔离依赖。沙箱是文件/命令权限边界，不是模型训练必需的一层网络，也不一定要 Docker</td>
+</tr>
+<tr>
+<td>4. 准备数据与标注</td>
+<td>生成 450 张图及标准答案；300 训练 / 50 验证 / 100 测试</td>
+<td>标注是真值。这里直接使用绘图字符串，没有拿 OCR 猜测当标准答案</td>
+</tr>
+<tr>
+<td>5. 固定 benchmark 和基线</td>
+<td>固定数据清单、评分规则；先看验证集底模表现</td>
+<td>Benchmark 是测试题及评分办法；baseline 是训练前成绩</td>
+</tr>
+<tr>
+<td>6. 训练</td>
+<td>冻结图像网络和编码器，缓存特征；用 CTC 损失更新识别头</td>
+<td>模型预测与标准答案产生损失，梯度指出参数调整方向，优化器真正更新参数</td>
+</tr>
+<tr>
+<td>7. 验证、选模型和保存</td>
+<td>每 60 步评估验证集；并列时选最早的第 60 步</td>
+<td>验证集帮助选择检查点。最终模型与“最后一次保存”可以不同</td>
+</tr>
+<tr>
+<td>8. 独立测评和推理复核</td>
+<td>选完模型后评测同一测试集；重新加载完整模型再次跑全量测试</td>
+<td>测试集负责最后验收；推理只读图输出结果，不更新参数</td>
+</tr>
+</tbody>
+</table>
+<p>CTC 适用于“知道整行文字，但没有逐字框”的训练：它处理图像特征序列与文字序列的对齐。推理时合并连续重复字符并去掉空白符。这里没有逐字标注或语言模型纠错。</p>
+<p>本次采用 CPU、2 个 PyTorch 计算线程。GPU/MPS 训练兼容性<strong>尚未验证</strong>；这次运行没有使用 GPU。训练与推理使用同一套 PyTorch/Transformers 框架，没有做 Core ML 或其他部署格式转换。</p>
+<h2>训练细节和真实性证据</h2>
+<ul>
+<li>固定随机种子；AdamW，学习率 <code>2e-5</code>，batch size <code>1</code>，梯度裁剪 <code>1.0</code>，weight decay <code>0.001</code>。</li>
+<li>准备 300 张训练图的特征，正式训练执行 240 次更新，使用其中 240 张图，每张一次。没有跑完一个完整训练轮次（epoch），这是刻意缩小的教学实验。</li>
+<li>第 60 / 120 / 180 / 240 步验证 CER 都为 0.36%；按预设规则选最早的第 60 步。</li>
+<li>先完成一次真实反向传播、更新、保存及恢复短测，再还原底模开始正式训练；该短测不计入 240 步。</li>
+<li>最终识别头最大参数变化为 <code>0.000998288</code>；权重哈希从 <code>a9dda5867b3d688d…</code> 变为 <code>26b0eee021a8d8d9…</code>。</li>
+<li>独立核对确认只改动 <code>head.head.weight</code>、<code>head.head.bias</code>，其余 1,033 个张量完全相同。</li>
+<li>保存后重新加载完整模型，使用官方预处理/后处理对全部 100 张测试图推理；前后两套预测分别与原记录逐条一致。另用独立编辑距离实现复核指标。</li>
+</ul>
+<p>这说明训练实际发生了。参数变动可能只改变字符的分数，而没有改变得分最高的字符，所以输出完全相同并不矛盾。</p>
+<h2>评分怎么读</h2>
+<p><strong>CER =（替换 + 删除 + 插入次数）÷ 标准答案字符数</strong>，越低越好。按整个数据集的字符数汇总，严格计入空格、大小写和标点，不做清洗来抬高分数。它不是“正确字符占比”的另一种严格说法，极端情况下插入很多字符可使 CER 大于 100%。</p>
+<p><strong>整行完全正确率</strong>要求一整行每个字符都一致，少一个空格也算该行错误。用它衡量直接交付整行文字是否可靠，会比只看平均字符错误更直观。</p>
+<table>
+<thead>
+<tr>
+<th>分组</th>
+<th style="text-align:right">图片数</th>
+<th style="text-align:right">CER：前 → 后</th>
+<th style="text-align:right">整行正确率：前 → 后</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>英文</td>
+<td style="text-align:right">40</td>
+<td style="text-align:right">0.39% → 0.39%</td>
+<td style="text-align:right">92.50% → 92.50%</td>
+</tr>
+<tr>
+<td>中英混排</td>
+<td style="text-align:right">20</td>
+<td style="text-align:right">1.36% → 1.36%</td>
+<td style="text-align:right">80.00% → 80.00%</td>
+</tr>
+<tr>
+<td>中文</td>
+<td style="text-align:right">40</td>
+<td style="text-align:right">0.00% → 0.00%</td>
+<td style="text-align:right">100.00% → 100.00%</td>
+</tr>
+<tr>
+<td>清晰合成图</td>
+<td style="text-align:right">34</td>
+<td style="text-align:right">0.17% → 0.17%</td>
+<td style="text-align:right">97.06% → 97.06%</td>
+</tr>
+<tr>
+<td>低分辨率合成图</td>
+<td style="text-align:right">33</td>
+<td style="text-align:right">0.90% → 0.90%</td>
+<td style="text-align:right">84.85% → 84.85%</td>
+</tr>
+<tr>
+<td>轻微倾斜/模糊合成图</td>
+<td style="text-align:right">33</td>
+<td style="text-align:right">0.36% → 0.36%</td>
+<td style="text-align:right">96.97% → 96.97%</td>
+</tr>
+</tbody>
+</table>
+<p>这些分组都来自同一个 100 张的小测试集。中文全对只代表这 40 张合成图片，不能推出所有中文照片都能识别正确。轻微倾斜/模糊是图像变换，不能等同于真实拍摄场景。</p>
+<h2>错例：训练前后都没有解决</h2>
+<p>【图片：7 个错例；请在网页素材区查看】</p>
+<table>
+<thead>
+<tr>
+<th>图片编号</th>
+<th>标准答案</th>
+<th>训练前后输出相同</th>
+<th style="text-align:right">编辑错误数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test_0004</td>
+<td><code>订单 Order 13</code></td>
+<td><code>订单Order 13</code></td>
+<td style="text-align:right">1</td>
+</tr>
+<tr>
+<td>test_0005</td>
+<td><code>Save the file as report283.</code></td>
+<td><code>Save the fl as report283.</code></td>
+<td style="text-align:right">2</td>
+</tr>
+<tr>
+<td>test_0034</td>
+<td><code>第182页 Page 182</code></td>
+<td><code>第182页Page 182</code></td>
+<td style="text-align:right">1</td>
+</tr>
+<tr>
+<td>test_0037</td>
+<td><code>The meeting starts at 03:09.</code></td>
+<td><code>'The meeting starts at 03:09.</code></td>
+<td style="text-align:right">1</td>
+</tr>
+<tr>
+<td>test_0042</td>
+<td><code>You walked 501 steps today.</code></td>
+<td><code>You walked 5o1 steps today.</code></td>
+<td style="text-align:right">1</td>
+</tr>
+<tr>
+<td>test_0049</td>
+<td><code>欢迎 Welcome 425</code></td>
+<td><code>欢迎Welcome 425</code></td>
+<td style="text-align:right">1</td>
+</tr>
+<tr>
+<td>test_0064</td>
+<td><code>欢迎 Welcome 891</code></td>
+<td><code>欢迎Welcome 891</code></td>
+<td style="text-align:right">1</td>
+</tr>
+</tbody>
+</table>
+<p>4 行错在中英边界空格；其余包含 <code>file</code> 中字符丢失、额外引号，以及数字 <code>0</code> 被读成字母 <code>o</code>。这些具体错例比单个平均分更有助于设计下一轮数据。本轮没有据此修改数据或继续训练。</p>
+<h2>时间、内存和磁盘</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>实测或范围</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>用户授权开始</td>
+<td>2026-10-21 11:35:58（上海时间）</td>
+</tr>
+<tr>
+<td>正式实验</td>
+<td>12:48:57 → 12:50:30，共 93.5 秒</td>
+</tr>
+<tr>
+<td>提取训练 / 验证特征</td>
+<td>60.5 / 9.9 秒</td>
+</tr>
+<tr>
+<td>缓存特征上的 240 步微调，含周期验证和检查点保存</td>
+<td>2.11 秒</td>
+</tr>
+<tr>
+<td>提取测试特征</td>
+<td>20.1 秒</td>
+</tr>
+<tr>
+<td>独立完整图像复核</td>
+<td>两套模型共 39.7 秒推理，另有加载开销</td>
+</tr>
+<tr>
+<td>每图完整 CPU 推理平均耗时</td>
+<td>底模 201 ms / 微调后 196 ms</td>
+</tr>
+<tr>
+<td>正式实验进程峰值常驻内存 RSS</td>
+<td>0.52 GiB（不是整台 Mac 的总内存）</td>
+</tr>
+<tr>
+<td>项目文件总大小</td>
+<td>约 1.13 GiB；另见资源快照</td>
+</tr>
+<tr>
+<td>完成时磁盘剩余空间快照</td>
+<td>约 21.1 GiB；实际会随其他应用变化</td>
+</tr>
+</tbody>
+</table>
+<p>完整推理计时含图像预处理、整个模型前向和文字解码，不含加载模型及读盘；没有足够重复测量支持速度提升结论。缓存特征上的分类层耗时不能替代端到端速度。</p>
+<p>训练阶段只需约 2 秒，是因为前面已花约 70 秒提取特征，且底模已经预训练。<strong>这不是从零训练完整 OCR 的耗时。</strong> 从开始执行到模型及复核完成约 76 分钟，绝大部分用于下载与环境适配；教学报告整理时间另计。完整问题复盘记录了饭点安排偏差。</p>
+<p>本次无付费云计算/API 调用。下载、安装和保存会占用磁盘；运行时会占用内存、CPU、内存带宽和散热能力。Apple Silicon 的 CPU/GPU 共享统一内存；即使不使用 GPU，CPU 阶段仍可能与工作应用竞争资源。本次限制了线程，不能据此保证任何情况下都完全不影响工作。</p>
+<p>所有实验文件保存在项目内，总量符合 1–2 GiB 目标，定期空间检查读数均高于 10 GiB 的磁盘保护线。正式训练和复核正常退出，没有磁盘耗尽或训练中断。没有关闭用户应用或修改长期睡眠设置。</p>
+<h2>这次证明了什么，尚未证明什么</h2>
+<p>已经证明：这台 Mac 的 CPU 足以完成一个小型双语 OCR 识别头微调闭环；数据、真实梯度更新、模型保存、重载和独立测评均可验证。</p>
+<p>尚未证明：真实照片准确率提升、复杂背景/大角度/手写/整页文档的识别效果、文字框定位能力、GPU 训练兼容性。合成数据使用重复的模板和字体，虽然具体文本和图像没有跨集重复，仍存在很强的风格相似性。测试集只有 100 张，本轮没有统计显著性结论。</p>
+<p>下一步最值得做的是准备真实错例与独立标签，再针对一个错误类型设计实验；本次没有擅自开启下一轮。</p>
+<h2>你现在可以亲手验证</h2>
+<p>在项目终端运行下面这一行，模型会读取一个保留的错例：</p>
+<pre><code class="language-sh">.venv/bin/python scripts/infer.py data/images/test_0005.png
+</code></pre>
+<p>标准答案为 <code>Save the file as report283.</code>，当前模型仍读为 <code>Save the fl as report283.</code>。换上 <code>--model base</code> 就能对照底模。完整复现方式和文件导航见 README。</p>
+<p>原始证据：实验摘要、全量复核、资源快照、训练事件、数据清单。</p>
+</html>

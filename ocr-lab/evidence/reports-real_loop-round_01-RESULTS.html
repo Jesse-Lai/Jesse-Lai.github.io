@@ -1,0 +1,132 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>真实图片优化：第 1 轮</title><style>body{max-width:900px;margin:60px auto;padding:0 24px;background:#f7f7f4;color:#26251e;font:15px/1.9 system-ui;overflow-wrap:anywhere}a{color:#a84c3f}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit;background:#efeee9;padding:16px}h1{font-size:28px}h2{font-size:22px;margin-top:40px}nav{margin-bottom:30px}table{border-collapse:collapse;display:block;overflow:auto;font-size:13px}th,td{border-bottom:1px solid #d8d7d0;padding:10px;text-align:left}</style><nav><a href="../">← 返回实验网页</a> · <a href="../#materials">查看全部图片</a></nav><h1>真实图片优化：第 1 轮</h1>
+<p><strong>状态：not_ready_for_confirmation。本轮正式验收尚未通过；阶段测试不等于最终成功。</strong></p>
+<p>从原始底模开始，实际使用 2000 张真实训练裁图，完成 6000 次参数更新。仅训练最终字符分类层；学习率 2e-05，训练 3 遍。</p>
+<p>各轮验证和阶段测试均使用不同原图组。底模与本轮候选在同一批新题上比较；验证集用于选检查点，阶段测试在模型锁定后执行。</p>
+<table>
+<thead>
+<tr>
+<th>验证候选</th>
+<th style="text-align:right">归一化整段正确率</th>
+<th style="text-align:right">归一化 CER（低为好）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>base</td>
+<td style="text-align:right">53.57%</td>
+<td style="text-align:right">24.30%</td>
+</tr>
+<tr>
+<td>epoch1</td>
+<td style="text-align:right">54.64%</td>
+<td style="text-align:right">23.97%</td>
+</tr>
+<tr>
+<td>epoch2</td>
+<td style="text-align:right">55.00%</td>
+<td style="text-align:right">23.84%</td>
+</tr>
+<tr>
+<td>epoch3</td>
+<td style="text-align:right">54.64%</td>
+<td style="text-align:right">24.04%</td>
+</tr>
+</tbody>
+</table>
+<p>验证集选中：<strong>epoch2</strong>。选择依据是最低归一化 CER；并列时保留更新较少的版本。</p>
+<table>
+<thead>
+<tr>
+<th>新测试指标</th>
+<th style="text-align:right">底模</th>
+<th style="text-align:right">本轮候选</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>严格整段正确率</td>
+<td style="text-align:right">242/400（60.50%）</td>
+<td style="text-align:right">243/400（60.75%）</td>
+</tr>
+<tr>
+<td>严格字符错误率 CER</td>
+<td style="text-align:right">21.41%</td>
+<td style="text-align:right">21.59%</td>
+</tr>
+<tr>
+<td>统一大小写和空白后整段正确率</td>
+<td style="text-align:right">250/400（62.50%）</td>
+<td style="text-align:right">250/400（62.50%）</td>
+</tr>
+<tr>
+<td>统一大小写和空白后字符错误率 CER</td>
+<td style="text-align:right">20.38%</td>
+<td style="text-align:right">20.47%</td>
+</tr>
+</tbody>
+</table>
+<p>归一化口径改对 <strong>5</strong> 张，改错 <strong>5</strong> 张；11 张字符错误减少，11 张字符错误增加。
+开发门槛：False；触发分组退步检查：无。</p>
+<table>
+<thead>
+<tr>
+<th>分组</th>
+<th style="text-align:right">张数</th>
+<th>底模正确率 → 候选</th>
+<th>底模 CER → 候选</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>language/en</td>
+<td style="text-align:right">200</td>
+<td>51.00% → 52.00%</td>
+<td>29.20% → 28.57%</td>
+</tr>
+<tr>
+<td>language/mixed</td>
+<td style="text-align:right">80</td>
+<td>63.75% → 62.50%</td>
+<td>16.67% → 17.57%</td>
+</tr>
+<tr>
+<td>language/zh</td>
+<td style="text-align:right">120</td>
+<td>80.83% → 80.00%</td>
+<td>8.98% → 9.18%</td>
+</tr>
+<tr>
+<td>source/MTWI</td>
+<td style="text-align:right">100</td>
+<td>70.00% → 69.00%</td>
+<td>15.46% → 16.26%</td>
+</tr>
+<tr>
+<td>source/ReCTS</td>
+<td style="text-align:right">100</td>
+<td>78.00% → 77.00%</td>
+<td>9.82% → 10.08%</td>
+</tr>
+<tr>
+<td>source/TextOCR</td>
+<td style="text-align:right">200</td>
+<td>51.00% → 52.00%</td>
+<td>29.20% → 28.57%</td>
+</tr>
+</tbody>
+</table>
+<p>全部新测试图和双方输出</p>
+<p>【图片：改善与退步；请在网页素材区查看】</p>
+<p>后续决策以本轮新验证/测试结果和错例为依据；任何确认测试前需锁定模型、样本量和评分，并使用从未评测的两批图片。</p>
+<p>独立复核：<strong>passed</strong>。正式训练进程用时 874.2 秒，峰值 RSS 0.485 GiB。数据查找、下载、标注核对不包含在该计算时间中。</p>
+<p>数据范围：TextOCR 拉丁字母街景（包含非英语词和专名）、ReCTS 中文招牌、MTWI 中文/混合网页图。TextOCR/ReCTS 已核对官方训练来源与标注；MTWI 使用固定版本镜像，未单独证实官方训练划分归属。本地按原图分组划分，不是完整官方测试集；公开数据可能出现在底模预训练中。</p>
+<p>查重后按事先固定比例缩减到可用数量，不按模型表现补题。自动检查和来源核对不等于每张标签都完美；最终确认另做逐图标签核查。只测文字裁图识别，不包含整图文字定位。</p>
+<p>本轮配置 · 完整指标 · 复核记录 · 数据协议</p>
+<p><strong>事后目视标注核查：</strong> 原始冻结分数不作修改；下列问题会影响结论可信度。</p>
+<ul>
+<li>test_01_00217：原标签 <code>台灣的貢茶·世</code>；目视读取 <code>臺灣的貢茶·世</code>。标准答案存在字形差异，原评分将这张计为改对，但目视结果倾向底模。</li>
+</ul>
+<p>已保存原标签、双方预测与核查记录。此核查属于同次测试的诊断，不构成新的独立评测。</p>
+<p><strong>数据独立性补充：</strong> 事后发现训练图片与本轮测试图片中存在复用的商家联系方式模板，原图编号不同，原像素阈值没有检出。保留本轮历史分数，不把这轮当作最终确认依据；后续新评测额外按联系方式/邮箱模板组排除。
+独立性核查记录</p>
+</html>

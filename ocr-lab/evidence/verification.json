@@ -1,0 +1,14 @@
+{
+  "status": "passed",
+  "formal_success_verified": false,
+  "attempt": 1,
+  "independent_metrics_and_decision": true,
+  "full_model_replays": 264,
+  "protected_artifacts_unchanged": true,
+  "seconds": 57.44679650000762,
+  "resources": {
+    "free_gib": 10.6048583984375,
+    "new_gib": 0.8875414244830608
+  },
+  "scope": "Technical verification of the same confirmation; not a new independent test."
+}

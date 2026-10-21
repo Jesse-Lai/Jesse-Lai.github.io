@@ -1,0 +1,21 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>首次确认后的诊断与后续边界</title><style>body{max-width:900px;margin:60px auto;padding:0 24px;background:#f7f7f4;color:#26251e;font:15px/1.9 system-ui;overflow-wrap:anywhere}a{color:#a84c3f}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit;background:#efeee9;padding:16px}h1{font-size:28px}h2{font-size:22px;margin-top:40px}nav{margin-bottom:30px}table{border-collapse:collapse;display:block;overflow:auto;font-size:13px}th,td{border-bottom:1px solid #d8d7d0;padding:10px;text-align:left}</style><nav><a href="../">← 返回实验网页</a> · <a href="../#materials">查看全部图片</a></nav><h1>首次确认后的诊断与后续边界</h1>
+<p>本次实验完整结束，优化目标尚未达成。独立复核已通过：失败来自模型效果未达到预注册标准，不是本次计算、保存或恢复失效。底模仍为默认模型。</p>
+<h2>已得到的证据</h2>
+<ul>
+<li>A 批持平，B 批少答对一张。合并改对 2、改错 3，净变化 -0.0625 个百分点；要求至少 +2 个百分点。McNemar p=0.8125，不满足 0.025 门槛。</li>
+<li>正确率差值的描述性分层配对 bootstrap 95% 区间为 [-0.3125, +0.1875] 个百分点。该区间不是重复尝试校正后的置信序列。</li>
+<li>1600 张中，严格预测文本改变 69 张，归一化文本改变 59 张；925 张双方都正确，670 张双方都错误。说明本次分类头微调对整段正确率作用有限；仅凭这些计数不能把原因归为编码器能力不足。</li>
+<li>归一化 CER 20.6058% → 20.5947%，只减少 1 个字符编辑错误；严格 CER 21.2975% → 21.2644%。这点字符级变化不能替代正确率验收。</li>
+<li>全部使用原来源标签时双方均为 56.625%；预先标为可确认或已修订的 1113 张子集为 71.3387% → 71.0692%。这些辅助口径也未证明候选改善。</li>
+<li>英文组整段正确率持平；中文组提高约 0.2083 个百分点；混合组降低 0.625 个百分点。分组护栏通过，但不等于各组已证实改善。</li>
+</ul>
+<h2>后续执行顺序</h2>
+<ol>
+<li>两批确认题退役为历史分析资料，保留图片、标签、原始预测、模型和哈希。可以分析错误，但不能让这些题进入梯度训练、新验证或新确认。</li>
+<li>下一轮先在训练侧核对标签、字符覆盖、图像方向与尺寸，区分标注/预处理问题、数据覆盖不足和模型表达限制。已有训练集只抽查过 160/2000 张，不能称为全部清洗。不要根据本次 5 张整段正确性变化专门造训练题。</li>
+<li>根据上述诊断只选择一个主要干预，事先固定采样或正则化公式、强度、训练预算和候选检查点。现有证据不足以直接认定加大学习率、加轮数或解冻编码器必然有效；若考虑解冻，必须先单独验证内存、保存恢复和前反向兼容性。</li>
+<li>当前尚无 validation_03/test_03，需要补齐原图组及模板独立的新验证与阶段测试。确认池账本中尚未消耗的 360 个组分布为 TextOCR/en 180、ReCTS/zh 90、MTWI/zh 18、MTWI/mixed 72；这些还含需隔离/再检查项，不是 360 张已合格的新题，更不足下一次至少 1600 张确认。</li>
+<li>新候选先通过新开发验证和阶段测试，再锁定两批全新确认题。下一次确认尝试编号为 2，alpha=0.0125；样本量须在查看新预测前重新计算，不能追加本次题目直到显著。</li>
+</ol>
+<p>下一轮尚未启动。本次完成窗口优先收尾已有锁定实验；后续数据准备与训练继续遵守 CPU 两线程、至少 10 GiB 系统余量和新阶段文件总预算 3 GiB。缓存只能在保留必要模型与原始证据的前提下回收。</p>
+</html>

@@ -1,0 +1,636 @@
+{
+  "attempt": 1,
+  "source_round": 2,
+  "status": "not_confirmed",
+  "formal_success": false,
+  "model_path": "models/real_loop/round_02",
+  "model_sha256": "8e5d461a040bebd24563ecceca82d8bb1a826fe514a202cf88ae6965f559856a",
+  "batches": {
+    "A": {
+      "base": {
+        "strict": {
+          "n": 800,
+          "correct": 446,
+          "accuracy": 0.5575,
+          "characters": 4681,
+          "edit_errors": 1027,
+          "cer": 0.21939756462294382
+        },
+        "normalized": {
+          "n": 800,
+          "correct": 454,
+          "accuracy": 0.5675,
+          "characters": 4679,
+          "edit_errors": 995,
+          "cer": 0.21265227612737764
+        },
+        "strata": {
+          "language": {
+            "en": {
+              "n": 400,
+              "accuracy": 0.465,
+              "cer": 0.31214421252371916
+            },
+            "mixed": {
+              "n": 160,
+              "accuracy": 0.66875,
+              "cer": 0.12074118350268978
+            },
+            "zh": {
+              "n": 240,
+              "accuracy": 0.6708333333333333,
+              "cer": 0.15033407572383073
+            }
+          },
+          "source": {
+            "MTWI": {
+              "n": 200,
+              "accuracy": 0.71,
+              "cer": 0.11953041622198506
+            },
+            "ReCTS": {
+              "n": 200,
+              "accuracy": 0.63,
+              "cer": 0.16212338593974174
+            },
+            "TextOCR": {
+              "n": 400,
+              "accuracy": 0.465,
+              "cer": 0.31214421252371916
+            }
+          }
+        }
+      },
+      "candidate": {
+        "strict": {
+          "n": 800,
+          "correct": 447,
+          "accuracy": 0.55875,
+          "characters": 4681,
+          "edit_errors": 1020,
+          "cer": 0.21790215765861995
+        },
+        "normalized": {
+          "n": 800,
+          "correct": 454,
+          "accuracy": 0.5675,
+          "characters": 4679,
+          "edit_errors": 991,
+          "cer": 0.21179739260525754
+        },
+        "strata": {
+          "language": {
+            "en": {
+              "n": 400,
+              "accuracy": 0.4675,
+              "cer": 0.31024667931688804
+            },
+            "mixed": {
+              "n": 160,
+              "accuracy": 0.6625,
+              "cer": 0.1195457262402869
+            },
+            "zh": {
+              "n": 240,
+              "accuracy": 0.6708333333333333,
+              "cer": 0.15256124721603564
+            }
+          },
+          "source": {
+            "MTWI": {
+              "n": 200,
+              "accuracy": 0.705,
+              "cer": 0.11846318036286019
+            },
+            "ReCTS": {
+              "n": 200,
+              "accuracy": 0.63,
+              "cer": 0.1649928263988522
+            },
+            "TextOCR": {
+              "n": 400,
+              "accuracy": 0.4675,
+              "cer": 0.31024667931688804
+            }
+          }
+        }
+      }
+    },
+    "B": {
+      "base": {
+        "strict": {
+          "n": 800,
+          "correct": 461,
+          "accuracy": 0.57625,
+          "characters": 4367,
+          "edit_errors": 900,
+          "cer": 0.20609113808106252
+        },
+        "normalized": {
+          "n": 800,
+          "correct": 474,
+          "accuracy": 0.5925,
+          "characters": 4367,
+          "edit_errors": 869,
+          "cer": 0.19899244332493704
+        },
+        "strata": {
+          "language": {
+            "en": {
+              "n": 400,
+              "accuracy": 0.5025,
+              "cer": 0.2731932342388519
+            },
+            "mixed": {
+              "n": 160,
+              "accuracy": 0.64375,
+              "cer": 0.12231182795698925
+            },
+            "zh": {
+              "n": 240,
+              "accuracy": 0.7083333333333334,
+              "cer": 0.16594827586206898
+            }
+          },
+          "source": {
+            "MTWI": {
+              "n": 200,
+              "accuracy": 0.68,
+              "cer": 0.12364294330518698
+            },
+            "ReCTS": {
+              "n": 200,
+              "accuracy": 0.685,
+              "cer": 0.17282321899736147
+            },
+            "TextOCR": {
+              "n": 400,
+              "accuracy": 0.5025,
+              "cer": 0.2731932342388519
+            }
+          }
+        }
+      },
+      "candidate": {
+        "strict": {
+          "n": 800,
+          "correct": 458,
+          "accuracy": 0.5725,
+          "characters": 4367,
+          "edit_errors": 904,
+          "cer": 0.20700709869475611
+        },
+        "normalized": {
+          "n": 800,
+          "correct": 473,
+          "accuracy": 0.59125,
+          "characters": 4367,
+          "edit_errors": 872,
+          "cer": 0.19967941378520723
+        },
+        "strata": {
+          "language": {
+            "en": {
+              "n": 400,
+              "accuracy": 0.5,
+              "cer": 0.2731932342388519
+            },
+            "mixed": {
+              "n": 160,
+              "accuracy": 0.6375,
+              "cer": 0.1256720430107527
+            },
+            "zh": {
+              "n": 240,
+              "accuracy": 0.7125,
+              "cer": 0.16379310344827586
+            }
+          },
+          "source": {
+            "MTWI": {
+              "n": 200,
+              "accuracy": 0.675,
+              "cer": 0.12605548854041013
+            },
+            "ReCTS": {
+              "n": 200,
+              "accuracy": 0.69,
+              "cer": 0.17150395778364116
+            },
+            "TextOCR": {
+              "n": 400,
+              "accuracy": 0.5,
+              "cer": 0.2731932342388519
+            }
+          }
+        }
+      }
+    }
+  },
+  "combined": {
+    "base": {
+      "strict": {
+        "n": 1600,
+        "correct": 907,
+        "accuracy": 0.566875,
+        "characters": 9048,
+        "edit_errors": 1927,
+        "cer": 0.21297524314765695
+      },
+      "normalized": {
+        "n": 1600,
+        "correct": 928,
+        "accuracy": 0.58,
+        "characters": 9046,
+        "edit_errors": 1864,
+        "cer": 0.2060579261552067
+      },
+      "strata": {
+        "language": {
+          "en": {
+            "n": 800,
+            "accuracy": 0.48375,
+            "cer": 0.2934220251293422
+          },
+          "mixed": {
+            "n": 320,
+            "accuracy": 0.65625,
+            "cer": 0.12148054413160392
+          },
+          "zh": {
+            "n": 480,
+            "accuracy": 0.6895833333333333,
+            "cer": 0.15826944140197152
+          }
+        },
+        "source": {
+          "MTWI": {
+            "n": 400,
+            "accuracy": 0.695,
+            "cer": 0.12146092865232164
+          },
+          "ReCTS": {
+            "n": 400,
+            "accuracy": 0.6575,
+            "cer": 0.1676975945017182
+          },
+          "TextOCR": {
+            "n": 800,
+            "accuracy": 0.48375,
+            "cer": 0.2934220251293422
+          }
+        }
+      }
+    },
+    "candidate": {
+      "strict": {
+        "n": 1600,
+        "correct": 905,
+        "accuracy": 0.565625,
+        "characters": 9048,
+        "edit_errors": 1924,
+        "cer": 0.21264367816091953
+      },
+      "normalized": {
+        "n": 1600,
+        "correct": 927,
+        "accuracy": 0.579375,
+        "characters": 9046,
+        "edit_errors": 1863,
+        "cer": 0.20594738005748398
+      },
+      "strata": {
+        "language": {
+          "en": {
+            "n": 800,
+            "accuracy": 0.48375,
+            "cer": 0.2924365607292437
+          },
+          "mixed": {
+            "n": 320,
+            "accuracy": 0.65,
+            "cer": 0.12242961088263207
+          },
+          "zh": {
+            "n": 480,
+            "accuracy": 0.6916666666666667,
+            "cer": 0.15826944140197152
+          }
+        },
+        "source": {
+          "MTWI": {
+            "n": 400,
+            "accuracy": 0.69,
+            "cer": 0.12202718006795017
+          },
+          "ReCTS": {
+            "n": 400,
+            "accuracy": 0.66,
+            "cer": 0.16838487972508592
+          },
+          "TextOCR": {
+            "n": 800,
+            "accuracy": 0.48375,
+            "cer": 0.2924365607292437
+          }
+        }
+      }
+    }
+  },
+  "comparison": {
+    "corrected": [
+      "confirmation_pool_00699",
+      "confirmation_pool_01238"
+    ],
+    "regressed": [
+      "confirmation_pool_01810",
+      "confirmation_pool_00921",
+      "confirmation_pool_01784"
+    ],
+    "edit_better": [
+      "confirmation_pool_01734",
+      "confirmation_pool_01576",
+      "confirmation_pool_00531",
+      "confirmation_pool_00216",
+      "confirmation_pool_00699",
+      "confirmation_pool_00388",
+      "confirmation_pool_00110",
+      "confirmation_pool_01503",
+      "confirmation_pool_01238",
+      "confirmation_pool_01925",
+      "confirmation_pool_00427",
+      "confirmation_pool_00402",
+      "confirmation_pool_01261"
+    ],
+    "edit_worse": [
+      "confirmation_pool_01307",
+      "confirmation_pool_01810",
+      "confirmation_pool_01006",
+      "confirmation_pool_01701",
+      "confirmation_pool_00509",
+      "confirmation_pool_00577",
+      "confirmation_pool_00921",
+      "confirmation_pool_01517",
+      "confirmation_pool_01610",
+      "confirmation_pool_01408",
+      "confirmation_pool_01757",
+      "confirmation_pool_01823",
+      "confirmation_pool_01784"
+    ],
+    "accuracy_delta": -0.0006249999999999867,
+    "normalized_cer_delta": -0.00011054609772273571,
+    "failed_group_guards": [],
+    "development_gate": false,
+    "note": "Exploratory stage test, not formal success; confirmation required."
+  },
+  "label_audit_counts": {
+    "consistent": 1061,
+    "corrected": 52,
+    "uncertain": 487
+  },
+  "secondary_label_sensitivity": {
+    "original_source_labels": {
+      "base": {
+        "strict": {
+          "n": 1600,
+          "correct": 884,
+          "accuracy": 0.5525,
+          "characters": 9044,
+          "edit_errors": 1956,
+          "cer": 0.21627598407784165
+        },
+        "normalized": {
+          "n": 1600,
+          "correct": 906,
+          "accuracy": 0.56625,
+          "characters": 9043,
+          "edit_errors": 1892,
+          "cer": 0.20922260311843416
+        },
+        "strata": {
+          "language": {
+            "en": {
+              "n": 800,
+              "accuracy": 0.475,
+              "cer": 0.2946538556294654
+            },
+            "mixed": {
+              "n": 320,
+              "accuracy": 0.6125,
+              "cer": 0.12927756653992395
+            },
+            "zh": {
+              "n": 480,
+              "accuracy": 0.6875,
+              "cer": 0.1575492341356674
+            }
+          },
+          "source": {
+            "MTWI": {
+              "n": 400,
+              "accuracy": 0.65,
+              "cer": 0.13010204081632654
+            },
+            "ReCTS": {
+              "n": 400,
+              "accuracy": 0.665,
+              "cer": 0.16277472527472528
+            },
+            "TextOCR": {
+              "n": 800,
+              "accuracy": 0.475,
+              "cer": 0.2946538556294654
+            }
+          }
+        }
+      },
+      "candidate": {
+        "strict": {
+          "n": 1600,
+          "correct": 884,
+          "accuracy": 0.5525,
+          "characters": 9044,
+          "edit_errors": 1953,
+          "cer": 0.21594427244582043
+        },
+        "normalized": {
+          "n": 1600,
+          "correct": 906,
+          "accuracy": 0.56625,
+          "characters": 9043,
+          "edit_errors": 1891,
+          "cer": 0.2091120203472299
+        },
+        "strata": {
+          "language": {
+            "en": {
+              "n": 800,
+              "accuracy": 0.47625,
+              "cer": 0.29366839122936683
+            },
+            "mixed": {
+              "n": 320,
+              "accuracy": 0.60625,
+              "cer": 0.13022813688212928
+            },
+            "zh": {
+              "n": 480,
+              "accuracy": 0.6895833333333333,
+              "cer": 0.1575492341356674
+            }
+          },
+          "source": {
+            "MTWI": {
+              "n": 400,
+              "accuracy": 0.645,
+              "cer": 0.1306689342403628
+            },
+            "ReCTS": {
+              "n": 400,
+              "accuracy": 0.6675,
+              "cer": 0.16346153846153846
+            },
+            "TextOCR": {
+              "n": 800,
+              "accuracy": 0.47625,
+              "cer": 0.29366839122936683
+            }
+          }
+        }
+      }
+    },
+    "visually_consistent_or_corrected_subset": {
+      "base": {
+        "strict": {
+          "n": 1113,
+          "correct": 776,
+          "accuracy": 0.6972147349505841,
+          "characters": 6646,
+          "edit_errors": 839,
+          "cer": 0.126241348179356
+        },
+        "normalized": {
+          "n": 1113,
+          "correct": 794,
+          "accuracy": 0.7133872416891285,
+          "characters": 6644,
+          "edit_errors": 794,
+          "cer": 0.11950632149307645
+        },
+        "strata": {
+          "language": {
+            "en": {
+              "n": 494,
+              "accuracy": 0.6518218623481782,
+              "cer": 0.18761518614080352
+            },
+            "mixed": {
+              "n": 263,
+              "accuracy": 0.752851711026616,
+              "cer": 0.05658153241650295
+            },
+            "zh": {
+              "n": 356,
+              "accuracy": 0.7696629213483146,
+              "cer": 0.10173160173160173
+            }
+          },
+          "source": {
+            "MTWI": {
+              "n": 334,
+              "accuracy": 0.7844311377245509,
+              "cer": 0.058452922646132305
+            },
+            "ReCTS": {
+              "n": 285,
+              "accuracy": 0.7368421052631579,
+              "cer": 0.10986964618249534
+            },
+            "TextOCR": {
+              "n": 494,
+              "accuracy": 0.6518218623481782,
+              "cer": 0.18761518614080352
+            }
+          }
+        }
+      },
+      "candidate": {
+        "strict": {
+          "n": 1113,
+          "correct": 773,
+          "accuracy": 0.6945193171608266,
+          "characters": 6646,
+          "edit_errors": 836,
+          "cer": 0.12578994884140837
+        },
+        "normalized": {
+          "n": 1113,
+          "correct": 791,
+          "accuracy": 0.710691823899371,
+          "characters": 6644,
+          "edit_errors": 795,
+          "cer": 0.11965683323299217
+        },
+        "strata": {
+          "language": {
+            "en": {
+              "n": 494,
+              "accuracy": 0.6497975708502024,
+              "cer": 0.1872465904902322
+            },
+            "mixed": {
+              "n": 263,
+              "accuracy": 0.7452471482889734,
+              "cer": 0.057367387033398824
+            },
+            "zh": {
+              "n": 356,
+              "accuracy": 0.7696629213483146,
+              "cer": 0.10173160173160173
+            }
+          },
+          "source": {
+            "MTWI": {
+              "n": 334,
+              "accuracy": 0.7784431137724551,
+              "cer": 0.05915295764788239
+            },
+            "ReCTS": {
+              "n": 285,
+              "accuracy": 0.7368421052631579,
+              "cer": 0.10986964618249534
+            },
+            "TextOCR": {
+              "n": 494,
+              "accuracy": 0.6497975708502024,
+              "cer": 0.1872465904902322
+            }
+          }
+        }
+      }
+    }
+  },
+  "exact_one_sided_mcnemar_p": 0.8125,
+  "alpha": 0.025,
+  "both_batches_positive": false,
+  "paired_stratified_bootstrap_95pct": {
+    "accuracy_delta": [
+      -0.003125,
+      0.001875
+    ],
+    "normalized_cer_delta": [
+      -0.0012675818184606368,
+      0.0010139759700246898
+    ]
+  },
+  "seconds": 244.0529387500137,
+  "resources": {
+    "free_gib": 10.71929931640625,
+    "new_gib": 0.8875107178464532,
+    "peak_rss_gib": 0.523773193359375
+  },
+  "limitations": [
+    "Public training-source custom grouped holdouts; base pretraining overlap unknown.",
+    "Annotation/source and scene similarity limitations remain; success applies only to the registered crop mixture."
+  ]
+}

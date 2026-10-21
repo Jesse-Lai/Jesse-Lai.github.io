@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="canonical" href="https://jesseos.com/ocr-lab/">
+  <meta name="description" content="一次本地 OCR 实验的完整记录：从合成文字到真实裁图，四轮训练、两批确认与全部逐图证据。">
+  <title>让模型读懂真实世界 · OCR 实验手记</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%23f7f7f4'/%3E%3Ctext x='10' y='44' font-size='37' fill='%23f54e00'%3E文%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css"><script src="data.js" defer></script><script src="app.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">跳至正文</a>
+<header class="site-header"><a href="#top" class="brand" aria-label="OCR 实验手记首页"><span class="brand-mark">文<span>A</span></span><span>实验手记 <small>OCR / 001</small></span></a><nav aria-label="章节导航"><a href="#goal">目标</a><a href="#journey">经过</a><a href="#results">结果</a><a href="#materials">素材</a><a href="#next">下一步</a></nav><span class="edition">2026.10.21 — 22</span></header>
+<main id="main">
+  <section class="hero wide" id="top">
+    <div class="daylight" aria-hidden="true"><div class="blinds"></div><img src="assets/leaves.png" alt=""></div>
+    <div class="hero-copy"><p class="eyebrow">A LOCAL MACHINE LEARNING JOURNAL</p><h1>教一个模型，<br>读懂真实世界。</h1><p class="hero-description">从合成文字，到街头招牌。<br>一次 OCR 微调实验的目标、尝试、证据，<br>以及没有被分数掩盖的结论。</p><a class="primary" href="#journey">翻开实验记录 <span aria-hidden="true">↗</span></a><p class="hero-note">PP-OCRv5 mobile · 本地 CPU · 中英文文字裁图</p></div>
+    <div class="photo-stack" id="hero-photos" aria-label="实验中的真实裁图"></div>
+    <span class="handwritten hero-scribble">Small changes. Real evidence.</span>
+  </section>
+  <div class="wide hero-footer"><span>四轮训练，六个观察节点</span><span>实验完成 · 改善尚未证实 <i class="orange-dot"></i></span></div>
+
+  <section class="reading section" id="goal">
+    <p class="section-index">01 / THE QUESTION</p><h2>我们想验证什么？</h2>
+    <p class="lead">在真实文字裁图上，微调后的模型<br class="desktop">能否<strong>可靠地优于原始底模</strong>？</p>
+    <p>先用合成图学会完整训练流程，再把目标转向真实场景。最终以同一个锁定模型，面对两批全新题目；不能仅凭一次涨分就宣布升级。</p>
+    <div class="goal-numbers"><div><b>+2<span>pp</span></b><p>合并正确率至少提升<br>2 个百分点</p></div><div><b>2<span>× 800</span></b><p>两批新题<br>都要有正向提升</p></div><div><b>0.025</b><p>首次确认的<br>统计检验门槛</p></div></div>
+    <p class="caption">还需归一化字符错误率下降、严格字符错误率不增加，并通过语言与来源分组检查。</p>
+    <div class="model-flow" aria-label="模型流程：真实文字裁图，冻结编码器，可训练分类层，输出字符串"><div class="flow-input">图像裁片<span>输入</span></div><span class="arrow">→</span><div>图像骨干 + 编码器<span>冻结，不更新</span></div><span class="arrow">→</span><div class="flow-train">文字分类层<span>实际更新参数</span></div><span class="arrow">→</span><div>识别文字<span>输出</span></div></div>
+    <p class="caption">本次从裁好的文字行开始，不包含整张照片的文字检测或定位，也未接入 Language Bubble 产品。</p>
+  </section>
+
+  <section class="wide materials-strip" aria-label="训练图片样例"><div class="strip-heading"><span class="handwritten">From generated text to the real world</span><span class="caption">训练素材原图 · 固定样例</span></div><div id="training-strip" class="training-strip"></div></section>
+
+  <section class="reading section" id="journey"><p class="section-index">02 / THE JOURNEY</p><h2>从“跑通”，到“真的有效”。</h2><p class="lead">每一步都留下证据，<br>也保留没有提升的那一轮。</p><p>点击下面的节点，查看该阶段为什么做、怎么做，以及在同一套题上发生了什么。</p></section>
+  <section class="wide journey-workspace" aria-label="交互式实验时间线">
+    <div class="timeline" id="timeline" role="tablist" aria-label="实验阶段"></div>
+    <div class="stage-panel" role="tabpanel" id="stage-panel" tabindex="0"></div>
+    <p class="caption comparison-note">每个节点比较的是该阶段同一套题上的两个模型。不同节点的数据、候选和评分口径可能不同，不能把绝对分数连成能力增长曲线。</p>
+  </section>
+
+  <section class="reading section" id="results"><p class="section-index">03 / THE VERDICT</p><h2>实验完成了。<br>升级，还没有被证明。</h2><p class="lead">最终确认：1,600 张真实裁图，<br>候选比底模少答对 1 张。</p></section>
+  <section class="wide results-board">
+    <div class="result-heading"><div><span class="pill neutral">首次正式确认</span><h3>几乎持平，未达到 +2pp 的目标。</h3></div><div class="metric-switch" role="group" aria-label="评分口径"><button data-mode="normalized" aria-pressed="true">归一化评分</button><button data-mode="strict" aria-pressed="false">严格评分</button></div></div>
+    <div class="headline-scores"><div><span>原始底模</span><strong id="base-score">58.00<small>%</small></strong><p id="base-correct">928 / 1,600 张正确</p></div><span class="score-arrow">→</span><div><span>第二轮候选</span><strong id="candidate-score">57.94<small>%</small></strong><p id="candidate-correct">927 / 1,600 张正确</p></div><div class="delta-note"><span class="handwritten">No proven gain</span><b id="score-delta">−0.06 pp</b><p>仍使用底模</p></div></div>
+    <p class="caption" id="metric-explanation">归一化：Unicode NFKC、忽略大小写与空白；保留标点，不转换简繁。</p>
+    <div class="result-columns"><div><h4>两批新试卷</h4><div id="batch-chart"></div><div class="legend"><span><i class="base-dot"></i>底模</span><span><i class="candidate-dot"></i>候选</span><span>完整 0–100% 尺度</span></div></div><div class="result-proof"><h4>主指标的五次改变</h4><div class="changes-counts"><div><b class="positive">2</b><span>原来错 → 改对</span></div><div><b class="negative">3</b><span>原来对 → 改错</span></div></div><p>925 张双方都正确，670 张双方都错误。字符级改善极小，无法替代整段正确率验收。</p><button class="text-button" id="show-changes">逐张查看这 5 张原图 <span>↗</span></button></div></div>
+    <div class="verdict-grid"><div><span>统计检验</span><b>p = 0.8125</b><small>高于 0.025，未通过</small></div><div><span>正确率差值 95% 区间</span><b>−0.31 → +0.19 pp</b><small>描述性配对 bootstrap 区间</small></div><div><span>独立技术复核</span><b>264 / 264 一致</b><small>完整模型重放，并复算所有评分</small></div></div>
+    <details class="detail-block"><summary>展开字符错误率、分组结果与全部验收条件</summary><div id="detail-metrics"></div></details>
+  </section>
+
+  <section class="reading section"><p class="section-index">04 / TRUST THE EVIDENCE</p><h2>分数之外，<br>还要检查证据是否可靠。</h2><p>所有确认标签在预测前冻结。清楚的错标做修订，无法确认的保留原标签，并报告不同标注口径下的敏感性。</p><div class="audit-bar" role="img" aria-label="1600 张标签中，1061 张一致，52 张修订，487 张不确定"><span style="width:66.3125%"></span><span style="width:3.25%"></span><span style="width:30.4375%"></span></div><div class="audit-legend"><span><i></i><b>1,061</b> 一致</span><span><i></i><b>52</b> 修订</span><span><i></i><b>487</b> 不确定，保留</span></div><p class="caption">目视审查不等于专家裁决；公开数据是否进入过底模预训练未知。像素、原图组与模板检查也不能保证消除所有关联。</p>
+    <div class="recovery-notes"><article><span>01</span><div><h3>在预测之前，处理重复模板</h3><p>复查后替换 3 张重复或疑似广告模板重叠题，同来源、同语言补齐；保留原清单和修订记录。</p></div></article><article><span>02</span><div><h3>聊天中断，与模型训练分开排查</h3><p>历史请求膨胀到约 34–35 MB，触发 HTTP 413。改用简短交接文件和分阶段日志，避免反复载入大量图片与旧对话。</p></div></article><article><span>03</span><div><h3>空间不足时暂停，从断点继续</h3><p>保留至少 10 GiB 系统余量，并预留写入缓冲。逐样本保存、进程锁防重复；恢复后约 5 分 25 秒完成剩余计算与复核。</p></div></article></div>
+  </section>
+
+  <section class="wide section gallery-section" id="materials"><div class="gallery-heading"><div><p class="section-index">05 / THE ORIGINAL MATERIALS</p><h2>把每一个答案，放回原图里。</h2><p>六个阶段的 2,780 组配对记录，含 2,680 张不同图片。<br>可以看改善，也可以看退步与仍未解决的难题。</p></div><span class="handwritten gallery-scribble">Look closer ↙</span></div>
+    <div class="gallery-controls"><label>实验阶段<select id="gallery-stage"></select></label><label>答题变化<select id="gallery-outcome"><option value="all">全部样本</option value="changed">改对或改错</option><option value="corrected">改对</option><option value="regressed">改错</option><option value="both_wrong">双方仍错</option><option value="both_correct">双方都对</option></select></label><label>语言<select id="gallery-language"><option value="all">全部语言</option><option value="en">英文</option><option value="zh">中文</option><option value="mixed">中英混合</option></select></label><label class="search-label">搜索原文、输出或编号<input id="gallery-search" type="search" placeholder="例如 GOJIRA、连锁、confirmation…" autocomplete="off"></label></div>
+    <div class="gallery-subbar"><p id="gallery-count" role="status" aria-live="polite"></p><label id="uncertain-control"><input type="checkbox" id="only-uncertain"> 只看标签不确定的样本</label></div>
+    <p class="caption gallery-context" id="gallery-context"></p><div id="gallery-grid" class="gallery-grid"></div><div class="pagination"><button id="previous-page" aria-label="上一页">← 上一页</button><span id="page-status" aria-live="polite"></span><button id="next-page" aria-label="下一页">下一页 →</button></div>
+  </section>
+
+  <section class="reading section" id="next"><p class="section-index">06 / WHAT COMES NEXT</p><h2>下一轮，先改进实验，<br>再期待模型改进。</h2><p class="lead">目前只有微弱变化。<br>继续堆训练次数，还没有充分依据。</p><ol class="next-list"><li><span>01</span><div><h3>回到训练数据找原因</h3><p>核对标签、字符覆盖、图像方向与尺寸。2,000 张训练图目前只抽查过 160 张，不能当作已经全部清洗。</p></div></li><li><span>02</span><div><h3>只改变一个主要因素</h3><p>根据诊断选择数据采样或正则化等方向，预先固定参数和预算。如果解冻编码器，先验证内存与恢复能力。</p></div></li><li><span>03</span><div><h3>补足真正独立的新题</h3><p>建立第三轮新验证、阶段测试。确认池账本尚余 360 个未消耗组，仍需审核，不足下一次至少 1,600 张确认。</p><div class="pool-meter"><span></span></div><small>最多 360 个待复查组 / 至少 1,600 张新确认题</small></div></li><li><span>04</span><div><h3>再次验收，仍然接受失败</h3><p>用两个全新批次测同一个锁定模型，第二次检验阈值为 0.0125。已用题只作历史分析，不循环验收，也不进入梯度训练。</p></div></li></ol><div class="closing-note"><span class="handwritten">An honest result is a useful result.</span><p>这一轮没有得到更好的模型。<br>我们得到了一条可复查的路径，和下一步该验证的问题。</p></div></section>
+  <section class="reading evidence"><h3>原始记录</h3><div class="evidence-links"><a href="evidence/reports-real_loop-confirmation_01-RESULTS.html" target="_blank" rel="noopener">最终报告 ↗</a><a href="evidence/reports-real_loop-confirmation_01-NEXT_STEPS.html" target="_blank" rel="noopener">诊断与下一步 ↗</a><a href="evidence/summary.json" target="_blank" rel="noopener">完整指标 JSON ↗</a><a href="evidence/verification.json" target="_blank" rel="noopener">独立复核记录 ↗</a><a href="evidence/REAL_DATA_OPTIMIZATION_PLAN.html" target="_blank" rel="noopener">预注册计划 ↗</a><a href="evidence/reports-INTERRUPTION_REVIEW.html" target="_blank" rel="noopener">中断原因复盘 ↗</a></div><p class="caption">素材来自实验原图与保存预测；线上图片使用像素一致的无损 WebP / SVG 封装。中文标签不确定性、公开数据预训练重叠和来源差异仍是结论边界。网页仅总结已完成实验，不启动训练。</p></section>
+</main>
+<footer class="wide"><span>OCR 实验手记 <small>· 记录于 2026 年 10 月 22 日</small></span><a href="https://jesseos.com/language-bubble/" target="_blank" rel="noopener">视觉延续 Language Bubble ↗</a></footer>
+<dialog id="image-dialog" aria-labelledby="dialog-title"><div class="dialog-top"><div><p class="section-index" id="dialog-source"></p><h2 id="dialog-title"></h2></div><button id="close-dialog" aria-label="关闭图片详情">✕</button></div><div class="dialog-image"><img id="dialog-photo" alt=""></div><div id="dialog-comparison"></div><div class="dialog-footer"><button id="dialog-previous">← 上一张</button><a id="original-image" target="_blank" rel="noopener">打开原始图片 ↗</a><button id="dialog-next">下一张 →</button></div></dialog>
+<noscript><p class="reading">请启用 JavaScript 查看交互图表与全部图片。静态结论及原始报告链接仍可阅读。</p></noscript>
+</body></html>

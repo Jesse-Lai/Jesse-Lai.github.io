@@ -1,0 +1,19 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>对话中断诊断与恢复约定</title><style>body{max-width:900px;margin:60px auto;padding:0 24px;background:#f7f7f4;color:#26251e;font:15px/1.9 system-ui;overflow-wrap:anywhere}a{color:#a84c3f}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit;background:#efeee9;padding:16px}h1{font-size:28px}h2{font-size:22px;margin-top:40px}nav{margin-bottom:30px}table{border-collapse:collapse;display:block;overflow:auto;font-size:13px}th,td{border-bottom:1px solid #d8d7d0;padding:10px;text-align:left}</style><nav><a href="../">← 返回实验网页</a> · <a href="../#materials">查看全部图片</a></nav><h1>对话中断诊断与恢复约定</h1>
+<p>2026-10-21，Asia/Shanghai。</p>
+<p><strong>已定位主要原因：请求体过大，返回 HTTP 413。</strong> 三个相关对话的失败记录均包含 <code>stream disconnected before completion: stream closed before response.completed</code>。进一步只读检查当前 <code>ghc-tunnel</code> provider（127.0.0.1:8314）的请求元数据后，发现此前连续失败的请求返回 HTTP 413，同批重试请求体大小完全不变。2026-10-21 22:28–22:29 的 6 次请求均为 34,351,783 字节；19:12 附近失败请求为 35,062,448 字节。应用自动重试达到 5/5，但没有缩小请求，因而重复失败。证据保存于 <code>runs/real_loop/tunnel_failure_metadata.json</code>。这些是中转记录的响应码；无法仅凭元数据确定限额由中转自身还是其上游施加，也不把约 32 MiB 猜测当作已确认的限额。</p>
+<p>图片与长对话/工具输出在历史中持续累积，导致请求过大；换对话后若再次读入整段旧历史，很容易重复触发。两次失败仅有用户消息、没有训练命令，也支持这是对话请求问题。另有少量 HTTP 408/504 超时记录，不与 413 混为一谈。</p>
+<p>相关对话：<code>01a159b2-f585-7a30-9b1b-d300b1f68ad4</code>、<code>01a15e18-11c6-7661-9c19-967eebf74610</code>、<code>01a15ed9-5e92-76d3-a8f8-e6e0494a9575</code>。诊断来源为 read_thread 返回的失败状态和 ~/.codex/logs_2.sqlite 中这些 thread_id 的 responses_retry 日志；没有修改应用配置。</p>
+<p>原进度文档停留在“准备数据”，未反映已保存的 1,320 张审核，也让多次恢复看起来停在同一处。实际审核页在持续增加。本次诊断初期只知道通用断流；取得中转 HTTP 状态后才将主要原因缩小到请求体积问题。应以这份更新后的结论为准。</p>
+<p>官方 app-server 文档也要求以完成状态判断成功，failed/interrupted 不算成功；文档没有给出本次断流的具体原因：https://developers.openai.com/siwc/token-sharing-open-source/codex-app-server</p>
+<h2>本任务采用的规避办法</h2>
+<ol>
+<li>恢复先读 <code>TASK_HANDOFF.md</code>，运行 <code>.venv/bin/python scripts/resume_status.py --write</code>，以已保存文件及哈希为准。不重新载入完整对话。</li>
+<li>图片每次检查 1–2 页，每页 20 张；看完立即写入 page_reviews。绝不将未检查页标成已检查。</li>
+<li>重复提交相同审核只跳过已保存内容；如内容或哈希不同立即拒绝覆盖，避免半批成功后的重试失败。</li>
+<li>训练、评测保留独立日志及已有逐样本保存机制；检查进程和输出后才恢复，不盲目重复启动。采用 CPU 两线程和既定资源门槛。</li>
+<li>每阶段更新交接记录，完成两批后再解释确认成绩。保持已锁定模型、评测规则和样本不因中断而改变。</li>
+<li>已核查图片不重新载入。小批处理可以减少单步载荷，但不能自动清空累计历史；长时间图像审核必须在适当阶段用精简交接开启新上下文。HTTP 413 不靠原样重试解决。当前任务剩余计算由磁盘脚本执行，只读简短进度与结果。</li>
+</ol>
+<p>本次继续时又触发了独立的本地资源保护：磁盘低于“10 GiB + 写入缓冲”而有序退出。已累计保存 1751/3200 条确认预测（A 批两模型完成，B 批底模 151 条）。合计清理约 482 MiB 项目安装/特征缓存、已完成数值探针临时状态及完成轮次的未选中/末轮恢复状态，保留底模、选中 epoch 头、完整选中模型、题图、标签和结果。清理清单与哈希另行保存。无损归档大型标注因临时空间不足退出，原文件未删除。这个本地保护与此前 HTTP 413 是两个不同故障；当前需要额外约 1 GiB 空间再继续，不下调安全线硬跑。</p>
+<p>这套办法避免重复载入超大历史并降低恢复成本，不能保证网络或服务端永不超时。无需为了修复 HTTP 413 缩小训练集；应缩小对话请求负载。</p>
+</html>

@@ -1,0 +1,165 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>新真实图片测评：底模 vs 第二轮训练后模型</title><style>body{max-width:900px;margin:60px auto;padding:0 24px;background:#f7f7f4;color:#26251e;font:15px/1.9 system-ui;overflow-wrap:anywhere}a{color:#a84c3f}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit;background:#efeee9;padding:16px}h1{font-size:28px}h2{font-size:22px;margin-top:40px}nav{margin-bottom:30px}table{border-collapse:collapse;display:block;overflow:auto;font-size:13px}th,td{border-bottom:1px solid #d8d7d0;padding:10px;text-align:left}</style><nav><a href="../">← 返回实验网页</a> · <a href="../#materials">查看全部图片</a></nav><h1>新真实图片测评：底模 vs 第二轮训练后模型</h1>
+<p><strong>结论：本次新题没有验证出识别提升，训练后的模型在这批图片上有所退步。此前合成回归题的 93% → 98% 没有迁移到这批真实图片。</strong></p>
+<p>本次只进行推理和测评，没有继续训练、重新挑检查点或调整图片预处理。比较的是原始 PP-OCRv5 mobile 底模与此前验证集已选定的第二轮第 10 遍模型。</p>
+<h2>测试题和公平性</h2>
+<ul>
+<li>共 200 张新文字裁图：100 张英文、60 张中文、40 张中英混合。英文来自 ICDAR 2015；另 100 张来自 BCTR 的真实街景和网页测试部分，各 50 张。BCTR 网页样本来自淘宝网页图片，并非本实验生成文字，也不是用户的真实应用截图。</li>
+<li>采用固定随机种子，按来源与语言分层抽取。排除完全重复的完整文字和图片；11 次候选跳过均因重复文字，没有按模型答题结果或图片难度筛题。</li>
+<li>新题与此前 450 张合成图的完整文字及 RGB 像素都无重复。清单和评分协议在推理前锁定、保存 SHA256；两个模型读取完全相同的 200 张图。</li>
+<li>保留原始难题：21 张图片高大于宽，22 张图片高度不足 16 像素；还包含竖排、透视、裁切不完整、模糊、低对比度等情况。没有追加旋转搜索、超分辨率或文字纠错。</li>
+<li>使用原底模的同一预处理器、RGB 输入、逐张推理、默认 CTC 解码。两个完整模型分别运行，而不是用人工答案、其他 OCR 或缓存结果代替。</li>
+</ul>
+<h2>两种评分同时报告</h2>
+<p>严格评分逐字符比较，大小写、空白、标点都计入。事先定义的格式归一化评分，对答案和输出同样做 Unicode NFKC、转小写、去掉空白；仍保留标点，不做简繁转换或语义纠错。</p>
+<p>使用双口径的原因：看题、但尚未运行模型时，发现 BCTR 标签经常把图中的大写英文写成小写、去掉原图中的空格。比如 LED/BOM 的标签是 led/bom。两种结果都保留，不能只展示对训练模型有利的一种。</p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th style="text-align:right">底模</th>
+<th style="text-align:right">训练后</th>
+<th style="text-align:right">变化</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>严格整段完全正确</td>
+<td style="text-align:right">96/200（48.0%）</td>
+<td style="text-align:right">92/200（46.0%）</td>
+<td style="text-align:right">-2.0 个百分点</td>
+</tr>
+<tr>
+<td>格式归一化后整段完全正确</td>
+<td style="text-align:right">119/200（59.5%）</td>
+<td style="text-align:right">113/200（56.5%）</td>
+<td style="text-align:right">-3.0 个百分点</td>
+</tr>
+<tr>
+<td>严格字符错误率 CER（越低越好）</td>
+<td style="text-align:right">23.04%</td>
+<td style="text-align:right">25.08%</td>
+<td style="text-align:right">+2.03 个百分点</td>
+</tr>
+<tr>
+<td>格式归一化后 CER（越低越好）</td>
+<td style="text-align:right">16.31%</td>
+<td style="text-align:right">17.98%</td>
+<td style="text-align:right">+1.66 个百分点</td>
+</tr>
+</tbody>
+</table>
+<p>严格口径共 1,328 个参考字符，编辑错误从 306 次增加到 333 次；格式归一化口径共 1,324 个参考字符，编辑错误从 216 次增加到 238 次。CER 是插入、删除、替换的最少总次数除以参考字符数。这里的“整段”指一张裁图里的完整文字，可能只有一个单词。</p>
+<h2>中英文分别看</h2>
+<table>
+<thead>
+<tr>
+<th>类别</th>
+<th style="text-align:right">张数</th>
+<th style="text-align:right">严格：底模 → 训练后</th>
+<th style="text-align:right">格式归一化：底模 → 训练后</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>英文</td>
+<td style="text-align:right">100</td>
+<td style="text-align:right">61.00% → 59.00%</td>
+<td style="text-align:right">61.00% → 60.00%</td>
+</tr>
+<tr>
+<td>中文（可含数字、标点）</td>
+<td style="text-align:right">60</td>
+<td style="text-align:right">53.33% → 50.00%</td>
+<td style="text-align:right">55.00% → 51.67%</td>
+</tr>
+<tr>
+<td>中英混合</td>
+<td style="text-align:right">40</td>
+<td style="text-align:right">7.50% → 7.50%</td>
+<td style="text-align:right">62.50% → 55.00%</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>来源</th>
+<th style="text-align:right">张数</th>
+<th style="text-align:right">严格：底模 → 训练后</th>
+<th style="text-align:right">格式归一化：底模 → 训练后</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>英文街景</td>
+<td style="text-align:right">100</td>
+<td style="text-align:right">61.00% → 59.00%</td>
+<td style="text-align:right">61.00% → 60.00%</td>
+</tr>
+<tr>
+<td>中文及混合街景</td>
+<td style="text-align:right">50</td>
+<td style="text-align:right">22.00% → 20.00%</td>
+<td style="text-align:right">42.00% → 40.00%</td>
+</tr>
+<tr>
+<td>中文及混合网页</td>
+<td style="text-align:right">50</td>
+<td style="text-align:right">48.00% → 46.00%</td>
+<td style="text-align:right">74.00% → 66.00%</td>
+</tr>
+</tbody>
+</table>
+<h2>哪些变好了，哪些变坏了</h2>
+<p>200 张中有 47 张原始输出发生变化。严格口径下改对 2 张、改错 6 张。格式归一化口径下改对 3 张、改错 9 张，另外 110 张两者都正确、78 张两者都错误。后一个口径下，6 张编辑错误减少，22 张编辑错误增加，172 张编辑错误数量相同。</p>
+<p>【图片：全部改对与改错；请在网页素材区查看】</p>
+<p>例如，MEETS 从 MEEIS 改对了；但 GIFT 从正确变成 GFT，订餐电话变成订餐请，货号 DXL7218 丢了“货”字。这些案例说明：少量图片上的学习收益可以与其他图片上的能力退步同时发生。</p>
+<p>全部 200 张图片、标准答案、两个模型输出</p>
+<p>所有 47 张输出变化的对照图：第 1 页 · 第 2 页 · 第 3 页 · 第 4 页 · 第 5 页 · 第 6 页</p>
+<p>所有测试题概览：第 1 页 · 第 2 页 · 第 3 页 · 第 4 页</p>
+<h2>能得出什么结论</h2>
+<p>这轮微调在原来的合成题上有效，但没有在这批新真实文字图片上显示出提升。现阶段没有证据支持用它替代底模。更合理的解释是：训练只覆盖 300 张有限字体、固定句式的合成图，优化后的识别头适应了这类图，却未覆盖新图片的复杂变化。这是符合数据的解释，并非已经证明了唯一机制；本轮不能单独区分过拟合、领域差异、遗忘和训练设置各自的贡献。</p>
+<p>旧题 98% 与这里 46% 不是同一套试卷，不能解读为同一能力从 98% 崩到 46%。公平的比较是在这套新题内：严格 48% → 46%，归一化 59.5% → 56.5%。</p>
+<h2>不确定性和标签问题</h2>
+<ul>
+<li>这里只是分层抽取的 200 张裁图，不是完整官方 benchmark，也不是按 Language Bubble 实际使用比例抽样。公开数据可能出现在底模的预训练中；只能确认它们没有参与我们这两轮本地训练或选型。</li>
+<li>裁图文件没有保留原照片分组 ID；虽然删除了完全重复的图片和文字，仍无法完全排除同一场景相关样本。统计区间按裁图独立计算，只作探索参考。</li>
+<li>严格整段正确率差值的配对 bootstrap 95% 区间为 −5.0 到 +0.5 个百分点，精确 McNemar 双侧 p=0.289；格式归一化差值区间为 −6.5 到 0.0 个百分点，p=0.146。因此不把小样本整段分差推广为确定的总体退步幅度。</li>
+<li>字符错误率的方向也变差：格式归一化 CER 差值 bootstrap 95% 区间约 +0.73 到 +2.68 个百分点。该区间同样受样本相关性、标注质量和固定混合比例限制。</li>
+<li>公开标签也可能不准确。推理前已记录 ext_0068、ext_0071 等疑似拼写问题；它们与 Paddle 分发的原始测试标签一致。英文镜像与该标注文件有 27/2077 处文字差异，多数是空格或标点，均保留对照证据。没有根据预测结果修改答案或移除样本；格式归一化也不能消除错标本身。所有标签与下载来源逐条复核通过，并不等于每张图都经过了独立人工重标。</li>
+<li>当前测的是裁好的文字，不包含在整张照片里定位文字的能力。</li>
+</ul>
+<h2>下一步怎么改进</h2>
+<p>优先改善数据，再考虑继续训练：收集或选取真实的目标截图、照片文字行，核对标签，按原始照片或页面分组划分训练、验证和一份全新测试集。训练中混入常规中英文样本，避免只强化很窄的题型；比较较短轮数，并以更接近实际使用的验证集选模型。竖排、方向和裁切问题可单独做固定预处理对照，不能把预处理收益记成模型训练收益。</p>
+<p>本次这 200 张已经被分析，后续可保留作回归测试；若用它们指导改进，就不能再称其为完全没见过的新测试。没有启动第三轮训练。</p>
+<h2>执行、成本与复盘</h2>
+<ul>
+<li>两个完整模型共 400 次推理，含加载与哈希检查约 95.8 秒；独立复核约 32.7 秒。数据查找、下载、来源和标签核查占用了更多时间，不能把推理时长当作本次端到端耗时。</li>
+<li>CPU 两个计算线程，未使用 GPU。推理进程峰值 RSS 0.465 GiB，复核进程峰值 0.619 GiB，两者顺序执行。</li>
+<li>推理采样到的最低磁盘余量 19.57 GiB，始终高于 10 GiB 预留。全部数据、读取依赖、缓存和报告新增约 0.6 GiB；原始数据保留便于离线复核。没有付费云调用。</li>
+<li>原始两轮模型、训练数据、结果文件全部哈希未变。独立复核了 200 张图片与原数据的像素及标签、400 条预测的全部评分，并重跑 122 次完整模型推理（全部有变化的图加固定间隔抽查），均一致。计算进程正常结束。</li>
+<li>遇到的环境问题：Copilot CLI 未登录；改读数据源公开页面/API。Python 官方 wheel 下载连接失败；使用镜像下载，并按官方 PyPI SHA256 核验后离线安装 lmdb 与 pyarrow，没有升级训练依赖。Google Drive 的数据库下载确认页经过核对后继续下载，仅用数据库读取器读取图片与标签。</li>
+<li>数据选择问题：一个中文识别镜像实际上是合成文档，已在推理前排除；一个带 Filter 名称的镜像缺少过滤说明，未使用。最终中文数据直接取自作者链接的原测试数据库。</li>
+</ul>
+<h2>文件与复核</h2>
+<ul>
+<li>冻结协议 · 题目清单 · 数据来源</li>
+<li>完整指标 · 逐题评分 · 独立复核证据</li>
+<li><code>requirements-lock.txt</code> 保留训练时版本；<code>requirements-external-lock.txt</code> 记录本次新增读取依赖后的完整环境。</li>
+</ul>
+<p>离线复核命令（只读模型；更新本轮复核记录）：</p>
+<pre><code class="language-sh">cd '[实验目录]'
+.venv/bin/python scripts/verify_external.py
+</code></pre>
+<p>单图对照：</p>
+<pre><code class="language-sh">.venv/bin/python scripts/infer.py data/external01/images/ext_0063.png --model base
+.venv/bin/python scripts/infer.py data/external01/images/ext_0063.png --model lesson02
+</code></pre>
+<p>数据准备脚本拒绝覆盖冻结清单，测评脚本拒绝覆盖已完成结果；若新开实验，应另建目录并重新声明协议。不要删除已有结果来重复挑选更好成绩。</p>
+<h2>来源</h2>
+<ul>
+<li><a href="https://rrc.cvc.uab.es/?ch=4">ICDAR 2015 原始挑战</a> · <a href="https://huggingface.co/datasets/MiXaiLL76/ICDAR2015_OCR/tree/7993b8bd9e20756684c97d539f0043923793b1b5">固定版本的英文数据镜像</a> · <a href="https://paddleocr.bj.bcebos.com/dataset/rec_gt_test.txt">Paddle 分发的标签</a></li>
+<li><a href="https://github.com/FudanVI/benchmarking-chinese-text-recognition">Benchmarking Chinese Text Recognition：作者说明、数据组成及原始下载链接</a>；本次仅使用 Scene/Web，未使用其合成 Document 部分。</li>
+<li>使用公开数据作本地学习测评；模型许可与数据许可分开处理，不把仓库代码的许可自动套用到各来源图片。</li>
+</ul>
+</html>
