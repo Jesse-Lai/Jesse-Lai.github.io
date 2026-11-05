@@ -3,6 +3,7 @@ console.log('[atoms-renderer] v=223 loaded');
 // All atom types are rendered from here. Both atoms.html and wall.js import this.
 import { streamChat, chatSync, buildSystemPrompt } from './ai-client.js?v=166';
 import './lib/embla-carousel.umd.js?v=860';
+import { createPaperclip, getPaperBounds, layoutPaperclip, stackPaperclip } from './paperclip.js?v=1';
 import './atomic-design-diagram.js?v=15';
 import { bindArticleMedia, disposeArticleMedia } from './article-media.js?v=1';
 
@@ -576,6 +577,7 @@ export async function renderClip(app, images, x, y, maxW, maxH, cfg) {
 
   // Render each image as a polaroid photo (reuses renderPhoto)
   const photoContainers = [];
+  const photoItems = [];
   const origPositions = [];
 
   for (let i=0; i<images.length; i++) {
@@ -588,46 +590,25 @@ export async function renderClip(app, images, x, y, maxW, maxH, cfg) {
     photoGroup.rotation = (Math.random()*8-4)*Math.PI/180;
     group.addChild(photoGroup);
     photoContainers.push(photoGroup);
+    const pw = img.w * sc, ph = img.h * sc, border = pw * 0.06;
+    photoItems.push({ group: photoGroup, itemW: pw + border * 2, itemH: ph + border * 4,
+      anchorX: pw / 2 + border, anchorY: ph / 2 + border });
     origPositions.push({x: posX, y: posY});
   }
+  // Mixed portrait/landscape previews need a shared paper edge too.
+  const firstBounds = getPaperBounds(photoItems[0]);
+  photoItems.forEach((item, i) => {
+    const bounds = getPaperBounds(item);
+    item.group.x += firstBounds.x - bounds.x;
+    item.group.y += firstBounds.y - bounds.y;
+    origPositions[i] = { x: item.group.x, y: item.group.y };
+  });
   const photoSprites = photoContainers; // alias for toggle logic
 
-  // Paperclip SVG — two-layer approach (inner loop behind photos, outer hook on top)
-  const clipTex = await PIXI.Assets.load({src:'paperclip.svg', data:{resolution:4}});
-  const clipScale = Math.min(maxW*0.25/clipTex.width, maxH*0.55/clipTex.height);
-  const clipX = -maxW/2+8;
-  const clipY = -maxH/2 - clipTex.height*clipScale*0.25;
-  const clipW = clipTex.width * clipScale;
-  const clipH = clipTex.height * clipScale;
-
-  // Bottom layer (inner loop) — goes BEHIND photos
-  const clipBottom = new PIXI.Sprite(clipTex);
-  clipBottom.scale.set(clipScale);
-  clipBottom.x = clipX;
-  clipBottom.y = clipY;
-  const clipBottomMask = new PIXI.Graphics();
-  clipBottomMask.rect(clipX, clipY + clipH * 0.35, clipW, clipH * 0.35).fill(0xffffff);
-  group.addChild(clipBottomMask);
-  clipBottom.mask = clipBottomMask;
-  group.addChildAt(clipBottom, 0); // Behind everything
-
-  // Top layer (outer hook) — goes ON TOP of photos
-  const clipSp = new PIXI.Sprite(clipTex);
-  clipSp.scale.set(clipScale);
-  clipSp.x = clipX;
-  clipSp.y = clipY;
-  const clipTopMask = new PIXI.Graphics();
-  clipTopMask.rect(clipX, clipY, clipW, clipH * 0.35).fill(0xffffff);
-  clipTopMask.rect(clipX, clipY + clipH * 0.7, clipW, clipH * 0.3).fill(0xffffff);
-  group.addChild(clipTopMask);
-  clipSp.mask = clipTopMask;
-  group.addChild(clipSp); // On top of everything
-
-  // Group shadow
-  const clipShadow = new PIXI.Graphics();
-  clipShadow.roundRect(-maxW/2+1.5, -maxH/2+1.5, maxW, maxH, 2);
-  clipShadow.fill({color:0x000000, alpha:0.06});
-  group.addChildAt(clipShadow, 0);
+  const clipInfo = { ...await createPaperclip(Math.min(maxW * 0.35, maxH * 0.35)), photos: photoItems };
+  const { clipSprite: clipSp, clipBottom } = clipInfo;
+  stackPaperclip(clipInfo, group);
+  layoutPaperclip(clipInfo);
 
   // Split/merge toggle
   let isSplit = false;
@@ -636,7 +617,7 @@ export async function renderClip(app, images, x, y, maxW, maxH, cfg) {
   async function toggleSplit() {
     isSplit = !isSplit;
     if (isSplit) {
-      await fadeOut(clipSp);
+      await Promise.all([fadeOut(clipSp), fadeOut(clipBottom)]);
       // Move each photo out of group into stage as independent element
       const angleStep = Math.PI*2/photoSprites.length;
       const baseAngle = Math.random()*Math.PI*2;
@@ -679,7 +660,9 @@ export async function renderClip(app, images, x, y, maxW, maxH, cfg) {
         sp.x = origPositions[i].x; sp.y = origPositions[i].y;
         group.addChild(sp);
       }
-      await fadeIn(clipSp);
+      stackPaperclip(clipInfo, group);
+      layoutPaperclip(clipInfo);
+      await Promise.all([fadeIn(clipSp), fadeIn(clipBottom)]);
     }
   }
   const splitCleanups = [];
@@ -693,7 +676,8 @@ export async function renderClip(app, images, x, y, maxW, maxH, cfg) {
 
   return { 
     group, 
-    clipSprite: clipSp, 
+    clipSprite: clipSp,
+    clipBottom,
     photoSprites,
     toggleSplit,
     clipHitTest,
@@ -1726,76 +1710,100 @@ export class PhotoSystem {
     return smaller>0 ? overlap/smaller : 0;
   }
 
-  async _mergePhotos(droppedItem, targetItem) {
-    let existingClip = this.clipGroups.find(cg => cg.photos.includes(targetItem));
-    if (existingClip) {
-      droppedItem.clipped = true;
-      existingClip.photos.push(droppedItem);
-      const firstBounds = this._getPhotoBounds(existingClip.photos[0]);
-      const dBounds = this._getPhotoBounds(droppedItem);
-      await animateTo(droppedItem.group, firstBounds.x + droppedItem.anchorX, firstBounds.y + droppedItem.anchorY);
-      existingClip.clipSprite.x = firstBounds.x + firstBounds.w * 0.15;
-      existingClip.clipSprite.y = firstBounds.y;
-      // Regenerate label if not predefined
-      if (!existingClip._presetLabel) { existingClip.label = null; this.generateClipLabel(existingClip); }
-      return;
+  _mergePhotos(droppedItem, targetItem) {
+    if (droppedItem.clipped) return;
+    const existingClip = this.clipGroups.find(cg => cg.photos.includes(targetItem));
+    return this._mergePhotoGroup([targetItem, droppedItem], { existingClip });
+  }
+
+  async _mergePhotoGroup(items, { existingClip = null, label } = {}) {
+    if (existingClip?._splitting || existingClip?._merging) return;
+    const additions = [...new Set(items)].filter(item => !existingClip?.photos.includes(item));
+    if (additions.some(item => item.clipped)) return;
+    const photos = [...(existingClip?.photos || []), ...additions];
+    if (photos.length < 2 || !additions.length) return;
+
+    for (const item of photos) {
+      item.clipped = true;
+      this._clearHoverLabelImmediate(item);
+      item.group.scale.set(item.baseScale);
     }
-    if (droppedItem.clipped || targetItem.clipped) return;
-    droppedItem.clipped = true; targetItem.clipped = true;
 
-    const tBounds = this._getPhotoBounds(targetItem);
-    // Align dropped item's top-left to target's top-left
-    await Promise.all([
-      animateTo(targetItem.group, targetItem.group.x, targetItem.group.y),
-      animateTo(droppedItem.group, tBounds.x + droppedItem.anchorX, tBounds.y + droppedItem.anchorY),
-    ]);
-
+    let clipInfo = existingClip;
     try {
-      const clipTex = await PIXI.Assets.load({src:'paperclip.svg', data:{resolution:4}});
-      const clipSp = new PIXI.Sprite(clipTex);
-      const smaller = Math.min(tBounds.w, tBounds.h);
-      const clipScale = Math.min(smaller*0.35/clipSp.texture.width, smaller*0.5/clipSp.texture.height);
-      clipSp.scale.set(clipScale);
-      clipSp.anchor.set(0.5, 0.5);
-      clipSp.x = tBounds.x + tBounds.w * 0.15;
-      const clipTargetY = tBounds.y;
-      clipSp.y = clipTargetY - 30;
-      clipSp.alpha = 0;
-      clipSp.zIndex = 9999;
-      this.app.stage.addChild(clipSp);
-      // Slide in from above + fade in
-      await Promise.all([animateTo(clipSp, clipSp.x, clipTargetY, 300), fadeIn(clipSp, 300)]);
-      const newClip = { clipSprite: clipSp, photos: [targetItem, droppedItem] };
-      this.clipGroups.push(newClip);
-      // Pre-generate AI label for hover (async, non-blocking)
-      this.generateClipLabel(newClip);
-    } catch(err) {
+      if (existingClip) {
+        existingClip._merging = true;
+        // Manual additions withdraw the clip once while new paper moves in.
+        await Promise.all([fadeOut(existingClip.clipSprite, 120), fadeOut(existingClip.clipBottom, 120)]);
+      }
+      const targetItem = photos[0];
+      const tBounds = getPaperBounds(targetItem);
+      // A category is one merge: align every sheet before revealing its clip.
+      await Promise.all(additions.filter(item => item !== targetItem).map(item => {
+        const bounds = getPaperBounds(item);
+        return animateTo(item.group,
+          item.group.x + tBounds.x - bounds.x,
+          item.group.y + tBounds.y - bounds.y);
+      }));
+
+      clipInfo = existingClip || await createPaperclip(Math.min(tBounds.w, tBounds.h) * 0.35);
+      clipInfo.photos = photos;
+      if (label) { clipInfo.label = label; clipInfo._presetLabel = true; }
+      clipInfo._lift = 0;
+      stackPaperclip(clipInfo, this.app.stage);
+      layoutPaperclip(clipInfo);
+      const targetY = clipInfo.clipSprite.y;
+      const layers = [clipInfo.clipBottom, clipInfo.clipSprite];
+      for (const layer of layers) { layer.y -= 30; layer.alpha = 0; }
+      await Promise.all(layers.flatMap(layer => [
+        animateTo(layer, layer.x, targetY, 300), fadeIn(layer, 300),
+      ]));
+      clipInfo._merging = false;
+      if (!existingClip) this.clipGroups.push(clipInfo);
+      if (!clipInfo._presetLabel) { clipInfo.label = null; this.generateClipLabel(clipInfo); }
+      return clipInfo;
+    } catch (err) {
       console.error('Failed to load paperclip:', err);
-      droppedItem.clipped = false; targetItem.clipped = false;
+      additions.forEach(item => { item.clipped = false; });
+      if (existingClip) {
+        existingClip.photos = photos.filter(item => !additions.includes(item));
+        existingClip._merging = false;
+        existingClip.clipSprite.alpha = existingClip.clipBottom.alpha = 1;
+      } else if (clipInfo) {
+        for (const layer of [clipInfo.clipBottom, clipInfo.clipSprite]) {
+          layer.removeFromParent(); layer.destroy();
+        }
+      }
     }
   }
 
-  async _splitPhotos(clipInfo) {
-    this._hideClipHoverLabel(clipInfo);
-    const { clipSprite, photos: clipPhotos } = clipInfo;
-    // Slide up + fade out
-    await Promise.all([
-      animateTo(clipSprite, clipSprite.x, clipSprite.y - 30, 250),
-      fadeOut(clipSprite, 250),
-    ]);
-    this.app.stage.removeChild(clipSprite);
-    clipSprite.destroy();
+  _splitPhotos(clipInfo) {
+    // mousedown and click can both request a split before its animation finishes.
+    if (clipInfo._splitPromise) return clipInfo._splitPromise;
+    if (clipInfo._merging) return Promise.resolve();
+    clipInfo._splitting = true;
+    clipInfo._splitPromise = (async () => {
+      this._hideClipHoverLabel(clipInfo);
+      const { clipSprite, clipBottom, photos: clipPhotos } = clipInfo;
+      const layers = [clipBottom, clipSprite];
+      await Promise.all(layers.flatMap(layer => [
+        animateTo(layer, layer.x, layer.y - 30, 250), fadeOut(layer, 250),
+      ]));
+      for (const layer of layers) { layer.removeFromParent(); layer.destroy(); }
+      const idx = this.clipGroups.indexOf(clipInfo);
+      if (idx >= 0) this.clipGroups.splice(idx, 1);
 
-    const cx = clipPhotos[0].group.x, cy = clipPhotos[0].group.y;
-    const spread = 60 + Math.random()*40;
-    const angleStep = Math.PI*2 / clipPhotos.length;
-    const baseAngle = Math.random()*Math.PI*2;
-    await Promise.all(clipPhotos.map((p,i) =>
-      animateTo(p.group, cx+Math.cos(baseAngle+angleStep*i)*spread, cy+Math.sin(baseAngle+angleStep*i)*spread)
-    ));
-    clipPhotos.forEach(p => { p.clipped = false; p.splitCooldown = Date.now()+500; });
-    const idx = this.clipGroups.indexOf(clipInfo);
-    if (idx>=0) this.clipGroups.splice(idx, 1);
+      const cx = clipPhotos[0].group.x, cy = clipPhotos[0].group.y;
+      const spread = 60 + Math.random() * 40;
+      const angleStep = Math.PI * 2 / clipPhotos.length;
+      const baseAngle = Math.random() * Math.PI * 2;
+      await Promise.all(clipPhotos.map((p, i) =>
+        animateTo(p.group, cx + Math.cos(baseAngle + angleStep * i) * spread,
+          cy + Math.sin(baseAngle + angleStep * i) * spread)
+      ));
+      clipPhotos.forEach(p => { p.clipped = false; p.splitCooldown = Date.now() + 500; });
+    })();
+    return clipInfo._splitPromise;
   }
 
   _stopPhotoVideo(photo) {
@@ -1922,6 +1930,7 @@ export class PhotoSystem {
       }
     };
     const onMove = e => {
+      if (photo.clipped) return;
       const cmx = e.clientX, cmy = this._canvasY(e.clientY);
       if (drag) {
         photo.group.x = cmx+offX;
@@ -2201,9 +2210,11 @@ export class PhotoSystem {
     let groupDrag = null, groupOffX = 0, groupOffY = 0, groupDownTime = 0, groupMoved = false;
 
     this.canvas.addEventListener('mousedown', e => {
+      if (this._isFocusOpen()) return;
       const mx = e.clientX, my = this._canvasY(e.clientY);
       // Check clip click (split)
       for (const cg of [...this.clipGroups]) {
+        if (cg._splitting || cg._merging) continue;
         const cs = cg.clipSprite;
         if (Math.abs(mx-cs.x)<cs.width*0.6 && Math.abs(my-cs.y)<cs.height*0.6) {
           this._splitPhotos(cg);
@@ -2212,6 +2223,7 @@ export class PhotoSystem {
       }
       // Check click on clipped items (drag whole group)
       for (const cg of this.clipGroups) {
+        if (cg._splitting || cg._merging) continue;
         for (const p of cg.photos) {
           const b = this._getPhotoBounds(p);
           if (mx>b.x && mx<b.x+b.w && my>b.y && my<b.y+b.h) {
@@ -2220,18 +2232,20 @@ export class PhotoSystem {
             groupDownTime = Date.now(); groupMoved = false;
             this._hideClipHoverLabelImmediate(cg);
             for (const gp of cg.photos) gp.group.scale.set(gp.baseScale * 1.05);
+            stackPaperclip(cg, this.app.stage);
+            layoutPaperclip(cg);
             return;
           }
         }
       }
     });
     this.canvas.addEventListener('mousemove', e => {
+      if (this._isFocusOpen()) return;
       if (groupDrag) {
         groupMoved = true;
         const dx = e.clientX - groupOffX, dy = e.clientY - groupOffY;
         for (const p of groupDrag.photos) { p.group.x += dx; p.group.y += dy; }
-        groupDrag.clipSprite.x += dx; groupDrag.clipSprite.y += dy;
-        if (groupDrag.clipSprite._baseY !== undefined) groupDrag.clipSprite._baseY += dy;
+        layoutPaperclip(groupDrag);
         // Move hover label with group
         if (groupDrag._hoverArrow) groupDrag._hoverArrow.position.set(groupDrag._hoverArrow.x + dx, groupDrag._hoverArrow.y + dy);
         if (groupDrag._hoverText) groupDrag._hoverText.position.set(groupDrag._hoverText.x + dx, groupDrag._hoverText.y + dy);
@@ -2248,6 +2262,7 @@ export class PhotoSystem {
       }
       if (!hovering) {
         for (const cg of this.clipGroups) {
+          if (cg._splitting || cg._merging) continue;
           const cs = cg.clipSprite;
           if (Math.abs(mx-cs.x)<cs.width*0.6 && Math.abs(my-cs.y)<cs.height*0.6) { hovering = true; break; }
           for (const p of cg.photos) {
@@ -2259,12 +2274,11 @@ export class PhotoSystem {
       }
       this.canvas.style.cursor = hovering ? 'pointer' : 'default';
       for (const cg of this.clipGroups) {
+        if (cg._splitting || cg._merging) continue;
         const cs = cg.clipSprite;
         const clipHovered = Math.abs(mx-cs.x)<cs.width*0.6 && Math.abs(my-cs.y)<cs.height*0.6;
-        // Clip lifts up when hovered to hint it's clickable
-        if (cs._baseY === undefined) cs._baseY = cs.y;
-        const targetY = clipHovered ? cs._baseY - 8 : cs._baseY;
-        cs.y += (targetY - cs.y) * 0.15;
+        // Both halves lift together; placement is recalculated after paper scaling.
+        cg._lift = (cg._lift || 0) + ((clipHovered ? -8 : 0) - (cg._lift || 0)) * 0.15;
 
         let groupHovered = clipHovered;
         if (!groupHovered) {
@@ -2274,6 +2288,7 @@ export class PhotoSystem {
           }
         }
         for (const p of cg.photos) { const ts = (groupHovered || groupDrag===cg ? 1.05 : 1.0) * p.baseScale; const c=p.group.scale.x; p.group.scale.set(c+(ts-c)*0.15); }
+        layoutPaperclip(cg);
 
         // Video hover: play top photo's (last in array = highest z) video on group hover
         if (groupHovered && !cg._wasGroupHovered) {
@@ -2306,6 +2321,7 @@ export class PhotoSystem {
     this.canvas.addEventListener('mouseup', () => {
       if (groupDrag) {
         for (const gp of groupDrag.photos) gp.group.scale.set(gp.baseScale);
+        layoutPaperclip(groupDrag);
         // Click (not drag) on clip group → open focus overlay
         if (!groupMoved && (Date.now() - groupDownTime) < 200 && this.onFocus) {
           this.hideAllHoverUI();
@@ -2322,8 +2338,10 @@ export class PhotoSystem {
 
     // Click for clip split (works on both desktop and mobile without blocking scroll)
     this.canvas.addEventListener('click', e => {
-      const mx = e.clientX, my = e.clientY;
+      if (this._isFocusOpen()) return;
+      const mx = e.clientX, my = this._canvasY(e.clientY);
       for (const cg of [...this.clipGroups]) {
+        if (cg._splitting || cg._merging) continue;
         const cs = cg.clipSprite;
         if (Math.abs(mx-cs.x)<cs.width*0.6 && Math.abs(my-cs.y)<cs.height*0.6) { this._splitPhotos(cg); return; }
       }
@@ -2852,6 +2870,7 @@ export class FocusOverlay {
       const photos = item.focusData._clipPhotos;
       const cg = item._clipGroupRef;
       const allEls = photos.map(p => p.group);
+      if (cg?.clipBottom) allEls.unshift(cg.clipBottom);
       if (cg?.clipSprite) allEls.push(cg.clipSprite);
 
       // Compute current group bounds

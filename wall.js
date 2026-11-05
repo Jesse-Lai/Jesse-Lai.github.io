@@ -1,5 +1,5 @@
 // wall.js — Main view, uses atoms-renderer.js
-import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, renderTearoffCard, makeDraggable, FocusOverlay, getOrCreateVideo, loadAllVideosSequentially, animateTo, fadeIn } from "./atoms-renderer-v211.js?v=251";
+import { loadImagePixels, PhotoSystem, renderStamp, renderStickyNote, renderTearoffCard, makeDraggable, FocusOverlay, getOrCreateVideo, loadAllVideosSequentially, animateTo, fadeIn } from "./atoms-renderer-v211.js?v=253";
 import { WallArticle } from "./wall-article.js?v=152";
 
 (async () => {
@@ -686,12 +686,9 @@ import { WallArticle } from "./wall-article.js?v=152";
     await Promise.all(masonryEntries.filter(e => e.type === 'group').map(async entry => {
       const items = entry.items;
       if (items.length < 2) return;
-      const target = items[0];
-      for (let i = 1; i < items.length; i++) {
-        await photoSystem._mergePhotos(items[i].focusableItem, target.focusableItem);
-      }
-      const cg = photoSystem.clipGroups.find(c => c.photos.includes(target.focusableItem));
-      if (cg) cg.label = categoryLabels[entry.cat] || entry.cat;
+      await photoSystem._mergePhotoGroup(items.map(item => item.focusableItem), {
+        label: categoryLabels[entry.cat] || entry.cat,
+      });
     }));
 
     // Resize canvas if needed
@@ -717,16 +714,33 @@ import { WallArticle } from "./wall-article.js?v=152";
     app.renderer.resize(W, Math.max(totalH + sat + sab, H)); app.canvas.style.height = Math.max(totalH + sat + sab, H) + "px";
   }
 
+  // Serialize layout actions so repeated clicks cannot rebuild a half-merged stack.
+  let layoutBusy = false;
+  async function runLayout(action, organized) {
+    if (layoutBusy) return;
+    layoutBusy = true;
+    const organizeButton = document.getElementById('organize-btn');
+    const shuffleButton = document.getElementById('shuffle-btn');
+    if (organizeButton) organizeButton.disabled = true;
+    if (shuffleButton) shuffleButton.disabled = true;
+    try {
+      await action();
+      shuffleButton?.classList.toggle('visible', organized);
+    } finally {
+      layoutBusy = false;
+      if (organizeButton) organizeButton.disabled = false;
+      if (shuffleButton) shuffleButton.disabled = false;
+    }
+  }
+
   // Wire buttons
   document.getElementById('organize-btn')?.addEventListener('click', () => {
-    organizeByCategory();
+    runLayout(organizeByCategory, true);
     track('organize-click');
-    document.getElementById('shuffle-btn')?.classList.add('visible');
   });
   document.getElementById('shuffle-btn')?.addEventListener('click', () => {
-    shuffleToInitial();
+    runLayout(shuffleToInitial, false);
     track('shuffle-click');
-    document.getElementById('shuffle-btn')?.classList.remove('visible');
   });
 
   // ─── Ticker ───
