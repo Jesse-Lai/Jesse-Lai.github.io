@@ -28,11 +28,6 @@
     <div><p class="eyebrow">BLACK FRIDAY → CYBER MONDAY</p><h1 id="title">黑五运营计划</h1><p class="subtitle">从预热到收尾，每个节点，只看该做什么。</p></div>
     <div class="season" aria-hidden="true">2026<small>OCTOBER — DECEMBER</small></div>
   </section>
-  <aside class="deadline" aria-label="重要报名截止日期">
-    <div class="deadline-date"><span>报名截止</span><time datetime="2026-10-20">10.20</time></div>
-    <div><h2>完成秒杀 / Best Deals 申报</h2><p>检查后台提交状态，确认商品、促销价与排期。</p></div>
-    <span class="countdown" id="countdown">10 月 20 日前完成</span>
-  </aside>
   <div class="map-meta"><h2>四个阶段 · 十一个行动节点<span>美国太平洋时间 · 勾选记录进度</span></h2><div class="progress-wrap"><span id="progress-label" aria-live="polite">已完成 0 / 11</span><progress id="progress" value="0" max="11" aria-label="任务完成进度"></progress></div></div>
   <div class="roadmap" aria-label="2026 黑五行动时间线">
     <section class="phase" data-start="2026-10-10" data-end="2026-10-31" aria-labelledby="warmup-title">
@@ -125,8 +120,6 @@
   const parts = new Intl.DateTimeFormat('en-CA', { timeZone:'America/Los_Angeles', year:'numeric', month:'2-digit', day:'2-digit' }).formatToParts(new Date());
   const part = name => parts.find(item => item.type === name).value;
   const today = `${part('year')}-${part('month')}-${part('day')}`;
-  const remaining = Math.round((Date.parse('2026-10-20T00:00:00Z') - Date.parse(`${today}T00:00:00Z`)) / 86400000);
-  document.getElementById('countdown').textContent = remaining > 0 ? `距截止 ${remaining} 天` : remaining === 0 ? '今日截止 · 核对后台时刻' : '报名节点已过';
   document.querySelectorAll('.phase').forEach(phase => {
     if (today >= phase.dataset.start && today <= phase.dataset.end) phase.classList.add('phase-current');
   });
