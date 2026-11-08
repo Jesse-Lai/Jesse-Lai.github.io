@@ -40,14 +40,18 @@ function stepReference(panel,id){
 const key='america-accounts-checklist-v1';
 let done={};
 try{const saved=JSON.parse(localStorage.getItem(key)||'{}');if(saved&&typeof saved==='object'&&!Array.isArray(saved))done=saved}catch{}
-let region='us';
-try{if(localStorage.getItem('accounts-region')==='hk')region='hk'}catch{}
+let region='trip';
+try{const saved=localStorage.getItem('america-active-view-v2');if(['trip','us','hk'].includes(saved))region=saved}catch{}
 let filter='all';
 const list=document.querySelector('#checklist');
 function sourcesFor(ids){return ids?.length?`<p class="step-sources">${ids.map(id=>{const [label,url]=hkSources[id];return `<a href="${url}" target="_blank" rel="noopener noreferrer">${label} ↗</a>`}).join('')}<span>核对于 2026.11.08</span></p>`:''}
 function render(){
  const phases=region==='hk'?hkPhases:usPhases;
  document.querySelectorAll('[data-region]').forEach(b=>{const active=b.dataset.region===region;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active))});
+ document.querySelector('#trip-view').hidden=region!=='trip';
+ document.querySelector('#bank-view').hidden=region==='trip';
+ document.querySelector('#main-content').classList.toggle('trip-mode',region==='trip');
+ if(region==='trip')return;
  document.querySelector('.toolbar').hidden=region==='hk';
  list.innerHTML=phases.map((p,index)=>{
   const visible=p.items.filter(t=>filter==='all'||filter===t[1]);
@@ -61,7 +65,7 @@ document.querySelectorAll('[data-filter]').forEach(b=>b.onclick=()=>{setFilter(b
 document.querySelectorAll('[data-region]').forEach(b=>b.onclick=()=>{
  if(region===b.dataset.region)return;
  region=b.dataset.region;setFilter('all');
- try{localStorage.setItem('accounts-region',region)}catch{}
+ try{localStorage.setItem('america-active-view-v2',region)}catch{}
  render();window.scrollTo({top:0,behavior:'instant'});
 });
 let timer;function notify(text){const t=document.querySelector('#toast');t.textContent=text;t.classList.add('show');clearTimeout(timer);timer=setTimeout(()=>t.classList.remove('show'),2500)}
