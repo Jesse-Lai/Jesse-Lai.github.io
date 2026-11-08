@@ -5,3 +5,11 @@
 .content-grid{display:block}.sidebar-references{display:grid;gap:8px;margin-top:24px;padding-top:24px;border-top:1px solid var(--line)}.sidebar-references button{display:flex;align-items:center;gap:13px;width:100%;padding:11px 14px;text-align:left;border:0;border-radius:7px;background:none;color:#646b76;font-weight:550}.sidebar-references button span{width:14px;text-align:center;color:#9298a3;font-size:13px;font-weight:450}.sidebar-references button:hover{background:#edf1ff;color:var(--blue)}@media(max-width:900px){.sidebar-references{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px;padding-top:12px}.sidebar-references button{font-size:12px;padding:8px 11px;gap:7px}}
 
 .step-reference{margin-top:20px;padding-top:4px;border-top:1px solid var(--line);overflow-wrap:anywhere}.step-reference h3{font-size:14px;color:var(--ink);margin:18px 0 8px}.step-reference p,.step-reference li{font-size:12px;line-height:1.9}.step-reference table{border-collapse:collapse;width:100%;margin:12px 0;font-size:12px}.step-reference td,.step-reference th{padding:10px 8px;text-align:left;border-bottom:1px solid var(--line)}.step-reference td:first-child{width:38%}.step-reference ol{padding-left:20px}.step-reference .address{color:var(--ink)}.task>div{min-width:0}
+
+.region-button{display:flex;align-items:center;width:100%;padding:13px 14px;border:0;border-radius:7px;background:transparent;text-align:left;font-weight:550;color:#646b76}
+.region-button.active{background:#edf1ff;color:var(--blue)}
+.region-button:hover{background:#f3f5fc}.region-button.active:hover{background:#edf1ff}
+.toolbar[hidden]{display:none}header:has(.toolbar[hidden]){margin-bottom:34px}
+.step-sources{display:flex;flex-wrap:wrap;gap:7px 15px;margin:17px 0 0;padding-top:12px;border-top:1px solid #eef0f4;font-size:11px}
+.step-sources a{color:var(--blue)}.step-sources a:hover{text-decoration:underline}.step-sources span{color:#9299a5}
+@media(max-width:900px){.region-button{flex:1;justify-content:center;padding:10px 12px;font-size:13px}}

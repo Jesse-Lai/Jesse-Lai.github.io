@@ -1,4 +1,4 @@
-const phases=[
+const usPhases=[
 {id:'before',name:'出发前',time:'材料与资格先准备',items:[
 ['documents','bank','备齐身份证明','护照、有效美签、身份证、本人信用卡。',['护照与 B1/B2 签证带原件，并保留电子备份。','身份证、印有本人姓名的国内信用卡作为第二证明备选；网点要求不同。','备好国内住址英文写法、职业、资金来源与已有税号信息。']],
 ['phone','bank','准备可长期保留的美国号码','能收银行验证码，并确认回国后的使用方式。',['别只买流量卡；确认号码可以接收银行短码短信。','检查手机的实体 SIM / eSIM、频段和运营商兼容性。','评论提到 Tello $5/月套餐，仅供询价；价格、激活和境外收码条件需向运营商确认。','使用可长期访问的邮箱，检查垃圾邮件；原帖推荐 Gmail。']],
@@ -37,11 +37,32 @@ function stepReference(panel,id){
  if(id==='transfer')return '<h3>电汇费用</h3><p>原帖银行文件：2025 年 8 月版本，办理前需确认当前费用。</p>'+panels.fees.slice(wire,other).replace('<h3>电汇 Wire</h3>','');
  return clean(panels.fees.slice(0,wire)+panels.fees.slice(other));
 }
-const key='america-accounts-checklist-v1';let done={};try{done=JSON.parse(localStorage.getItem(key)||'{}')||{}}catch{}let filter='all';const list=document.querySelector('#checklist');
-function render(){list.innerHTML=phases.map(p=>{const visible=p.items.filter(t=>(filter==='all'||filter===t[1]));return `<section class="phase" id="${p.id}"><div class="phase-heading"><span class="phase-number">0${phases.indexOf(p)+1}</span><h2>${p.name}</h2></div><div class="tasks">${visible.length?visible.map(([id,type,title,sub,body,panel])=>`<article class="task"><input type="checkbox" id="${id}" ${done[id]?'checked':''} aria-label="完成：${title}"><div><details><summary><span class="task-title">${title}</span><span class="tag ${type}">${type==='bank'?'银行':'券商'}</span><span class="chevron" aria-hidden="true">›</span></summary><div class="task-body"><ul>${body.map(t=>`<li>${t}</li>`).join('')}</ul>${panel?`<div class="step-reference">${stepReference(panel,id)}</div>`:''}</div></details><p class="task-sub">${sub}</p></div></article>`).join(''):'<div class="empty">此阶段没有待显示事项。</div>'}</div></section>`}).join('');updateProgress()}
-function updateProgress(){phases.forEach(p=>document.querySelector('#count-'+p.id).textContent=p.items.filter(t=>done[t[0]]).length+'/6')}
+const key='america-accounts-checklist-v1';
+let done={};
+try{const saved=JSON.parse(localStorage.getItem(key)||'{}');if(saved&&typeof saved==='object'&&!Array.isArray(saved))done=saved}catch{}
+let region='us';
+try{if(localStorage.getItem('accounts-region')==='hk')region='hk'}catch{}
+let filter='all';
+const list=document.querySelector('#checklist');
+function sourcesFor(ids){return ids?.length?`<p class="step-sources">${ids.map(id=>{const [label,url]=hkSources[id];return `<a href="${url}" target="_blank" rel="noopener noreferrer">${label} ↗</a>`}).join('')}<span>核对于 2026.11.08</span></p>`:''}
+function render(){
+ const phases=region==='hk'?hkPhases:usPhases;
+ document.querySelectorAll('[data-region]').forEach(b=>{const active=b.dataset.region===region;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active))});
+ document.querySelector('.toolbar').hidden=region==='hk';
+ list.innerHTML=phases.map((p,index)=>{
+  const visible=p.items.filter(t=>filter==='all'||filter===t[1]);
+  return `<section class="phase" id="${p.id}"><div class="phase-heading"><span class="phase-number">0${index+1}</span><h2>${p.name}</h2></div><div class="tasks">${visible.length?visible.map(([id,type,title,sub,body,panel,sources])=>`<article class="task"><input type="checkbox" id="${id}" ${done[id]?'checked':''} aria-label="完成：${title}"><div><details><summary><span class="task-title">${title}</span><span class="tag ${type}">${type==='bank'?'银行':'券商'}</span><span class="chevron" aria-hidden="true">›</span></summary><div class="task-body"><ul>${body.map(t=>`<li>${t}</li>`).join('')}</ul>${panel?`<div class="step-reference">${stepReference(panel,id)}</div>`:''}${sourcesFor(sources)}</div></details><p class="task-sub">${sub}</p></div></article>`).join(''):'<div class="empty">此阶段没有待显示事项。</div>'}</div></section>`
+ }).join('');
+}
 function save(){try{localStorage.setItem(key,JSON.stringify(done))}catch{notify('浏览器暂时无法保存进度')}}
-list.addEventListener('change',e=>{if(e.target.matches('input[type=checkbox]')){done[e.target.id]=e.target.checked;save();updateProgress()}});
-document.querySelectorAll('[data-filter]').forEach(b=>b.onclick=()=>{filter=b.dataset.filter;document.querySelectorAll('[data-filter]').forEach(x=>{x.classList.toggle('selected',x===b);x.setAttribute('aria-pressed',String(x===b))});render()});
+list.addEventListener('change',e=>{if(e.target.matches('input[type=checkbox]')){done[e.target.id]=e.target.checked;save()}});
+function setFilter(value){filter=value;document.querySelectorAll('[data-filter]').forEach(b=>{const active=b.dataset.filter===value;b.classList.toggle('selected',active);b.setAttribute('aria-pressed',String(active))})}
+document.querySelectorAll('[data-filter]').forEach(b=>b.onclick=()=>{setFilter(b.dataset.filter);render()});
+document.querySelectorAll('[data-region]').forEach(b=>b.onclick=()=>{
+ if(region===b.dataset.region)return;
+ region=b.dataset.region;setFilter('all');
+ try{localStorage.setItem('accounts-region',region)}catch{}
+ render();window.scrollTo({top:0,behavior:'instant'});
+});
 let timer;function notify(text){const t=document.querySelector('#toast');t.textContent=text;t.classList.add('show');clearTimeout(timer);timer=setTimeout(()=>t.classList.remove('show'),2500)}
-document.querySelectorAll('nav a').forEach(a=>a.onclick=()=>{document.querySelectorAll('nav a').forEach(x=>x.classList.toggle('active',x===a))});window.addEventListener('scroll',()=>{let active='before';phases.forEach(p=>{if(document.getElementById(p.id).getBoundingClientRect().top<180)active=p.id});document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('active',a.hash==='#'+active))},{passive:true});render();
+render();
